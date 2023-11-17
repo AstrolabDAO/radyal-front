@@ -9,3 +9,9 @@ export function slugify(s: string, sep: string = "-"): string {
   // : is kept as part of the slug
   return toRaw(s).replace(/[-_.,;\s]+/gi, sep);
 }
+
+export const clearFrom = (s: string, regex: string): string =>
+  s.substring(0, s.search(new RegExp(regex)));
+
+export const clearNetworkTypeFromSlug = (slug: string): string =>
+  clearFrom(slug, "-mainnet|-testnet");

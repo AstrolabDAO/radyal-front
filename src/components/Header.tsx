@@ -3,12 +3,9 @@ import logo from "../assets/logo.svg";
 import { web3Modal } from "../main";
 import Button from "./Button";
 import { disconnect } from "wagmi/actions";
-import { WalletContext } from "../context/wallet-context";
-import { useContext } from "react";
 
 const Header = () => {
   const { address, isConnected } = useAccount();
-  const { balances } = useContext(WalletContext);
 
   return (
     <header className="fixed top-0 left-0 w-full flex p-3 bottom-box-shadow">
@@ -26,8 +23,7 @@ const Header = () => {
             )}
             {isConnected && (
               <div className="flex">
-                <span>balance: {balances.length} - ----</span>
-                <span>{address}</span>
+                <span onClick={() => web3Modal.open()}>{address}</span>
                 <Button onClick={() => disconnect()}>Logout</Button>
               </div>
             )}

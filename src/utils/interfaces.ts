@@ -51,3 +51,8 @@ export interface IDeFiBalance {
   totalValue: number;
   token: IDeFIToken;
 }
+
+export type ChainRpcUrls = {
+  http: readonly string[];
+  webSocket?: readonly string[];
+};
