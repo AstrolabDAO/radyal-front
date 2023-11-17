@@ -1,16 +1,13 @@
 import "./App.css";
-import { web3Modal } from "./main";
+import Header from "./components/Header";
+import { WalletProvider } from "./context/wallet-context";
 
 function App() {
   return (
     <>
-      {" "}
-      <button
-        className="btn btn-primary bg-primary"
-        onClick={() => web3Modal.open()}
-      >
-        Connect wallet
-      </button>
+      <WalletProvider>
+        <Header />
+      </WalletProvider>
     </>
   );
 }
