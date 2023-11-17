@@ -1,0 +1,407 @@
+[
+  {
+    "id": 1,
+    "name": "ethereum",
+    "displayName": "Ethereum",
+    "abbr": "eth",
+    "displayAbbr": "eth",
+    "metadata": {
+      "absoluteChainId": 1,
+      "coingeckoPlatformId": "ethereum",
+      "debankPlatformId": "eth"
+    }
+  },
+  {
+    "id": 2,
+    "name": "binance",
+    "displayName": "BNB Chain",
+    "abbr": "bnb",
+    "displayAbbr": "bnb",
+    "metadata": {
+      "absoluteChainId": 56,
+      "coingeckoPlatformId": "binance-smart-chain",
+      "debankPlatformId": "bsc"
+    }
+  },
+  {
+    "id": 3,
+    "name": "polygon",
+    "displayName": "Polygon",
+    "abbr": "plg",
+    "displayAbbr": "plg",
+    "metadata": {
+      "absoluteChainId": 137,
+      "coingeckoPlatformId": "polygon-pos",
+      "debankPlatformId": "matic"
+    }
+  },
+  {
+    "id": 4,
+    "name": "fantom",
+    "displayName": "Fantom",
+    "abbr": "ftm",
+    "displayAbbr": "ftm",
+    "metadata": {
+      "absoluteChainId": 250,
+      "coingeckoPlatformId": "fantom",
+      "debankPlatformId": "ftm"
+    }
+  },
+  {
+    "id": 5,
+    "name": "arbitrum",
+    "displayName": "Arbitrum",
+    "abbr": "arbi",
+    "displayAbbr": "ARB",
+    "metadata": {
+      "absoluteChainId": 42161,
+      "coingeckoPlatformId": "arbitrum-one",
+      "debankPlatformId": "arb"
+    }
+  },
+  {
+    "id": 6,
+    "name": "avalanche",
+    "displayName": "Avalanche",
+    "abbr": "avax",
+    "displayAbbr": "avax",
+    "metadata": {
+      "absoluteChainId": 43114,
+      "coingeckoPlatformId": "avalanche",
+      "debankPlatformId": "avax"
+    }
+  },
+  {
+    "id": 7,
+    "name": "gnosis",
+    "displayName": "Gnosis",
+    "abbr": "gnosis",
+    "displayAbbr": "Gnosis",
+    "metadata": {
+      "absoluteChainId": 100,
+      "coingeckoPlatformId": "xdai",
+      "debankPlatformId": "xdai"
+    }
+  },
+  {
+    "id": 8,
+    "name": "celo",
+    "displayName": "Celo",
+    "abbr": "celo",
+    "displayAbbr": "celo",
+    "metadata": {
+      "absoluteChainId": 42220,
+      "coingeckoPlatformId": "celo",
+      "debankPlatformId": "celo"
+    }
+  },
+  {
+    "id": 12,
+    "name": "solana",
+    "displayName": "Solana",
+    "abbr": "sol",
+    "displayAbbr": "sol",
+    "metadata": {
+      "absoluteChainId": 101,
+      "coingeckoPlatformId": "solana",
+      "debankPlatformId": ""
+    }
+  },
+  {
+    "id": 13,
+    "name": "okx",
+    "displayName": "OKTChain",
+    "abbr": "okex",
+    "displayAbbr": "OKX",
+    "metadata": {
+      "absoluteChainId": 66,
+      "coingeckoPlatformId": "okex-chain",
+      "debankPlatformId": ""
+    }
+  },
+  {
+    "id": 14,
+    "name": "cronos",
+    "displayName": "Cronos",
+    "abbr": "cro",
+    "displayAbbr": "Cro",
+    "metadata": {
+      "absoluteChainId": 25,
+      "coingeckoPlatformId": "cronos",
+      "debankPlatformId": "cro"
+    }
+  },
+  {
+    "id": 17,
+    "name": "optimism",
+    "displayName": "Optimism",
+    "abbr": "opt",
+    "displayAbbr": "OP",
+    "metadata": {
+      "absoluteChainId": 10,
+      "coingeckoPlatformId": "optimistic-ethereum",
+      "debankPlatformId": "op"
+    }
+  },
+  {
+    "id": 19,
+    "name": "terra",
+    "displayName": "Terra Classic",
+    "abbr": "terra",
+    "displayAbbr": "terra",
+    "metadata": {
+      "absoluteChainId": "columbus-5",
+      "coingeckoPlatformId": "terra",
+      "debankPlatformId": ""
+    }
+  },
+  {
+    "id": 20,
+    "name": "klaytn",
+    "displayName": "Klaytn",
+    "abbr": "klay",
+    "displayAbbr": "klay",
+    "metadata": {
+      "absoluteChainId": 8217,
+      "coingeckoPlatformId": "klay-token",
+      "debankPlatformId": ""
+    }
+  },
+  {
+    "id": 22,
+    "name": "cardano",
+    "displayName": "Cardano",
+    "abbr": "cardano",
+    "displayAbbr": "cardano",
+    "metadata": {
+      "absoluteChainId": 1003,
+      "coingeckoPlatformId": "cardano",
+      "debankPlatformId": ""
+    }
+  },
+  {
+    "id": 31,
+    "name": "moonbeam",
+    "displayName": "Moonbeam",
+    "abbr": "moonbeam",
+    "displayAbbr": "moonbeam",
+    "metadata": {
+      "absoluteChainId": 1284,
+      "coingeckoPlatformId": "moonbeam",
+      "coinmarketcapPlatformName": "Moonbeam"
+    }
+  },
+  {
+    "id": 32,
+    "name": "thorchain",
+    "displayName": "Thorchain",
+    "abbr": "thor",
+    "displayAbbr": "thor",
+    "metadata": {
+      "absoluteChainId": 2008,
+      "coingeckoPlatformId": "thorchain"
+    }
+  },
+  {
+    "id": 33,
+    "name": "sifchain",
+    "displayName": "Sifchain",
+    "abbr": "sif",
+    "displayAbbr": "sif",
+    "metadata": {
+      "absoluteChainId": 2009,
+      "coingeckoPlatformId": "sifchain"
+    }
+  },
+  {
+    "id": 34,
+    "name": "juno",
+    "displayName": "Juno",
+    "abbr": "juno",
+    "displayAbbr": "juno",
+    "metadata": {
+      "absoluteChainId": 2010,
+      "coingeckoPlatformId": "juno-network"
+    }
+  },
+  {
+    "id": 35,
+    "name": "stargaze",
+    "displayName": "Stargaze",
+    "abbr": "stargaze",
+    "displayAbbr": "stargaze",
+    "metadata": {
+      "absoluteChainId": 2011,
+      "coingeckoPlatformId": "stargaze"
+    }
+  },
+  {
+    "id": 36,
+    "name": "akash",
+    "displayName": "Akash",
+    "abbr": "akash",
+    "displayAbbr": "akash",
+    "metadata": {
+      "absoluteChainId": 2012,
+      "coingeckoPlatformId": "akash-network"
+    }
+  },
+  {
+    "id": 37,
+    "name": "kujira",
+    "displayName": "Kujira",
+    "abbr": "kujira",
+    "displayAbbr": "kujira",
+    "metadata": {
+      "absoluteChainId": 2013,
+      "coingeckoPlatformId": "kujira"
+    }
+  },
+  {
+    "id": 38,
+    "name": "evmos",
+    "displayName": "Evmos",
+    "abbr": "evmos",
+    "displayAbbr": "evmos",
+    "metadata": {
+      "absoluteChainId": 9001,
+      "coingeckoPlatformId": "evmos"
+    }
+  },
+  {
+    "id": 39,
+    "name": "agoric",
+    "displayName": "Agoric",
+    "abbr": "agoric",
+    "displayAbbr": "agoric",
+    "metadata": {
+      "absoluteChainId": 2014,
+      "coingeckoPlatformId": "agoric"
+    }
+  },
+  {
+    "id": 40,
+    "name": "terra 2.0",
+    "displayName": "Terra 2.0",
+    "abbr": "terra2",
+    "displayAbbr": "terra2",
+    "metadata": {
+      "absoluteChainId": 2015,
+      "coingeckoPlatformId": "terra-2"
+    }
+  },
+  {
+    "id": 43,
+    "name": "Crescent",
+    "displayName": "Crescent",
+    "abbr": "crescent",
+    "displayAbbr": "crescent",
+    "metadata": {
+      "absoluteChainId": "crescent-1",
+      "coingeckoPlatformId": "crescent-network"
+    }
+  },
+  {
+    "id": 44,
+    "name": "Bitcoin",
+    "displayName": "Bitcoin",
+    "abbr": "bitcoin",
+    "displayAbbr": "bitcoin",
+    "metadata": {
+      "absoluteChainId": "bitcoin",
+      "coingeckoPlatformId": "bitcoin"
+    }
+  },
+  {
+    "id": 45,
+    "name": "Dogecoin",
+    "displayName": "Dogecoin",
+    "abbr": "dogecoin",
+    "displayAbbr": "dogecoin",
+    "metadata": {
+      "absoluteChainId": "dogecoin",
+      "coingeckoPlatformId": "dogecoin"
+    }
+  },
+  {
+    "id": 46,
+    "name": "Tezos",
+    "displayName": "Tezos",
+    "abbr": "tz",
+    "displayAbbr": "TZ",
+    "metadata": {
+      "absoluteChainId": "NetXdQprcVkpaWU",
+      "coingeckoPlatformId": "tezos"
+    }
+  },
+  {
+    "id": 47,
+    "name": "zkSync Era",
+    "displayName": "zkSync Era",
+    "abbr": "zksync_era",
+    "displayAbbr": "ZKSYNC ERA",
+    "metadata": {
+      "absoluteChainId": 324,
+      "coingeckoPlatformId": "zksync"
+    }
+  },
+  {
+    "id": 25,
+    "name": "cosmos",
+    "displayName": "Cosmos Hub",
+    "abbr": "cosmos",
+    "displayAbbr": "cosmos",
+    "metadata": {
+      "absoluteChainId": 2004,
+      "coingeckoPlatformId": "cosmos",
+      "debankPlatformId": ""
+    }
+  },
+  {
+    "id": 28,
+    "name": "secret",
+    "displayName": "Secret",
+    "abbr": "secret",
+    "displayAbbr": "secret",
+    "metadata": {
+      "absoluteChainId": 2007,
+      "coingeckoPlatformId": "secret",
+      "debankPlatformId": ""
+    }
+  },
+  {
+    "id": 26,
+    "name": "kava",
+    "displayName": "Kava",
+    "abbr": "kava",
+    "displayAbbr": "kava",
+    "metadata": {
+      "absoluteChainId": 2222,
+      "coingeckoPlatformId": "kava",
+      "debankPlatformId": ""
+    }
+  },
+  {
+    "id": 27,
+    "name": "osmosis",
+    "displayName": "Osmosis",
+    "abbr": "osmosis",
+    "displayAbbr": "osmosis",
+    "metadata": {
+      "absoluteChainId": 2006,
+      "coingeckoPlatformId": "osmosis",
+      "debankPlatformId": ""
+    }
+  },
+  {
+    "id": 49,
+    "name": "base",
+    "displayName": "Base",
+    "abbr": "base",
+    "displayAbbr": "base",
+    "metadata": {
+      "absoluteChainId": 8453,
+      "coingeckoPlatformId": "base"
+    }
+  }
+]
