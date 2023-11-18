@@ -1,0 +1,1243 @@
+{
+  "1": {
+    "tokens": {
+      "WETH": {
+        "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "WGAS": { "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2" },
+      "USDC": {
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "USDT": {
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "coingeckoId": "bridged-tether-fuse"
+      },
+      "DAI": {
+        "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "coingeckoId": "bridged-dai-stablecoin-linea"
+      },
+      "TUSD": {
+        "address": "0x0000000000085d4780B73119b644AE5ecd22b376",
+        "coingeckoId": "bridged-trueusd"
+      },
+      "FRAX": {
+        "address": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+        "coingeckoId": "frax"
+      },
+      "MIM": {
+        "address": "0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3",
+        "coingeckoId": "magic-internet-money"
+      },
+      "sUSD": {
+        "address": "0x57Ab1ec28D129707052df4dF418D58a2D46d5f51",
+        "coingeckoId": "nusd"
+      },
+      "EURC": {
+        "address": "0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c",
+        "coingeckoId": "eurc-wormhole"
+      },
+      "EURT": {
+        "address": "0xC581b735A1688071A1746c968e0798D642EDE491",
+        "coingeckoId": "tether-eurt"
+      },
+      "cbETH": {
+        "address": "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
+        "coingeckoId": "coinbase-wrapped-staked-eth"
+      },
+      "wBETH": {
+        "address": "0xa2E3356610840701BDf5611a53974510Ae27E2e1",
+        "coingeckoId": "wrapped-beacon-eth"
+      },
+      "stETH": {
+        "address": "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+        "coingeckoId": "staked-ether"
+      },
+      "rETH": {
+        "address": "0xae78736Cd615f374D3085123A210448E74Fc6393",
+        "coingeckoId": "bridged-rocket-pool-eth-manta-pacific"
+      },
+      "sETH2": {
+        "address": "0xFe2e637202056d30016725477c5da089Ab0A043A",
+        "coingeckoId": "seth2"
+      },
+      "ankrETH": {
+        "address": "0xE95A203B1a91a908F9B9CE46459d101078c2c3cb",
+        "coingeckoId": "ankreth"
+      },
+      "sETH": {
+        "address": "0x5e74C9036fb86BD7eCdcb084a0673EFc32eA31cb",
+        "coingeckoId": "bridged-wrapped-ether-im-bridge"
+      },
+      "swETH": {
+        "address": "0xf951E335afb289353dc249e82926178EaC7DEd78",
+        "coingeckoId": "sweth"
+      },
+      "ETHx": {
+        "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
+        "coingeckoId": "lsdx-pool"
+      },
+      "BNB": {
+        "address": "0xB8c77482e45F1F44dE1745F52C74426C631bDD52",
+        "coingeckoId": "binancecoin"
+      },
+      "LINK": {
+        "address": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+        "coingeckoId": "chainlink"
+      },
+      "WBTC": {
+        "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+        "coingeckoId": "bridged-wrapped-bitcoin-manta-pacific"
+      },
+      "MATIC": {
+        "address": "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
+        "coingeckoId": "matic-network"
+      },
+      "TON": {
+        "address": "0x582d872A1B094FC48F5DE31D3B73F2D9bE47def1",
+        "coingeckoId": "the-open-network"
+      },
+      "UNI": {
+        "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+        "coingeckoId": "unicorn-token"
+      },
+      "ARB": {
+        "address": "0xB50721BCf8d664c30412Cfbc6cf7a15145234ad1",
+        "coingeckoId": "arbitrum"
+      },
+      "MANTLE": { "address": "0x3c3a81e81dc49A522A592e7622A7E711c06bf354" },
+      "FMT": {
+        "address": "0x4E15361FD6b4BB609Fa63C81A2be19d873717870",
+        "coingeckoId": "finminity"
+      },
+      "LDO": {
+        "address": "0xFdb794692724153d1488CcdBE0C56c252596735F",
+        "coingeckoId": "lido-dao"
+      },
+      "USDD": {
+        "address": "0x0C10bF8FcB7Bf5412187A595ab97a3609160b5c6",
+        "coingeckoId": "usdd"
+      },
+      "FXS": {
+        "address": "0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0",
+        "coingeckoId": "frax-share"
+      },
+      "XAUt": {
+        "address": "0x68749665FF8D2d112Fa859AA293F07A622782F38",
+        "coingeckoId": "tether-gold"
+      },
+      "CAKE": {
+        "address": "0x152649eA73beAb28c5b49B26eb48f7EAD6d4c898",
+        "coingeckoId": "pancakeswap-token"
+      },
+      "PAXG": {
+        "address": "0x45804880De22913dAFE09f4980848ECE6EcbAf78",
+        "coingeckoId": "pax-gold"
+      },
+      "USDP": {
+        "address": "0x8E870D67F660D95d5be530380D0eC0bd388289E1",
+        "coingeckoId": "paxos-standard"
+      },
+      "_1INCH": { "address": "0x111111111117dC0aa78b770fA6A738034120C302" },
+      "GNO": {
+        "address": "0x6810e776880C02933D47DB1b9fc05908e5386b96",
+        "coingeckoId": "gnosis"
+      },
+      "COMP": {
+        "address": "0xc00e94Cb662C3520282E6f5717214004A7f26888",
+        "coingeckoId": "compound-governance-token"
+      },
+      "SUSHI": {
+        "address": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+        "coingeckoId": "sushi"
+      },
+      "BAL": {
+        "address": "0xba100000625a3754423978a60c9317c58a424e3D",
+        "coingeckoId": "balancer"
+      },
+      "crvUSD": {
+        "address": "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+        "coingeckoId": "crvusd"
+      },
+      "RBN": {
+        "address": "0x6123B0049F904d730dB3C36a31167D9d4121fA6B",
+        "coingeckoId": "ribbon-finance"
+      },
+      "KNC": {
+        "address": "0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202",
+        "coingeckoId": "kyber-network-crystal"
+      },
+      "STG": {
+        "address": "0xAf5191B0De278C7286d6C7CC6ab6BB8A73bA2Cd6",
+        "coingeckoId": "stargate-finance"
+      },
+      "PENDLE": {
+        "address": "0x808507121B80c02388fAd14726482e061B8da827",
+        "coingeckoId": "pendle"
+      },
+      "RDNT": {
+        "address": "0x137dDB47Ee24EaA998a535Ab00378d6BFa84F893",
+        "coingeckoId": "radiant-capital"
+      },
+      "DODO": {
+        "address": "0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd",
+        "coingeckoId": "dodo"
+      },
+      "SPELL": {
+        "address": "0x090185f2135308BaD17527004364eBcC2D37e5F6",
+        "coingeckoId": "spell-token"
+      },
+      "OGN": {
+        "address": "0x8207c1FfC5B6804F6024322CcF34F29c3541Ae26",
+        "coingeckoId": "origin-protocol"
+      },
+      "TRU": {
+        "address": "0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784",
+        "coingeckoId": "truebit-protocol"
+      },
+      "AURA": {
+        "address": "0xC0c293ce456fF0ED870ADd98a0828Dd4d2903DBF",
+        "coingeckoId": "aura-finance"
+      },
+      "GFI": {
+        "address": "0xdab396cCF3d84Cf2D07C4454e10C8A6F5b008D2b",
+        "coingeckoId": "goldfinch"
+      },
+      "BIFI": {
+        "address": "0x5870700f1272a1AdbB87C3140bD770880a95e55D",
+        "coingeckoId": "beefy-finance"
+      },
+      "QUICK": {
+        "address": "0xd2bA23dE8a19316A638dc1e7a9ADdA1d74233368",
+        "coingeckoId": "quick"
+      }
+    }
+  },
+  "10": {
+    "tokens": {
+      "OP": {
+        "address": "0x4200000000000000000000000000000000000042",
+        "coingeckoId": "optimism"
+      },
+      "WETH": {
+        "address": "0x4200000000000000000000000000000000000006",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "WGAS": { "address": "0x4200000000000000000000000000000000000006" },
+      "WBTC": {
+        "address": "0x68f180fcCe6836688e9084f035309E29Bf0A2095",
+        "coingeckoId": "bridged-wrapped-bitcoin-manta-pacific"
+      },
+      "sBTC": {
+        "address": "0x298B9B95708152ff6968aafd889c6586e9169f1D",
+        "coingeckoId": "sbtc"
+      },
+      "USDC": {
+        "address": "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "USDCe": { "address": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607" },
+      "USDT": {
+        "address": "0x94b008aa00579c1307b0ef2c499ad98a8ce58e58",
+        "coingeckoId": "bridged-tether-fuse"
+      },
+      "DAI": {
+        "address": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+        "coingeckoId": "bridged-dai-stablecoin-linea"
+      },
+      "FRAX": {
+        "address": "0x2E3D870790dC77A83DD1d18184Acc7439A53f475",
+        "coingeckoId": "frax"
+      },
+      "TUSD": {
+        "address": "0xcB59a0A753fDB7491d5F3D794316F1adE197B21E",
+        "coingeckoId": "bridged-trueusd"
+      },
+      "axlUSD": { "address": "0xEB466342C4d449BC9f53A865D5Cb90586f405215" },
+      "BOB": {
+        "address": "0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb",
+        "coingeckoId": "bob"
+      },
+      "DOLA": {
+        "address": "0x8aE125E8653821E851F12A49F7765db9a9ce7384",
+        "coingeckoId": "dola-usd"
+      },
+      "sUSD": {
+        "address": "0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9",
+        "coingeckoId": "nusd"
+      },
+      "USDplus": { "address": "0x73cb180bf0521828d8849bc8CF2B920918e23032" },
+      "sETH": {
+        "address": "0xE405de8F52ba7559f9df3C368500B6E6ae6Cee49",
+        "coingeckoId": "bridged-wrapped-ether-im-bridge"
+      },
+      "cbETH": {
+        "address": "0xadDb6A0412DE1BA0F936DCaeb8Aaa24578dcF3B2",
+        "coingeckoId": "coinbase-wrapped-staked-eth"
+      },
+      "frxETH": {
+        "address": "0x6806411765Af15Bddd26f8f544A34cC40cb9838B",
+        "coingeckoId": "frax-ether"
+      },
+      "sfrxETH": {
+        "address": "0x484c2D6e3cDd945a8B2DF735e079178C1036578c",
+        "coingeckoId": "staked-frax-ether"
+      },
+      "wstETH": {
+        "address": "0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb",
+        "coingeckoId": "bridged-wrapped-lido-staked-ether-scroll"
+      },
+      "KNC": {
+        "address": "0xa00E3A3511aAC35cA78530c85007AFCd31753819",
+        "coingeckoId": "kyber-network-crystal"
+      },
+      "SNX": {
+        "address": "0x8700dAec35aF8Ff88c16BdF0418774CB3D7599B4",
+        "coingeckoId": "havven"
+      },
+      "RPL": {
+        "address": "0xC81D1F0EB955B0c020E5d5b264E1FF72c14d1401",
+        "coingeckoId": "rocket-pool"
+      },
+      "HOP": {
+        "address": "0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC",
+        "coingeckoId": "hop-protocol"
+      },
+      "SYN": {
+        "address": "0x5A5fFf6F753d7C11A56A52FE47a177a87e431655",
+        "coingeckoId": "synapse-2"
+      },
+      "VELO": {
+        "address": "0x3c8B650257cFb5f272f799F5e2b4e65093a11a05",
+        "coingeckoId": "velo"
+      },
+      "LINK": {
+        "address": "0x350a791Bfc2C21F9Ed5d10980Dad2e2638ffa7f6",
+        "coingeckoId": "chainlink"
+      },
+      "LDO": {
+        "address": "0xFdb794692724153d1488CcdBE0C56c252596735F",
+        "coingeckoId": "lido-dao"
+      },
+      "FXS": {
+        "address": "0x67CCEA5bb16181E7b4109c9c2143c24a1c2205Be",
+        "coingeckoId": "frax-share"
+      },
+      "PENDLE": {
+        "address": "0xBC7B1Ff1c6989f006a1185318eD4E7b5796e66E1",
+        "coingeckoId": "pendle"
+      },
+      "BAL": {
+        "address": "0xFE8B128bA8C78aabC59d4c64cEE7fF28e9379921",
+        "coingeckoId": "balancer"
+      }
+    }
+  },
+  "56": {
+    "tokens": {
+      "WBNB": {
+        "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        "coingeckoId": "wbnb"
+      },
+      "WGAS": { "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" },
+      "WETH": {
+        "address": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "BTCB": {
+        "address": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+        "coingeckoId": "binance-bitcoin"
+      },
+      "BSCUSD": { "address": "0x55d398326f99059fF775485246999027B3197955" },
+      "USDC": {
+        "address": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "DAI": {
+        "address": "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
+        "coingeckoId": "bridged-dai-stablecoin-linea"
+      },
+      "TUSD": {
+        "address": "0x40af3827F39D0EAcBF4A168f8D4ee67c121D11c9",
+        "coingeckoId": "bridged-trueusd"
+      },
+      "BUSD": {
+        "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+        "coingeckoId": "binance-peg-busd"
+      },
+      "LINK": {
+        "address": "0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD",
+        "coingeckoId": "chainlink"
+      },
+      "MATIC": {
+        "address": "0xCC42724C6683B7E57334c4E856f4c9965ED682bD",
+        "coingeckoId": "matic-network"
+      },
+      "AVAX": {
+        "address": "0x1CE0c2827e2eF14D5C4f29a091d735A204794041",
+        "coingeckoId": "avalanche-2"
+      },
+      "FTM": {
+        "address": "0xAD29AbB318791D579433D831ed122aFeAf29dcfe",
+        "coingeckoId": "fantom"
+      },
+      "BCH": {
+        "address": "0x8fF795a6F4D97E7887C79beA79aba5cc76444aDf",
+        "coingeckoId": "binance-peg-bitcoin-cash"
+      },
+      "LTC": {
+        "address": "0x4338665CBB7B2485A8855A139b75D5e34AB0DB94",
+        "coingeckoId": "binance-peg-litecoin"
+      },
+      "CAKE": {
+        "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "coingeckoId": "pancakeswap-token"
+      },
+      "STG": {
+        "address": "0xB0D502E938ed5f4df2E681fE6E419ff29631d62b",
+        "coingeckoId": "stargate-finance"
+      },
+      "BSW": {
+        "address": "0x965F527D9159dCe6288a2219DB51fc6Eef120dD1",
+        "coingeckoId": "biswap"
+      },
+      "RDNT": {
+        "address": "0xf7DE7E8A6bd59ED41a4b5fe50278b3B7f31384dF",
+        "coingeckoId": "radiant-capital"
+      },
+      "VXS": { "address": "0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63" },
+      "UNI": {
+        "address": "0xBf5140A22578168FD562DCcF235E5D43A02ce9B1",
+        "coingeckoId": "unicorn-token"
+      },
+      "DODO": {
+        "address": "0x67ee3Cb086F8a16f34beE3ca72FAD36F7Db929e2",
+        "coingeckoId": "dodo"
+      },
+      "ANKR": {
+        "address": "0xf307910A4c7bbc79691fD374889b36d8531B08e3",
+        "coingeckoId": "ankr"
+      },
+      "BIFI": {
+        "address": "0xCa3F508B8e4Dd382eE878A314789373D80A5190A",
+        "coingeckoId": "beefy-finance"
+      },
+      "JOE": {
+        "address": "0x371c7ec6D8039ff7933a2AA28EB827Ffe1F52f07",
+        "coingeckoId": "joe"
+      }
+    }
+  },
+  "100": {
+    "tokens": {
+      "WXDAI": {
+        "address": "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d",
+        "coingeckoId": "wrapped-xdai"
+      },
+      "WGAS": { "address": "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d" },
+      "USDT": {
+        "address": "0x4ECaBa5870353805a9F068101A40E0f32ed605C6",
+        "coingeckoId": "bridged-tether-fuse"
+      },
+      "USDC": {
+        "address": "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "WBTC": {
+        "address": "0x8e5bBbb09Ed1ebdE8674Cda39A0c169401db4252",
+        "coingeckoId": "bridged-wrapped-bitcoin-manta-pacific"
+      },
+      "GNO": {
+        "address": "0x9C58BAcC331c9aa871AFD802DB6379a98e80CEdb",
+        "coingeckoId": "gnosis"
+      },
+      "HOP": {
+        "address": "0x881296Edcb252080bd476c464cEB521d08df7631",
+        "coingeckoId": "hop-protocol"
+      },
+      "AGVE": {
+        "address": "0x3a97704a1b25F08aa230ae53B352e2e72ef52843",
+        "coingeckoId": "agave-token"
+      },
+      "stETH": {
+        "address": "0x6C76971f98945AE98dD7d4DFcA8711ebea946eA6",
+        "coingeckoId": "staked-ether"
+      },
+      "WETH": {
+        "address": "0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "sDAI": {
+        "address": "0xaf204776c7245bF4147c2612BF6e5972Ee483701",
+        "coingeckoId": "savings-dai"
+      }
+    }
+  },
+  "137": {
+    "tokens": {
+      "WBTC": {
+        "address": "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
+        "coingeckoId": "bridged-wrapped-bitcoin-manta-pacific"
+      },
+      "WETH": {
+        "address": "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "WMATIC": {
+        "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+        "coingeckoId": "wmatic"
+      },
+      "USDT": {
+        "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+        "coingeckoId": "bridged-tether-fuse"
+      },
+      "BNB": {
+        "address": "0x3BA4c387f786bFEE076A58914F5Bd38d668B42c3",
+        "coingeckoId": "binancecoin"
+      },
+      "USDC": {
+        "address": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "USDCe": { "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174" },
+      "BUSD": {
+        "address": "0xdAb529f40E671A1D4bF91361c21bf9f0C9712ab7",
+        "coingeckoId": "binance-peg-busd"
+      },
+      "DAI": {
+        "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+        "coingeckoId": "bridged-dai-stablecoin-linea"
+      },
+      "TUSD": {
+        "address": "0x2e1AD108fF1D8C782fcBbB89AAd783aC49586756",
+        "coingeckoId": "bridged-trueusd"
+      },
+      "USDD": {
+        "address": "0xFFA4D863C96e743A2e1513824EA006B8D0353C57",
+        "coingeckoId": "usdd"
+      },
+      "FRAX": {
+        "address": "0x45c32fA6DF82ead1e2EF74d17b76547EDdFaFF89",
+        "coingeckoId": "frax"
+      },
+      "agEUR": {
+        "address": "0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4",
+        "coingeckoId": "ageur"
+      },
+      "rETH": {
+        "address": "0x0266F4F08D82372CF0FcbCCc0Ff74309089c74d1",
+        "coingeckoId": "bridged-rocket-pool-eth-manta-pacific"
+      },
+      "frxETH": {
+        "address": "0xEe327F889d5947c1dc1934Bb208a1E792F953E96",
+        "coingeckoId": "frax-ether"
+      },
+      "PAXG": {
+        "address": "0x553d3D295e0f695B9228246232eDF400ed3560B5",
+        "coingeckoId": "pax-gold"
+      },
+      "LINK": {
+        "address": "0xb0897686c545045aFc77CF20eC7A532E3120E0F1",
+        "coingeckoId": "chainlink"
+      },
+      "MATIC": {
+        "address": "0x0000000000000000000000000000000000001010",
+        "coingeckoId": "matic-network"
+      },
+      "AVAX": {
+        "address": "0x2C89bbc92BD86F8075d1DEcc58C7F4E0107f286b",
+        "coingeckoId": "avalanche-2"
+      },
+      "FTM": {
+        "address": "0xC9c1c1c20B3658F8787CC2FD702267791f224Ce1",
+        "coingeckoId": "fantom"
+      },
+      "UNI": {
+        "address": "0xb33EaAd8d922B1083446DC23f610c2567fB5180f",
+        "coingeckoId": "unicorn-token"
+      },
+      "LDO": {
+        "address": "0xC3C7d422809852031b44ab29EEC9F1EfF2A58756",
+        "coingeckoId": "lido-dao"
+      },
+      "AAVE": {
+        "address": "0xD6DF932A45C0f255f85145f286eA0b292B21C90B",
+        "coingeckoId": "aave"
+      },
+      "SNX": {
+        "address": "0x50B728D8D964fd00C2d0AAD81718b71311feF68a",
+        "coingeckoId": "havven"
+      },
+      "FXS": {
+        "address": "0x1a3acf6D19267E2d3e7f898f42803e90C9219062",
+        "coingeckoId": "frax-share"
+      },
+      "STG": {
+        "address": "0x2F6F07CDcf3588944Bf4C42aC74ff24bF56e7590",
+        "coingeckoId": "stargate-finance"
+      },
+      "SUSHI": {
+        "address": "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a",
+        "coingeckoId": "sushi"
+      },
+      "BAL": {
+        "address": "0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3",
+        "coingeckoId": "balancer"
+      },
+      "QUICK": {
+        "address": "0xf28164A485B0B2C90639E47b0f377b4a438a16B1",
+        "coingeckoId": "quick"
+      }
+    }
+  },
+  "204": {
+    "tokens": {
+      "BTCB": {
+        "address": "0x7c6b91d9be155a6db01f749217d76ff02a7227f2",
+        "coingeckoId": "binance-bitcoin"
+      },
+      "ETH": {
+        "address": "0xe7798f023fc62146e8aa1b36da45fb70855a77ea",
+        "coingeckoId": "bridged-binance-peg-ethereum-opbnb"
+      },
+      "USDT": {
+        "address": "0x9e5aac1ba1a2e6aed6b32689dfcf62a509ca96f3",
+        "coingeckoId": "bridged-tether-fuse"
+      },
+      "WBNB": {
+        "address": "0x4200000000000000000000000000000000000006",
+        "coingeckoId": "wbnb"
+      }
+    }
+  },
+  "250": {
+    "tokens": {
+      "WFTM": {
+        "address": "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
+        "coingeckoId": "wrapped-fantom"
+      },
+      "WGAS": { "address": "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83" },
+      "WBTC": {
+        "address": "0x321162Cd933E2Be498Cd2267a90534A804051b11",
+        "coingeckoId": "bridged-wrapped-bitcoin-manta-pacific"
+      },
+      "WETH": {
+        "address": "0x74b23882a30290451a17c44f4f05243b6b58c76d",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "stFTM": { "address": "0x69c744D3444202d35a2783929a0F930f2FBB05ad" },
+      "frxETH": {
+        "address": "0x9E73F99EE061C8807F69f9c6CCc44ea3d8c373ee",
+        "coingeckoId": "frax-ether"
+      },
+      "sfrxETH": {
+        "address": "0xb90CCD563918fF900928dc529aA01046795ccb4A",
+        "coingeckoId": "staked-frax-ether"
+      },
+      "ankrETH": {
+        "address": "0x12D8CE035c5DE3Ce39B1fDD4C1d5a745EAbA3b8C",
+        "coingeckoId": "ankreth"
+      },
+      "lzUSDC": {
+        "address": "0x28a92dde19D9989F39A49905d7C9C2FAc7799bDf",
+        "coingeckoId": "layerzero-usdc"
+      },
+      "axlUSDC": {
+        "address": "0x1b6382dbdea11d97f24495c9a90b7c88469134a4",
+        "coingeckoId": "axlusdc"
+      },
+      "FUSDT": {
+        "address": "0x049d68029688eabf473097a2fc38ef61633a3c7a",
+        "coingeckoId": "fluid-usdt"
+      },
+      "FRAX": {
+        "address": "0xdc301622e621166BD8E82f2cA0A26c13Ad0BE355",
+        "coingeckoId": "frax"
+      },
+      "MIM": {
+        "address": "0x82f0B8B456c1A451378467398982d4834b6829c1",
+        "coingeckoId": "magic-internet-money"
+      },
+      "USDD": {
+        "address": "0xcf799767d366d789e8B446981C2D578E241fa25c",
+        "coingeckoId": "usdd"
+      },
+      "MAI": {
+        "address": "0xfB98B335551a418cD0737375a2ea0ded62Ea213b",
+        "coingeckoId": "matrixgpt"
+      },
+      "DOLA": {
+        "address": "0x3129662808bEC728a27Ab6a6b9AFd3cBacA8A43c",
+        "coingeckoId": "dola-usd"
+      },
+      "STFTM": { "address": "0x69c744D3444202d35a2783929a0F930f2FBB05ad" },
+      "LDO": {
+        "address": "0xFdb794692724153d1488CcdBE0C56c252596735F",
+        "coingeckoId": "lido-dao"
+      },
+      "AAVE": {
+        "address": "0x6a07A792ab2965C72a5B8088d3a069A7aC3a993B",
+        "coingeckoId": "aave"
+      },
+      "SNX": {
+        "address": "0x56ee926bD8c72B2d5fa1aF4d9E4Cbb515a1E3Adc",
+        "coingeckoId": "havven"
+      },
+      "FXS": {
+        "address": "0x7d016eec9c25232b01F23EF992D98ca97fc2AF5a",
+        "coingeckoId": "frax-share"
+      },
+      "ANKR": {
+        "address": "0x0615Dbba33Fe61a31c7eD131BDA6655Ed76748B1",
+        "coingeckoId": "ankr"
+      },
+      "SUSHI": {
+        "address": "0xae75A438b2E0cB8Bb01Ec1E1e376De11D44477CC",
+        "coingeckoId": "sushi"
+      },
+      "AXL": {
+        "address": "0x8b1f4432F943c465A973FeDC6d7aa50Fc96f1f65",
+        "coingeckoId": "axelar"
+      },
+      "STG": {
+        "address": "0x2F6F07CDcf3588944Bf4C42aC74ff24bF56e7590",
+        "coingeckoId": "stargate-finance"
+      },
+      "SYN": {
+        "address": "0xE55e19Fb4F2D85af758950957714292DAC1e25B2",
+        "coingeckoId": "synapse-2"
+      },
+      "SPELL": {
+        "address": "0x468003B688943977e6130F4F68F23aad939a1040",
+        "coingeckoId": "spell-token"
+      },
+      "BOO": {
+        "address": "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE",
+        "coingeckoId": "booster"
+      }
+    }
+  },
+  "1284": {
+    "tokens": {
+      "WGLMR": {
+        "address": "0xAcc15dC74880C9944775448304B263D191c6077F",
+        "coingeckoId": "wrapped-moonbeam"
+      },
+      "WGAS": { "address": "0xAcc15dC74880C9944775448304B263D191c6077F" },
+      "whBTC": { "address": "0xE57eBd2d67B462E9926e04a8e33f01cD0D64346D" },
+      "WETH": {
+        "address": "0xab3f0245B83feB11d15AAffeFD7AD465a59817eD",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "frxETH": {
+        "address": "0x82bbd1b6f6De2B7bb63D3e1546e6b1553508BE99",
+        "coingeckoId": "frax-ether"
+      },
+      "sfrxETH": {
+        "address": "0xecf91116348aF1cfFe335e9807f0051332BE128D",
+        "coingeckoId": "staked-frax-ether"
+      },
+      "FRAX": {
+        "address": "0x322E86852e492a7Ee17f28a78c663da38FB33bfb",
+        "coingeckoId": "frax"
+      },
+      "whDAI": { "address": "0x06e605775296e851FF43b4dAa541Bb0984E9D6fD" },
+      "axlUSDC": {
+        "address": "0xCa01a1D0993565291051daFF390892518ACfAD3A",
+        "coingeckoId": "axlusdc"
+      },
+      "axlUSDT": {
+        "address": "0xDFd74aF792bC6D45D1803F425CE62Dd16f8Ae038",
+        "coingeckoId": "axelar-usdt"
+      },
+      "whUSDC": { "address": "0x931715FEE2d06333043d11F658C8CE934aC61D0c" },
+      "FXS": {
+        "address": "0x2CC0A9D8047A5011dEfe85328a6f26968C8aaA1C",
+        "coingeckoId": "frax-share"
+      },
+      "SYN": {
+        "address": "0xF44938b0125A6662f9536281aD2CD6c499F22004",
+        "coingeckoId": "synapse-2"
+      },
+      "AXL": {
+        "address": "0x467719aD09025FcC6cF6F8311755809d45a5E5f3",
+        "coingeckoId": "axelar"
+      }
+    }
+  },
+  "2222": {
+    "tokens": {
+      "WKAVA": {
+        "address": "0xc86c7C0eFbd6A49B35E8714C5f59D99De09A225b",
+        "coingeckoId": "wrapped-kava"
+      },
+      "WGAS": { "address": "0xc86c7C0eFbd6A49B35E8714C5f59D99De09A225b" },
+      "SKAVA": { "address": "0xc86c7c0efbd6a49b35e8714c5f59d99de09a225b" },
+      "SWKAVA": { "address": "0x9d9682577CA889c882412056669bd936894663fd" },
+      "ETH": {
+        "address": "0xe3f5a90f9cb311505cd691a46596599aa1a0ad7d",
+        "coingeckoId": "bridged-binance-peg-ethereum-opbnb"
+      },
+      "WBTC": {
+        "address": "0x818ec0A7Fe18Ff94269904fCED6AE3DaE6d6dC0b",
+        "coingeckoId": "bridged-wrapped-bitcoin-manta-pacific"
+      },
+      "USDC": {
+        "address": "0xfA9343C3897324496A05fC75abeD6bAC29f8A40f",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "USDT": {
+        "address": "0xB44a9B6905aF7c801311e8F4E76932ee959c663C",
+        "coingeckoId": "bridged-tether-fuse"
+      },
+      "MIM": {
+        "address": "0x471EE749bA270eb4c1165B5AD95E614947f6fCeb",
+        "coingeckoId": "magic-internet-money"
+      },
+      "STG": {
+        "address": "0x83c30eb8bc9ad7C56532895840039E62659896ea",
+        "coingeckoId": "stargate-finance"
+      },
+      "SUSHI": {
+        "address": "0x7C598c96D02398d89FbCb9d41Eab3DF0C16F227D",
+        "coingeckoId": "sushi"
+      },
+      "BIFI": {
+        "address": "0xC19281F22A075E0F10351cd5D6Ea9f0AC63d4327",
+        "coingeckoId": "beefy-finance"
+      }
+    }
+  },
+  "5000": {
+    "tokens": {
+      "MNT": {
+        "address": "0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000",
+        "coingeckoId": "mantle"
+      },
+      "WGAS": { "address": "0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000" },
+      "WETH": {
+        "address": "0xdEAddEaDdeadDEadDEADDEAddEADDEAddead1111",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "WBTC": {
+        "address": "0xCAbAE6f6Ea1ecaB08Ad02fE02ce9A44F09aebfA2",
+        "coingeckoId": "bridged-wrapped-bitcoin-manta-pacific"
+      },
+      "USDT": {
+        "address": "0x201EBa5CC46D216Ce6DC03F6a759e8E766e956aE",
+        "coingeckoId": "bridged-tether-fuse"
+      },
+      "USDC": {
+        "address": "0x09Bc4E0D864854c6aFB6eB9A9cdF58aC190D0dF9",
+        "coingeckoId": "bridged-usdc-fuse"
+      }
+    }
+  },
+  "8453": {
+    "tokens": {
+      "WETH": {
+        "address": "0x4200000000000000000000000000000000000006",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "WGAS": { "address": "0x4200000000000000000000000000000000000006" },
+      "tBTC": {
+        "address": "0x236aa50979D5f3De3Bd1Eeb40E81137F22ab794b",
+        "coingeckoId": "tbtc"
+      },
+      "USDbC": {
+        "address": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+        "coingeckoId": "bridged-usd-coin-base"
+      },
+      "USDC": {
+        "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "DAI": {
+        "address": "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
+        "coingeckoId": "bridged-dai-stablecoin-linea"
+      },
+      "MIM": {
+        "address": "0x4A3A6Dd60A34bB2Aba60D73B4C88315E9CeB6A3D",
+        "coingeckoId": "magic-internet-money"
+      },
+      "R": {
+        "address": "0xaFB2820316e7Bc5Ef78d295AB9b8Bb2257534576",
+        "coingeckoId": "r"
+      },
+      "USDplus": { "address": "0xda3de145054ED30Ee937865D31B500505C4bDfe7" },
+      "cbETH": {
+        "address": "0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22",
+        "coingeckoId": "coinbase-wrapped-staked-eth"
+      },
+      "rETH": {
+        "address": "0xB6fe221Fe9EeF5aBa221c348bA20A1Bf5e73624c",
+        "coingeckoId": "bridged-rocket-pool-eth-manta-pacific"
+      },
+      "STG": {
+        "address": "0xE3B53AF74a4BF62Ae5511055290838050bf764Df",
+        "coingeckoId": "stargate-finance"
+      },
+      "KNC": {
+        "address": "0x28fe69Ff6864C1C218878BDCA01482D36B9D57b1",
+        "coingeckoId": "kyber-network-crystal"
+      }
+    }
+  },
+  "42161": {
+    "tokens": {
+      "WETH": {
+        "address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "WGAS": { "address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1" },
+      "ARB": {
+        "address": "0x912CE59144191C1204E64559FE8253a0e49E6548",
+        "coingeckoId": "arbitrum"
+      },
+      "USDT": {
+        "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+        "coingeckoId": "bridged-tether-fuse"
+      },
+      "USDCE": { "address": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8" },
+      "USDC": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "DAI": {
+        "address": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+        "coingeckoId": "bridged-dai-stablecoin-linea"
+      },
+      "TUSD": {
+        "address": "0x4D15a3A2286D883AF0AA1B3f21367843FAc63E07",
+        "coingeckoId": "bridged-trueusd"
+      },
+      "FRAX": {
+        "address": "0x17FC002b466eEc40DaE837Fc4bE5c67993ddBd6F",
+        "coingeckoId": "frax"
+      },
+      "MIM": {
+        "address": "0xFEa7a6a0B346362BF88A9e4A88416B77a57D6c2A",
+        "coingeckoId": "magic-internet-money"
+      },
+      "USDD": {
+        "address": "0x680447595e8b7b3Aa1B43beB9f6098C79ac2Ab3f",
+        "coingeckoId": "usdd"
+      },
+      "AGEUR": {
+        "address": "0xFA5Ed56A203466CbBC2430a43c66b9D8723528E7",
+        "coingeckoId": "ageur"
+      },
+      "WBTC": {
+        "address": "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f",
+        "coingeckoId": "bridged-wrapped-bitcoin-manta-pacific"
+      },
+      "LINK": {
+        "address": "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4",
+        "coingeckoId": "chainlink"
+      },
+      "SUSHI": {
+        "address": "0xd4d42F0b6DEF4CE0383636770eF773390d85c61A",
+        "coingeckoId": "sushi"
+      },
+      "CRV": {
+        "address": "0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978",
+        "coingeckoId": "bridged-curve-dao-token-stargate"
+      },
+      "COMP": {
+        "address": "0x354A6dA3fcde098F8389cad84b0182725c6C91dE",
+        "coingeckoId": "compound-governance-token"
+      },
+      "WSTETH": {
+        "address": "0x0fBcbaEA96Ce0cF7Ee00A8c19c3ab6f5Dc8E1921",
+        "coingeckoId": "bridged-wrapped-lido-staked-ether-scroll"
+      },
+      "FRXETH": {
+        "address": "0x178412e79c25968a32e89b11f63B33F733770c2A",
+        "coingeckoId": "frax-ether"
+      },
+      "GMX": {
+        "address": "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a",
+        "coingeckoId": "gmx"
+      },
+      "FXS": {
+        "address": "0x9d2F299715D94d8A7E6F5eaa8E654E8c74a988A7",
+        "coingeckoId": "frax-share"
+      },
+      "LDO": {
+        "address": "0xFdb794692724153d1488CcdBE0C56c252596735F",
+        "coingeckoId": "lido-dao"
+      },
+      "STG": {
+        "address": "0x6694340fc020c5E6B96567843da2df01b2CE1eb6",
+        "coingeckoId": "stargate-finance"
+      },
+      "ACX": {
+        "address": "0x53691596d1BCe8CEa565b84d4915e69e03d9C99d",
+        "coingeckoId": "across-protocol"
+      },
+      "PENDLE": {
+        "address": "0x0c880f6761F1af8d9Aa9C466984b80DAb9a8c9e8",
+        "coingeckoId": "pendle"
+      },
+      "RDNT": {
+        "address": "0x3082CC23568eA640225c2467653dB90e9250AaA0",
+        "coingeckoId": "radiant-capital"
+      },
+      "KNC": {
+        "address": "0xe4DDDfe67E7164b0FE14E218d80dC4C08eDC01cB",
+        "coingeckoId": "kyber-network-crystal"
+      },
+      "BAL": {
+        "address": "0x040d1EdC9569d4Bab2D15287Dc5A4F10F56a56B8",
+        "coingeckoId": "balancer"
+      },
+      "AURA": {
+        "address": "0x1509706a6c66CA549ff0cB464de88231DDBe213B",
+        "coingeckoId": "aura-finance"
+      },
+      "JOE": {
+        "address": "0x371c7ec6D8039ff7933a2AA28EB827Ffe1F52f07",
+        "coingeckoId": "joe"
+      },
+      "JONES": {
+        "address": "0x10393c20975cF177a3513071bC110f7962CD67da",
+        "coingeckoId": "jones-dao"
+      },
+      "HOP": {
+        "address": "0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC",
+        "coingeckoId": "hop-protocol"
+      },
+      "LYRA": {
+        "address": "0x079504b86d38119F859c4194765029F692b7B7aa",
+        "coingeckoId": "lyra-finance"
+      },
+      "LODE": {
+        "address": "0xF19547f9ED24aA66b03c3a552D181Ae334FBb8DB",
+        "coingeckoId": "lodestar"
+      },
+      "DODO": {
+        "address": "0x69Eb4FA4a2fbd498C257C57Ea8b7655a2559A581",
+        "coingeckoId": "dodo"
+      },
+      "GNS": {
+        "address": "0x18c11FD286C5EC11c3b683Caa813B77f5163A122",
+        "coingeckoId": "gains-network"
+      },
+      "GRAIL": {
+        "address": "0x3d9907F9a368ad0a51Be60f7Da3b97cf940982D8",
+        "coingeckoId": "camelot-token"
+      },
+      "VELA": {
+        "address": "0x088cd8f5eF3652623c22D48b1605DCfE860Cd704",
+        "coingeckoId": "vela-token"
+      }
+    }
+  },
+  "42220": {
+    "tokens": {
+      "CELO": {
+        "address": "0x471EcE3750Da237f93B8E339c536989b8978a438",
+        "coingeckoId": "celo"
+      },
+      "WGAS": { "address": "0x471EcE3750Da237f93B8E339c536989b8978a438" },
+      "WETH": {
+        "address": "0x122013fd7dF1C6F636a5bb8f03108E876548b455",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "WBTC": {
+        "address": "0xD629eb00dEced2a080B7EC630eF6aC117e614f1b",
+        "coingeckoId": "bridged-wrapped-bitcoin-manta-pacific"
+      },
+      "oWBTC": {
+        "address": "0xbaab46e28388d2779e6e31fd00cf0e5ad95e327b",
+        "coingeckoId": "orbit-bridge-klaytn-wrapped-btc"
+      },
+      "ptUSDT": { "address": "0x617f3112bf5397D0467D315cC709EF968D9ba546" },
+      "USDC": {
+        "address": "0xef4229c8c3250C675F21BCefa42f58EfbfF6002a",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "cUSDC": {
+        "address": "0x765DE816845861e75A25fCA122bb6898B8B1282a",
+        "coingeckoId": "compound-usd-coin"
+      },
+      "MAI": {
+        "address": "0xB9C8F0d3254007eE4b98970b94544e473Cd610EC",
+        "coingeckoId": "matrixgpt"
+      },
+      "whUSDC": { "address": "0x37f750B7cC259A2f741AF45294f6a16572CF5cAd" },
+      "whEUROC": { "address": "0xBddC3554269053544bE0d6d027a73271225E9859" },
+      "cEUR": {
+        "address": "0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73",
+        "coingeckoId": "celo-euro"
+      },
+      "SUSHI": {
+        "address": "0x29dFce9c22003A4999930382Fd00f9Fd6133Acd1",
+        "coingeckoId": "sushi"
+      }
+    }
+  },
+  "43114": {
+    "tokens": {
+      "WBTCe": { "address": "0x50b7545627a5162F82A992c33b87aDc75187B218" },
+      "WAVAX": {
+        "address": "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7",
+        "coingeckoId": "wrapped-avax"
+      },
+      "USDTe": {
+        "address": "0xc7198437980c041c805a1edcba50c1ce5db95118",
+        "coingeckoId": "tether-avalanche-bridged-usdt-e"
+      },
+      "USDT": {
+        "address": "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
+        "coingeckoId": "bridged-tether-fuse"
+      },
+      "USDCe": { "address": "0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664" },
+      "USDC": {
+        "address": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "DAI": {
+        "address": "0xd586E7F844cEa2F87f50152665BCbc2C279D8d70",
+        "coingeckoId": "bridged-dai-stablecoin-linea"
+      },
+      "BUSDe": { "address": "0x19860CCB0A68fd4213aB9D8266F7bBf05A8dDe98" },
+      "LINKe": { "address": "0x5947BB275c521040051D82396192181b413227A3" },
+      "AAVEe": { "address": "0x63a72806098Bd3D9520cC43356dD78afe5D386D9" },
+      "FRAX": {
+        "address": "0xD24C2Ad096400B6FBcd2ad8B24E7acBc21A1da64",
+        "coingeckoId": "frax"
+      },
+      "SNXe": { "address": "0xbec243c995409e6520d7c41e404da5deba4b209b" }
+    }
+  },
+  "59144": {
+    "tokens": {
+      "WETH": {
+        "address": "0xe5D7C2a44FfDDf6b295A15c148167daaAf5Cf34f",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "WGAS": { "address": "0xe5D7C2a44FfDDf6b295A15c148167daaAf5Cf34f" },
+      "WBTC": {
+        "address": "0x3aAB2285ddcDdaD8edf438C1bAB47e1a9D05a9b4",
+        "coingeckoId": "bridged-wrapped-bitcoin-manta-pacific"
+      },
+      "USDT": {
+        "address": "0xA219439258ca9da29E9Cc4cE5596924745e12B93",
+        "coingeckoId": "bridged-tether-fuse"
+      },
+      "USDC": {
+        "address": "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "DAI": {
+        "address": "0x4AF15ec2A0BD43Db75dd04E62FAA3B8EF36b00d5",
+        "coingeckoId": "bridged-dai-stablecoin-linea"
+      },
+      "BUSD": {
+        "address": "0x7d43AABC515C356145049227CeE54B608342c0ad",
+        "coingeckoId": "binance-peg-busd"
+      },
+      "MIM": {
+        "address": "0xDD3B8084AF79B9BaE3D1b668c0De08CCC2C9429A",
+        "coingeckoId": "magic-internet-money"
+      },
+      "AVAX": {
+        "address": "0x5471ea8f739dd37E9B81Be9c5c77754D8AA953E4",
+        "coingeckoId": "avalanche-2"
+      },
+      "BNB": {
+        "address": "0xf5C6825015280CdfD0b56903F9F8B5A2233476F5",
+        "coingeckoId": "binancecoin"
+      },
+      "LINK": {
+        "address": "0x5b16228b94b68c7ce33af2acc5663ebde4dcfa2d",
+        "coingeckoId": "chainlink"
+      },
+      "UNI": {
+        "address": "0x636B22bC471c955A8DB60f28D4795066a8201fa3",
+        "coingeckoId": "unicorn-token"
+      },
+      "LDO": {
+        "address": "0x0e076AAFd86a71dCEAC65508DAF975425c9D0cB6",
+        "coingeckoId": "lido-dao"
+      },
+      "KNC": {
+        "address": "0x3b2F62d42DB19B30588648bf1c184865D4C3B1D6",
+        "coingeckoId": "kyber-network-crystal"
+      }
+    }
+  },
+  "534352": {
+    "tokens": {
+      "WETH": {
+        "address": "0x5300000000000000000000000000000000000004",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "WGAS": { "address": "0x5300000000000000000000000000000000000004" },
+      "WBTC": {
+        "address": "0x3C1BCa5a656e69edCD0D4E36BEbb3FcDAcA60Cf1",
+        "coingeckoId": "bridged-wrapped-bitcoin-manta-pacific"
+      },
+      "USDC": {
+        "address": "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "USDT": {
+        "address": "0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df",
+        "coingeckoId": "bridged-tether-fuse"
+      },
+      "DAI": {
+        "address": "0xcA77eB3fEFe3725Dc33bccB54eDEFc3D9f764f97",
+        "coingeckoId": "bridged-dai-stablecoin-linea"
+      },
+      "UNI": {
+        "address": "0x434cdA25E8a2CA5D9c1C449a8Cb6bCbF719233E8",
+        "coingeckoId": "unicorn-token"
+      },
+      "AAVE": {
+        "address": "0x79379C0E09a41d7978f883a56246290eE9a8c4d3",
+        "coingeckoId": "aave"
+      },
+      "CRV": {
+        "address": "0xB755039eDc7910C1F1BD985D48322E55A31AC0bF",
+        "coingeckoId": "bridged-curve-dao-token-stargate"
+      },
+      "CAKE": {
+        "address": "0x1b896893dfc86bb67Cf57767298b9073D2c1bA2c",
+        "coingeckoId": "pancakeswap-token"
+      },
+      "BAL": {
+        "address": "0x6a28e90582c583fcd3347931c544819C31e9D0e0",
+        "coingeckoId": "balancer"
+      }
+    }
+  },
+  "245022934": {
+    "tokens": {
+      "WNEON": {
+        "address": "0x202c35e517fa803b537565c40f0a6965d7204609",
+        "coingeckoId": "wrapped-neon"
+      },
+      "WGAS": { "address": "0x202c35e517fa803b537565c40f0a6965d7204609" },
+      "WETH": {
+        "address": "0xcffd84d468220c11be64dc9df64eafe02af60e8a",
+        "coingeckoId": "bridged-wrapped-ether-fuse"
+      },
+      "WBTC": {
+        "address": "0x54ecec9d995a6cbff3838f6a8f38099e518805d7",
+        "coingeckoId": "bridged-wrapped-bitcoin-manta-pacific"
+      },
+      "USDC": {
+        "address": "0xea6b04272f9f62f997f666f07d3a974134f7ffb9",
+        "coingeckoId": "bridged-usdc-fuse"
+      },
+      "USDT": {
+        "address": "0x5f0155d08ef4aae2b500aefb64a3419da8bb611a",
+        "coingeckoId": "bridged-tether-fuse"
+      },
+      "WSOL": { "address": "0x5f38248f339bf4e84a2caf4e4c0552862dc9f82a" }
+    }
+  }
+}

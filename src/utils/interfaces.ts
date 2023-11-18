@@ -10,26 +10,31 @@ export interface Network {
 }
 
 export interface Token {
-  symbol: string;
-  defiLlamaId: string;
+  address: `0x${string}`;
+  decimals: number;
+  coingeckoId?: string;
+  icon?: string;
+  network: Network;
+  amount: string;
+  symbol?: string;
   slug: string;
 }
 
-export interface IDeFiMetadata {
+export interface DeFiMetadata {
   absoluteChainid: number;
   coingeckoPlatformId: string;
   debankPlatformId: string;
 }
-export interface IDeFiNetwork {
+export interface DeFiNetwork {
   id: string;
   name: string;
   displayName: string;
   abbr: string;
   displayAbbr: string;
-  metadata: IDeFiMetadata;
+  metadata: DeFiMetadata;
 }
 
-export interface IDeFIToken {
+export interface DeFIToken {
   address: `0x${string}`;
   chainId: number;
   name: string;
@@ -41,7 +46,7 @@ export interface IDeFIToken {
   coingeckoId: string;
 }
 
-export interface IDeFiBalance {
+export interface DeFiBalance {
   address: `0x${string}`;
   amount: string;
   decimalsAmount: string;
@@ -49,10 +54,10 @@ export interface IDeFiBalance {
   tokenPriceUSD: number;
   totalPriceUSD: number;
   totalValue: number;
-  token: IDeFIToken;
+  token: DeFIToken;
 }
 
-export type ChainRpcUrls = {
-  http: readonly string[];
-  webSocket?: readonly string[];
-};
+export interface ChainRpcUrls {
+  http: string[];
+  webSocket?: string[];
+}

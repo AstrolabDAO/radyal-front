@@ -3,7 +3,7 @@ import content from "../data/content.json";
 import { FEATURED_WALLETS } from "./web3-constants";
 import { configureChains, createConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
-import { chainImages } from "../main";
+import { chainImages } from "./mappings";
 
 const WAGMI_PROJECT_ID = "2f0ff1893bae6d2f220397f005075a1f";
 export const setupWeb3modal = (chains) => {

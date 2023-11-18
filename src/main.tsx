@@ -5,16 +5,16 @@ import "./index.css";
 import { NETWORKS } from "./utils/web3-constants.ts";
 import { networkToWagmiChain } from "./utils/converters.ts";
 import { setupWeb3modal } from "./utils/setup-web3modal.ts";
-import { Network } from "./utils/interfaces.ts";
 import networksData from "./data/networks.json";
 import deFiNetworks from "./data/defi-networks.json";
 import { WagmiConfig } from "wagmi";
 import { clearNetworkTypeFromSlug } from "./utils/format.ts";
-
-export const networkBySlug: { [slug: string]: Network } = {};
-export const deFiIdByChainId: { [chainId: number]: number } = {};
-export const chainIdByDeFiId: { [deFiId: number]: number } = {};
-export const chainImages: { [id: number]: string } = {};
+import {
+  chainIdByDeFiId,
+  chainImages,
+  deFiIdByChainId,
+  networkBySlug,
+} from "./utils/mappings.ts";
 
 networksData.map((network) => {
   networkBySlug[network.slug] = network;
