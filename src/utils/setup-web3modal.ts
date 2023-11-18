@@ -17,15 +17,6 @@ export const setupWeb3modal = (chains) => {
     },
   });
 
-  const { publicClient, webSocketPublicClient } = configureChains(chains, [
-    publicProvider(),
-  ]);
-
-  const config = createConfig({
-    publicClient,
-    webSocketPublicClient,
-  });
-
   const web3Modal = createWeb3Modal({
     wagmiConfig,
     chains,
@@ -34,5 +25,5 @@ export const setupWeb3modal = (chains) => {
     featuredWalletIds: Object.values(FEATURED_WALLETS),
     themeMode: "dark",
   });
-  return { web3Modal, config };
+  return { web3Modal, config: wagmiConfig };
 };
