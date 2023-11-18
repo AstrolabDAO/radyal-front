@@ -7,6 +7,7 @@ export interface Network {
   explorerApi: string;
   gasToken: string;
   slug: string;
+  icon?: string;
 }
 
 export interface Token {
@@ -18,6 +19,15 @@ export interface Token {
   amount: string;
   symbol?: string;
   slug: string;
+}
+
+export interface Strategy {
+  name: string;
+  slug: string;
+  underlying: string;
+  rewardsTokens: string[];
+  token: Token;
+  nativeNetwork: Network;
 }
 
 export interface DeFiMetadata {
@@ -60,4 +70,19 @@ export interface DeFiBalance {
 export interface ChainRpcUrls {
   http: string[];
   webSocket?: string[];
+}
+
+export interface Logo {
+  url: string;
+  alt: string;
+}
+
+export interface CoingeckoPrices {
+  [id: string]: {
+    [currency: string]: number;
+  };
+}
+
+export interface TokenBySlugMapping {
+  [slug: string]: Token;
 }

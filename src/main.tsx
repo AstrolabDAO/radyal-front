@@ -29,10 +29,9 @@ networksData.map((network) => {
 
 const convertedNetworks = NETWORKS.map((n) => {
   const network = networkBySlug[n];
-
-  chainImages[network.id] = `/networks/${clearNetworkTypeFromSlug(
-    network.slug
-  )}.svg`;
+  const icon = `/networks/${clearNetworkTypeFromSlug(network.slug)}.svg`;
+  chainImages[network.id] = icon;
+  network.icon = `/networks/${clearNetworkTypeFromSlug(network.slug)}.svg`;
 
   return network ? networkToWagmiChain(network) : null;
 });

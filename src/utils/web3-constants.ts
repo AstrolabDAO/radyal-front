@@ -26,4 +26,5 @@ export const NETWORKS = [
   "celo-mainnet",
   "moonbeam-mainnet",
   "kava-mainnet",
+  "gnosis-mainnet",
 ];

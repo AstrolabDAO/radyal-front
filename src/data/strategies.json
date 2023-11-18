@@ -1,0 +1,218 @@
+[
+  {
+    "name": "iZiSwap USDC ZkSync Era",
+    "slug": "zksync-era-mainnet:iziswap-usdc",
+    "underlying": "zksync-era-mainnet:usdc",
+    "rewardTokens": ["IZI"]
+  },
+  {
+    "name": "iZiSwap ETH ZkSync Era",
+    "slug": "zksync-era-mainnet:iziswap-eth",
+    "underlying": "zksync-era-mainnet:eth",
+    "rewardTokens": ["IZI"]
+  },
+  {
+    "name": "iZiSwap USDC Scroll",
+    "slug": "scroll-mainnet:iziswap-usdc",
+    "underlying": "scroll-mainnet:usdc",
+    "rewardTokens": ["IZI"]
+  },
+  {
+    "name": "iZiSwap ETH Scroll",
+    "slug": "scroll-mainnet:iziswap-eth",
+    "underlying": "scroll-mainnet:eth",
+    "rewardTokens": ["IZI"]
+  },
+  {
+    "name": "iZiSwap USDC Mantle",
+    "slug": "mantle-mainnet:iziswap-usdc",
+    "underlying": "mantle-mainnet:usdc",
+    "rewardTokens": ["IZI"]
+  },
+  {
+    "name": "iZiSwap ETH Mantle",
+    "slug": "mantle-mainnet:iziswap-eth",
+    "underlying": "mantle-mainnet:eth",
+    "rewardTokens": ["IZI"]
+  },
+  {
+    "name": "iZiSwap USDC Linea",
+    "slug": "linea-mainnet:iziswap-usdc",
+    "underlying": "linea-mainnet:usdc",
+    "rewardTokens": ["IZI"]
+  },
+  {
+    "name": "iZiSwap ETH Linea",
+    "slug": "linea-mainnet:iziswap-eth",
+    "underlying": "linea-mainnet:eth",
+    "rewardTokens": ["IZI"]
+  },
+  {
+    "name": "iZiSwap USDC Base",
+    "slug": "base-mainnet:iziswap-usdc",
+    "underlying": "base-mainnet:usdc",
+    "rewardTokens": ["IZI"]
+  },
+  {
+    "name": "iZiSwap ETH Base",
+    "slug": "base-mainnet:iziswap-eth",
+    "underlying": "base-mainnet:eth",
+    "rewardTokens": ["IZI"]
+  },
+  {
+    "name": "KyberSwap USDC Scroll KNC",
+    "slug": "scroll-mainnet:kyberswap-usdc-knc",
+    "underlying": "scroll-mainnet:usdc",
+    "rewardTokens": ["KNC"]
+  },
+  {
+    "name": "KyberSwap ETH Scroll KNC",
+    "slug": "scroll-mainnet:kyberswap-eth-knc",
+    "underlying": "scroll-mainnet:eth",
+    "rewardTokens": ["KNC"]
+  },
+  {
+    "name": "KyberSwap USDC Linea KNC",
+    "slug": "linea-mainnet:kyberswap-usdc-knc",
+    "underlying": "linea-mainnet:usdc",
+    "rewardTokens": ["KNC"]
+  },
+  {
+    "name": "KyberSwap ETH Linea KNC",
+    "slug": "linea-mainnet:kyberswap-eth-knc",
+    "underlying": "linea-mainnet:eth",
+    "rewardTokens": ["KNC"]
+  },
+  {
+    "name": "KyberSwap USDC Arbitrum KNC",
+    "slug": "arbitrum-mainnet-one:kyberswap-usdc-knc",
+    "underlying": "arbitrum-mainnet-one:usdc",
+    "rewardTokens": ["KNC"]
+  },
+  {
+    "name": "KyberSwap ETH Arbitrum KNC",
+    "slug": "arbitrum-mainnet-one:kyberswap-eth-knc",
+    "underlying": "arbitrum-mainnet-one:eth",
+    "rewardTokens": ["KNC"]
+  },
+  {
+    "name": "KyberSwap USDC ZkSync Era KNC",
+    "slug": "zksync-era-mainnet:kyberswap-usdc-knc",
+    "underlying": "zksync-era-mainnet:usdc",
+    "rewardTokens": ["KNC"]
+  },
+  {
+    "name": "KyberSwap ETH ZkSync Era KNC",
+    "slug": "zksync-era-mainnet:kyberswap-eth-knc",
+    "underlying": "zksync-era-mainnet:eth",
+    "rewardTokens": ["KNC"]
+  },
+  {
+    "name": "KyberSwap USDC Base KNC",
+    "slug": "base-mainnet:kyberswap-usdc-knc",
+    "underlying": "base-mainnet:usdc",
+    "rewardTokens": ["KNC"]
+  },
+  {
+    "name": "KyberSwap ETH Base KNC",
+    "slug": "base-mainnet:kyberswap-eth-knc",
+    "underlying": "base-mainnet:eth",
+    "rewardTokens": ["KNC"]
+  },
+  {
+    "name": "PancakeSwap USDC Linea CAKE",
+    "slug": "linea-mainnet:pancakeswap-usdc-cake",
+    "underlying": "linea-mainnet:usdc",
+    "rewardTokens": ["CAKE"]
+  },
+  {
+    "name": "PancakeSwap ETH Linea CAKE",
+    "slug": "linea-mainnet:pancakeswap-eth-cake",
+    "underlying": "linea-mainnet:eth",
+    "rewardTokens": ["CAKE"]
+  },
+  {
+    "name": "PancakeSwap USDC ZkSync Era CAKE",
+    "slug": "zksync-era-mainnet:pancakeswap-usdc-cake",
+    "underlying": "zksync-era-mainnet:usdc",
+    "rewardTokens": ["CAKE"]
+  },
+  {
+    "name": "PancakeSwap ETH ZkSync Era CAKE",
+    "slug": "zksync-era-mainnet:pancakeswap-eth-cake",
+    "underlying": "zksync-era-mainnet:eth",
+    "rewardTokens": ["CAKE"]
+  },
+  {
+    "name": "PancakeSwap USDC Arbitrum CAKE",
+    "slug": "arbitrum-mainnet-one:pancakeswap-usdc-cake",
+    "underlying": "arbitrum-mainnet-one:usdc",
+    "rewardTokens": ["CAKE"]
+  },
+  {
+    "name": "PancakeSwap ETH Arbitrum CAKE",
+    "slug": "arbitrum-mainnet-one:pancakeswap-eth-cake",
+    "underlying": "arbitrum-mainnet-one:eth",
+    "rewardTokens": ["CAKE"]
+  },
+  {
+    "name": "PancakeSwap USDC Base CAKE",
+    "slug": "base-mainnet:pancakeswap-usdc-cake",
+    "underlying": "base-mainnet:usdc",
+    "rewardTokens": ["CAKE"]
+  },
+  {
+    "name": "PancakeSwap ETH Base CAKE",
+    "slug": "base-mainnet:pancakeswap-eth-cake",
+    "underlying": "base-mainnet:eth",
+    "rewardTokens": ["CAKE"]
+  },
+  {
+    "name": "Hop USDC Scroll",
+    "slug": "scroll-mainnet:hop-usdc",
+    "underlying": "scroll-mainnet:usdc",
+    "rewardTokens": []
+  },
+  {
+    "name": "Hop ETH Scroll",
+    "slug": "scroll-mainnet:hop-eth",
+    "underlying": "scroll-mainnet:eth",
+    "rewardTokens": []
+  },
+  {
+    "name": "Hop USDC Linea",
+    "slug": "linea-mainnet:hop-usdc",
+    "underlying": "linea-mainnet:usdc",
+    "rewardTokens": []
+  },
+  {
+    "name": "Hop ETH Linea",
+    "slug": "linea-mainnet:hop-eth",
+    "underlying": "linea-mainnet:eth",
+    "rewardTokens": []
+  },
+  {
+    "name": "Hop USDC ZkSync Era",
+    "slug": "zksync-era-mainnet:hop-usdc",
+    "underlying": "zksync-era-mainnet:usdc",
+    "rewardTokens": []
+  },
+  {
+    "name": "Hop ETH ZkSync Era",
+    "slug": "zksync-era-mainnet:hop-eth",
+    "underlying": "zksync-era-mainnet:eth",
+    "rewardTokens": []
+  },
+  {
+    "name": "Spark USDC Gnosis",
+    "slug": "gnosis-mainnet:spark-usdc",
+    "underlying": "gnosis-mainnet:usdc",
+    "rewardTokens": []
+  },
+  {
+    "name": "Spark ETH Gnosis",
+    "slug": "gnosis-mainnet:spark-eth",
+    "underlying": "gnosis-mainnet:eth",
+    "rewardTokens": []
+  }
+]

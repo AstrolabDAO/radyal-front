@@ -1,8 +1,7 @@
 import { multicall as wagmiMulticalll } from "wagmi/actions";
 import { Network, Token } from "./interfaces";
 import { MulticallContracts, Narrow } from "viem";
-import { tokenBySlug } from "./mappings";
-import { getTokensPrices } from "./api";
+import { tokenBySlug, tokenBySymbol } from "./mappings";
 
 export const multicall = (
   chainId: number,
@@ -60,12 +59,14 @@ export const updateBalances = (
         decimals,
         symbol,
         network,
+        icon: `/tokens/${symbol}.svg`,
         coingeckoId: contract.coingeckoId,
-        slug: `${network.id}:${contract.address}`,
+        slug: `${network.slug}:${contract.symbol}`,
       };
 
       tokens.push(token);
       tokenBySlug[token.slug] = token;
+      tokenBySymbol[token.symbol] = token;
     }
 
     return tokens;

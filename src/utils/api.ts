@@ -4,6 +4,7 @@ import {
   coingeckoIdBySymbol,
   deFiIdByChainId,
   tokenBySlug,
+  tokenBySymbol,
   tokenPriceByCoingeckoId,
 } from "./mappings";
 import { DeFiBalance, Network, Token } from "./interfaces";
@@ -32,13 +33,14 @@ export const getBalancesFromDeFI = (
             symbol: apiToken.symbol,
             decimals: apiToken.decimals,
             coingeckoId: apiToken.coingeckoId,
-            icon: apiToken.icon,
-            slug: `${network.id}:${apiToken.address}`,
+            icon: `/tokens/${apiToken.symbol}.svg`,
+            slug: `${network.slug}:${apiToken.symbol}`,
             network,
             amount,
           };
 
           tokenBySlug[token.slug] = token;
+          tokenBySymbol[token.symbol] = token;
           coingeckoIdBySymbol[token.symbol];
           return token;
         });
