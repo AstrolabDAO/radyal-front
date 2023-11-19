@@ -1,10 +1,11 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { Token } from "~/utils/interfaces";
 import IconGroup from "./IconGroup";
 import { amountToEth } from "~/utils/format";
 import { TokensContext } from "~/context/tokens-context";
-
+import { getRoute } from "~/utils/squid";
+import { ethers } from "ethers";
 interface Props {
   tokens: Token[];
   selected: Token;
@@ -34,6 +35,31 @@ const CrossChainTokenSelect = ({ tokens, selected, onSelect }: Props) => {
     return isNaN(price) ? 0 : price;
   }, [tokenPrices, selected]);
 
+  const [amountReceive, setAmountReceive] = useState(0);
+
+  useEffect(() => {
+    if (!selected || !depositValue) return;
+    getRoute({
+      fromChain: selected.network.id,
+      fromToken: selected.address,
+      fromAmount: ethers
+        .parseUnits(depositValue.toString(), selected.decimals)
+        .toString(),
+    })
+      .then((result) => {
+        console.log(
+          "🚀 ~ file: CrossChainTokenSelect.tsx:47 ~ useEffect ~ result:",
+          result
+        );
+        //setAmountReceive(result);
+      })
+      .catch((e) => {
+        console.log(
+          "🚀 ~ file: CrossChainTokenSelect.tsx:55 ~ useEffect ~ e:",
+          e
+        );
+      });
+  }, [depositValue, selected]);
   return (
     <div className="p-2 w-full card bg-neutral text-neutral-content active-border">
       {!selected && (
