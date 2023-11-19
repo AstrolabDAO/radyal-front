@@ -4,7 +4,8 @@ import { PrepareSendTransactionArgs, writeContract } from '@wagmi/core';
 import { parseGwei } from 'viem';
 import { prepareSendTransaction, prepareWriteContract, sendTransaction } from "wagmi/actions";
 
-import erc20Abi from "./erc20.json";
+import { erc20Abi } from "abitype/abis";
+
 
 const squid = new Squid({ baseUrl: "https://api.0xsquid.com" });
 
