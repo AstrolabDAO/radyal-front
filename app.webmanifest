@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "Astrolab Radyal",
+  "short_name": "Radyal",
+  "start_url": "https://radyal.xyz/",
+  "scope": "https://radyal.xyz/",
+  "description": "Zap from any token on any chain to a yield source of your choice. Simple, cheap, convenient.",
+  "id": "https://radyal.xyz",
+  "background_color": "#415af3",
+  "display": "standalone",
+  "orientation": "any",
+  "dir": "auto",
+  "lang": "en-US",
+  "icons": [
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "./images/pwa/icon512_maskable.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "./images/pwa/icon512_rounded.png",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": []
+}

@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { useState } from "react";
 import Deposit from "../Deposit";
+import Withdraw from "../Withdraw";
 
 const SwapModal = () => {
   const tabs = [
@@ -10,13 +11,18 @@ const SwapModal = () => {
     },
     {
       title: "Withdraw",
-      component: <Deposit />,
+      component: <Withdraw />,
     },
   ];
   const [selectedTab, setSelectedTab] = useState(0);
+  console.log(
+    "🚀 ~ file: SwapModal.tsx:18 ~ SwapModal ~ selectedTab:",
+    selectedTab,
+    tabs[selectedTab]
+  );
 
   return (
-    <div>
+    <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
       <div role="tablist" className="tabs inline-block">
         {tabs.map(({ title }, index) => (
           <a

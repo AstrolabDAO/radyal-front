@@ -1,23 +1,21 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
+import { TokensContext } from "~/context/tokens-context";
+import { amountToEth, lisibleAmount } from "~/utils/format";
 import { Token } from "~/utils/interfaces";
 import IconGroup from "./IconGroup";
-import { amountToEth, lisibleAmount } from "~/utils/format";
-import { TokensContext } from "~/context/tokens-context";
-import { ethers } from "ethers";
 interface Props {
-  tokens: Token[];
   selected: Token;
-  activeSelectTokenMode: () => void;
-  onSelect: (token: Token) => void;
+  estimate: (depositValue: string) => void;
+  activeSelectTokenMode?: () => void;
 }
 const CrossChainTokenSelect = ({
-  tokens,
   selected,
-  onSelect,
+  estimate,
   activeSelectTokenMode,
 }: Props) => {
   const [depositValue, setDepositValue] = useState("");
+
   const { tokenPrices } = useContext(TokensContext);
 
   const icons = useMemo(
@@ -38,9 +36,13 @@ const CrossChainTokenSelect = ({
     return isNaN(price) ? 0 : price;
   }, [tokenPrices, selected]);
 
+  useEffect(() => {
+    estimate(depositValue);
+  }, [depositValue]);
+
   return (
     <div className="relative">
-      <div className="p-2 w-full card bg-neutral text-neutral-content active-border">
+      <div className="p-2 w-full card active-border border-gray-200 border-solid border shadow-2xl">
         {!selected && (
           <span className="loading loading-spinner loading-lg mx-auto block"></span>
         )}
@@ -60,7 +62,7 @@ const CrossChainTokenSelect = ({
             </header>
             <div className="flex items-center cursor-pointer">
               <div
-                className="flex"
+                className="flex items-center"
                 onClick={() => {
                   activeSelectTokenMode();
                 }}
@@ -70,7 +72,7 @@ const CrossChainTokenSelect = ({
                 <FaChevronDown className="mr-2" />
               </div>
               <input
-                className="input w-full max-w-xs bg-neutral text-right text-4xl"
+                className="input w-full max-w-xs text-right text-4xl"
                 type="text"
                 placeholder="100"
                 value={depositValue}

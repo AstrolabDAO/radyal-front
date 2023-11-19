@@ -9,6 +9,7 @@ import { networkBySlug } from "../utils/mappings";
 import updateBalances from "../utils/multicall";
 import { NETWORKS } from "../utils/web3-constants";
 import { TokensContext } from "./tokens-context";
+import { toast } from "react-toastify";
 
 export const WalletContext = createContext({
   balances: [],
@@ -38,11 +39,6 @@ export const WalletProvider = ({ children }) => {
       const requests = [];
       const needBalances = [];
       for (const network of filteredNetworks) {
-        //const chain = deFiIdByChainId[network.id];
-
-        /*if (false) {
-          requests.push(getBalancesFromDeFI(address, network));
-        } else {*/
         const tokenKeys = Object.keys(addresses[network.id].tokens);
         const tokens = Object.values(addresses[network.id].tokens)
           .filter((token, index) => tokenKeys[index] !== "WGAS")
@@ -53,13 +49,24 @@ export const WalletProvider = ({ children }) => {
           abi: erc20Abi,
         }));
         needBalances.push({ network, tokens });
-        requests.push(updateBalances(network, contracts, address));
+        const promise = updateBalances(network, contracts, address);
+        toast.promise(promise, {
+          pending: `Get balances from ${network.name}`,
+          success: `Balances from ${network.name} loaded`,
+          error: "Balances not found 🤯",
+        });
+        requests.push(promise);
         //}
+
         await Promise.all(requests).then((data) => {
           const flatData = data.flat(1);
           setBalances(flatData);
           refreshTokenBySlugs();
           localStorage.setItem("balances", JSON.stringify(flatData));
+          localStorage.setItem(
+            "balancesExpiry",
+            now + (60 * 1000 * 10).toString()
+          );
           _balances = flatData;
           return flatData;
         });

@@ -36,7 +36,7 @@ const StrategyBox = ({ strategy }: StrategyProps) => {
     <div className="p-2 w-full md:w-1/2 xl:w-1/3">
       <div
         className={clsx(
-          "card w-96 bg-base-100 shadow-xl w-full p-2 cursor-pointer transition-500 active-bordered active-shadow",
+          "card bg-base-100 shadow-xl w-full p-2 cursor-pointer transition-500 active-bordered active-shadow",
           { active: selectedStrategy?.slug === strategy.slug }
         )}
         onClick={() => {
@@ -45,7 +45,7 @@ const StrategyBox = ({ strategy }: StrategyProps) => {
           else open(<SwapModal />);
         }}
       >
-        <div className="card-body">
+        <div className="card-body p-4">
           <h2 className="card-title">
             <IconGroup icons={icons} />
             {name}

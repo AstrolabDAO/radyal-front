@@ -6,17 +6,33 @@ import IconGroup from "./IconGroup";
 const SelectToken = ({ tokens, onSelect }) => {
   const { tokenPrices } = useContext(TokensContext);
   return (
-    <div className="token-list bg-neutral text-neutral-content card">
+    <div className="token-list card shadow-2xl">
       {tokens.map((token) => {
         const tokenPrice = Number(tokenPrices[token.coingeckoId]?.usd);
+        console.log(
+          "🚀 ~ file: SelectToken.tsx:12 ~ tokenPrice:",
+          token.slug,
+          tokenPrices
+        );
+
         const convertedAmount = amountToEth(
           BigInt(token.amount),
           token.decimals
         );
+        console.log(
+          "🚀 ~ file: SelectToken.tsx:17 ~ {tokens.map ~ convertedAmount:",
+          convertedAmount
+        );
+        console.log(
+          "🚀 ~ file: SelectToken.tsx:12 ~ {tokens.map ~ tokenPrice:",
+          tokenPrice
+        );
+
         const icons = [
           { url: token?.network?.icon, alt: token?.network?.name },
           { url: token?.icon, alt: token?.symbol, small: true },
         ];
+
         return (
           <div className="flex items-center cursor-pointer p-4 border-white-800 border-b-solid border-b">
             <div

@@ -11,6 +11,7 @@ import {
   chainIdByDeFiId,
   chainImages,
   deFiIdByChainId,
+  networkByChainId,
   networkBySlug,
 } from "./utils/mappings.ts";
 import { setupWeb3modal } from "./utils/setup-web3modal.ts";
@@ -18,6 +19,7 @@ import { NETWORKS } from "./utils/web3-constants.ts";
 
 networksData.map((network) => {
   networkBySlug[network.slug] = network;
+  networkByChainId[network.id] = network;
   const deFiNetwork = deFiNetworks.find(
     (n) => n.metadata.absoluteChainId === network.id
   );

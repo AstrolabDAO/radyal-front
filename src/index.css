@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Inter, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -46,6 +46,11 @@ body {
   min-width: 320px;
   min-height: 100vh;
   @apply bg-gray-200;
+  font-family: "Inter", sans-serif;
+}
+.title {
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
 }
 
 .bottom-box-shadow {
@@ -73,7 +78,8 @@ body {
 
   .active-bordered,
   .active-border {
-    border: 2px solid transparent;
+    border: 1px solid;
+    //border: 2px solid transparent;
     &:hover,
     &.active {
       @apply border-primary;

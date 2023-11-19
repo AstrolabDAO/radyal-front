@@ -51,7 +51,8 @@ export const updateBalances = (
       if (balance === 0n) continue;
 
       const result = balance as bigint;
-      const contract = contracts[i];
+
+      const contract = contracts[i > 2 ? i / 3 : i];
 
       const token: Token = {
         address: contract.address,

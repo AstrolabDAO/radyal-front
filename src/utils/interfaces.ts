@@ -11,9 +11,9 @@ export interface Network {
 }
 
 export interface Token {
-  address: `0x${string}`;
-  name: string;
-  decimals: number;
+  address?: `0x${string}`;
+  name?: string;
+  decimals?: number;
   coingeckoId?: string;
   icon?: string;
   network: Network;

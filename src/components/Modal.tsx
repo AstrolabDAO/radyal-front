@@ -6,8 +6,8 @@ import Button from "./Button";
 
 const Modal = () => {
   const { visible, close, modalContent } = useContext(ModalContext);
-  const cancelButtonRef = useRef(null);
 
+  const cancelButtonRef = useRef(null);
   return (
     <Transition.Root show={visible} as={Fragment}>
       <Dialog
@@ -40,17 +40,7 @@ const Modal = () => {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                  {modalContent}
-                </div>
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <Button type="button" onClick={() => close()}>
-                    Deactivate
-                  </Button>
-                  <Button onClick={() => close()} ref={cancelButtonRef}>
-                    Cancel
-                  </Button>
-                </div>
+                {modalContent}
               </Dialog.Panel>
             </Transition.Child>
           </div>

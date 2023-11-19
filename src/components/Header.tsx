@@ -12,7 +12,7 @@ const Header = () => {
       <div className="container mx-auto">
         <div className="relative flex w-full">
           <div className="logo h-full relative block">
-            <img src={logo} alt="Logo Radyal" className="flex h-12" />
+            <img src={logo} alt="Logo Radyal" className="flex h-16" />
           </div>
           <nav className="flex w-full justify-end">
             <ul className="flex"></ul>
@@ -23,7 +23,10 @@ const Header = () => {
             )}
             {isConnected && (
               <div className="flex items-center">
-                <span className="flex mr-8" onClick={() => web3Modal.open()}>
+                <span
+                  className="flex mr-8 cursor-pointer transition-ease hover:text-primary"
+                  onClick={() => web3Modal.open()}
+                >
                   {address}
                 </span>
                 <Button onClick={() => disconnect()}>Logout</Button>

@@ -643,10 +643,6 @@
         "address": "0x28a92dde19D9989F39A49905d7C9C2FAc7799bDf",
         "coingeckoId": "layerzero-usdc"
       },
-      "axlUSDC": {
-        "address": "0x1b6382dbdea11d97f24495c9a90b7c88469134a4",
-        "coingeckoId": "axlusdc"
-      },
       "FUSDT": {
         "address": "0x049d68029688eabf473097a2fc38ef61633a3c7a",
         "coingeckoId": "fluid-usdt"
@@ -919,10 +915,6 @@
       "MIM": {
         "address": "0xFEa7a6a0B346362BF88A9e4A88416B77a57D6c2A",
         "coingeckoId": "magic-internet-money"
-      },
-      "USDD": {
-        "address": "0x680447595e8b7b3Aa1B43beB9f6098C79ac2Ab3f",
-        "coingeckoId": "usdd"
       },
       "AGEUR": {
         "address": "0xFA5Ed56A203466CbBC2430a43c66b9D8723528E7",
