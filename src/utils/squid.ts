@@ -13,9 +13,6 @@ import {
 
 import { currentChain } from "~/context/swap-context";
 
-const squid = new Squid({ baseUrl: "https://api.0xsquid.com" });
-
-await squid.init();
 
 export enum SquidCallType {
   DEFAULT = 0,
@@ -47,6 +44,9 @@ export const getRoute = async ({
   fromToken,
   fromAmount,
 }: RouteParams): Promise<RouteData> => {
+  const squid = new Squid({ baseUrl: "https://api.0xsquid.com" });
+
+  await squid.init();
   const slippage = 3.0;
   const enableForecall = false;
   const quoteOnly = false;

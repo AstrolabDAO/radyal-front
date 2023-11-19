@@ -44,7 +44,7 @@ const WithdrawInput = ({ estimate }) => {
   };
   */
 
-  const [selectedToken, setSelectedToken] = useState(sortedTokens?.[1] ?? null);
+  // const [selectedToken, setSelectedToken] = useState(sortedTokens?.[1] ?? null);
   const [selectTokenMode, setSelectTokenMode] = useState(false);
 
   return (
@@ -52,16 +52,16 @@ const WithdrawInput = ({ estimate }) => {
       <div className="box w-full">
         {!selectTokenMode && (
           <>
-            <CrossChainTokenSelect
+            {/* <CrossChainTokenSelect
               estimate={(depositValue: string) => {}}
               //activeSelectTokenMode={() => setSelectTokenMode(true)}
               selected={selectedToken}
-            />
+            /> */}
             {receiveEstimation && (
               <div className="text-center text-primary text-2xl my-2">To</div>
             )}
 
-            <ReceiveInput receive={receiveEstimation} />
+            {/* <ReceiveInput receive={receiveEstimation} /> */}
           </>
         )}
       </div>
