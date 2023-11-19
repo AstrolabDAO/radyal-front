@@ -1,5 +1,13 @@
 import { Strategy } from "~/utils/interfaces";
 import IconGroup from "./IconGroup";
+import StrategyData from "./StrategyData";
+import { useContext } from "react";
+import { StrategyContext } from "~/context/strategy-context";
+import clsx from "clsx";
+import { useAccount } from "wagmi";
+import { web3Modal } from "~/main";
+import { ModalContext } from "~/context/modal-context";
+import SwapModal from "./modals/SwapModal";
 
 interface StrategyProps {
   strategy: Strategy;
@@ -7,25 +15,36 @@ interface StrategyProps {
 const StrategyBox = ({ strategy }: StrategyProps) => {
   const { name } = strategy;
   const { nativeNetwork, token } = strategy;
-  console.log(
-    "🚀 ~ file: StrategyBox.tsx:6 ~ StrategyBox ~ nativeNetwork:",
-    nativeNetwork
-  );
+  const { selectStrategy, selectedStrategy } = useContext(StrategyContext);
+  const { open } = useContext(ModalContext);
+  const { isConnected } = useAccount();
 
   const icons = [
     { url: nativeNetwork.icon, alt: nativeNetwork.name },
     { url: token.icon, alt: token.symbol },
   ];
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
-      <div className="card-body">
-        <h2 className="card-title">
-          <IconGroup icons={icons} />
-          {name}
-        </h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
-        <div className="card-actions justify-end">
-          <button className="btn btn-primary">Buy Now</button>
+    <div className="p-2 w-full md:w-1/2 xl:w-1/3">
+      <div
+        className={clsx(
+          "card w-96 bg-base-100 shadow-xl w-full p-2 cursor-pointer transition-500 active-bordered active-shadow",
+          { active: selectedStrategy?.slug === strategy.slug }
+        )}
+        onClick={() => {
+          selectStrategy(strategy);
+          if (!isConnected) web3Modal.open().then(() => open(<SwapModal />));
+          else open(<SwapModal />);
+        }}
+      >
+        <div className="card-body">
+          <h2 className="card-title">
+            <IconGroup icons={icons} />
+            {name}
+          </h2>
+          <ul className="infos flex mt-6">
+            <StrategyData label="APR" data="12.31%" />
+            <StrategyData label="Positions" data="0.00$" />
+          </ul>
         </div>
       </div>
     </div>

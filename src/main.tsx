@@ -1,13 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
-import { NETWORKS } from "./utils/web3-constants.ts";
-import { networkToWagmiChain } from "./utils/converters.ts";
-import { setupWeb3modal } from "./utils/setup-web3modal.ts";
-import networksData from "./data/networks.json";
-import deFiNetworks from "./data/defi-networks.json";
 import { WagmiConfig } from "wagmi";
+import App from "./App.tsx";
+import deFiNetworks from "./data/defi-networks.json";
+import networksData from "./data/networks.json";
+import "./index.css";
+import { networkToWagmiChain } from "./utils/converters.ts";
 import { clearNetworkTypeFromSlug } from "./utils/format.ts";
 import {
   chainIdByDeFiId,
@@ -15,6 +13,8 @@ import {
   deFiIdByChainId,
   networkBySlug,
 } from "./utils/mappings.ts";
+import { setupWeb3modal } from "./utils/setup-web3modal.ts";
+import { NETWORKS } from "./utils/web3-constants.ts";
 
 networksData.map((network) => {
   networkBySlug[network.slug] = network;

@@ -1,7 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 import * as daisyui from 'daisyui'
 import  * as themes from 'daisyui/src/theming/themes'
-console.log("🚀 ~ file: tailwind.config.js:3 ~ daisyui:", daisyui)
 
 const colors = {
   blue: "#4159f3",

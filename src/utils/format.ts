@@ -15,3 +15,5 @@ export const clearFrom = (s: string, regex: string): string =>
 
 export const clearNetworkTypeFromSlug = (slug: string): string =>
   clearFrom(slug, "-mainnet|-testnet");
+export const amountToEth = (bigInt: bigint, decimals) =>
+  Number(bigInt) / 10 ** decimals;

@@ -1,9 +1,9 @@
-import Strategies from "../components/Strategies";
+import StrategiesPage from "./StrategiesPage";
 
 const HomePage = () => {
   return (
     <div id="home">
-      <Strategies />
+      <StrategiesPage />
     </div>
   );
 };
