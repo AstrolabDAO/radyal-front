@@ -31,9 +31,10 @@ export const getBalancesFromDeFI = (
           const token: Token = {
             address: apiToken.address,
             symbol: apiToken.symbol,
+            name: apiToken.name,
             decimals: apiToken.decimals,
             coingeckoId: apiToken.coingeckoId,
-            icon: `/tokens/${apiToken.symbol}.svg`,
+            icon: `/tokens/${apiToken.symbol.toLowerCase()}.svg`,
             slug: `${network.slug}:${apiToken.symbol}`,
             network,
             amount,

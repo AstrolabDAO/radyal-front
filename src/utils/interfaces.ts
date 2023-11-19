@@ -12,6 +12,7 @@ export interface Network {
 
 export interface Token {
   address: `0x${string}`;
+  name: string;
   decimals: number;
   coingeckoId?: string;
   icon?: string;
@@ -72,9 +73,10 @@ export interface ChainRpcUrls {
   webSocket?: string[];
 }
 
-export interface Logo {
+export interface Icon {
   url: string;
   alt: string;
+  small?: boolean;
 }
 
 export interface CoingeckoPrices {

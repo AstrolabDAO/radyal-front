@@ -5,6 +5,7 @@ import { tokenBySlug as tokenBySlugMapping } from "~/utils/mappings";
 interface TokensContextType {
   tokens: Token[];
   tokenPrices: CoingeckoPrices;
+  tokensBySlug?: TokenBySlugMapping;
   updateTokens: (tokens: Token[]) => void;
   updatePrices: (prices: CoingeckoPrices) => void;
   updateTokenBySlug: (slug: string, token: Token) => void;
@@ -15,6 +16,7 @@ interface TokensContextType {
 export const TokensContext = createContext<TokensContextType>({
   tokens: [],
   tokenPrices: {},
+  tokensBySlug: {},
   updateTokens: () => {},
   updatePrices: () => {},
   updateTokenBySlug: () => {},
@@ -26,7 +28,7 @@ export const TokensProvider = ({ children }) => {
   const localTokenPrices = localStorage.getItem("token-prices");
   const Provider = TokensContext.Provider;
   const [tokens, setTokens] = useState([]);
-  const [tokenBySlug, setTokenBySlugs] = useState<TokenBySlugMapping>({});
+  const [tokensBySlug, setTokensBySlugs] = useState<TokenBySlugMapping>({});
 
   const [tokenPrices, setTokenPrices] = useState(
     localTokenPrices ? (JSON.parse(localTokenPrices) as CoingeckoPrices) : {}
@@ -44,27 +46,28 @@ export const TokensProvider = ({ children }) => {
   };
   const updateTokenBySlug = (slug: string, token: Token) => {
     tokenBySlugMapping[slug] = token;
-    setTokenBySlugs({ ...tokenBySlugMapping });
+    setTokensBySlugs({ ...tokenBySlugMapping });
   };
 
-  const tokenBySlugGetter = (slug: string) => {
-    return tokenBySlug[slug];
+  const tokenBySlug = (slug: string) => {
+    return tokensBySlug[slug];
   };
 
   const refreshTokenBySlugs = () => {
-    setTokenBySlugs({ ...tokenBySlugMapping });
+    setTokensBySlugs({ ...tokenBySlugMapping });
   };
 
   return (
     <Provider
       value={{
         tokens,
-        updateTokens,
         tokenPrices,
+        tokensBySlug,
+        updateTokens,
         updatePrices,
         updateTokenBySlug,
         refreshTokenBySlugs,
-        tokenBySlug: tokenBySlugGetter,
+        tokenBySlug,
       }}
     >
       {children}

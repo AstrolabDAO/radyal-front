@@ -59,7 +59,7 @@ export const updateBalances = (
         decimals,
         symbol,
         network,
-        icon: `/tokens/${symbol}.svg`,
+        icon: `/tokens/${symbol.toLowerCase()}.svg`,
         coingeckoId: contract.coingeckoId,
         slug: `${network.slug}:${contract.symbol}`,
       };

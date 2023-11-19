@@ -1,11 +1,21 @@
-import { Logo } from "~/utils/interfaces";
+import { Icon } from "~/utils/interfaces";
 import IconCard from "./IconCard";
-
-const IconGroup = ({ icons }: { icons: Logo[] }) => {
+import { ButtonHTMLAttributes } from "react";
+import clsx from "clsx";
+interface Props extends ButtonHTMLAttributes<HTMLDivElement> {
+  icons?: Icon[];
+}
+const IconGroup = ({ icons, className, ...props }: Props) => {
   return (
-    <div className="avatar-group -space-x-6 rtl:space-x-reverse">
-      {icons.map((logo) => (
-        <IconCard logo={logo} />
+    <div
+      {...props}
+      className={clsx(
+        "avatar-group -space-x-6 rtl:space-x-reverse overflow-visible",
+        className
+      )}
+    >
+      {icons.map((icon) => (
+        <IconCard icon={icon} />
       ))}
     </div>
   );

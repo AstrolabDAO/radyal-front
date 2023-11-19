@@ -9,7 +9,7 @@
 
   color-scheme: light dark;
   color: #0c0c0c;
-  background-color: @apply;
+  //background-color: @apply;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -45,9 +45,47 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background: #fff;
+  @apply bg-gray-200;
 }
 
 .bottom-box-shadow {
   box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+}
+
+@layer utilities {
+  #root {
+    width: 100%;
+  }
+
+  .small-container {
+    max-width: 1200px;
+  }
+  .centerXY {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .bottom-right-icon {
+    transform: translate(0.5rem, 1.3rem);
+  }
+
+  .active-bordered,
+  .active-border {
+    border: 2px solid transparent;
+    &:hover,
+    &.active {
+      @apply border-primary;
+    }
+  }
+  .active-shadow {
+    box-shadow: transparent 0px 13px 27px -5px,
+      rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    &:hover,
+    &.active {
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+        rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    }
+  }
 }

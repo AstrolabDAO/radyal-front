@@ -8,7 +8,7 @@ const Header = () => {
   const { address, isConnected } = useAccount();
 
   return (
-    <header className="fixed top-0 left-0 w-full flex p-3 bottom-box-shadow">
+    <header className="fixed top-0 left-0 w-full flex p-3 bottom-box-shadow z-10 bg-white">
       <div className="container mx-auto">
         <div className="relative flex w-full">
           <div className="logo h-full relative block">
@@ -22,8 +22,10 @@ const Header = () => {
               <Button onClick={() => web3Modal.open()}>Connect wallet</Button>
             )}
             {isConnected && (
-              <div className="flex">
-                <span onClick={() => web3Modal.open()}>{address}</span>
+              <div className="flex items-center">
+                <span className="flex mr-8" onClick={() => web3Modal.open()}>
+                  {address}
+                </span>
                 <Button onClick={() => disconnect()}>Logout</Button>
               </div>
             )}
