@@ -297,8 +297,8 @@
     "defiSafetyId": "Fantom",
     "solityId": "fantom-mainnet-opera",
     "httpRpcs": [
-      "https://rpc.ankr.com/fantom",
       "https://fantom-mainnet.public.blastapi.io",
+      "https://rpc.ankr.com/fantom",
       "https://rpc.fantom.network",
       "https://rpc2.fantom.network",
       "https://fantom.blockpi.network/v1/rpc/public"
