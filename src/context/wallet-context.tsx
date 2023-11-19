@@ -1,13 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
-import { NETWORKS } from "../utils/web3-constants";
 import { erc20Abi } from "abitype/abis";
-import { deFiIdByChainId, networkBySlug } from "../utils/mappings";
-import updateBalances from "../utils/multicall";
-import { getBalancesFromDeFI, updateTokenPrices } from "../utils/api";
-import { DeFiBalance } from "../utils/interfaces";
 import addresses from "../data/token-addresses.json";
+import { updateTokenPrices } from "../utils/api";
+import { DeFiBalance } from "../utils/interfaces";
+import { networkBySlug } from "../utils/mappings";
+import updateBalances from "../utils/multicall";
+import { NETWORKS } from "../utils/web3-constants";
 import { TokensContext } from "./tokens-context";
 
 export const WalletContext = createContext({
@@ -38,23 +38,23 @@ export const WalletProvider = ({ children }) => {
       const requests = [];
       const needBalances = [];
       for (const network of filteredNetworks) {
-        const chain = deFiIdByChainId[network.id];
+        //const chain = deFiIdByChainId[network.id];
 
-        if (chain) {
+        /*if (false) {
           requests.push(getBalancesFromDeFI(address, network));
-        } else {
-          const tokenKeys = Object.keys(addresses[network.id].tokens);
-          const tokens = Object.values(addresses[network.id].tokens)
-            .filter((token, index) => tokenKeys[index] !== "WGAS")
-            .slice(0, 10);
-          const contracts: any = tokens.map((token: any) => ({
-            address: token.address,
-            coingeckoId: token.coingeckoId,
-            abi: erc20Abi,
-          }));
-          needBalances.push({ network, tokens });
-          requests.push(updateBalances(network, contracts, address));
-        }
+        } else {*/
+        const tokenKeys = Object.keys(addresses[network.id].tokens);
+        const tokens = Object.values(addresses[network.id].tokens)
+          .filter((token, index) => tokenKeys[index] !== "WGAS")
+          .slice(0, 10);
+        const contracts: any = tokens.map((token: any) => ({
+          address: token.address,
+          coingeckoId: token.coingeckoId,
+          abi: erc20Abi,
+        }));
+        needBalances.push({ network, tokens });
+        requests.push(updateBalances(network, contracts, address));
+        //}
         await Promise.all(requests).then((data) => {
           const flatData = data.flat(1);
           setBalances(flatData);

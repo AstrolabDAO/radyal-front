@@ -20,6 +20,7 @@ const SwapModal = () => {
       <div role="tablist" className="tabs inline-block">
         {tabs.map(({ title }, index) => (
           <a
+            key={title}
             role="tab"
             className={clsx("tab", {
               active: selectedTab === index,

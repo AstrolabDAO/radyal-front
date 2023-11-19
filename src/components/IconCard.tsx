@@ -1,20 +1,22 @@
 import clsx from "clsx";
+import { Icon } from "~/utils/interfaces";
 
 interface IconCardProps {
-  icon: {
-    url: string;
-    alt: string;
-    small?: boolean;
-  };
+  icon: Icon;
 }
 const IconCard = ({ icon }: IconCardProps) => {
-  const { small } = icon;
+  const { small, classes } = icon;
+
   return (
-    <div className={clsx("avatar", { "h-5 w-5 bottom-right-icon": small })}>
+    <div
+      className={clsx("avatar", classes, {
+        "h-7 w-7 bottom-right-icon": small,
+      })}
+    >
       <div
         className={clsx({
-          "w-6": !small,
-          "w-5 h-5 border-none": small,
+          "w-8": !small,
+          "w-7 h-7 border-none": small,
         })}
       >
         <img src={icon.url} alt={icon.alt} className="centerXY" />

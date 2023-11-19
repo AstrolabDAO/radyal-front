@@ -77,6 +77,7 @@ export interface Icon {
   url: string;
   alt: string;
   small?: boolean;
+  classes?: string;
 }
 
 export interface CoingeckoPrices {

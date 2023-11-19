@@ -20,8 +20,17 @@ const StrategyBox = ({ strategy }: StrategyProps) => {
   const { isConnected } = useAccount();
 
   const icons = [
-    { url: nativeNetwork.icon, alt: nativeNetwork.name },
-    { url: token.icon, alt: token.symbol },
+    {
+      url: nativeNetwork.icon,
+      alt: nativeNetwork.name,
+      classes: "border-primary",
+    },
+    {
+      url: token.icon,
+      alt: token.symbol,
+      small: true,
+      classes: "border-primary",
+    },
   ];
   return (
     <div className="p-2 w-full md:w-1/2 xl:w-1/3">

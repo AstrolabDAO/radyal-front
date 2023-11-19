@@ -15,7 +15,7 @@ const IconGroup = ({ icons, className, ...props }: Props) => {
       )}
     >
       {icons.map((icon) => (
-        <IconCard icon={icon} />
+        <IconCard key={icon.url} icon={icon} />
       ))}
     </div>
   );

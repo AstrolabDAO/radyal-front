@@ -17,3 +17,7 @@ export const clearNetworkTypeFromSlug = (slug: string): string =>
   clearFrom(slug, "-mainnet|-testnet");
 export const amountToEth = (bigInt: bigint, decimals) =>
   Number(bigInt) / 10 ** decimals;
+
+export const lisibleAmount = (amount: string | number) => {
+  return Math.round(Number(amount) * 100) / 100;
+};
