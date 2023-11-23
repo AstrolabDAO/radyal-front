@@ -6,7 +6,6 @@ import { WalletContext } from "~/context/wallet-context";
 import { getRoute } from "~/utils/squid";
 import CrossChainTokenSelect from "./CrossChainTokenSelect";
 import ReceiveInput from "./ReceiveInput";
-import SelectToken from "./SelectToken";
 let debounceTimer;
 const Withdraw = () => {
   const { selectedStrategy } = useContext(StrategyContext);
@@ -61,14 +60,10 @@ const Withdraw = () => {
             <h2 className="text-sm text-primary mb-4 mt-4">
               Withdraw from strategy...
             </h2>
-            <CrossChainTokenSelect
-              estimate={(depositValue: string) => estimate(depositValue)}
-              activeSelectTokenMode={() => setSelectTokenMode(true)}
-              selected={selectedToken}
-            />
+            <CrossChainTokenSelect />
 
             <div className="text-center"></div>
-            <ReceiveInput receive={{}} />
+            <ReceiveInput />
           </>
         )}
       </div>
