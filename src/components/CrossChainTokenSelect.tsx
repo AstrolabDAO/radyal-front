@@ -1,21 +1,18 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
+import { SwapModalContext } from "~/context/swap-modal-context";
 import { TokensContext } from "~/context/tokens-context";
 import { amountToEth, lisibleAmount } from "~/utils/format";
-import { Token } from "~/utils/interfaces";
 import IconGroup from "./IconGroup";
-interface Props {
-  selected: Token;
-  estimate: (depositValue: string) => void;
-  activeSelectTokenMode?: () => void;
-}
-const CrossChainTokenSelect = ({
-  selected,
-  estimate,
-  activeSelectTokenMode,
-}: Props) => {
+
+const CrossChainTokenSelect = () => {
   const [depositValue, setDepositValue] = useState("");
 
+  const {
+    selectedToken: selected,
+    estimate,
+    switchSelectMode,
+  } = useContext(SwapModalContext);
   const { tokenPrices } = useContext(TokensContext);
 
   const icons = useMemo(
@@ -38,33 +35,39 @@ const CrossChainTokenSelect = ({
 
   useEffect(() => {
     estimate(depositValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [depositValue]);
 
   return (
     <div className="relative">
-      <div className="p-2 w-full card active-border border-gray-200 border-solid border shadow-2xl">
+      <div className="p-2 w-full card">
         {!selected && (
           <span className="loading loading-spinner loading-lg mx-auto block"></span>
         )}
         {selected && (
           <div>
-            <header className="flex justify-end text-xs mb-2">
+            <header className="flex justify-end text-xs mb-2 items-center">
               <span className="w-full">Depositing</span>
               <span className="whitespace-nowrap block mr-2">
                 Balance: {lisibleAmount(selectedAmount)}{" "}
               </span>
-              <button
-                className="btn btn-xs"
-                onClick={() => setDepositValue(selectedAmount.toString())}
-              >
-                max
-              </button>
+              <div>
+                <button
+                  className="btn btn-xs"
+                  onClick={() => {
+                    const rounredValue = Math.round(selectedAmount * 100) / 100;
+                    setDepositValue(rounredValue.toString());
+                  }}
+                >
+                  max
+                </button>
+              </div>
             </header>
             <div className="flex items-center cursor-pointer">
               <div
                 className="flex items-center"
                 onClick={() => {
-                  activeSelectTokenMode();
+                  switchSelectMode();
                 }}
               >
                 <IconGroup icons={icons} className="mr-6" />
@@ -85,7 +88,7 @@ const CrossChainTokenSelect = ({
               <span className="w-full">
                 {selected.name} ({selected.network.name})
               </span>
-              <i>~</i>
+              <i>~ </i>
               <span>{lisibleAmount(Number(depositValue) * tokenPrice)}$</span>
             </footer>
           </div>

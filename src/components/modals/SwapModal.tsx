@@ -1,9 +1,22 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Deposit from "../Deposit";
 import Withdraw from "../Withdraw";
+import {
+  SwapModalContext,
+  SwapModalProvider,
+} from "~/context/swap-modal-context";
+import SelectToken from "../SelectToken";
 
 const SwapModal = () => {
+  return (
+    <SwapModalProvider>
+      <SwapModalContent />
+    </SwapModalProvider>
+  );
+};
+
+const SwapModalContent = () => {
   const tabs = [
     {
       title: "Deposit",
@@ -15,30 +28,30 @@ const SwapModal = () => {
     },
   ];
   const [selectedTab, setSelectedTab] = useState(0);
-  console.log(
-    "🚀 ~ file: SwapModal.tsx:18 ~ SwapModal ~ selectedTab:",
-    selectedTab,
-    tabs[selectedTab]
-  );
-
+  const { selectTokenMode, sortedTokens, switchSelectMode } =
+    useContext(SwapModalContext);
   return (
-    <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-      <div role="tablist" className="tabs inline-block">
-        {tabs.map(({ title }, index) => (
-          <a
-            key={title}
-            role="tab"
-            className={clsx("tab", {
-              active: selectedTab === index,
-              "text-primary": selectedTab === index,
-            })}
-            onClick={() => setSelectedTab(index)}
-          >
-            {title}
-          </a>
-        ))}
-      </div>
-      {tabs[selectedTab].component}
+    <div className="bg-white p-4">
+      {selectTokenMode && <SelectToken />}
+      {!selectTokenMode && (
+        <>
+          <div role="tablist" className="tabs tabs-bordered inline-block mb-4">
+            {tabs.map(({ title }, index) => (
+              <a
+                key={title}
+                role="tab"
+                className={clsx("tab", {
+                  "tab-active": selectedTab === index,
+                })}
+                onClick={() => setSelectedTab(index)}
+              >
+                {title}
+              </a>
+            ))}
+          </div>
+          {tabs[selectedTab].component}
+        </>
+      )}
     </div>
   );
 };
