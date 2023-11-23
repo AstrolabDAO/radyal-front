@@ -85,6 +85,9 @@ body {
       @apply border-primary;
     }
   }
+  .max-h-80vh {
+    max-height: 80vh;
+  }
 
   .active-shadow {
     box-shadow: transparent 0px 13px 27px -5px,

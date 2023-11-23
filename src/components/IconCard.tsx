@@ -15,7 +15,7 @@ const IconCard = ({ icon }: IconCardProps) => {
     >
       <div
         className={clsx({
-          "w-8": !small,
+          "w-8 h-8": !small,
           "w-7 h-7 border-none": small,
         })}
       >

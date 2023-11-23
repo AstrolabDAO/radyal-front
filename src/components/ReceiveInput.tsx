@@ -1,18 +1,17 @@
-import { FaChevronDown } from "react-icons/fa";
-
 import IconGroup from "./IconGroup";
 import { networkByChainId } from "~/utils/mappings";
 import { lisibleAmount } from "~/utils/format";
+import { useContext } from "react";
+import { SwapModalContext } from "~/context/swap-modal-context";
+import Loader from "./Loader";
 
-const ReceiveInput = ({ receive }) => {
-  if (!receive) return null;
-  const { toAmountUSD, toAmount, toToken } = receive;
-  console.log(
-    "🚀 ~ file: ReceiveInput.tsx:10 ~ ReceiveInput ~ toAmount:",
-    toAmount
-  );
+const ReceiveInput = () => {
+  const { receiveEstimation, estimationPromise } = useContext(SwapModalContext);
 
-  const network = networkByChainId[toToken.chainId];
+  const { toAmountUSD, toAmount, toToken } = receiveEstimation;
+  const network = toToken?.network
+    ? toToken.network
+    : networkByChainId[toToken.chainId];
 
   const icons = [
     { url: network.icon, alt: network?.name },
@@ -22,9 +21,10 @@ const ReceiveInput = ({ receive }) => {
       small: true,
     },
   ];
+
   return (
     <div className="relative">
-      <div className="p-2 w-full card border-gray-200 border-solid border">
+      <div className="p-2 w-full card">
         <div>
           <header className="flex justify-end text-xs mb-2">
             <span className="w-full">Depositing</span>
@@ -36,7 +36,9 @@ const ReceiveInput = ({ receive }) => {
               <span className="text-2xl mr-2">{toToken.symbol}</span>
             </div>
             <div className="w-full text-right text-4xl">
-              {lisibleAmount(toAmount)}
+              <Loader promise={estimationPromise}>
+                {lisibleAmount(toAmount)}
+              </Loader>
             </div>
           </div>
           <footer className="flex justify-end text-xs items-center mt-2">

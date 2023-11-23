@@ -56,6 +56,7 @@ export const StrategyProvider = ({ children }) => {
 
           updateTokenBySlug(underlying, {
             address: tokenData.address,
+            network: network,
             coingeckoId: tokenData.coingeckoId,
             symbol,
             icon: `/tokens/${symbol}.svg`,

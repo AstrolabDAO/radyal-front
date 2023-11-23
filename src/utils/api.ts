@@ -1,5 +1,5 @@
 import axios from "axios";
-import { COINGECKO_API, DeFI_API } from "./constants";
+import { COINGECKO_API, DeFI_API, TOKEN_BASENAME_REGEX } from "./constants";
 import {
   coingeckoIdBySymbol,
   deFiIdByChainId,
@@ -28,13 +28,17 @@ export const getBalancesFromDeFI = (
           return convertedAmount > 0;
         })
         .map(({ amount, token: apiToken }: DeFiBalance) => {
+          const cleanSymbol = apiToken.symbol.replace(
+            TOKEN_BASENAME_REGEX,
+            "$1"
+          );
           const token: Token = {
             address: apiToken.address,
             symbol: apiToken.symbol,
             name: apiToken.name,
             decimals: apiToken.decimals,
             coingeckoId: apiToken.coingeckoId,
-            icon: `/tokens/${apiToken.symbol.toLowerCase()}.svg`,
+            icon: `/tokens/${cleanSymbol.toLowerCase()}.svg`,
             slug: `${network.slug}:${apiToken.symbol}`,
             network,
             amount,

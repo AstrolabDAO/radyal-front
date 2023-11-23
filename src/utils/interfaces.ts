@@ -17,9 +17,17 @@ export interface Token {
   coingeckoId?: string;
   icon?: string;
   network: Network;
-  amount: string;
+  amount?: string;
   symbol?: string;
   slug: string;
+}
+
+export interface GetRouteResult {
+  route?: any;
+  fromToken?: Token;
+  toToken: Token;
+  toAmountUSD: number;
+  toAmount: number;
 }
 
 export interface Strategy {
