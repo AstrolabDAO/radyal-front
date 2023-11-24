@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { ethers } from "ethers";
 import { getRoute } from "~/utils/squid";
@@ -57,7 +50,7 @@ export const SwapModalProvider = ({ children }) => {
     );
   }, [balances]);
 
-  const [selectedToken, setSelectedToken] = useState(sortedTokens?.[1] ?? null);
+  const [selectedToken, setSelectedToken] = useState(sortedTokens?.[0] ?? null);
 
   const estimate = (depositValue: string) => {
     clearTimeout(debounceTimer);

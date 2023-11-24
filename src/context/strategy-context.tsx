@@ -8,21 +8,26 @@ import { TokensContext } from "./tokens-context";
 interface StrategyContextType {
   strategies: Strategy[];
   selectedStrategy: Strategy;
+  filteredStrategies: Strategy[];
   selectStrategy: (strategy: Strategy) => void;
   updateStrategies: (strategies: Strategy[]) => void;
+  search: (searchString: string) => void;
 }
 
 export const StrategyContext = createContext<StrategyContextType>({
   strategies: [],
   selectedStrategy: null,
+  filteredStrategies: [],
   selectStrategy: () => {},
   updateStrategies: () => {},
+  search: () => {},
 });
 
 export const StrategyProvider = ({ children }) => {
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(null);
 
   const [strategies, setStrategies] = useState<Strategy[]>([]);
+  const [filteredStrategies, setFilteredStrategies] = useState<Strategy[]>([]);
 
   const Provider = StrategyContext.Provider;
   const selectStrategy = (strategy: Strategy) => {
@@ -72,10 +77,28 @@ export const StrategyProvider = ({ children }) => {
         } as Strategy;
       });
     setStrategies(populatedStrategies);
+    setFilteredStrategies(populatedStrategies);
   }, []);
+
+  const search = (searchString: string) => {
+    const filtered = strategies.filter((item) =>
+      Object.values(item).some((value) =>
+        value.toString().toLowerCase().includes(searchString.toLowerCase())
+      )
+    );
+    setFilteredStrategies(filtered);
+  };
+
   return (
     <Provider
-      value={{ selectedStrategy, strategies, selectStrategy, updateStrategies }}
+      value={{
+        selectedStrategy,
+        strategies,
+        filteredStrategies,
+        selectStrategy,
+        updateStrategies,
+        search,
+      }}
     >
       {children}
     </Provider>

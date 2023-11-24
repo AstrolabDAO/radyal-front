@@ -1,12 +1,15 @@
+import { useContext } from "react";
 import CrossChainTokenSelect from "./CrossChainTokenSelect";
 import ReceiveInput from "./ReceiveInput";
+import { SwapModalContext } from "~/context/swap-modal-context";
 
 const Deposit = () => {
+  const { selectedToken } = useContext(SwapModalContext);
   return (
     <div className="deposit block">
       <div className="box w-full">
         <>
-          <CrossChainTokenSelect />
+          <CrossChainTokenSelect selected={selectedToken} />
           <div className="text-center text-primary text-2xl my-2">to</div>
           <ReceiveInput />
         </>

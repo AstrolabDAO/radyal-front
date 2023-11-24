@@ -4,15 +4,12 @@ import { SwapModalContext } from "~/context/swap-modal-context";
 import { TokensContext } from "~/context/tokens-context";
 import { amountToEth, lisibleAmount } from "~/utils/format";
 import IconGroup from "./IconGroup";
+import clsx from "clsx";
 
-const CrossChainTokenSelect = () => {
+const CrossChainTokenSelect = ({ selected, locked = false }) => {
   const [depositValue, setDepositValue] = useState("");
 
-  const {
-    selectedToken: selected,
-    estimate,
-    switchSelectMode,
-  } = useContext(SwapModalContext);
+  const { estimate, switchSelectMode } = useContext(SwapModalContext);
   const { tokenPrices } = useContext(TokensContext);
 
   const icons = useMemo(
@@ -24,7 +21,7 @@ const CrossChainTokenSelect = () => {
   );
   const selectedAmount = useMemo(() => {
     if (!selected) return 0;
-    return amountToEth(BigInt(selected.amount), selected.decimals);
+    return amountToEth(BigInt(selected.amount ?? 0), selected.decimals);
   }, [selected]);
 
   const tokenPrice = useMemo(() => {
@@ -63,16 +60,20 @@ const CrossChainTokenSelect = () => {
                 </button>
               </div>
             </header>
-            <div className="flex items-center cursor-pointer">
+            <div
+              className={clsx("flex items-center", {
+                "cursor-pointer": !locked,
+              })}
+            >
               <div
                 className="flex items-center"
                 onClick={() => {
-                  switchSelectMode();
+                  if (!locked) switchSelectMode();
                 }}
               >
                 <IconGroup icons={icons} className="mr-6" />
                 <span className="text-2xl mr-2">{selected?.symbol}</span>
-                <FaChevronDown className="mr-2" />
+                {!locked && <FaChevronDown className="mr-2" />}
               </div>
               <input
                 className="input w-full max-w-xs text-right text-4xl"
