@@ -1,10 +1,11 @@
 import { useContext } from "react";
 import { StrategyContext } from "~/context/strategy-context";
-import StrategyBox from "./StrategyBox";
+import StrategyCard from "./StrategyBox";
 const Strategies = () => {
-  const { strategies } = useContext(StrategyContext);
+  const { filteredStrategies, search } = useContext(StrategyContext);
+
   return (
-    <div className="strategies w-full small-container mx-auto">
+    <div className="strategies w-full small-container mx-auto p-2">
       <h2 className="text-2xl text-center text-primary">
         Select your strategy...
       </h2>
@@ -16,15 +17,21 @@ const Strategies = () => {
           type="text"
           placeholder="type anything..."
           className="input input-bordered w-full max-w-xs w-full"
+          onChange={({ target }) => {
+            search(target.value);
+          }}
         />
       </label>
-      <ul className="flex items-center justify-center min-h-screen w-full flex-wrap">
-        {strategies.map((strategy) => (
-          <StrategyBox strategy={strategy} key={strategy.slug} />
+      <ul className="flex w-full flex-wrap">
+        {filteredStrategies.length === 0 && (
+          <div className="flex w-full justify-center">No strategies...</div>
+        )}
+        {filteredStrategies.map((strategy) => (
+          <StrategyCard strategy={strategy} key={strategy.slug} />
         ))}
-        ;
       </ul>
     </div>
   );
 };
+
 export default Strategies;

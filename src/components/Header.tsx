@@ -12,7 +12,7 @@ const Header = () => {
       <div className="container mx-auto">
         <div className="relative flex w-full">
           <div className="logo h-full relative block">
-            <img src={logo} alt="Logo Radyal" className="flex h-16" />
+            <img src={logo} alt="Logo Radyal" className="flex w-96" />
           </div>
           <nav className="flex w-full justify-end">
             <ul className="flex"></ul>

@@ -44,9 +44,11 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
   @apply bg-gray-200;
   font-family: "Inter", sans-serif;
+}
+#root {
+  min-height: 100vh;
 }
 .title {
   font-family: "Gilroy", sans-serif;
@@ -87,6 +89,34 @@ body {
   }
   .max-h-80vh {
     max-height: 80vh;
+  }
+
+  .strategy-box {
+    @apply p-2;
+    @media screen(md) {
+      &:nth-child(2n) {
+        @apply pr-0;
+      }
+      &:nth-child(2n-1) {
+        @apply pl-0;
+      }
+    }
+    @media screen(xl) {
+      @apply p-2;
+      &:nth-child(2n):not(:nth-child(3n)) {
+        @apply pr-2;
+      }
+      &:nth-child(2n-1):not(:nth-child(3n-2)) {
+        @apply pl-2;
+      }
+
+      &:nth-child(3n) {
+        @apply pr-0;
+      }
+      &:nth-child(3n-2) {
+        @apply pl-0;
+      }
+    }
   }
 
   .active-shadow {

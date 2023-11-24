@@ -12,7 +12,7 @@ import SwapModal from "./modals/SwapModal";
 interface StrategyProps {
   strategy: Strategy;
 }
-const StrategyBox = ({ strategy }: StrategyProps) => {
+const StrategyCard = ({ strategy }: StrategyProps) => {
   const { name } = strategy;
   const { nativeNetwork, token } = strategy;
   const { selectStrategy, selectedStrategy } = useContext(StrategyContext);
@@ -33,7 +33,7 @@ const StrategyBox = ({ strategy }: StrategyProps) => {
     },
   ];
   return (
-    <div className="p-2 w-full md:w-1/2 xl:w-1/3">
+    <div className="w-full md:w-1/2 xl:w-1/3 strategy-box">
       <div
         className={clsx(
           "card bg-base-100 shadow-xl w-full p-2 cursor-pointer transition-500 active-bordered active-shadow",
@@ -59,4 +59,5 @@ const StrategyBox = ({ strategy }: StrategyProps) => {
     </div>
   );
 };
-export default StrategyBox;
+
+export default StrategyCard;
