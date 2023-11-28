@@ -1,16 +1,28 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
-import { SwapModalContext } from "~/context/swap-modal-context";
 import { TokensContext } from "~/context/tokens-context";
 import { amountToEth, lisibleAmount } from "~/utils/format";
 import IconGroup from "./IconGroup";
 import clsx from "clsx";
+import { SwapContext } from "~/context/swap-context";
+import Loader from "./Loader";
 
-const CrossChainTokenSelect = ({ selected, locked = false }) => {
+const CrossChainTokenSelect = ({
+  selected,
+  locked = false,
+  isReceive = false,
+}) => {
   const [depositValue, setDepositValue] = useState("");
 
-  const { estimate, switchSelectMode } = useContext(SwapModalContext);
+  const { estimate, switchSelectMode, receiveEstimation, estimationPromise } =
+    useContext(SwapContext);
+
   const { tokenPrices } = useContext(TokensContext);
+
+  const { toAmount } = useMemo(() => {
+    if (!receiveEstimation) return { toAmount: 0 };
+    return receiveEstimation;
+  }, [receiveEstimation]);
 
   const icons = useMemo(
     () => [
@@ -19,17 +31,17 @@ const CrossChainTokenSelect = ({ selected, locked = false }) => {
     ],
     [selected]
   );
-  const selectedAmount = useMemo(() => {
-    if (!selected) return 0;
+  const selectedBalance = useMemo(() => {
+    if (!selected || (selected && !selected.amount)) return 0;
     return amountToEth(BigInt(selected.amount ?? 0), selected.decimals);
   }, [selected]);
 
   const tokenPrice = useMemo(() => {
     if (!selected) return 0;
-    const price = Number(tokenPrices[selected.coingeckoId]?.usd);
+
+    const price = Number(tokenPrices[selected.coinGeckoId]?.usd);
     return isNaN(price) ? 0 : price;
   }, [tokenPrices, selected]);
-
   useEffect(() => {
     estimate(depositValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -44,21 +56,24 @@ const CrossChainTokenSelect = ({ selected, locked = false }) => {
         {selected && (
           <div>
             <header className="flex justify-end text-xs mb-2 items-center">
-              <span className="w-full">Depositing</span>
+              <span className="w-full">{!isReceive && "Depositing"}</span>
               <span className="whitespace-nowrap block mr-2">
-                Balance: {lisibleAmount(selectedAmount)}{" "}
+                Balance: {lisibleAmount(selectedBalance)}{" "}
               </span>
-              <div>
-                <button
-                  className="btn btn-xs"
-                  onClick={() => {
-                    const rounredValue = Math.round(selectedAmount * 100) / 100;
-                    setDepositValue(rounredValue.toString());
-                  }}
-                >
-                  max
-                </button>
-              </div>
+              {!isReceive && (
+                <div>
+                  <button
+                    className="btn btn-xs"
+                    onClick={() => {
+                      const rounredValue =
+                        Math.round(selectedBalance * 100) / 100;
+                      setDepositValue(rounredValue.toString());
+                    }}
+                  >
+                    max
+                  </button>
+                </div>
+              )}
             </header>
             <div
               className={clsx("flex items-center", {
@@ -75,22 +90,36 @@ const CrossChainTokenSelect = ({ selected, locked = false }) => {
                 <span className="text-2xl mr-2">{selected?.symbol}</span>
                 {!locked && <FaChevronDown className="mr-2" />}
               </div>
-              <input
-                className="input w-full max-w-xs text-right text-4xl"
-                type="text"
-                placeholder="100"
-                value={depositValue}
-                onChange={({ target }) => {
-                  setDepositValue(target.value.replace(/[^0-9]/g, ""));
-                }}
-              />
+              {isReceive && (
+                <div className="w-full text-right text-4xl">
+                  <Loader promise={estimationPromise}>
+                    {lisibleAmount(toAmount)}
+                  </Loader>
+                </div>
+              )}
+              {!isReceive && (
+                <input
+                  className="input w-full max-w-xs text-right text-4xl"
+                  type="text"
+                  placeholder="100"
+                  value={depositValue}
+                  onChange={({ target }) => {
+                    setDepositValue(target.value.replace(/[^0-9]/g, ""));
+                  }}
+                />
+              )}
             </div>
             <footer className="flex justify-end text-xs items-center mt-2">
               <span className="w-full">
                 {selected.name} ({selected.network.name})
               </span>
               <i>~ </i>
-              <span>{lisibleAmount(Number(depositValue) * tokenPrice)}$</span>
+              <span>
+                {lisibleAmount(
+                  Number(isReceive ? toAmount : depositValue) * tokenPrice
+                )}
+                $
+              </span>
             </footer>
           </div>
         )}

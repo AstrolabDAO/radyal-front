@@ -5,9 +5,9 @@ import { useContext } from "react";
 import { StrategyContext } from "~/context/strategy-context";
 import clsx from "clsx";
 import { useAccount } from "wagmi";
-import { web3Modal } from "~/main";
 import { ModalContext } from "~/context/modal-context";
 import SwapModal from "./modals/SwapModal";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 interface StrategyProps {
   strategy: Strategy;
@@ -16,8 +16,9 @@ const StrategyCard = ({ strategy }: StrategyProps) => {
   const { name } = strategy;
   const { nativeNetwork, token } = strategy;
   const { selectStrategy, selectedStrategy } = useContext(StrategyContext);
-  const { open } = useContext(ModalContext);
+  const { openModal } = useContext(ModalContext);
   const { isConnected } = useAccount();
+  const web3Modal = useWeb3Modal();
 
   const icons = [
     {
@@ -41,8 +42,9 @@ const StrategyCard = ({ strategy }: StrategyProps) => {
         )}
         onClick={() => {
           selectStrategy(strategy);
-          if (!isConnected) web3Modal.open().then(() => open(<SwapModal />));
-          else open(<SwapModal />);
+          if (!isConnected)
+            web3Modal.open().then(() => openModal(<SwapModal />));
+          else openModal(<SwapModal />);
         }}
       >
         <div className="card-body p-4">

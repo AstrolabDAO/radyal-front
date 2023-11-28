@@ -1,18 +1,14 @@
 import clsx from "clsx";
 import { useContext, useState } from "react";
+import { SwapContext, SwapProvider } from "~/context/swap-context";
 import Deposit from "../Deposit";
 import Withdraw from "../Withdraw";
-import {
-  SwapModalContext,
-  SwapModalProvider,
-} from "~/context/swap-modal-context";
-import SelectToken from "../SelectToken";
 
 const SwapModal = () => {
   return (
-    <SwapModalProvider>
+    <SwapProvider>
       <SwapModalContent />
-    </SwapModalProvider>
+    </SwapProvider>
   );
 };
 
@@ -28,13 +24,12 @@ const SwapModalContent = () => {
     },
   ];
   const [selectedTab, setSelectedTab] = useState(0);
-  const { selectTokenMode, sortedTokens, switchSelectMode } =
-    useContext(SwapModalContext);
+  const { selectTokenMode } = useContext(SwapContext);
+
   return (
     <div className="bg-white p-4">
-      {selectTokenMode && <SelectToken />}
-      {!selectTokenMode && (
-        <>
+      <>
+        {!selectTokenMode && (
           <div role="tablist" className="tabs tabs-bordered inline-block mb-4">
             {tabs.map(({ title }, index) => (
               <a
@@ -49,9 +44,9 @@ const SwapModalContent = () => {
               </a>
             ))}
           </div>
-          {tabs[selectedTab].component}
-        </>
-      )}
+        )}
+        {tabs[selectedTab].component}
+      </>
     </div>
   );
 };

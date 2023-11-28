@@ -3,8 +3,8 @@ import React, { createContext, useState } from "react";
 interface ModalContextType {
   visible: boolean;
   modalContent?: React.ReactNode;
-  open: (modal: React.ReactNode) => void;
-  close: () => void;
+  openModal: (modal: React.ReactNode) => void;
+  closeModal: () => void;
 }
 interface ModalContextProps {
   children: React.ReactNode;
@@ -12,24 +12,24 @@ interface ModalContextProps {
 export const ModalContext = createContext<ModalContextType>({
   visible: false,
   modalContent: null,
-  open: () => {},
-  close: () => {},
+  openModal: () => {},
+  closeModal: () => {},
 });
 
 export const ModalProvider = ({ children }: ModalContextProps) => {
   const [visible, setVisible] = useState(false);
   const Provider = ModalContext.Provider;
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
-  const open = (modal: React.ReactNode) => {
+  const openModal = (modal: React.ReactNode) => {
     setModalContent(modal);
     setVisible(true);
   };
-  const close = () => {
+  const closeModal = () => {
     setModalContent(null);
     setVisible(false);
   };
   return (
-    <Provider value={{ visible, open, close, modalContent }}>
+    <Provider value={{ visible, openModal, closeModal, modalContent }}>
       {children}
     </Provider>
   );

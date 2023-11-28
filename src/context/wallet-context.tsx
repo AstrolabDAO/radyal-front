@@ -1,10 +1,18 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useAccount, useNetwork, useWalletClient } from "wagmi";
 
 import { erc20Abi } from "abitype/abis";
 import addresses from "../data/token-addresses.json";
 import { getBalancesFromDeFI, updateTokenPrices } from "../utils/api";
-import { DeFiBalance } from "../utils/interfaces";
+import {
+  Balance,
+  BalanceBySlugMapping,
+  DeFiBalance,
+} from "../utils/interfaces";
+import {
+  balanceBySlug as balanceBySlugMapping,
+  updateBalanceMapping,
+} from "../utils/mappings";
 import { deFiIdByChainId, networkBySlug } from "../utils/mappings";
 import updateBalances from "../utils/multicall";
 import { NETWORKS } from "../utils/web3-constants";
@@ -13,31 +21,53 @@ import { toast } from "react-toastify";
 
 export const WalletContext = createContext({
   balances: [],
+  sortedBalances: [],
+  balancesBySlug: {},
 });
+
+export let currentChain = null;
+export let etherSigner = null;
 
 export const WalletProvider = ({ children }) => {
   const { address, isConnected } = useAccount();
-  const localBalances = localStorage.getItem(`balances-${address}`);
+  const { data: signer } = useWalletClient();
+  const { chain } = useNetwork();
 
+  const { refreshTokenBySlugs, updatePrices, tokensIsLoaded } =
+    useContext(TokensContext);
+
+  const localBalances = localStorage.getItem(`balances-${address}`);
   const localBalancesDate = Number(localStorage.getItem("balancesExpiry"));
 
   const now = new Date().getTime();
   const Provider = WalletContext.Provider;
 
-  const [balances, setBalances] = useState(
+  const [balances, setBalances] = useState<Balance[]>(
     localBalances ? JSON.parse(localBalances) : []
   );
 
-  const { refreshTokenBySlugs, updatePrices } = useContext(TokensContext);
+  const [balancesBySlug, setBalancesBySlug] = useState<BalanceBySlugMapping>(
+    {}
+  );
+
+  const sortedBalances = useMemo(() => {
+    return balances.sort((a, b) =>
+      BigInt(a.amount) > BigInt(b.amount) ? -1 : 1
+    );
+  }, [balances]);
+
   const filteredNetworks = NETWORKS.map((slug) => networkBySlug[slug]);
 
   useEffect(() => {
-    if (!isConnected) return;
+    balances.forEach((balance) => updateBalanceMapping(balance));
+  }, [balances]);
+
+  useEffect(() => {
+    if (!isConnected || !tokensIsLoaded) return;
 
     const loadBalancesByAddress = async (address: `0x${string}`) => {
       let _balances = [];
       const requests = [];
-      const needBalances = [];
       for (const network of filteredNetworks) {
         const chain = deFiIdByChainId[network.id];
         if (chain) {
@@ -49,10 +79,9 @@ export const WalletProvider = ({ children }) => {
             .slice(0, 10);
           const contracts: any = tokens.map((token: any) => ({
             address: token.address,
-            coingeckoId: token.coingeckoId,
+            coinGeckoId: token.coinGeckoId,
             abi: erc20Abi,
           }));
-          needBalances.push({ network, tokens });
           const promise = updateBalances(network, contracts, address);
           toast.promise(promise, {
             pending: `Get balances from ${network.name}`,
@@ -66,6 +95,7 @@ export const WalletProvider = ({ children }) => {
           const flatData = data.flat(1);
 
           setBalances(flatData);
+          setBalancesBySlug(balanceBySlugMapping);
           refreshTokenBySlugs();
 
           localStorage.setItem(`balances-${address}`, JSON.stringify(flatData));
@@ -92,5 +122,14 @@ export const WalletProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address, isConnected]);
 
-  return <Provider value={{ balances }}>{children}</Provider>;
+  useEffect(() => {
+    etherSigner = signer;
+    currentChain = chain;
+  }, [chain, signer]);
+
+  return (
+    <Provider value={{ balances, balancesBySlug, sortedBalances }}>
+      {children}
+    </Provider>
+  );
 };

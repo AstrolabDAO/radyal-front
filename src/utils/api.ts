@@ -1,13 +1,7 @@
 import axios from "axios";
-import { COINGECKO_API, DeFI_API, TOKEN_BASENAME_REGEX } from "./constants";
-import {
-  coingeckoIdBySymbol,
-  deFiIdByChainId,
-  tokenBySlug,
-  tokenBySymbol,
-  tokenPriceByCoingeckoId,
-} from "./mappings";
-import { DeFiBalance, Network, Token } from "./interfaces";
+import { COINGECKO_API, DeFI_API } from "./constants";
+import { Balance, DeFiBalance, Network, Token } from "./interfaces";
+import { deFiIdByChainId, tokenPriceBycoinGeckoId } from "./mappings";
 
 export const getBalancesFromDeFI = (
   address: `0x${string}`,
@@ -28,6 +22,7 @@ export const getBalancesFromDeFI = (
           return convertedAmount > 0;
         })
         .map(({ amount, token: apiToken }: DeFiBalance) => {
+          /*
           const cleanSymbol = apiToken.symbol.replace(
             TOKEN_BASENAME_REGEX,
             "$1"
@@ -37,17 +32,18 @@ export const getBalancesFromDeFI = (
             symbol: apiToken.symbol,
             name: apiToken.name,
             decimals: apiToken.decimals,
-            coingeckoId: apiToken.coingeckoId,
+            coinGeckoId: apiToken.coinGeckoId,
             icon: `/tokens/${cleanSymbol.toLowerCase()}.svg`,
             slug: `${network.slug}:${apiToken.symbol}`,
             network,
+          };
+          */
+          const balance: Balance = {
+            slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
             amount,
           };
 
-          tokenBySlug[token.slug] = token;
-          tokenBySymbol[token.symbol] = token;
-          coingeckoIdBySymbol[token.symbol];
-          return token;
+          return balance;
         });
     });
 };
@@ -55,13 +51,15 @@ export const getBalancesFromDeFI = (
 export const getTokenPrice = (token: Token) => {
   return axios.get(`${COINGECKO_API}/simple/price`, {
     params: {
-      ids: token.coingeckoId,
+      ids: token.coinGeckoId,
       vs_currencies: "usd",
     },
   });
 };
 export const getTokensPrices = async (tokens: Token[]) => {
-  const tokensIds = new Set(tokens.map((token) => token.coingeckoId));
+  console.log("🚀 ~ file: api.ts:60 ~ getTokensPrices ~ tokens:", tokens);
+  const tokensIds = new Set(tokens.map((token) => token.coinGeckoId));
+  console.log("🚀 ~ file: api.ts:61 ~ getTokensPrices ~ tokensIds:", tokensIds);
 
   return axios
     .get(`${COINGECKO_API}/simple/price`, {
@@ -79,7 +77,7 @@ export const updateTokenPrices = async (tokens: Token[]) => {
 
   Object.values(prices).map((price, index) => {
     const key = keys[index];
-    tokenPriceByCoingeckoId[key] = price as any;
+    tokenPriceBycoinGeckoId[key] = price as any;
   });
-  return tokenPriceByCoingeckoId;
+  return tokenPriceBycoinGeckoId;
 };

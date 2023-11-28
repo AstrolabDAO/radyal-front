@@ -1,8 +1,7 @@
-import { multicall as wagmiMulticalll } from "wagmi/actions";
-import { Network, Token } from "./interfaces";
 import { MulticallContracts, Narrow } from "viem";
-import { tokenBySlug, tokenBySymbol } from "./mappings";
-import { TOKEN_BASENAME_REGEX } from "./constants";
+import { multicall as wagmiMulticalll } from "wagmi/actions";
+import { Balance, Network } from "./interfaces";
+import { updateBalanceMapping } from "./mappings";
 
 export const multicall = (
   chainId: number,
@@ -28,52 +27,31 @@ export const updateBalances = (
           functionName: "balanceOf",
           args: [address],
         },
-        {
-          ...contract,
-          functionName: "decimals",
-        },
-        {
-          ...contract,
-          functionName: "symbol",
-        },
       ])
       .flat(1),
   }).then(async (result) => {
     const filteredResults = result.map((res) => res.result);
-    const tokens = [];
+    const balances = [];
 
-    for (let i = 0; i < filteredResults.length; i += 3) {
-      const [balance, decimals, symbol] = filteredResults.slice(i, i + 3) as [
-        bigint,
-        number,
-        string
-      ];
+    for (let i = 0; i < filteredResults.length; i++) {
+      const balanceResult = filteredResults[i] as bigint;
 
-      if (balance === 0n) continue;
+      if (balanceResult === 0n) continue;
 
-      const result = balance as bigint;
+      const result = balanceResult as bigint;
 
-      const contract = contracts[i > 2 ? i / 3 : i];
+      const contract = contracts[i];
 
-      const cleanSymbol = symbol.replace(TOKEN_BASENAME_REGEX, "$1");
-      console.log("🚀 ~ file: multicall.ts:59 ~ cleanSymbol:", cleanSymbol);
-      const token: Token = {
-        address: contract.address,
+      const balance: Balance = {
+        slug: `${network.slug}:${contract.symbol.toLowerCase()}`,
         amount: result.toString(),
-        decimals,
-        symbol,
-        network,
-        icon: `/tokens/${cleanSymbol.toLowerCase()}.svg`,
-        coingeckoId: contract.coingeckoId,
-        slug: `${network.slug}:${contract.symbol}`,
       };
 
-      tokens.push(token);
-      tokenBySlug[token.slug] = token;
-      tokenBySymbol[token.symbol] = token;
+      balances.push(balance);
+      updateBalanceMapping(balance);
     }
 
-    return tokens;
+    return balances;
   });
 };
 export default updateBalances;

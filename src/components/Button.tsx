@@ -5,7 +5,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   primary?: boolean;
 }
 const Button = React.forwardRef<HTMLButtonElement, Props>(
-  ({ className, primary, children, ...props }: Props, ref) => {
+  ({ className, primary = true, children, ...props }: Props, ref) => {
     return (
       <button
         ref={ref}

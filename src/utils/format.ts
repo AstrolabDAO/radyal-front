@@ -1,3 +1,6 @@
+import { Token } from "./interfaces";
+import { unwraps } from "./mappings";
+
 export function toRaw(s: string): string {
   return s
     .replace(/[^0-9A-Za-zÀ-ÖØ-öø-ÿ-_.,:;\s]+/g, "")
@@ -10,6 +13,16 @@ export function slugify(s: string, sep: string = "-"): string {
   return toRaw(s).replace(/[-_.,;\s]+/gi, sep);
 }
 
+export function shortenAddress(
+  address: string,
+  start = 4,
+  end = 4,
+  sep = "."
+): string {
+  const len = address.length;
+  return address.slice(0, 2 + start) + sep + address.slice(len - end, len);
+}
+
 export const clearFrom = (s: string, regex: string): string =>
   s.substring(0, s.search(new RegExp(regex)));
 
@@ -20,4 +33,8 @@ export const amountToEth = (bigInt: bigint, decimals) =>
 
 export const lisibleAmount = (amount: string | number) => {
   return Math.round(Number(amount) * 100) / 100;
+};
+
+export const unwrapSymbol = (symbol: string): string => {
+  return unwraps?.[symbol.toLowerCase()] ?? symbol.toLowerCase();
 };

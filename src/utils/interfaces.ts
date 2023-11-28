@@ -14,11 +14,15 @@ export interface Token {
   address?: `0x${string}`;
   name?: string;
   decimals?: number;
-  coingeckoId?: string;
+  coinGeckoId?: string;
   icon?: string;
   network: Network;
-  amount?: string;
   symbol?: string;
+  slug: string;
+}
+
+export interface Balance {
+  amount: string;
   slug: string;
 }
 
@@ -26,7 +30,6 @@ export interface GetRouteResult {
   route?: any;
   fromToken?: Token;
   toToken: Token;
-  toAmountUSD: number;
   toAmount: number;
 }
 
@@ -62,7 +65,7 @@ export interface DeFIToken {
   icon: `https://${string}`;
   price: number;
   displayName: string;
-  coingeckoId: string;
+  coinGeckoId: string;
 }
 
 export interface DeFiBalance {
@@ -96,4 +99,8 @@ export interface CoingeckoPrices {
 
 export interface TokenBySlugMapping {
   [slug: string]: Token;
+}
+
+export interface BalanceBySlugMapping {
+  [slug: string]: Balance;
 }
