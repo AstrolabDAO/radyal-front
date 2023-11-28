@@ -1,21 +1,23 @@
-import "./App.css";
 import Header from "./components/Header";
 import { WalletProvider } from "./context/wallet-context";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { TokensProvider } from "./context/tokens-context";
-import { SwapProvider } from "./context/swap-context";
-import routes from "./utils/routes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { TokensProvider } from "./context/tokens-context";
+import routes from "./utils/routes";
+
+import { Web3Provider } from "./context/web3-context.tsx";
+import "./styles/App.css";
 
 const router = createBrowserRouter(routes);
+
 function App() {
   return (
     <>
-      <TokensProvider>
-        <WalletProvider>
-          <SwapProvider>
+      <Web3Provider>
+        <TokensProvider>
+          <WalletProvider>
             <Header />
             <div id="page-content" className="pt-32 relative">
               <RouterProvider router={router} />
@@ -23,9 +25,9 @@ function App() {
                 <ToastContainer />
               </div>
             </div>
-          </SwapProvider>
-        </WalletProvider>
-      </TokensProvider>
+          </WalletProvider>
+        </TokensProvider>
+      </Web3Provider>
     </>
   );
 }

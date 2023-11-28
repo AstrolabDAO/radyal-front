@@ -1,12 +1,10 @@
-import IconGroup from "./IconGroup";
-import { networkByChainId } from "~/utils/mappings";
-import { lisibleAmount } from "~/utils/format";
 import { useContext } from "react";
-import { SwapModalContext } from "~/context/swap-modal-context";
-import Loader from "./Loader";
+import { SwapContext } from "~/context/swap-context";
+import { networkByChainId } from "~/utils/mappings";
+import CrossChainTokenSelect from "./CrossChainTokenSelect";
 
-const ReceiveInput = () => {
-  const { receiveEstimation, estimationPromise } = useContext(SwapModalContext);
+const ReceiveInput = ({ locked = true }) => {
+  const { receiveEstimation, estimationPromise } = useContext(SwapContext);
 
   const { toAmountUSD, toAmount, toToken } = receiveEstimation;
   const network = toToken?.network
@@ -23,12 +21,21 @@ const ReceiveInput = () => {
   ];
 
   return (
+    <>
+      <CrossChainTokenSelect
+        locked={locked}
+        selected={toToken}
+        isReceive={true}
+      />
+    </>
+  );
+  /* return (
     <div className="relative">
       <div className="p-2 w-full card">
         <div>
           <header className="flex justify-end text-xs mb-2">
             <span className="w-full">Depositing</span>
-            {/*<span className="whitespace-nowrap block mr-2">Balance: 0.00</span>*/}
+            {/*<span className="whitespace-nowrap block mr-2">Balance: 0.00</span>}
           </header>
           <div className="flex items-center">
             <div className="flex">
@@ -51,7 +58,7 @@ const ReceiveInput = () => {
         </div>
       </div>
     </div>
-  );
+  );*/
 };
 
 export default ReceiveInput;

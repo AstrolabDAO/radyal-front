@@ -59,14 +59,15 @@ export const StrategyProvider = ({ children }) => {
           const tokenData =
             tokenAddresses[network.id].tokens[symbol.toUpperCase()];
 
-          updateTokenBySlug(underlying, {
+          const token = {
             address: tokenData.address,
             network: network,
-            coingeckoId: tokenData.coingeckoId,
+            coinGeckoId: tokenData.coinGeckoId,
             symbol,
             icon: `/tokens/${symbol}.svg`,
             slug: underlying,
-          } as Token);
+          } as Token;
+          updateTokenBySlug(token);
         }
         const token = tokenBySlug[underlying];
 
@@ -78,7 +79,7 @@ export const StrategyProvider = ({ children }) => {
       });
     setStrategies(populatedStrategies);
     setFilteredStrategies(populatedStrategies);
-  }, []);
+  }, [updateTokenBySlug]);
 
   const search = (searchString: string) => {
     const filtered = strategies.filter((item) =>

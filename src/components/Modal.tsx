@@ -3,7 +3,7 @@ import { Fragment, useContext, useRef } from "react";
 import { ModalContext } from "~/context/modal-context";
 
 const Modal = () => {
-  const { visible, close, modalContent } = useContext(ModalContext);
+  const { visible, closeModal, modalContent } = useContext(ModalContext);
 
   const cancelButtonRef = useRef(null);
   return (
@@ -12,7 +12,7 @@ const Modal = () => {
         as="div"
         className="relative z-10"
         initialFocus={cancelButtonRef}
-        onClose={() => close()}
+        onClose={() => closeModal()}
       >
         <Transition.Child
           as={Fragment}

@@ -1,4 +1,4 @@
-import { RouteData, Squid } from "@0xsquid/sdk";
+import { Squid } from "@0xsquid/sdk";
 import { ethers } from "ethers";
 import { PrepareSendTransactionArgs, writeContract } from "@wagmi/core";
 import { parseGwei } from "viem";
@@ -10,9 +10,7 @@ import {
   sendTransaction,
   switchNetwork,
 } from "wagmi/actions";
-
-import { currentChain } from "~/context/swap-context";
-
+import { currentChain } from "~/context/wallet-context";
 
 export enum SquidCallType {
   DEFAULT = 0,
@@ -35,28 +33,35 @@ export interface ICustomContractCall {
 
 interface RouteParams {
   fromChain: number;
-  fromToken: string;
+  fromAddress: `0x${string}`;
+  toChain: number;
+  fromToken: `0x${string}`;
+  toToken: `0x${string}`;
+  toAddress: `0x${string}`;
   fromAmount: string;
 }
 
 export const getRoute = async ({
+  fromAddress,
   fromChain,
   fromToken,
   fromAmount,
-}: RouteParams): Promise<RouteData> => {
-  const squid = new Squid({ baseUrl: "https://api.0xsquid.com" });
+  toChain,
+  toToken,
+  toAddress,
+}: RouteParams) => {
+  const baseUrl = "https://v2.api.squidrouter.com"; // "https://api.0xsquid.com"
+  const squid = new Squid({ baseUrl, integratorId: "radyal-astrolab-sdk" });
 
   await squid.init();
   const slippage = 3.0;
   const enableForecall = false;
   const quoteOnly = false;
 
-  const toChain = 42161;
-  const toToken = "0x17FC002b466eEc40DaE837Fc4bE5c67993ddBd6F";
-  // receiver = caller here
-  const toAddress = "0x7B56288776Cae4260770981b6BcC0f6D011C7b72";
-
   const stratAddress = "0x1Fe1aa5f581AcD595A362Ff9876eBd9E39Ddf89D";
+
+  const nullAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
+  const zeroAddressRegex = /^0x(0)*$/i;
 
   // Allowance & approval part (to test)
   // ! don't delete, need it later for approval (useApproval)
@@ -67,15 +72,19 @@ export const getRoute = async ({
   // switchNetworkIfNeeded(fromChain);
 
   const params = {
-    fromChain,
-    fromToken,
+    fromAddress,
+    fromChain: fromChain.toString(),
+    fromToken: zeroAddressRegex.test(fromToken) ? nullAddress : fromToken,
     fromAmount,
-    toChain,
-    toToken,
+    toChain: toChain.toString(),
+    toToken: zeroAddressRegex.test(toToken) ? nullAddress : toToken,
     toAddress,
     slippage,
     enableForecall,
     quoteOnly,
+    slippageConfig: {
+      autoMode: 1,
+    },
     customContractCalls: [
       generateCustomContractCall("transfer", [stratAddress, "0"], toToken),
     ],
@@ -85,7 +94,7 @@ export const getRoute = async ({
   return route;
 };
 
-export const swap = async (route?: RouteData) => {
+export const swap = async (route) => {
   if (route.transactionRequest.maxFeePerGas)
     delete route.transactionRequest.maxFeePerGas;
   if (route.transactionRequest.maxPriorityFeePerGas)
