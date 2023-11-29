@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useContext, useRef } from "react";
 import { ModalContext } from "~/context/modal-context";
-
+import { FaTimes } from "react-icons/fa";
 const Modal = () => {
   const { visible, closeModal, modalContent } = useContext(ModalContext);
 
@@ -38,6 +38,12 @@ const Modal = () => {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg overflow-scroll max-h-80vh">
+                <button
+                  className="right-0 top-0 absolute p-2"
+                  onClick={() => closeModal()}
+                >
+                  <FaTimes />
+                </button>
                 {modalContent}
               </Dialog.Panel>
             </Transition.Child>

@@ -1,4 +1,3 @@
-import { Token } from "./interfaces";
 import { unwraps } from "./mappings";
 
 export function toRaw(s: string): string {

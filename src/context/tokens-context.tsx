@@ -84,7 +84,7 @@ export const TokensProvider = ({ children }) => {
         }
         setTokensIsLoaded(true);
       });
-  }, []);
+  }, [tokenPrices]);
 
   useEffect(() => {
     tokens.forEach((token) => {
