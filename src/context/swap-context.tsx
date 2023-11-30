@@ -1,17 +1,13 @@
+import { ethers } from "ethers";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { ethers } from "ethers";
-import { getRoute } from "~/utils/squid";
-import { WalletContext } from "./wallet-context";
-import { GetRouteResult, Token } from "~/utils/interfaces";
-import { StrategyContext } from "./strategy-context";
-import {
-  networkByChainId,
-  networkBySlug,
-  tokenBySlug as tokenBySlugMapping,
-} from "~/utils/mappings";
 import { useAccount } from "wagmi";
+import { GetRouteResult, Token } from "~/utils/interfaces";
+import { networkByChainId } from "~/utils/mappings";
+import { getRoute } from "~/utils/squid";
+import { StrategyContext } from "./strategy-context";
 import { TokensContext } from "./tokens-context";
+import { WalletContext } from "./wallet-context";
 
 let debounceTimer;
 
@@ -45,17 +41,17 @@ export const SwapProvider = ({ children }) => {
   const { selectedStrategy } = useContext(StrategyContext);
   const [receiveEstimation, setReceiveEstimation] = useState<GetRouteResult>({
     toAmount: 0,
-    toToken: selectedStrategy.token,
+    toToken: selectedStrategy?.token ?? null,
   });
   const [estimationPromise, setEstimationPromise] = useState(null);
   const [selectTokenMode, setSelectTokenMode] = useState(false);
 
   const { sortedBalances } = useContext(WalletContext);
-  const { tokenBySlug } = useContext(TokensContext);
+  const { tokenBySlug, tokensBySlug, tokens } = useContext(TokensContext);
 
   const [fromToken, setFromToken] = useState<Token>(null);
 
-  const [toToken, setToToken] = useState<Token>(selectedStrategy?.token);
+  const [toToken, setToToken] = useState<Token>(null);
 
   const estimate = (depositValue: string) => {
     clearTimeout(debounceTimer);
@@ -119,28 +115,25 @@ export const SwapProvider = ({ children }) => {
   const selectToToken = (token: Token) => setToToken(token);
 
   useEffect(() => {
+    console.l;
     if (!fromToken) {
-      const token = tokenBySlug(sortedBalances?.[0].slug) ?? null;
-      console.log(
-        "🚀 ~ file: swap-context.tsx:120 ~ useEffect ~ tokenBySlug:",
-        tokenBySlugMapping
-      );
+      const token = tokenBySlug(sortedBalances?.[0]?.slug) ?? null;
 
-      console.log(
-        "🚀 ~ file: swap-context.tsx:129 ~ useEffect ~ networkBySlug:",
-        networkBySlug
-      );
-      console.log(
-        "🚀 ~ file: swap-context.tsx:120 ~ useEffect ~ sortedBalances?.[0].slug:",
-        sortedBalances?.[0].slug
-      );
-      console.log(
-        "🚀 ~ file: swap-context.tsx:121 ~ useEffect ~ token:",
-        token
-      );
       selectFromToken(token);
     }
-  }, [sortedBalances, fromToken]);
+    if (!toToken) {
+      const token = selectedStrategy ? selectedStrategy.token : tokens[0];
+      selectToToken(token);
+    }
+  }, [
+    sortedBalances,
+    fromToken,
+    tokensBySlug,
+    tokenBySlug,
+    selectedStrategy,
+    tokens,
+    toToken,
+  ]);
 
   return (
     <SwapContext.Provider

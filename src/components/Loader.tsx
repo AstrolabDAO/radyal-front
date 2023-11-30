@@ -1,25 +1,31 @@
 import { HTMLAttributes, useEffect, useState } from "react";
 
 interface LoaderProps extends HTMLAttributes<HTMLDivElement> {
-  promise: Promise<any> | null;
+  promise?: Promise<any> | null;
+  state?: any;
   children: React.ReactNode;
 }
-const Loader = ({ promise, children }: LoaderProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+const Loader = ({ promise, children, state }: LoaderProps) => {
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!promise) return;
-    setIsLoading(true);
+    if (!promise && !state) return;
 
-    promise
-      .then(() => {
+    if (promise) {
+      promise
+        .then(() => {
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          console.error(err);
+        });
+    } else {
+      if (state) {
         setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        console.error(err);
-      });
-  }, [promise]);
+      }
+    }
+  }, [promise, state]);
 
   return (
     <>
