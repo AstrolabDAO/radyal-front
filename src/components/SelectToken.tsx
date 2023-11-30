@@ -8,9 +8,10 @@ import { balanceBySlug } from "~/utils/mappings";
 
 const SelectToken = ({ tokens, onSelect }) => {
   const { tokenPrices } = useContext(TokensContext);
-  const [search, setSearch] = useState("");
 
+  const [search, setSearch] = useState("");
   const { switchSelectMode } = useContext(SwapContext);
+
   const filteredTokens = useMemo(() => {
     return tokens.filter(({ symbol }) =>
       symbol.toString().toLowerCase().includes(search.toLowerCase())
@@ -33,7 +34,8 @@ const SelectToken = ({ tokens, onSelect }) => {
         />
       </label>
       {filteredTokens.map((token, index) => {
-        const tokenPrice = Number(tokenPrices[token.coinGeckoId]?.usd);
+        const convertedPrice = Number(tokenPrices[token.coinGeckoId]?.usd);
+        const tokenPrice = isNaN(convertedPrice) ? 0 : convertedPrice;
 
         const balance = balanceBySlug[token.slug]?.amount ?? 0;
 
