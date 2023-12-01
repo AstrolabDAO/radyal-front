@@ -115,7 +115,6 @@ export const SwapProvider = ({ children }) => {
   const selectToToken = (token: Token) => setToToken(token);
 
   useEffect(() => {
-    console.l;
     if (!fromToken) {
       const token = tokenBySlug(sortedBalances?.[0]?.slug) ?? null;
 

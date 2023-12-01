@@ -13,8 +13,7 @@ interface StrategyProps {
   strategy: Strategy;
 }
 const StrategyCard = ({ strategy }: StrategyProps) => {
-  const { name } = strategy;
-  const { nativeNetwork, token } = strategy;
+  const { network, token, name } = strategy;
   const { selectStrategy, selectedStrategy } = useContext(StrategyContext);
   const { openModal } = useContext(ModalContext);
   const { isConnected } = useAccount();
@@ -22,8 +21,8 @@ const StrategyCard = ({ strategy }: StrategyProps) => {
 
   const icons = [
     {
-      url: nativeNetwork.icon,
-      alt: nativeNetwork.name,
+      url: network.icon,
+      alt: network.name,
       classes: "border-primary",
     },
     {

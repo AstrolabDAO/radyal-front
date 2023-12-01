@@ -1,17 +1,16 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { Strategy, Token } from "~/utils/interfaces";
-import importedStrategies from "~/data/strategies.json";
-import { networkBySlug, tokenBySlug } from "~/utils/mappings";
-import tokenAddresses from "~/data/token-addresses.json";
+import { createContext, useContext, useMemo, useState } from "react";
+import { useQuery } from "react-query";
+import { Strategy } from "~/utils/interfaces";
 import { TokensContext } from "./tokens-context";
+import { getStrategies } from "~/utils/api";
 
 interface StrategyContextType {
   strategies: Strategy[];
   selectedStrategy: Strategy;
   filteredStrategies: Strategy[];
   selectStrategy: (strategy: Strategy) => void;
-  updateStrategies: (strategies: Strategy[]) => void;
   search: (searchString: string) => void;
+  filterByNetworks: (networks: string[]) => void;
 }
 
 export const StrategyContext = createContext<StrategyContextType>({
@@ -19,76 +18,44 @@ export const StrategyContext = createContext<StrategyContextType>({
   selectedStrategy: null,
   filteredStrategies: [],
   selectStrategy: () => {},
-  updateStrategies: () => {},
   search: () => {},
+  filterByNetworks: () => {},
 });
 
 export const StrategyProvider = ({ children }) => {
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(null);
 
-  const [strategies, setStrategies] = useState<Strategy[]>([]);
-  const [filteredStrategies, setFilteredStrategies] = useState<Strategy[]>([]);
+  const [search, setSearch] = useState<string>("");
+  const [networksFilter, setNetworksFilter] = useState<string[]>([]);
+  const { tokensIsLoaded, tokensBySlug } = useContext(TokensContext);
 
   const Provider = StrategyContext.Provider;
   const selectStrategy = (strategy: Strategy) => {
     setSelectedStrategy(strategy);
   };
-  const updateStrategies = (strategies: Strategy[]) => {
-    setStrategies(strategies);
-  };
 
-  const { updateTokenBySlug } = useContext(TokensContext);
+  const { data: strategiesData } = useQuery("strategies", getStrategies, {
+    enabled: tokensIsLoaded && Object.values(tokensBySlug).length > 0,
+    staleTime: 0,
+  });
 
-  useEffect(() => {
-    const populatedStrategies = importedStrategies
-      .filter((s) => {
-        const { underlying } = s;
-        const [networkSlug, symbol] = underlying.split(":");
+  const strategies = useMemo<Strategy[]>(() => {
+    if (!strategiesData) return [];
+    return strategiesData as Strategy[];
+  }, [strategiesData]);
 
-        const network = networkBySlug[networkSlug];
-        const tokenData =
-          tokenAddresses[network.id]?.tokens?.[symbol.toUpperCase()];
-        return tokenData ? true : false;
+  const filteredStrategies = useMemo<Strategy[]>(() => {
+    return strategies
+      .filter(({ network }) => {
+        if (!networksFilter.length) return true;
+        return networksFilter.includes(network.slug);
       })
-      .map((s: any) => {
-        const { underlying } = s;
-        const [networkSlug, symbol] = underlying.split(":");
-        const network = networkBySlug[networkSlug];
-
-        if (!tokenBySlug[underlying]) {
-          const tokenData =
-            tokenAddresses[network.id].tokens[symbol.toUpperCase()];
-
-          const token = {
-            address: tokenData.address,
-            network: network,
-            coinGeckoId: tokenData.coinGeckoId,
-            symbol,
-            icon: `/tokens/${symbol}.svg`,
-            slug: underlying,
-          } as Token;
-          updateTokenBySlug(token);
-        }
-        const token = tokenBySlug[underlying];
-
-        return {
-          ...s,
-          nativeNetwork: network,
-          token,
-        } as Strategy;
-      });
-    setStrategies(populatedStrategies);
-    setFilteredStrategies(populatedStrategies);
-  }, [updateTokenBySlug]);
-
-  const search = (searchString: string) => {
-    const filtered = strategies.filter((item) =>
-      Object.values(item).some((value) =>
-        value.toString().toLowerCase().includes(searchString.toLowerCase())
-      )
-    );
-    setFilteredStrategies(filtered);
-  };
+      .filter((item) =>
+        Object.values(item).some((value) =>
+          value.toString().toLowerCase().includes(search.toLowerCase())
+        )
+      );
+  }, [search, strategies, networksFilter]);
 
   return (
     <Provider
@@ -97,8 +64,8 @@ export const StrategyProvider = ({ children }) => {
         strategies,
         filteredStrategies,
         selectStrategy,
-        updateStrategies,
-        search,
+        search: (value) => setSearch(value),
+        filterByNetworks: (value) => setNetworksFilter(value),
       }}
     >
       {children}

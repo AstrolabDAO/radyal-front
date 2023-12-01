@@ -34,12 +34,13 @@ export interface GetRouteResult {
 }
 
 export interface Strategy {
+  id: number;
   name: string;
   slug: string;
-  underlying: string;
+  address: `0x${string}`;
   rewardsTokens: string[];
   token: Token;
-  nativeNetwork: Network;
+  network: Network;
 }
 
 export interface DeFiMetadata {

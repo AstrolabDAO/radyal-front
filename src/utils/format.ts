@@ -30,8 +30,8 @@ export const clearNetworkTypeFromSlug = (slug: string): string =>
 export const amountToEth = (bigInt: bigint, decimals) =>
   Number(bigInt) / 10 ** decimals;
 
-export const lisibleAmount = (amount: string | number) => {
-  return Math.round(Number(amount) * 100) / 100;
+export const lisibleAmount = (amount: string | number, decimals = 2) => {
+  return Math.round(Number(amount) * 10 ** decimals) / 10 ** decimals;
 };
 
 export const unwrapSymbol = (symbol: string): string => {

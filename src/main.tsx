@@ -9,6 +9,7 @@ import { createWebStoragePersistor } from "react-query/createWebStoragePersistor
 import "./styles/index.css";
 
 export const ONE_MINUTE = 1000 * 60;
+
 export const CACHE_TIME = ONE_MINUTE * 5;
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -33,16 +33,20 @@ export const WalletProvider = ({ children }) => {
     {}
   );
 
-  const { data: balances } = useQuery(
+  const { data: balancesData } = useQuery(
     "balances",
     () => loadBalancesByAddress(address),
     {
       enabled: !!address && tokensIsLoaded && isConnected,
       staleTime: ONE_MINUTE,
       refetchInterval: ONE_MINUTE,
-      initialData: [],
     }
   );
+
+  const balances = useMemo(() => {
+    if (!balancesData) return [];
+    return balancesData;
+  }, [balancesData]);
 
   useEffect(() => {
     setBalancesBySlug(balanceBySlugMapping);
@@ -64,7 +68,13 @@ export const WalletProvider = ({ children }) => {
   }, [chain, signer]);
 
   return (
-    <Provider value={{ balances, balancesBySlug, sortedBalances }}>
+    <Provider
+      value={{
+        balances: balances ?? [],
+        balancesBySlug,
+        sortedBalances,
+      }}
+    >
       {children}
     </Provider>
   );
