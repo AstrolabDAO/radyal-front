@@ -102,7 +102,7 @@ export const getRoute = async ({
   toToken,
   toAddress,
 }: RouteParams) => {
-  const baseUrl = "https://api.0xsquid.com"; // "https://api.0xsquid.com"
+  const baseUrl = "https://v2.api.squidrouter.com"; // "https://api.0xsquid.com"
   const squid = new Squid({ baseUrl, integratorId: "radyal-astrolab-sdk" });
 
   await squid.init();
@@ -146,7 +146,7 @@ export const getRoute = async ({
   const { route } = await squid.getRoute(params);
   console.log(route)
   return route;
-};*/
+};
 
 export const depositCallData = async (
   stratAddress: string,
