@@ -17,7 +17,7 @@ const Strategies = () => {
           <input
             type="text"
             placeholder="type anything..."
-            className="input input-bordered w-full max-w-xs w-full w-64"
+            className="input input-bordered max-w-xs w-full w-64"
             onChange={({ target }) => {
               search(target.value);
             }}

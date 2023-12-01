@@ -11,7 +11,6 @@ const Withdraw = () => {
     selectToToken,
     switchSelectMode,
     selectFromToken,
-    fromToken,
     toToken,
   } = useContext(SwapContext);
 

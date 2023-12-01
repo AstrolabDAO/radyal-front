@@ -24,20 +24,22 @@ const Header = () => {
             </ul>
           </nav>
           <div className="flex justify-end">
-            {!isConnected && (
-              <Button onClick={() => web3Modal.open()}>Connect wallet</Button>
-            )}
-            {isConnected && (
-              <div className="flex items-center">
-                <Button
-                  className="flex mr-4 cursor-pointer transition-ease hover:text-primary"
-                  onClick={() => web3Modal.open()}
-                >
-                  {shortenAddress(address.toLowerCase())}
-                </Button>
-                <Button onClick={() => disconnect()}>Logout</Button>
-              </div>
-            )}
+            <div className="flex items-center">
+              {!isConnected && (
+                <Button onClick={() => web3Modal.open()}>Connect wallet</Button>
+              )}
+              {isConnected && (
+                <>
+                  <Button
+                    className="flex mr-4 cursor-pointer transition-ease hover:text-primary"
+                    onClick={() => web3Modal.open()}
+                  >
+                    {shortenAddress(address.toLowerCase())}
+                  </Button>
+                  <Button onClick={() => disconnect()}>Logout</Button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
