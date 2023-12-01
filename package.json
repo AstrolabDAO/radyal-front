@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@0xsquid/sdk": "2.8.0-beta.0",
     "@astrolabs/registry": "^1.0.2",
     "@ethersproject/units": "^5.7.0",
     "@headlessui/react": "^1.7.17",
@@ -36,7 +35,6 @@
   "devDependencies": {
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
-    "@0xsquid/squid-types": "0.1.40",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "@vitejs/plugin-react": "^4.2.0",

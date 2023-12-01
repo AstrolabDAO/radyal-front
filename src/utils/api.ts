@@ -7,14 +7,12 @@ import {
   deFiIdByChainId,
   networkBySlug,
   tokenBySlug,
-  tokenBySymbol,
   tokenPriceBycoinGeckoId,
   tokensByNetworkSlug,
   updateTokenMapping,
 } from "./mappings";
 import updateBalances from "./multicall";
 import { NETWORKS } from "./web3-constants";
-import importedStrategies from "~/data/strategies.json";
 
 export const getBalancesFromDeFI = (
   address: `0x${string}`,
@@ -187,49 +185,5 @@ export const getStrategies = () => {
             slug,
           } as Strategy;
         });
-    });
-
-  return importedStrategies
-    .filter((s) => {
-      const { underlying } = s;
-      const [networkSlug, symbol] = underlying.split(":");
-
-      const network = networkBySlug[networkSlug];
-      if (!network) return false;
-      const tokenData = tokenBySymbol[symbol];
-      console.log(
-        "🚀 ~ file: api.ts:166 ~ .filter ~ tokenBySymbol:",
-        tokenBySymbol
-      );
-      console.log("🚀 ~ file: api.ts:166 ~ .filter ~ tokenData:", tokenData);
-
-      return tokenData ? true : false;
-    })
-    .map((s: any) => {
-      const { underlying } = s;
-      const [networkSlug, symbol] = underlying.split(":");
-      const network = networkBySlug[networkSlug];
-
-      /*if (!tokenBySlug[underlying]) {
-        const tokenData =
-          tokenAddresses[network.id].tokens[symbol.toUpperCase()];
-
-        const token = {
-          address: tokenData.address,
-          network: network,
-          coinGeckoId: tokenData.coinGeckoId,
-          symbol,
-          icon: `/tokens/${symbol}.svg`,
-          slug: underlying,
-        } as Token;
-        updateTokenBySlug(token);
-      }*/
-      const token = tokenBySlug[underlying];
-
-      return {
-        ...s,
-        nativeNetwork: network,
-        token,
-      } as Strategy;
     });
 };

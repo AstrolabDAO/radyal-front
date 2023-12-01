@@ -1,10 +1,6 @@
-import { ethers } from "ethers";
 import { createContext, useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { useAccount } from "wagmi";
 import { GetRouteResult, Token } from "~/utils/interfaces";
-import { networkByChainId } from "~/utils/mappings";
-import { getRoute } from "~/utils/squid";
 import { StrategyContext } from "./strategy-context";
 import { TokensContext } from "./tokens-context";
 import { WalletContext } from "./wallet-context";
@@ -57,7 +53,7 @@ export const SwapProvider = ({ children }) => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
       if (!fromToken || !depositValue) return;
-      const promise = getRoute({
+      /*const promise = getRoute({
         fromAddress: address,
         toAddress: address,
         fromChain: fromToken.network.id,
@@ -103,7 +99,7 @@ export const SwapProvider = ({ children }) => {
       toast.promise(promise, {
         pending: "Calculating...",
         error: "route not found from Swapper 🤯",
-      });
+      });*/
     }, 1000);
   };
 

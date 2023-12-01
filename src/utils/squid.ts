@@ -1,4 +1,3 @@
-import { Squid } from "@0xsquid/sdk";
 import { ethers } from "ethers";
 import { PrepareSendTransactionArgs, writeContract } from "@wagmi/core";
 import { parseGwei } from "viem";
@@ -30,7 +29,7 @@ export interface ICustomContractCall {
   };
   estimatedGas: string;
 }
-
+/*
 interface RouteParams {
   fromChain: number;
   fromAddress: `0x${string}`;
@@ -39,9 +38,9 @@ interface RouteParams {
   toToken: `0x${string}`;
   toAddress: `0x${string}`;
   fromAmount: string;
-}
+}*/
 
-export const getRoute = async ({
+/*export const getRoute = async ({
   fromAddress,
   fromChain,
   fromToken,
@@ -93,7 +92,7 @@ export const getRoute = async ({
 
   const { route } = await squid.getRoute(params);
   return route;
-};
+};*/
 
 export const swap = async (route) => {
   if (route.transactionRequest.maxFeePerGas)
