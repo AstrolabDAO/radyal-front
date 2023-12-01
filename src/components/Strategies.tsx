@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { StrategyContext } from "~/context/strategy-context";
 import StrategyCard from "./StrategyBox";
 import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
-import { getLifitransactionRequest } from '~/utils/lifi';
 
 const Strategies = () => {
   const { filteredStrategies, search, filterByNetworks, strategies } =

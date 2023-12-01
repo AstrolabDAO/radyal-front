@@ -1,20 +1,8 @@
 import { ethers } from "ethers";
-import { PrepareSendTransactionArgs, writeContract } from "@wagmi/core";
-import { parseGwei } from "viem";
 import { erc20Abi } from "abitype/abis";
 import { getTransactionRequest } from '../../../swapperClain/src/Squid'
-import { type PublicClient } from 'wagmi'
-
-import {
-  prepareSendTransaction,
-  prepareWriteContract,
-  sendTransaction,
-  switchNetwork,
-} from "wagmi/actions";
-import { currentChain } from "~/context/web3-context";
-
-import { getContractCallsQuote, getQuote } from "../../../swapperClain/src/LiFi";
-import { prepareWriteTx } from "./web3";
+import { swap } from "./web3";
+import StratV5Abi from '@astrolabs/registry/abis/StrategyV5.json';
 
 
 export enum SquidCallType {
@@ -114,7 +102,7 @@ export const getRoute = async ({
   toToken,
   toAddress,
 }: RouteParams) => {
-  const baseUrl = "https://v2.api.squidrouter.com"; // "https://api.0xsquid.com"
+  const baseUrl = "https://api.0xsquid.com"; // "https://api.0xsquid.com"
   const squid = new Squid({ baseUrl, integratorId: "radyal-astrolab-sdk" });
 
   await squid.init();
@@ -160,49 +148,18 @@ export const getRoute = async ({
   return route;
 };*/
 
-// export const swap = async (route?: RouteData) => {
-//   if (route.transactionRequest.maxFeePerGas)
-//     delete route.transactionRequest.maxFeePerGas;
-//   if (route.transactionRequest.maxPriorityFeePerGas)
-//     delete route.transactionRequest.maxPriorityFeePerGas;
-
-//   const param: PrepareSendTransactionArgs = {
-//     to: route.transactionRequest.targetAddress,
-//     ...route.transactionRequest,
-//     gas: parseGwei("0.00001"),
-//   };
-
-//   const { hash } = await send(param);
-
-//   const explorer = `https://axelarscan.io/gmp/${hash}`;
-//   console.log('axelar explorer: ', explorer, '\n', 'hash: ', hash);
-//   return explorer;
-// };
-
-// export const prepareWriteTx = async (
-//   args: unknown[],
-//   to: string,
-//   functionName: string,
-//   abi = erc20Abi
-// ) => {
-//   const { request } = await prepareWriteContract({
-//     address: to,
-//     abi,
-//     functionName,
-//     args,
-//   });
-//   return request;
-// };
-
-// export const approve = async (
-//   routerAddress: string,
-//   amountInWei: string,
-//   tokenAddress: string
-// ) => {
-//   return await writeContract(
-//     await prepareWriteTx([routerAddress, amountInWei], tokenAddress, "approve")
-//   );
-// };
+export const depositCallData = async (
+  stratAddress: string,
+  address: string,
+  toAmount: string,
+) => {
+  return await generateSquidContractCall(
+    "safeDeposit",
+    [toAmount, stratAddress, "0"],
+    toAmount,
+    StratV5Abi.abi as any
+  );
+}
 
 export const generateSquidContractCall = (
   functionName: string,
@@ -221,44 +178,4 @@ export const generateSquidContractCall = (
     },
     estimatedGas: "20000",
   };
-};
-
-export const getDeadline = (minutes = 30) => {
-  const now = new Date();
-  return now.setMinutes(now.getMinutes() + minutes);
-};
-
-export const safeDeposit = async (
-  args: unknown[],
-  stratAddress: string,
-  abi = erc20Abi
-) => {
-  return await writeContract(
-    await prepareWriteTx(args, stratAddress, "safeDeposit", abi)
-  );
-};
-
-export const safeWithdraw = async (
-  args: unknown[],
-  stratAddress: string,
-  abi = erc20Abi
-) => {
-  return await writeContract(
-    await prepareWriteTx(args, stratAddress, "safeWithdraw", abi)
-  );
-};
-
-export const _switchNetwork = async (chainId: number) => {
-  if (currentChain.id !== chainId) await switchNetwork({ chainId });
-};
-
-export const increaseAllowance = async (
-  spender: string,
-  amountInWei: string,
-  tokenAddress: string,
-  functionName = "increaseAllowance"
-) => {
-  return await writeContract(
-    await prepareWriteTx([spender, amountInWei], tokenAddress, functionName)
-  );
 };
