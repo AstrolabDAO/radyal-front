@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { Strategy } from "~/utils/interfaces";
 import { TokensContext } from "./tokens-context";
 import { getStrategies } from "~/utils/api";
+import { ONE_MINUTE } from "~/main";
 
 interface StrategyContextType {
   strategies: Strategy[];
@@ -36,7 +37,7 @@ export const StrategyProvider = ({ children }) => {
 
   const { data: strategiesData } = useQuery("strategies", getStrategies, {
     enabled: tokensIsLoaded && Object.values(tokensBySlug).length > 0,
-    staleTime: 0,
+    staleTime: ONE_MINUTE * 5,
   });
 
   const strategies = useMemo<Strategy[]>(() => {
