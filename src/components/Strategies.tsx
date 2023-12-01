@@ -17,7 +17,7 @@ const Strategies = () => {
           <input
             type="text"
             placeholder="type anything..."
-            className="input input-bordered max-w-xs w-full w-64"
+            className="input input-bordered max-w-xs w-64"
             onChange={({ target }) => {
               search(target.value);
             }}
@@ -29,7 +29,7 @@ const Strategies = () => {
           </span>
           <NetworkSelect
             isSearchable
-            className="basic-multi-select w-full w-64 h-12"
+            className="basic-multi-select w-64 h-12"
             classNamePrefix="select"
             networks={strategies.map(({ network }) => network)}
             onChange={(value: Array<NetworkSelectData>) => {
