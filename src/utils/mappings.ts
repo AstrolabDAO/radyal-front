@@ -20,7 +20,7 @@ export const balanceBySlug: BalanceBySlugMapping = {};
 export const tokenPriceBycoinGeckoId: CoingeckoPrices = {};
 export const tokenBySymbol: { [symbol: string]: Token } = {};
 export const tokensByNetworkId: { [networkId: number]: Token[] } = {};
-
+export const tokensByNetworkSlug: { [networkSlug: string]: Token[] } = {};
 export const coinGeckoIdBySymbol: { [symbol: string]: string } = {};
 
 export const updateTokenMapping = (token: Token) => {
@@ -30,6 +30,11 @@ export const updateTokenMapping = (token: Token) => {
   if (!tokensByNetworkId[token.network.id]) {
     tokensByNetworkId[token.network.id] = [];
   }
+  if (!tokensByNetworkSlug[token.network.slug]) {
+    tokensByNetworkSlug[token.network.slug] = [];
+  }
+
+  tokensByNetworkSlug[token.network.slug].push(token);
   tokensByNetworkId[token.network.id].push(token);
 };
 export const updateBalanceMapping = (balance: Balance) => {

@@ -1,16 +1,20 @@
 import { erc20Abi } from "abitype/abis";
 import axios from "axios";
 import { toast } from "react-toastify";
-import addresses from "../data/token-addresses.json";
 import { COINGECKO_API, DeFI_API, TOKEN_BASENAME_REGEX } from "./constants";
-import { Balance, DeFiBalance, Network, Token } from "./interfaces";
+import { Balance, DeFiBalance, Network, Strategy, Token } from "./interfaces";
 import {
   deFiIdByChainId,
   networkBySlug,
+  tokenBySlug,
+  tokenBySymbol,
   tokenPriceBycoinGeckoId,
+  tokensByNetworkSlug,
+  updateTokenMapping,
 } from "./mappings";
 import updateBalances from "./multicall";
 import { NETWORKS } from "./web3-constants";
+import importedStrategies from "~/data/strategies.json";
 
 export const getBalancesFromDeFI = (
   address: `0x${string}`,
@@ -98,6 +102,7 @@ export const getTokens = async () => {
             slug: `${network.slug}:${symbol.toLocaleLowerCase()}`,
             coinGeckoId,
           } as Token;
+          updateTokenMapping(token);
           return token;
         });
 
@@ -116,20 +121,20 @@ export const loadBalancesByAddress = async (address: `0x${string}`) => {
 
   const filteredNetworks = NETWORKS.map((slug) => networkBySlug[slug]);
   const requests = [];
+
   for (const network of filteredNetworks) {
     const chain = deFiIdByChainId[network.id];
     if (chain) {
       requests.push(getBalancesFromDeFI(address, network));
     } else {
-      const tokenKeys = Object.keys(addresses[network.id].tokens);
-      const tokens = Object.values(addresses[network.id].tokens)
-        .filter((token, index) => tokenKeys[index] !== "WGAS")
-        .slice(0, 10);
+      const tokens = tokensByNetworkSlug[network.slug] ?? [];
+
       const contracts: any = tokens.map((token: any) => ({
-        address: token.address,
+        address: token.nativeAddress,
         coinGeckoId: token.coinGeckoId,
         abi: erc20Abi,
       }));
+
       const promise = updateBalances(network, contracts, address);
       toast.promise(promise, {
         pending: `Get balances from ${network.name}`,
@@ -147,4 +152,84 @@ export const loadBalancesByAddress = async (address: `0x${string}`) => {
   });
 
   return _balances;
+};
+
+export const getStrategies = () => {
+  return axios
+    .get(`${process.env.ASTROLAB_API}/strategies`)
+    .then((res) => res.data.data)
+    .then((strategies) => {
+      return strategies
+        .filter((strategy) => {
+          const { nativeNetwork, denomination } = strategy;
+          const network = networkBySlug[nativeNetwork];
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const [_, symbol] = denomination.split(":");
+          const token = tokenBySlug[`${network?.slug}:${symbol}`];
+
+          return !!network && !!token ? true : false;
+        })
+        .map((strategy) => {
+          const { id, name, nativeNetwork, nativeAddress, denomination, slug } =
+            strategy;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const [_, symbol] = denomination.split(":");
+          const network = networkBySlug[nativeNetwork];
+
+          const token = tokenBySlug[`${network.slug}:${symbol}`];
+
+          return {
+            id,
+            name,
+            address: nativeAddress,
+            network: network,
+            token,
+            slug,
+          } as Strategy;
+        });
+    });
+
+  return importedStrategies
+    .filter((s) => {
+      const { underlying } = s;
+      const [networkSlug, symbol] = underlying.split(":");
+
+      const network = networkBySlug[networkSlug];
+      if (!network) return false;
+      const tokenData = tokenBySymbol[symbol];
+      console.log(
+        "🚀 ~ file: api.ts:166 ~ .filter ~ tokenBySymbol:",
+        tokenBySymbol
+      );
+      console.log("🚀 ~ file: api.ts:166 ~ .filter ~ tokenData:", tokenData);
+
+      return tokenData ? true : false;
+    })
+    .map((s: any) => {
+      const { underlying } = s;
+      const [networkSlug, symbol] = underlying.split(":");
+      const network = networkBySlug[networkSlug];
+
+      /*if (!tokenBySlug[underlying]) {
+        const tokenData =
+          tokenAddresses[network.id].tokens[symbol.toUpperCase()];
+
+        const token = {
+          address: tokenData.address,
+          network: network,
+          coinGeckoId: tokenData.coinGeckoId,
+          symbol,
+          icon: `/tokens/${symbol}.svg`,
+          slug: underlying,
+        } as Token;
+        updateTokenBySlug(token);
+      }*/
+      const token = tokenBySlug[underlying];
+
+      return {
+        ...s,
+        nativeNetwork: network,
+        token,
+      } as Strategy;
+    });
 };

@@ -40,8 +40,10 @@ const CrossChainTokenSelect = ({
     if (!selected) return 0;
 
     const price = Number(tokenPrices[selected?.coinGeckoId]?.usd);
+
     return isNaN(price) ? 0 : price;
   }, [tokenPrices, selected]);
+
   useEffect(() => {
     estimate(depositValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,7 +93,7 @@ const CrossChainTokenSelect = ({
             {isReceive && (
               <div className="w-full text-right text-4xl">
                 <Loader promise={estimationPromise}>
-                  {lisibleAmount(toAmount)}
+                  {lisibleAmount(toAmount, 4)}
                 </Loader>
               </div>
             )}

@@ -61,7 +61,7 @@ export const getRoute = async ({
   const stratAddress = "0x1Fe1aa5f581AcD595A362Ff9876eBd9E39Ddf89D";
 
   const nullAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
-  const zeroAddressRegex = /^0x(0)*[0-9a-fA-F]*$/i;
+  const zeroAddressRegex = /^0x(0)+(1010)?$/i;
 
   // Allowance & approval part (to test)
   // ! don't delete, need it later for approval (useApproval)
@@ -78,6 +78,7 @@ export const getRoute = async ({
     fromAmount,
     toChain: toChain.toString(),
     toToken: zeroAddressRegex.test(toToken) ? nullAddress : toToken,
+
     toAddress,
     slippage,
     enableForecall,

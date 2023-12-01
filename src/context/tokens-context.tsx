@@ -2,7 +2,10 @@ import { createContext, useCallback, useEffect, useState } from "react";
 
 import { getTokens, getTokensPrices } from "~/utils/api";
 import { CoingeckoPrices, Token, TokenBySlugMapping } from "~/utils/interfaces";
-import { tokenBySlug as tokenBySlugMapping } from "~/utils/mappings";
+import {
+  tokenBySlug as tokenBySlugMapping,
+  updateTokenMapping,
+} from "~/utils/mappings";
 
 import { useQuery } from "react-query";
 import { ONE_MINUTE } from "~/main";
@@ -29,9 +32,9 @@ export const TokensContext = createContext<TokensContextType>({
 
 export const TokensProvider = ({ children }) => {
   const [tokensBySlug, setTokensBySlugs] = useState<TokenBySlugMapping>({});
+
   const updateTokenBySlug = useCallback((token: Token) => {
     tokenBySlugMapping[token.slug] = token;
-    setTokensBySlugs({ ...tokenBySlugMapping });
   }, []);
 
   const tokenBySlug = useCallback(
@@ -59,8 +62,9 @@ export const TokensProvider = ({ children }) => {
 
   useEffect(() => {
     tokens?.forEach((token) => {
-      updateTokenBySlug(token);
+      updateTokenMapping(token);
     });
+    setTokensBySlugs({ ...tokenBySlugMapping });
   }, [tokens, updateTokenBySlug]);
 
   return (

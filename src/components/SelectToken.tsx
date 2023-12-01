@@ -6,24 +6,36 @@ import clsx from "clsx";
 import { SwapContext } from "~/context/swap-context";
 import { balanceBySlug } from "~/utils/mappings";
 
+import { Web3Context } from "~/context/web3-context";
+import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
+
 const SelectToken = ({ tokens, onSelect }) => {
   const { tokenPrices } = useContext(TokensContext);
 
+  const { networks } = useContext(Web3Context);
+
   const [search, setSearch] = useState("");
+  const [networksFilter, setNetworksFilter] = useState([]);
+
   const { switchSelectMode } = useContext(SwapContext);
 
   const filteredTokens = useMemo(() => {
-    return tokens.filter(({ symbol }) =>
-      symbol.toString().toLowerCase().includes(search.toLowerCase())
-    );
-  }, [search, tokens]);
+    return tokens
+      .filter(({ network }) => {
+        if (!networksFilter.length) return true;
+        return networksFilter.includes(network.slug);
+      })
+      .filter(({ symbol }) =>
+        symbol.toString().toLowerCase().includes(search.toLowerCase())
+      );
+  }, [search, tokens, networksFilter]);
 
   return (
-    <div className="token-list card">
-      <label className="label block flex flex-wrap">
-        <span className="label-text block w-full mb-2">
-          You need an specific token ?
-        </span>
+    <div className="token-list card pt-4">
+      <h1 className="text-center mb-8">Select </h1>
+
+      <div>
+        <label>search by name...</label>
         <input
           type="text"
           placeholder="USDC..."
@@ -32,7 +44,19 @@ const SelectToken = ({ tokens, onSelect }) => {
             setSearch(target.value);
           }}
         />
-      </label>
+        <hr />
+        <div className="my-2">filter by network</div>
+        <NetworkSelect
+          isSearchable
+          networks={networks}
+          className="basic-multi-select w-full mb-8"
+          classNamePrefix="select"
+          onChange={(value: Array<NetworkSelectData>) => {
+            setNetworksFilter(value.map((v) => v.network?.slug));
+          }}
+        />
+      </div>
+
       {filteredTokens.map((token, index) => {
         const convertedPrice = Number(tokenPrices[token.coinGeckoId]?.usd);
         const tokenPrice = isNaN(convertedPrice) ? 0 : convertedPrice;
@@ -71,7 +95,7 @@ const SelectToken = ({ tokens, onSelect }) => {
             <div>
               <div className="text-right">
                 <span className="whitespace-nowrap block">
-                  Balance: {lisibleAmount(convertedBalance)}
+                  Balance: {lisibleAmount(convertedBalance, 4)}
                   {token.symbol}
                 </span>
               </div>

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -17,35 +17,40 @@ import { clearNetworkTypeFromSlug } from "~/utils/format";
 import { networkToWagmiChain } from "~/utils/converters";
 import { setupWeb3modal } from "~/utils/setup-web3modal";
 import deFiNetworks from "../data/defi-networks.json";
+import { Network } from "~/utils/interfaces";
 
 interface Web3ContextType {
   config: any;
+  networks: Network[];
 }
 
 const Web3Context = createContext<Web3ContextType>({
   config: null,
+  networks: [],
 });
 
 const Web3Provider = ({ children }) => {
   const [config, setConfig] = useState(null);
 
-  const { data: networks, isLoading } = useQuery("networks", getNetworks);
+  const { data: networksData, isLoading } = useQuery("networks", getNetworks);
+
+  const networks = useMemo(() => {
+    return networksData?.filter((network) => NETWORKS.includes(network.slug));
+  }, [networksData]);
 
   useEffect(() => {
     if (isLoading || !networks) return;
-    networks
-      .filter((network) => NETWORKS.includes(network.slug))
-      .map((network) => {
-        networkBySlug[network.slug] = network;
-        networkByChainId[network.id] = network;
-        const deFiNetwork = deFiNetworks.find(
-          (n) => n.metadata.absoluteChainId === network.id
-        );
-        if (deFiNetwork) {
-          deFiIdByChainId[network.id] = deFiNetwork.id;
-          chainIdByDeFiId[deFiNetwork.id] = network.id;
-        }
-      });
+    networks.map((network) => {
+      networkBySlug[network.slug] = network;
+      networkByChainId[network.id] = network;
+      const deFiNetwork = deFiNetworks.find(
+        (n) => n.metadata.absoluteChainId === network.id
+      );
+      if (deFiNetwork) {
+        deFiIdByChainId[network.id] = deFiNetwork.id;
+        chainIdByDeFiId[deFiNetwork.id] = network.id;
+      }
+    });
 
     const convertedNetworks = NETWORKS.map((n) => {
       const network = networkBySlug[n];
@@ -62,7 +67,7 @@ const Web3Provider = ({ children }) => {
   if (!config) return null;
 
   return (
-    <Web3Context.Provider value={{ config }}>
+    <Web3Context.Provider value={{ config, networks }}>
       <WagmiConfig config={config}>{children}</WagmiConfig>
     </Web3Context.Provider>
   );
