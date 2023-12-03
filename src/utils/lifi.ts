@@ -135,9 +135,9 @@ export const generateAndSwap = async ({
     address,
   });
 
-  const amountWei = BigInt(Math.round(amount * fromToken.weiPerUnit) * 1.2);
+  const amountWei = BigInt(Math.round(amount * fromToken.weiPerUnit));
 
-  const approvalAmount = amountWei; // + amountWei / 500n; // 5%
+  const approvalAmount = amountWei + amountWei / 500n; // 5%
 
   return approve(
     routerByChainId[fromToken.network.id],
