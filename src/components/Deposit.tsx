@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { SwapContext } from "~/context/swap-context";
-import { WalletContext } from "~/context/wallet-context";
 import CrossChainTokenSelect from "./CrossChainTokenSelect";
 import SelectToken from "./SelectToken";
 import { tokenBySlug } from "~/utils/mappings";

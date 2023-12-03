@@ -9,7 +9,7 @@ import {
   sendTransaction,
   switchNetwork,
 } from "wagmi/actions";
-import { currentChain } from "~/context/wallet-context";
+import { currentChain } from "~/context/web3-context";
 
 export enum SquidCallType {
   DEFAULT = 0,

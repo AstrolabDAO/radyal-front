@@ -3,7 +3,6 @@ import { useAccount } from "wagmi";
 import { GetRouteResult, Token } from "~/utils/interfaces";
 import { StrategyContext } from "./strategy-context";
 import { TokensContext } from "./tokens-context";
-import { WalletContext } from "./wallet-context";
 
 let debounceTimer;
 

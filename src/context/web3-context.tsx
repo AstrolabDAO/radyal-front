@@ -3,7 +3,7 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useQuery } from "react-query";
-import { WagmiConfig } from "wagmi";
+import { WagmiConfig, useAccount, useNetwork, useWalletClient } from "wagmi";
 import { getNetworks } from "~/utils/api.ts";
 import {
   chainIdByDeFiId,
@@ -28,6 +28,9 @@ const Web3Context = createContext<Web3ContextType>({
   config: null,
   networks: [],
 });
+
+export let currentChain = null;
+export let etherSigner = null;
 
 const Web3Provider = ({ children }) => {
   const [config, setConfig] = useState(null);
@@ -68,9 +71,20 @@ const Web3Provider = ({ children }) => {
 
   return (
     <Web3Context.Provider value={{ config, networks }}>
-      <WagmiConfig config={config}>{children}</WagmiConfig>
+      <WagmiConfig config={config}>
+        <UpdateSigner>{children}</UpdateSigner>
+      </WagmiConfig>
     </Web3Context.Provider>
   );
 };
 
+const UpdateSigner = ({ children }) => {
+  const { data: signer } = useWalletClient();
+  const { chain } = useNetwork();
+  useEffect(() => {
+    etherSigner = signer;
+    currentChain = chain;
+  }, [chain, signer]);
+  return <>{children}</>;
+};
 export { Web3Context, Web3Provider };
