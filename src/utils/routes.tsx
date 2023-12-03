@@ -1,6 +1,6 @@
 import SwapPage from "~/pages/SwapPage";
-import Strategies from "../components/Strategies";
-import HomePage from "../pages/HomePage";
+import Strategies from "~/components/Strategies";
+import HomePage from "~/pages/HomePage";
 
 export default [
   {

@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { StrategyContext } from "~/context/strategy-context";
 import StrategyCard from "./StrategyBox";
 import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
+
 const Strategies = () => {
   const { filteredStrategies, search, filterByNetworks, strategies } =
     useContext(StrategyContext);
