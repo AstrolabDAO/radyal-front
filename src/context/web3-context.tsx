@@ -3,7 +3,7 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useQuery } from "react-query";
-import { WagmiConfig, useAccount, useNetwork, useWalletClient } from "wagmi";
+import { WagmiConfig, useNetwork, useWalletClient } from "wagmi";
 import { getNetworks } from "~/utils/api.ts";
 import {
   chainIdByDeFiId,

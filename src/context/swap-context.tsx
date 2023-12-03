@@ -1,18 +1,29 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useAccount } from "wagmi";
-import { GetRouteResult, Token } from "~/utils/interfaces";
+import { Token } from "~/utils/interfaces";
 import { StrategyContext } from "./strategy-context";
 import { TokensContext } from "./tokens-context";
+import { generateRequest } from "~/utils/lifi";
+import { toast } from "react-toastify";
+import { useQueryClient } from "react-query";
 
 let debounceTimer;
 
 interface SwapContextType {
-  estimate: (depositValue: string) => void;
+  estimate: (depositValue: number) => void;
   switchSelectMode: () => void;
   selectFromToken: (token: Token) => void;
   selectToToken: (token: Token) => void;
+  updateFromValue: (value: string) => void;
   fromToken: Token;
   toToken: Token;
+  fromValue: string;
   sortedBalances: any;
   receiveEstimation: any;
   selectTokenMode: boolean;
@@ -23,8 +34,10 @@ export const SwapContext = createContext<SwapContextType>({
   switchSelectMode: () => {},
   selectFromToken: () => {},
   selectToToken: () => {},
+  updateFromValue: () => {},
   fromToken: null,
   toToken: null,
+  fromValue: null,
   sortedBalances: [],
   receiveEstimation: null,
   selectTokenMode: false,
@@ -34,10 +47,9 @@ export const SwapContext = createContext<SwapContextType>({
 export const SwapProvider = ({ children }) => {
   const { address } = useAccount();
   const { selectedStrategy } = useContext(StrategyContext);
-  const [receiveEstimation, setReceiveEstimation] = useState<GetRouteResult>({
-    toAmount: 0,
-    toToken: selectedStrategy?.token ?? null,
-  });
+  const [fromValue, setFromValue] = useState<string>(null);
+
+  const [receiveEstimation, setReceiveEstimation] = useState(0);
   const [estimationPromise, setEstimationPromise] = useState(null);
   const [selectTokenMode, setSelectTokenMode] = useState(false);
 
@@ -48,57 +60,51 @@ export const SwapProvider = ({ children }) => {
 
   const [toToken, setToToken] = useState<Token>(null);
 
-  const estimate = (depositValue: string) => {
+  const queryClient = useQueryClient();
+
+  const estimate = (depositValue: number) => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
       if (!fromToken || !depositValue) return;
-      /*const promise = getRoute({
-        fromAddress: address,
-        toAddress: address,
-        fromChain: fromToken.network.id,
-        fromToken: fromToken.address,
-        fromAmount: ethers
-          .parseUnits(depositValue, fromToken.decimals)
-          .toString(),
-        toChain: toToken.network.id,
-        toToken: toToken.address,
-      })
-        .then((result) => {
-          const { estimate, params } = result;
-          const { fromToken, toToken } = estimate;
 
-          const fromNetwork = networkByChainId[params.fromChain];
-          const toNetwork = networkByChainId[params.toChain];
+      queryClient
+        .fetchQuery(
+          `estimate-${depositValue}`,
+          async () => {
+            const promise = generateRequest({
+              estimateOnly: true,
+              address: address,
+              fromToken,
+              toToken,
+              amount: depositValue,
+              strat: selectedStrategy,
+            })
+              .then(({ estimatedExchangeRate }) => {
+                const receiveEstimation =
+                  Number(depositValue) * Number(estimatedExchangeRate);
 
-          setReceiveEstimation({
-            route: result,
-            fromToken: {
-              ...fromToken,
-              address: fromToken.address as `0x${string}`,
-              network: fromNetwork,
-              slug: `${
-                fromNetwork.slug
-              }:${fromToken.symbol.toLocaleLowerCase()}`,
-            },
-            toToken: {
-              ...toToken,
-              address: toToken.address as `0x${string}`,
-              network: toNetwork,
-              slug: `${toNetwork.slug}:${toToken.symbol.toLocaleLowerCase()}`,
-            },
-            toAmount: Number(estimate.toAmount) / 10 ** toToken.decimals,
-          });
-        })
-        .catch((err) => {
-          console.error(err);
-          toast.error("route not found from Swapper");
+                return receiveEstimation;
+              })
+              .catch((err) => {
+                console.error(err);
+                toast.error("route not found from Swapper");
+              });
+
+            setEstimationPromise(promise);
+            toast.promise(promise, {
+              pending: "Calculating...",
+              error: "route not found from Swapper 🤯",
+            });
+            return promise;
+          },
+          {
+            staleTime: 1000 * 15,
+            cacheTime: 1000 * 15,
+          }
+        )
+        .then((estimation) => {
+          setReceiveEstimation(estimation as number);
         });
-
-      setEstimationPromise(promise);
-      toast.promise(promise, {
-        pending: "Calculating...",
-        error: "route not found from Swapper 🤯",
-      });*/
     }, 1000);
   };
 
@@ -129,6 +135,14 @@ export const SwapProvider = ({ children }) => {
     toToken,
   ]);
 
+  const updateFromValue = useCallback((value: string) => {
+    console.log(
+      "🚀 ~ file: swap-context.tsx:139 ~ updateFromValue ~ value:",
+      value
+    );
+    setFromValue(value);
+  }, []);
+
   return (
     <SwapContext.Provider
       value={{
@@ -136,8 +150,10 @@ export const SwapProvider = ({ children }) => {
         switchSelectMode,
         selectFromToken,
         selectToToken,
+        updateFromValue,
         fromToken,
         toToken,
+        fromValue,
         sortedBalances,
         receiveEstimation,
         selectTokenMode,

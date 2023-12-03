@@ -31,23 +31,25 @@ export const getBalancesFromDeFI = (
           const convertedAmount = BigInt(amount);
           return convertedAmount > 0;
         })
-        .map(({ amount, token: apiToken, token }: DeFiBalance) => {
+        .map((result: DeFiBalance) => {
+          const { amount, token: apiToken } = result;
           const balance: Balance = {
             slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
             amount,
           };
-          // TO DO -> MORE TO 1$
+
           const existingToken = tokenBySlug[balance.slug];
+
           if (!existingToken) {
             const _token = {
-              address: token.address,
-              name: token.name,
-              decimals: token.decimals,
-              coinGeckoId: token.coinGeckoId,
-              icon: token.icon,
+              address: apiToken.address,
+              name: apiToken.name,
+              decimals: apiToken.decimals,
+              coinGeckoId: apiToken.coingeckoId,
+              icon: apiToken.icon,
               network,
-              symbol: token.symbol,
-              slug: `${network.slug}:${token.symbol.toLowerCase()}`,
+              symbol: apiToken.symbol,
+              slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
             } as Token;
             return [balance, _token];
           }
@@ -109,6 +111,7 @@ export const getTokens = async () => {
             address: nativeAddress,
             symbol,
             decimals: scale,
+            weiPerUnit: 10 ** scale,
             icon: `/tokens/${cleanSymbol.toLowerCase()}.svg`,
             network,
             slug: `${network.slug}:${symbol.toLocaleLowerCase()}`,

@@ -1,29 +1,32 @@
 import { PrepareSendTransactionArgs } from "@wagmi/core";
 import { parseGwei } from "viem/utils";
-import { prepareSendTransaction, prepareWriteContract, sendTransaction, writeContract } from "wagmi/actions";
+import {
+  prepareSendTransaction,
+  prepareWriteContract,
+  sendTransaction,
+  writeContract,
+} from "wagmi/actions";
 import { erc20Abi } from "abitype/abis";
 import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
 import { useContractRead } from "wagmi";
 import { currentChain } from "~/context/web3-context";
 import { switchNetwork } from "wagmi/actions";
 
-export const swap = async (route: ITransactionRequestWithEstimate) => {
-  if (!route) return;
-  if (route.maxFeePerGas) delete route.maxFeePerGas;
-  if (route.maxPriorityFeePerGas) delete route.maxPriorityFeePerGas;
+export const swap = async (tr: ITransactionRequestWithEstimate) => {
+  if (!tr) return;
+  if (tr.maxFeePerGas) delete tr.maxFeePerGas;
+  if (tr.maxPriorityFeePerGas) delete tr.maxPriorityFeePerGas;
   const params: PrepareSendTransactionArgs = {
-    to: route.to,
-    ...route,
+    ...tr,
     gas: parseGwei("0.00001"),
   };
-  console.log(params)
+  console.log(params);
   const { hash } = await send(params);
 
-  const squidExplorer = `https://axelarscan.io/gmp/${hash}`;
-  const lifiExplorer = `https://explorer.li.fi/tx/${hash}`
-  console.log('squidExplorer: ', squidExplorer);
-  console.log('lifiExplorer: ', lifiExplorer);
-  console.log('hash: ', hash);
+  tr.aggregatorId == "LIFI"
+    ? console.log("lifiExplorer: ", `https://explorer.li.fi/tx/${hash}`)
+    : console.log("squidExplorer: ", `https://axelarscan.io/gmp/${hash}`);
+  console.log("hash: ", hash);
   return hash;
 };
 
@@ -45,11 +48,11 @@ export const writeTx = async (
   return await writeContract(
     await prepareWriteTx(args, toAddress, functionName, abi)
   );
-}
+};
 
 export const useAllowance = (toAddress: `0x${string}`, address: string) => {
-  return useReadTx('allowance', toAddress, [address, toAddress]);
-}
+  return useReadTx("allowance", toAddress, [address, toAddress]);
+};
 
 export const useReadTx = (
   functionName: any,
@@ -63,7 +66,7 @@ export const useReadTx = (
     args: args as any,
     functionName,
   }).data;
-}
+};
 
 export const prepareWriteTx = async (
   args: unknown[],
@@ -80,14 +83,16 @@ export const prepareWriteTx = async (
   return request;
 };
 
-
 export const approve = async (
   address: string,
   amountInWei: string,
   tokenAddress: string
 ) => {
+  console.log("🚀 ~ file: web3.tsx:91 ~ amountInWei:", amountInWei);
+  console.log("🚀 ~ file: web3.tsx:91 ~ address:", address);
+  console.log("🚀 ~ file: web3.tsx:91 ~ tokenAddress:", tokenAddress);
   return await writeTx("approve", [address, amountInWei], tokenAddress);
-}
+};
 
 export const _switchNetwork = async (chainId: number) => {
   if (currentChain.id !== chainId) await switchNetwork({ chainId });

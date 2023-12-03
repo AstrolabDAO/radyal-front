@@ -5,7 +5,6 @@ import Button from "./Button";
 import { disconnect } from "wagmi/actions";
 import { shortenAddress } from "~/utils/format";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { generateRequest } from "~/utils/lifi";
 
 const Header = () => {
   const { address, isConnected } = useAccount();
@@ -21,7 +20,6 @@ const Header = () => {
           <nav className="flex w-full justify-end items-center mr-6">
             <ul className="flex font-bold text-xl">
               <li className="px-2 cursor-pointer">Strategies</li>
-              <li className="px-2 cursor-pointer" onClick={ generateRequest }>Swap</li>
             </ul>
           </nav>
           <div className="flex justify-end">
