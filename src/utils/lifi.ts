@@ -5,7 +5,7 @@ import StratV5Abi from '@astrolabs/registry/abis/StrategyV5.json';
 import { getAllTransactionRequests } from "@astrolabs/swapper";
 import { approve, swap } from "./web3";
 import { routerByChainId } from "@astrolabs/swapper/dist/src/LiFi";
-import { currentChain } from "~/context/wallet-context";
+import { currentChain } from "~/context/web3-context";
 
 export const generateCallData =
   async (functionName: string, fromAddress: string, toAddress: string, amount: string, abi = erc20Abi) => {

@@ -4,7 +4,7 @@ import { prepareSendTransaction, prepareWriteContract, sendTransaction, writeCon
 import { erc20Abi } from "abitype/abis";
 import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
 import { useContractRead } from "wagmi";
-import { currentChain } from "~/context/wallet-context";
+import { currentChain } from "~/context/web3-context";
 import { switchNetwork } from "wagmi/actions";
 
 export const swap = async (route: ITransactionRequestWithEstimate) => {
@@ -60,7 +60,7 @@ export const useReadTx = (
   return useContractRead({
     address: toAddress,
     abi,
-    args,
+    args: args as any,
     functionName,
   }).data;
 }
