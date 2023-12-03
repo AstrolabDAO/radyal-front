@@ -2,7 +2,7 @@ import { PrepareSendTransactionArgs } from "@wagmi/core";
 import { parseGwei } from "viem/utils";
 import { prepareSendTransaction, prepareWriteContract, sendTransaction, writeContract } from "wagmi/actions";
 import { erc20Abi } from "abitype/abis";
-import { ITransactionRequestWithEstimate } from "../../../swapperClain/src";
+import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
 import { useContractRead } from "wagmi";
 import { currentChain } from "~/context/wallet-context";
 import { switchNetwork } from "wagmi/actions";
@@ -12,7 +12,7 @@ export const swap = async (route: ITransactionRequestWithEstimate) => {
   if (route.maxFeePerGas) delete route.maxFeePerGas;
   if (route.maxPriorityFeePerGas) delete route.maxPriorityFeePerGas;
   const params: PrepareSendTransactionArgs = {
-    to: route.to ?? route.targetAddress,
+    to: route.to,
     ...route,
     gas: parseGwei("0.00001"),
   };
