@@ -11,14 +11,14 @@ import "./styles/index.css";
 export const ONE_MINUTE = 1000 * 60;
 
 export const CACHE_TIME = ONE_MINUTE * 5;
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       cacheTime: CACHE_TIME,
       staleTime: ONE_MINUTE,
     },
   },
-}) as any;
+});
 
 const localStoragePersistor = createWebStoragePersistor({
   storage: window.localStorage,

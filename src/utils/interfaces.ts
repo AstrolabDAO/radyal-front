@@ -14,6 +14,7 @@ export interface Token {
   address?: `0x${string}`;
   name?: string;
   decimals?: number;
+  weiPerUnit?: number;
   coinGeckoId?: string;
   icon?: string;
   network: Network;
@@ -66,7 +67,7 @@ export interface DeFIToken {
   icon: `https://${string}`;
   price: number;
   displayName: string;
-  coinGeckoId: string;
+  coingeckoId: string;
 }
 
 export interface DeFiBalance {

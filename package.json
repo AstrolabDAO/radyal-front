@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@astrolabs/registry": "^1.0.2",
+    "@astrolabs/registry": "^1.0.19",
     "@astrolabs/swapper": "^1.0.14",
     "@ethersproject/units": "^5.7.0",
     "@headlessui/react": "^1.7.17",

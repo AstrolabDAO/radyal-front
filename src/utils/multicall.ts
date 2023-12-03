@@ -47,7 +47,7 @@ export const updateBalances = (
         amount: result.toString(),
       };
 
-      balances.push(balance);
+      balances.push([balance, null]);
       updateBalanceMapping(balance);
     }
 

@@ -4,6 +4,9 @@ import CrossChainTokenSelect from "./CrossChainTokenSelect";
 import SelectToken from "./SelectToken";
 import { tokenBySlug } from "~/utils/mappings";
 import { TokensContext } from "~/context/tokens-context";
+import { generateAndSwap } from "~/utils/lifi";
+import { StrategyContext } from "~/context/strategy-context";
+import { useAccount } from "wagmi";
 
 const Deposit = () => {
   const {
@@ -13,7 +16,10 @@ const Deposit = () => {
     selectFromToken,
     switchSelectMode,
   } = useContext(SwapContext);
+  const { address } = useAccount();
+  const { fromValue, updateFromValue } = useContext(SwapContext);
 
+  const { selectedStrategy } = useContext(StrategyContext);
   const { sortedBalances } = useContext(TokensContext);
 
   if (selectTokenMode) {
@@ -42,7 +48,10 @@ const Deposit = () => {
     <div className="deposit block">
       <div className="box w-full">
         <>
-          <CrossChainTokenSelect selected={fromToken} />
+          <CrossChainTokenSelect
+            selected={fromToken}
+            onChange={(value) => updateFromValue(value)}
+          />
           <hr />
           <CrossChainTokenSelect
             locked={true}
@@ -53,7 +62,20 @@ const Deposit = () => {
       </div>
       <div className="bg-gray-50 py-3 sm:flex sm:flex-row-reverse">
         <div className="flex w-full justify-center">
-          <button className="btn btn-primary w-full">Deposit</button>
+          <button
+            className="btn btn-primary w-full"
+            onClick={() => {
+              generateAndSwap({
+                address,
+                fromToken,
+                toToken,
+                amount: Number(fromValue),
+                strat: selectedStrategy,
+              });
+            }}
+          >
+            Deposit
+          </button>
         </div>
       </div>
     </div>

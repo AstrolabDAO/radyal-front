@@ -16,7 +16,6 @@ import {
 } from "~/utils/interfaces";
 import {
   tokenBySlug as tokenBySlugMapping,
-  tokenPriceBycoinGeckoId,
   updateTokenMapping,
   updateBalanceMapping,
   balanceBySlug as balanceBySlugMapping,
@@ -25,7 +24,6 @@ import {
 import { useQuery } from "react-query";
 import { ONE_MINUTE } from "~/main";
 import { useAccount } from "wagmi";
-import { etherUnits } from "viem";
 import { amountToEth } from "~/utils/format";
 
 interface TokensContextType {
@@ -56,8 +54,8 @@ export const TokensProvider = ({ children }) => {
   const [tokens, setTokens] = useState<Token[]>([]);
 
   const [balances, setBalances] = useState<Balance[]>([]);
-
   const [loadPrices, setLoadPrices] = useState<boolean>(false);
+  const [canLoadBalances, setCanLoadBalances] = useState<boolean>(false);
   const [tokensBySlug, setTokensBySlugs] = useState<TokenBySlugMapping>({});
   const [balancesBySlug, setBalancesBySlug] = useState<BalanceBySlugMapping>(
     {}
@@ -85,12 +83,19 @@ export const TokensProvider = ({ children }) => {
       setTokens(data);
     },
   });
+  useEffect(() => {
+    tokensData?.forEach((token) => updateTokenMapping(token));
+    setTokensBySlugs({ ...tokenBySlugMapping });
+    setCanLoadBalances(true);
+  }, [tokensData]);
 
   const { data: balancesData } = useQuery(
-    "balances",
-    () => loadBalancesByAddress(address),
+    `balances-${address}`,
+    () => {
+      return loadBalancesByAddress(address);
+    },
     {
-      enabled: !!address && !isLoading && isConnected,
+      enabled: !!address && !isLoading && isConnected && canLoadBalances,
       staleTime: ONE_MINUTE,
       refetchInterval: ONE_MINUTE,
     }
@@ -110,17 +115,21 @@ export const TokensProvider = ({ children }) => {
     if (!balancesData || !tokensData) return;
 
     const _tokens = tokensData;
-    const _balances = balancesData.map(([balance, token]) => {
-      if (token && !tokenBySlugMapping[token.slug]) {
+
+    const _balances = [];
+    balancesData?.forEach(([balance, token]) => {
+      if (token && !_tokens.find((t) => t.slug === token.slug)) {
         _tokens.push(token);
       }
-      return balance;
+      _balances.push(balance);
     });
+
     tokens?.forEach((token) => {
       updateTokenMapping(token);
     });
 
     setTokensBySlugs({ ...tokenBySlugMapping });
+
     setTokens(_tokens);
     setBalances(_balances);
     setLoadPrices(true);
@@ -133,8 +142,13 @@ export const TokensProvider = ({ children }) => {
     return balances
       .filter((balance) => {
         const token = tokenBySlugMapping[balance.slug];
+
         const price = tokenPrices[token?.coinGeckoId]?.usd;
-        if (!price) return false;
+
+        if (!price) {
+          return false;
+        }
+
         const value = amountToEth(BigInt(balance.amount), token?.decimals);
         return value * price > 1;
       })

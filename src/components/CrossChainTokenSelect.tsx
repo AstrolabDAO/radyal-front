@@ -6,23 +6,31 @@ import IconGroup from "./IconGroup";
 import clsx from "clsx";
 import { SwapContext } from "~/context/swap-context";
 import Loader from "./Loader";
+import { balanceBySlug } from "~/utils/mappings";
 
 const CrossChainTokenSelect = ({
   selected,
   locked = false,
   isReceive = false,
+  onChange = (value: string) => {},
 }) => {
-  const [depositValue, setDepositValue] = useState("");
+  const {
+    estimate,
+    switchSelectMode,
+    receiveEstimation,
+    estimationPromise,
+    fromValue,
+  } = useContext(SwapContext);
+  console.log(
+    "🚀 ~ file: CrossChainTokenSelect.tsx:26 ~ fromValue:",
+    fromValue
+  );
 
-  const { estimate, switchSelectMode, receiveEstimation, estimationPromise } =
-    useContext(SwapContext);
+  const [depositValue, setDepositValue] = useState<string>(
+    isReceive ? null : fromValue ?? null
+  );
 
   const { tokenPrices } = useContext(TokensContext);
-
-  const { toAmount } = useMemo(() => {
-    if (!receiveEstimation) return { toAmount: 0 };
-    return receiveEstimation;
-  }, [receiveEstimation]);
 
   const icons = useMemo(
     () => [
@@ -32,8 +40,10 @@ const CrossChainTokenSelect = ({
     [selected]
   );
   const selectedBalance = useMemo(() => {
-    if (!selected || (selected && !selected.amount)) return 0;
-    return amountToEth(BigInt(selected.amount ?? 0), selected.decimals);
+    if (!selected) return 0;
+    const balance = balanceBySlug[selected.slug];
+
+    return amountToEth(BigInt(balance?.amount ?? 0), selected.decimals);
   }, [selected]);
 
   const tokenPrice = useMemo(() => {
@@ -45,7 +55,7 @@ const CrossChainTokenSelect = ({
   }, [tokenPrices, selected]);
 
   useEffect(() => {
-    estimate(depositValue);
+    estimate(Number(depositValue));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [depositValue]);
 
@@ -93,7 +103,7 @@ const CrossChainTokenSelect = ({
             {isReceive && (
               <div className="w-full text-right text-4xl">
                 <Loader promise={estimationPromise}>
-                  {lisibleAmount(toAmount, 4)}
+                  {lisibleAmount(receiveEstimation, 4)}
                 </Loader>
               </div>
             )}
@@ -102,9 +112,11 @@ const CrossChainTokenSelect = ({
                 className="input w-full max-w-xs text-right text-4xl"
                 type="text"
                 placeholder="100"
-                value={depositValue}
+                value={depositValue?.toString() ?? ""}
                 onChange={({ target }) => {
-                  setDepositValue(target.value.replace(/[^0-9]/g, ""));
+                  const replace = target.value.replace(/[^0-9.]/g, "");
+                  setDepositValue(replace);
+                  onChange(replace);
                 }}
               />
             )}
@@ -120,7 +132,8 @@ const CrossChainTokenSelect = ({
             <i>~ </i>
             <span>
               {lisibleAmount(
-                Number(isReceive ? toAmount : depositValue) * tokenPrice
+                Number(isReceive ? receiveEstimation : depositValue) *
+                  tokenPrice
               )}
               $
             </span>
