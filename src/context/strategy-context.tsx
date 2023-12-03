@@ -36,7 +36,7 @@ export const StrategyProvider = ({ children }) => {
   };
 
   const { data: strategiesData } = useQuery("strategies", getStrategies, {
-    enabled: tokensIsLoaded && Object.values(tokensBySlug).length > 0,
+    enabled: tokensIsLoaded,
     staleTime: ONE_MINUTE * 5,
   });
 

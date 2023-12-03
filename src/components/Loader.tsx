@@ -3,7 +3,7 @@ import { HTMLAttributes, useEffect, useState } from "react";
 interface LoaderProps extends HTMLAttributes<HTMLDivElement> {
   promise?: Promise<any> | null;
   state?: any;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 const Loader = ({ promise, children, state }: LoaderProps) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -26,6 +26,13 @@ const Loader = ({ promise, children, state }: LoaderProps) => {
       }
     }
   }, [promise, state]);
+
+  if (!isLoading && !children) return null;
+  console.log(
+    "🚀 ~ file: Loader.tsx:31 ~ Loader ~ isLoading:",
+    isLoading,
+    state
+  );
 
   return (
     <>

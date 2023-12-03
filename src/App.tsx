@@ -1,5 +1,4 @@
 import Header from "./components/Header";
-import { WalletProvider } from "./context/wallet-context";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -17,15 +16,13 @@ function App() {
     <>
       <Web3Provider>
         <TokensProvider>
-          <WalletProvider>
-            <Header />
-            <div id="page-content" className="pt-32 relative">
-              <RouterProvider router={router} />
-              <div className="fixed bottom-0 left-0 w-full flex justify-center z-50">
-                <ToastContainer />
-              </div>
+          <Header />
+          <div id="page-content" className="pt-32 relative">
+            <RouterProvider router={router} />
+            <div className="fixed bottom-0 left-0 w-full flex justify-center z-50">
+              <ToastContainer />
             </div>
-          </WalletProvider>
+          </div>
         </TokensProvider>
       </Web3Provider>
     </>

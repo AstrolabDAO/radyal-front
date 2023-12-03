@@ -33,7 +33,6 @@ const SelectToken = ({ tokens, onSelect }) => {
   return (
     <div className="token-list card pt-4">
       <h1 className="text-center mb-8">Select </h1>
-
       <div>
         <label>search by name...</label>
         <input

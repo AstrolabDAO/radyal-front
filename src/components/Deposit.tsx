@@ -4,6 +4,7 @@ import { WalletContext } from "~/context/wallet-context";
 import CrossChainTokenSelect from "./CrossChainTokenSelect";
 import SelectToken from "./SelectToken";
 import { tokenBySlug } from "~/utils/mappings";
+import { TokensContext } from "~/context/tokens-context";
 
 const Deposit = () => {
   const {
@@ -14,14 +15,14 @@ const Deposit = () => {
     switchSelectMode,
   } = useContext(SwapContext);
 
-  const { balances } = useContext(WalletContext);
+  const { sortedBalances } = useContext(TokensContext);
 
   if (selectTokenMode) {
     return (
       <div className="deposit block">
         <div className="box w-full">
           <SelectToken
-            tokens={balances
+            tokens={sortedBalances
               .filter((balance) => {
                 const token = tokenBySlug[balance.slug];
                 if (!token) return false;

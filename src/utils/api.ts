@@ -1,6 +1,5 @@
 import { erc20Abi } from "abitype/abis";
 import axios from "axios";
-import { toast } from "react-toastify";
 import { COINGECKO_API, DeFI_API, TOKEN_BASENAME_REGEX } from "./constants";
 import { Balance, DeFiBalance, Network, Strategy, Token } from "./interfaces";
 import {
@@ -32,13 +31,28 @@ export const getBalancesFromDeFI = (
           const convertedAmount = BigInt(amount);
           return convertedAmount > 0;
         })
-        .map(({ amount, token: apiToken }: DeFiBalance) => {
+        .map(({ amount, token: apiToken, token }: DeFiBalance) => {
           const balance: Balance = {
             slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
             amount,
           };
+          // TO DO -> MORE TO 1$
+          const existingToken = tokenBySlug[balance.slug];
+          if (!existingToken) {
+            const _token = {
+              address: token.address,
+              name: token.name,
+              decimals: token.decimals,
+              coinGeckoId: token.coinGeckoId,
+              icon: token.icon,
+              network,
+              symbol: token.symbol,
+              slug: `${network.slug}:${token.symbol.toLowerCase()}`,
+            } as Token;
+            return [balance, _token];
+          }
 
-          return balance;
+          return [balance, null];
         });
     });
 };
@@ -52,6 +66,7 @@ export const getTokenPrice = (token: Token) => {
   });
 };
 export const getTokensPrices = async (tokens: Token[]) => {
+  console.log("🚀 ~ file: api.ts:69 ~ getTokensPrices ~ tokens:", tokens);
   if (!tokens) return;
   const tokensIds = new Set(tokens.map((token) => token.coinGeckoId));
 
@@ -134,11 +149,7 @@ export const loadBalancesByAddress = async (address: `0x${string}`) => {
       }));
 
       const promise = updateBalances(network, contracts, address);
-      toast.promise(promise, {
-        pending: `Get balances from ${network.name}`,
-        success: `Balances from ${network.name} loaded`,
-        error: "Balances not found 🤯",
-      });
+
       requests.push(promise);
     }
   }

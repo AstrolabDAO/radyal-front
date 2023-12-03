@@ -1,10 +1,9 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import { useAccount, useNetwork, useWalletClient } from "wagmi";
 
 import { useQuery } from "react-query";
 import { ONE_MINUTE } from "~/main";
 import { loadBalancesByAddress } from "../utils/api";
-import { BalanceBySlugMapping } from "../utils/interfaces";
 import {
   balanceBySlug as balanceBySlugMapping,
   updateBalanceMapping,
@@ -25,13 +24,10 @@ export const WalletProvider = ({ children }) => {
   const { data: signer } = useWalletClient();
   const { chain } = useNetwork();
 
-  const { refreshTokenBySlugs, tokensIsLoaded } = useContext(TokensContext);
+  const { refreshTokenBySlugs, tokensIsLoaded, addToken } =
+    useContext(TokensContext);
 
   const Provider = WalletContext.Provider;
-
-  const [balancesBySlug, setBalancesBySlug] = useState<BalanceBySlugMapping>(
-    {}
-  );
 
   const { data: balancesData } = useQuery(
     "balances",
@@ -45,18 +41,20 @@ export const WalletProvider = ({ children }) => {
 
   const balances = useMemo(() => {
     if (!balancesData) return [];
-    return balancesData;
-  }, [balancesData]);
+    const _balances = balancesData.map(([balance, token]) => {
+      if (token) {
+        addToken(token);
+      }
+      return balance;
+    });
+    loadPrices();
+    return _balances;
+  }, [balancesData, addToken, loadPrices]);
 
   useEffect(() => {
     setBalancesBySlug(balanceBySlugMapping);
     refreshTokenBySlugs();
   }, [balances, refreshTokenBySlugs]);
-  const sortedBalances = useMemo(() => {
-    return balances.sort((a, b) =>
-      BigInt(a.amount) > BigInt(b.amount) ? -1 : 1
-    );
-  }, [balances]);
 
   useEffect(() => {
     balances.forEach((balance) => updateBalanceMapping(balance));
