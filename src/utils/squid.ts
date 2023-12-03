@@ -109,7 +109,7 @@ export const swap = async (route) => {
   const { hash } = await send(param);
 
   const explorer = `https://axelarscan.io/gmp/${hash}`;
-  console.log(explorer);
+
   return explorer;
 };
 

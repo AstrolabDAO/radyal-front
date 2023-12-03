@@ -28,11 +28,6 @@ const Loader = ({ promise, children, state }: LoaderProps) => {
   }, [promise, state]);
 
   if (!isLoading && !children) return null;
-  console.log(
-    "🚀 ~ file: Loader.tsx:31 ~ Loader ~ isLoading:",
-    isLoading,
-    state
-  );
 
   return (
     <>

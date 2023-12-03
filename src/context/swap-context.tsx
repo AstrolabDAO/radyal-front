@@ -112,19 +112,7 @@ export const SwapProvider = ({ children }) => {
 
   useEffect(() => {
     if (!fromToken) {
-      console.log(
-        "🚀 ~ file: swap-context.tsx:115 ~ useEffect ~ fromToken:",
-        fromToken
-      );
       const token = tokenBySlug(sortedBalances?.[0]?.slug) ?? null;
-      console.log(
-        "🚀 ~ file: swap-context.tsx:120 ~ useEffect ~ tokenBySlug:",
-        tokenBySlug
-      );
-      console.log(
-        "🚀 ~ file: swap-context.tsx:120 ~ useEffect ~ token:",
-        token
-      );
 
       selectFromToken(token);
     }
