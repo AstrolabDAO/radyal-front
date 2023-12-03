@@ -9,7 +9,7 @@ import {
   sendTransaction,
   switchNetwork,
 } from "wagmi/actions";
-import { currentChain } from "~/context/wallet-context";
+import { currentChain } from "~/context/web3-context";
 
 export enum SquidCallType {
   DEFAULT = 0,
@@ -109,7 +109,7 @@ export const swap = async (route) => {
   const { hash } = await send(param);
 
   const explorer = `https://axelarscan.io/gmp/${hash}`;
-  console.log(explorer);
+
   return explorer;
 };
 

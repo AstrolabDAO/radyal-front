@@ -3,7 +3,6 @@ import { useAccount } from "wagmi";
 import { GetRouteResult, Token } from "~/utils/interfaces";
 import { StrategyContext } from "./strategy-context";
 import { TokensContext } from "./tokens-context";
-import { WalletContext } from "./wallet-context";
 
 let debounceTimer;
 
@@ -42,7 +41,7 @@ export const SwapProvider = ({ children }) => {
   const [estimationPromise, setEstimationPromise] = useState(null);
   const [selectTokenMode, setSelectTokenMode] = useState(false);
 
-  const { sortedBalances } = useContext(WalletContext);
+  const { sortedBalances } = useContext(TokensContext);
   const { tokenBySlug, tokensBySlug, tokens } = useContext(TokensContext);
 
   const [fromToken, setFromToken] = useState<Token>(null);

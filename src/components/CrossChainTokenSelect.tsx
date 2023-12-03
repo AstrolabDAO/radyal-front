@@ -37,7 +37,7 @@ const CrossChainTokenSelect = ({
   }, [selected]);
 
   const tokenPrice = useMemo(() => {
-    if (!selected) return 0;
+    if (!selected || !tokenPrices) return 0;
 
     const price = Number(tokenPrices[selected?.coinGeckoId]?.usd);
 
