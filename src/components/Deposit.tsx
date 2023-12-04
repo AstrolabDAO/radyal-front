@@ -4,9 +4,9 @@ import CrossChainTokenSelect from "./CrossChainTokenSelect";
 import SelectToken from "./SelectToken";
 import { tokenBySlug } from "~/utils/mappings";
 import { TokensContext } from "~/context/tokens-context";
-import { generateAndSwap } from "~/utils/lifi";
 import { StrategyContext } from "~/context/strategy-context";
 import { useAccount } from "wagmi";
+import { useGenerateAndSwap } from "~/hooks/swap";
 
 const Deposit = () => {
   const {
@@ -21,6 +21,8 @@ const Deposit = () => {
 
   const { selectedStrategy } = useContext(StrategyContext);
   const { sortedBalances } = useContext(TokensContext);
+
+  const generateAndSwap = useGenerateAndSwap(fromToken)
 
   if (selectTokenMode) {
     return (

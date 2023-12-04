@@ -8,7 +8,6 @@ import {
 } from "wagmi/actions";
 import { erc20Abi } from "abitype/abis";
 import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
-import { useContractRead } from "wagmi";
 import { currentChain } from "~/context/web3-context";
 import { switchNetwork } from "wagmi/actions";
 
@@ -23,9 +22,8 @@ export const swap = async (tr: ITransactionRequestWithEstimate) => {
   console.log(params);
   const { hash } = await send(params);
 
-  tr.aggregatorId == "LIFI"
-    ? console.log("lifiExplorer: ", `https://explorer.li.fi/tx/${hash}`)
-    : console.log("squidExplorer: ", `https://axelarscan.io/gmp/${hash}`);
+  console.log("lifiExplorer: ", `https://explorer.li.fi/tx/${hash}`);
+  //   : console.log("squidExplorer: ", `https://axelarscan.io/gmp/${hash}`);
   console.log("hash: ", hash);
   return hash;
 };
@@ -50,24 +48,6 @@ export const writeTx = async (
   );
 };
 
-export const useAllowance = (toAddress: `0x${string}`, address: string) => {
-  return useReadTx("allowance", toAddress, [address, toAddress]);
-};
-
-export const useReadTx = (
-  functionName: any,
-  toAddress: `0x${string}`,
-  args: unknown[] = [],
-  abi = erc20Abi
-) => {
-  return useContractRead({
-    address: toAddress,
-    abi,
-    args: args as any,
-    functionName,
-  }).data;
-};
-
 export const prepareWriteTx = async (
   args: unknown[],
   toAddress: string,
@@ -88,9 +68,6 @@ export const approve = async (
   amountInWei: string,
   tokenAddress: string
 ) => {
-  console.log("🚀 ~ file: web3.tsx:91 ~ amountInWei:", amountInWei);
-  console.log("🚀 ~ file: web3.tsx:91 ~ address:", address);
-  console.log("🚀 ~ file: web3.tsx:91 ~ tokenAddress:", tokenAddress);
   return await writeTx("approve", [address, amountInWei], tokenAddress);
 };
 
