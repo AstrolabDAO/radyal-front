@@ -28,7 +28,7 @@ export const StrategyProvider = ({ children }) => {
 
   const [search, setSearch] = useState<string>("");
   const [networksFilter, setNetworksFilter] = useState<string[]>([]);
-  const { tokensIsLoaded, tokensBySlug } = useContext(TokensContext);
+  const { tokensIsLoaded } = useContext(TokensContext);
 
   // const data = useAllowance("0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE", "0x7B56288776Cae4260770981b6BcC0f6D011C7b72");
   // console.log('data: ', data)

@@ -5,6 +5,7 @@ import Button from "./Button";
 import { disconnect } from "wagmi/actions";
 import { shortenAddress } from "~/utils/format";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { withdraw } from "~/utils/web3";
 
 const Header = () => {
   const { address, isConnected } = useAccount();
@@ -19,6 +20,7 @@ const Header = () => {
           </div>
           <nav className="flex w-full justify-end items-center mr-6">
             <ul className="flex font-bold text-xl">
+              <li className="px-2 cursor-pointer" onClick={withdraw}>withdraw</li>
               <li className="px-2 cursor-pointer">Strategies</li>
             </ul>
           </nav>

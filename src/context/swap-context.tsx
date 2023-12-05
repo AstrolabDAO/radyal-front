@@ -98,8 +98,8 @@ export const SwapProvider = ({ children }) => {
             return promise;
           },
           {
-            staleTime: 1000 * 15,
-            cacheTime: 1000 * 15,
+            staleTime: 1000 * 0,
+            cacheTime: 1000 * 0,
           }
         )
         .then((estimation) => {

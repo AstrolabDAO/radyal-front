@@ -3,12 +3,14 @@ import { erc20Abi } from "abitype/abis";
 import { ethers } from "ethers";
 
 import { Strategy, Token } from "./interfaces";
-import { approve, swap } from "./web3";
+import { _switchNetwork, approve, swap } from "./web3";
 import {
   getTransactionRequest,
   routerByChainId,
 } from "@astrolabs/swapper/dist/src/LiFi";
+
 import { queryClient } from "~/main";
+import { QueryClient } from "react-query";
 
 export const generateCallData = async (
   functionName: string,
@@ -40,13 +42,14 @@ export const depositCallData = async (
   );
 };
 
-interface LifiRequest {
+export interface LifiRequest {
   address: `0x${string}`;
   fromToken: Token;
   toToken: Token;
   strat: Strategy;
   amount: number;
   estimateOnly?: boolean;
+  allowance?: string | number | bigint | boolean
 }
 
 export const generateRequest = async ({
@@ -77,6 +80,7 @@ export const generateRequest = async ({
   const amountWei = fromToken.weiPerUnit * amount;
 
   if (!estimateOnly) {
+    console.log('callData amountWei: ', amountWei.toString())
     const { to, data } = await depositCallData(
       strat.address,
       address,
@@ -84,23 +88,24 @@ export const generateRequest = async ({
     );
     customContractCalls.push({ toAddress: to, callData: data });
   }
-
   const lifiOptions = {
     aggregatorId: ["LIFI"],
     inputChainId: fromToken.network.id,
     input: fromToken.address,
-    amountWei,
+    amountWei: amountWei,
     outputChainId: toToken.network.id,
     output: toToken.address,
-    maxSlippage: 2_000,
+    maxSlippage: 50,
     payer: address,
     customContractCalls: customContractCalls.length
       ? customContractCalls
       : undefined,
   };
+  console.log('amountWei: ', lifiOptions)
 
   return getTransactionRequest(lifiOptions);
 };
+
 
 export const generateAndSwap = async ({
   fromToken,
@@ -108,9 +113,9 @@ export const generateAndSwap = async ({
   strat,
   amount,
   address,
-}: LifiRequest) => {
-  const oldEstimation: number = queryClient.getQueryData(`estimate-${amount}`);
-
+}: LifiRequest,allowance: string | number | bigint | boolean  = 0n,_queryClient: QueryClient = queryClient) => {
+  await _switchNetwork(fromToken?.network?.id);
+  const oldEstimation: number = _queryClient.getQueryData(`estimate-${amount}`);
   let toAmount: number = oldEstimation;
   console.log("🚀 ~ file: lifi.ts:119 ~ toAmount:", toAmount);
 
@@ -126,6 +131,7 @@ export const generateAndSwap = async ({
 
     toAmount = Number(trEstimation?.estimatedExchangeRate) * Number(amount);
   }
+  const amountWei = BigInt(Math.round(amount * fromToken.weiPerUnit));
 
   const tr = await generateRequest({
     fromToken,
@@ -135,13 +141,9 @@ export const generateAndSwap = async ({
     address,
   });
 
-  const amountWei = BigInt(Math.round(amount * fromToken.weiPerUnit));
-
   const approvalAmount = amountWei + amountWei / 500n; // 5%
 
-  return approve(
-    routerByChainId[fromToken.network.id],
-    approvalAmount.toString(),
-    fromToken.address
-  ).then(() => swap(tr));
-};
+  if (Number(amountWei.toString()) > Number(allowance.toString()))
+    await approve(routerByChainId[fromToken.network.id], approvalAmount.toString(), fromToken.address);
+  return swap(tr);
+}

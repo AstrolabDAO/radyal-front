@@ -4,8 +4,9 @@ interface LoaderProps extends HTMLAttributes<HTMLDivElement> {
   promise?: Promise<any> | null;
   state?: any;
   children?: React.ReactNode;
+  blur?: boolean;
 }
-const Loader = ({ promise, children, state }: LoaderProps) => {
+const Loader = ({ promise, children, state,blur = false }: LoaderProps) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -29,6 +30,11 @@ const Loader = ({ promise, children, state }: LoaderProps) => {
 
   if (!isLoading && !children) return null;
 
+  if(blur){
+    return <>
+    <div className="relative">{children}</div>
+    </>
+  }
   return (
     <>
       {isLoading && (

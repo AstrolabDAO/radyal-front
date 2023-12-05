@@ -4,6 +4,7 @@ import { chainImages } from "./mappings";
 import { FEATURED_WALLETS } from "./web3-constants";
 
 const WAGMI_PROJECT_ID = "2f0ff1893bae6d2f220397f005075a1f";
+
 export const setupWeb3modal = (chains) => {
   const wagmiConfig = defaultWagmiConfig({
     projectId: WAGMI_PROJECT_ID,

@@ -21,10 +21,6 @@ const CrossChainTokenSelect = ({
     estimationPromise,
     fromValue,
   } = useContext(SwapContext);
-  console.log(
-    "🚀 ~ file: CrossChainTokenSelect.tsx:26 ~ fromValue:",
-    fromValue
-  );
 
   const [depositValue, setDepositValue] = useState<string>(
     isReceive ? null : fromValue ?? null
