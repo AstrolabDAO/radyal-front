@@ -49,7 +49,7 @@ export interface LifiRequest {
   strat: Strategy;
   amount: number;
   estimateOnly?: boolean;
-  allowance?: string | number | bigint | boolean
+  allowance?: string | number | bigint | boolean;
 }
 
 export const generateRequest = async ({
@@ -80,7 +80,7 @@ export const generateRequest = async ({
   const amountWei = fromToken.weiPerUnit * amount;
 
   if (!estimateOnly) {
-    console.log('callData amountWei: ', amountWei.toString())
+    console.log("callData amountWei: ", amountWei.toString());
     const { to, data } = await depositCallData(
       strat.address,
       address,
@@ -101,23 +101,19 @@ export const generateRequest = async ({
       ? customContractCalls
       : undefined,
   };
-  console.log('amountWei: ', lifiOptions)
+  console.log("amountWei: ", lifiOptions);
 
   return getTransactionRequest(lifiOptions);
 };
 
-
-export const generateAndSwap = async ({
-  fromToken,
-  toToken,
-  strat,
-  amount,
-  address,
-}: LifiRequest,allowance: string | number | bigint | boolean  = 0n,_queryClient: QueryClient = queryClient) => {
+export const generateAndSwap = async (
+  { fromToken, toToken, strat, amount, address }: LifiRequest,
+  allowance: string | number | bigint | boolean = 0n,
+  _queryClient: QueryClient = queryClient
+) => {
   await _switchNetwork(fromToken?.network?.id);
   const oldEstimation: number = _queryClient.getQueryData(`estimate-${amount}`);
   let toAmount: number = oldEstimation;
-  console.log("🚀 ~ file: lifi.ts:119 ~ toAmount:", toAmount);
 
   if (!oldEstimation) {
     const trEstimation = await generateRequest({
@@ -128,6 +124,7 @@ export const generateAndSwap = async ({
       amount,
       address,
     });
+    console.log("🚀 ~ file: lifi.ts:125 ~ trEstimation:", trEstimation);
 
     toAmount = Number(trEstimation?.estimatedExchangeRate) * Number(amount);
   }
@@ -140,10 +137,15 @@ export const generateAndSwap = async ({
     amount: toAmount,
     address,
   });
+  console.log("🚀 ~ file: lifi.ts:137 ~ tr:", tr);
 
   const approvalAmount = amountWei + amountWei / 500n; // 5%
 
   if (Number(amountWei.toString()) > Number(allowance.toString()))
-    await approve(routerByChainId[fromToken.network.id], approvalAmount.toString(), fromToken.address);
+    await approve(
+      routerByChainId[fromToken.network.id],
+      approvalAmount.toString(),
+      fromToken.address
+    );
   return swap(tr);
-}
+};

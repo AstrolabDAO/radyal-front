@@ -12,6 +12,7 @@ const CrossChainTokenSelect = ({
   selected,
   locked = false,
   isReceive = false,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onChange = (value: string) => {},
 }) => {
   const {

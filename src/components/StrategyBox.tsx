@@ -5,9 +5,10 @@ import { useContext } from "react";
 import { StrategyContext } from "~/context/strategy-context";
 import clsx from "clsx";
 import { useAccount } from "wagmi";
-import { ModalContext } from "~/context/modal-context";
+
 import SwapModal from "./modals/SwapModal";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { SwapModalContext } from "~/context/swap-modal-context";
 
 interface StrategyProps {
   strategy: Strategy;
@@ -15,7 +16,8 @@ interface StrategyProps {
 const StrategyCard = ({ strategy }: StrategyProps) => {
   const { network, token, name } = strategy;
   const { selectStrategy, selectedStrategy } = useContext(StrategyContext);
-  const { openModal } = useContext(ModalContext);
+  const { openModal } = useContext(SwapModalContext);
+
   const { isConnected } = useAccount();
   const web3Modal = useWeb3Modal();
 

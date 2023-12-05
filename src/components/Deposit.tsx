@@ -1,12 +1,14 @@
-import { useContext } from "react";
-import { SwapContext } from "~/context/swap-context";
-import CrossChainTokenSelect from "./CrossChainTokenSelect";
-import SelectToken from "./SelectToken";
-import { tokenBySlug } from "~/utils/mappings";
-import { TokensContext } from "~/context/tokens-context";
-import { StrategyContext } from "~/context/strategy-context";
+import { useContext, useEffect } from "react";
 import { useAccount } from "wagmi";
+import { StrategyContext } from "~/context/strategy-context";
+import { SwapContext } from "~/context/swap-context";
+import { SwapModalContext } from "~/context/swap-modal-context";
+import { TokensContext } from "~/context/tokens-context";
 import { useGenerateAndSwap } from "~/hooks/swap";
+import CrossChainTokenSelect from "./CrossChainTokenSelect";
+import SelectTokenModal, {
+  SelectTokenModalMode,
+} from "./modals/SelectTokenModal";
 
 const Deposit = () => {
   const {
@@ -16,35 +18,31 @@ const Deposit = () => {
     selectFromToken,
     switchSelectMode,
   } = useContext(SwapContext);
+
   const { address } = useAccount();
   const { fromValue, updateFromValue } = useContext(SwapContext);
 
+  const { openModal } = useContext(SwapModalContext);
   const { selectedStrategy } = useContext(StrategyContext);
   const { sortedBalances } = useContext(TokensContext);
 
-  const generateAndSwap = useGenerateAndSwap(fromToken)
+  const generateAndSwap = useGenerateAndSwap(fromToken);
 
-  if (selectTokenMode) {
-    return (
-      <div className="deposit block">
-        <div className="box w-full">
-          <SelectToken
-            tokens={sortedBalances
-              .filter((balance) => {
-                const token = tokenBySlug[balance.slug];
-                if (!token) return false;
-                return true;
-              })
-              .map((balance) => tokenBySlug[balance.slug])}
-            onSelect={(token) => {
-              selectFromToken(token);
-              switchSelectMode();
-            }}
-          />
-        </div>
-      </div>
+  useEffect(() => {
+    if (!selectTokenMode) return;
+    openModal(
+      <SelectTokenModal
+        mode={SelectTokenModalMode.Deposit}
+        onClose={() => switchSelectMode()}
+      />
     );
-  }
+  }, [
+    selectTokenMode,
+    openModal,
+    sortedBalances,
+    selectFromToken,
+    switchSelectMode,
+  ]);
 
   return (
     <div className="deposit block">

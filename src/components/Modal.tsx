@@ -1,18 +1,38 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useContext, useRef } from "react";
-import { ModalContext } from "~/context/modal-context";
+import { Fragment, useCallback, useContext, useRef } from "react";
 import { FaTimes } from "react-icons/fa";
+import { ModalContext } from "~/context/modal-context";
+
+export interface BaseModal extends React.ReactElement {
+  props: {
+    onClose?: () => void;
+  };
+}
+export interface BaseModalProps {
+  onClose?: () => void;
+}
+
 const Modal = () => {
-  const { visible, closeModal, modalContent } = useContext(ModalContext);
+  const { visible, closeModal, selectedModal } = useContext(ModalContext);
+
+  const onClose = useCallback(() => {
+    if (selectedModal) {
+      const { props } = selectedModal;
+
+      if (props?.onClose) props.onClose();
+    }
+    closeModal();
+  }, [selectedModal, closeModal]);
 
   const cancelButtonRef = useRef(null);
   return (
     <Transition.Root show={visible} as={Fragment}>
       <Dialog
+        open={visible}
         as="div"
         className="relative z-10"
         initialFocus={cancelButtonRef}
-        onClose={() => closeModal()}
+        onClose={onClose}
       >
         <Transition.Child
           as={Fragment}
@@ -23,7 +43,10 @@ const Modal = () => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div
+            className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            onClick={onClose}
+          />
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -39,12 +62,12 @@ const Modal = () => {
             >
               <Dialog.Panel className="relative transform overflow-y-auto rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg overflow-auto max-h-80vh">
                 <button
-                  className="right-0 top-0 absolute p-2"
-                  onClick={() => closeModal()}
+                  className="right-0 top-0 absolute p-2 z-50"
+                  onClick={onClose}
                 >
                   <FaTimes />
                 </button>
-                {modalContent}
+                {selectedModal}
               </Dialog.Panel>
             </Transition.Child>
           </div>

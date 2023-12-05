@@ -67,44 +67,41 @@ export const SwapProvider = ({ children }) => {
     debounceTimer = setTimeout(() => {
       if (!fromToken || !depositValue) return;
 
-      queryClient
-        .fetchQuery(
-          `estimate-${depositValue}`,
-          async () => {
-            const promise = generateRequest({
-              estimateOnly: true,
-              address: address,
-              fromToken,
-              toToken,
-              amount: depositValue,
-              strat: selectedStrategy,
+      queryClient.fetchQuery(
+        `estimate-${depositValue}`,
+        async () => {
+          const promise = generateRequest({
+            estimateOnly: true,
+            address: address,
+            fromToken,
+            toToken,
+            amount: depositValue,
+            strat: selectedStrategy,
+          })
+            .then((result) => {
+              const { estimatedExchangeRate } = result;
+              const receiveEstimation =
+                Number(depositValue) * Number(estimatedExchangeRate);
+              setReceiveEstimation(receiveEstimation as number);
+              return result;
             })
-              .then(({ estimatedExchangeRate }) => {
-                const receiveEstimation =
-                  Number(depositValue) * Number(estimatedExchangeRate);
-
-                return receiveEstimation;
-              })
-              .catch((err) => {
-                console.error(err);
-                toast.error("route not found from Swapper");
-              });
-
-            setEstimationPromise(promise);
-            toast.promise(promise, {
-              pending: "Calculating...",
-              error: "route not found from Swapper 🤯",
+            .catch((err) => {
+              console.error(err);
+              toast.error("route not found from Swapper");
             });
-            return promise;
-          },
-          {
-            staleTime: 1000 * 0,
-            cacheTime: 1000 * 0,
-          }
-        )
-        .then((estimation) => {
-          setReceiveEstimation(estimation as number);
-        });
+
+          setEstimationPromise(promise);
+          toast.promise(promise, {
+            pending: "Calculating...",
+            error: "route not found from Swapper 🤯",
+          });
+          return promise;
+        },
+        {
+          staleTime: 1000 * 15,
+          cacheTime: 1000 * 15,
+        }
+      );
     }, 1000);
   };
 
@@ -136,10 +133,6 @@ export const SwapProvider = ({ children }) => {
   ]);
 
   const updateFromValue = useCallback((value: string) => {
-    console.log(
-      "🚀 ~ file: swap-context.tsx:139 ~ updateFromValue ~ value:",
-      value
-    );
     setFromValue(value);
   }, []);
 

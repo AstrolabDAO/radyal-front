@@ -1,17 +1,18 @@
 import React, { createContext, useState } from "react";
+import { BaseModal } from "~/components/Modal";
 
-interface ModalContextType {
+export interface ModalContextType {
   visible: boolean;
-  modalContent?: React.ReactNode;
-  openModal: (modal: React.ReactNode) => void;
+  selectedModal?: BaseModal;
+  openModal: (modal: BaseModal) => void;
   closeModal: () => void;
 }
 interface ModalContextProps {
-  children: React.ReactNode;
+  children: BaseModal;
 }
 export const ModalContext = createContext<ModalContextType>({
   visible: false,
-  modalContent: null,
+  selectedModal: null,
   openModal: () => {},
   closeModal: () => {},
 });
@@ -19,17 +20,34 @@ export const ModalContext = createContext<ModalContextType>({
 export const ModalProvider = ({ children }: ModalContextProps) => {
   const [visible, setVisible] = useState(false);
   const Provider = ModalContext.Provider;
-  const [modalContent, setModalContent] = useState<React.ReactNode>(null);
-  const openModal = (modal: React.ReactNode) => {
-    setModalContent(modal);
+  const [modals, setModals] = useState<React.ReactElement[]>([]); // [modal1, modal2, modal3
+
+  const [selectedModal, setSelectedModal] = useState<number>();
+
+  const openModal = (modal: BaseModal) => {
+    setModals([...modals, modal]);
+    setSelectedModal(modals.length);
     setVisible(true);
   };
   const closeModal = () => {
-    setModalContent(null);
-    setVisible(false);
+    setModals(modals.slice(0, modals.length - 1));
+
+    if (modals.length === 1) {
+      setSelectedModal(null);
+      setVisible(false);
+    } else {
+      setSelectedModal(modals.length - 2);
+    }
   };
   return (
-    <Provider value={{ visible, openModal, closeModal, modalContent }}>
+    <Provider
+      value={{
+        visible,
+        openModal,
+        closeModal,
+        selectedModal: modals[selectedModal],
+      }}
+    >
       {children}
     </Provider>
   );
