@@ -11,6 +11,7 @@ import {
 
 import { queryClient } from "~/main";
 import { QueryClient } from "react-query";
+
 export const generateCallData = async (
   functionName: string,
   fromAddress: string,

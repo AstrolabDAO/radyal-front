@@ -10,6 +10,8 @@ import { erc20Abi } from "abitype/abis";
 import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
 import { currentChain } from "~/context/web3-context";
 import { switchNetwork } from "wagmi/actions";
+import { BigNumberish, ethers } from "ethers";
+import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
 
 export const swap = async (tr: ITransactionRequestWithEstimate) => {
   if (!tr) return;
@@ -74,3 +76,31 @@ export const approve = async (
 export const _switchNetwork = async (chainId: number) => {
   if (currentChain.id !== chainId) await switchNetwork({ chainId });
 };
+
+export const safeWithdraw = async (
+  contractAddress: string,
+  amount: BigNumberish,
+  receiver: string,
+  owner?: string,
+  minAmount = "0",
+  abi = StratV5Abi.abi
+) => {
+  if (!owner) owner = receiver;
+  return await writeTx(
+    "safeWithdraw",
+    [amount, minAmount, receiver, owner],
+    contractAddress,
+    abi as any
+  );
+};
+
+
+export const withdraw = async () => {
+  const address = '0x7B56288776Cae4260770981b6BcC0f6D011C7b72';
+  const amount = ethers.parseUnits('3.99922', 6);
+  const contractAddress = '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83';
+  const chainId = 100;
+  await _switchNetwork(chainId);
+  const res = await safeWithdraw(contractAddress, amount, address);
+  return res;
+}
