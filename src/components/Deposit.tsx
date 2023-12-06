@@ -5,10 +5,8 @@ import { SwapContext } from "~/context/swap-context";
 import { SwapModalContext } from "~/context/swap-modal-context";
 import { TokensContext } from "~/context/tokens-context";
 import { useGenerateAndSwap } from "~/hooks/swap";
-import CrossChainTokenSelect from "./CrossChainTokenSelect";
-import SelectTokenModal, {
-  SelectTokenModalMode,
-} from "./modals/SelectTokenModal";
+
+import ModalLayout from "./layout/ModalLayout";
 
 const Deposit = () => {
   const {
