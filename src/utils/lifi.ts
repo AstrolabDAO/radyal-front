@@ -80,7 +80,6 @@ export const generateRequest = async ({
   const amountWei = fromToken.weiPerUnit * amount;
 
   if (!estimateOnly) {
-    console.log("callData amountWei: ", amountWei.toString());
     const { to, data } = await depositCallData(
       strat.address,
       address,

@@ -1,26 +1,28 @@
 import { useAccount } from "wagmi";
-import logo from "../assets/logo.svg";
-
-import Button from "./Button";
 import { disconnect } from "wagmi/actions";
-import { shortenAddress } from "~/utils/format";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
+
+import { shortenAddress } from "~/utils/format";
 import { withdraw } from "~/utils/web3";
+import Button from "./Button";
+import Logo from "~/assets/logo.svg?react";
 
 const Header = () => {
   const { address, isConnected } = useAccount();
   const web3Modal = useWeb3Modal();
 
   return (
-    <header className="fixed top-0 left-0 w-full flex p-3 bottom-box-shadow z-10 bg-white">
+    <header className="fixed top-0 left-0 w-full flex p-3 bottom-box-shadow z-10">
       <div className="container mx-auto">
         <div className="relative flex w-full">
           <div className="logo h-full relative block">
-            <img src={logo} alt="Logo Radyal" className="flex w-96" />
+            <Logo className="flex w-64 fill-white" />
           </div>
           <nav className="flex w-full justify-end items-center mr-6">
             <ul className="flex font-bold text-xl">
-              <li className="px-2 cursor-pointer" onClick={withdraw}>withdraw</li>
+              <li className="px-2 cursor-pointer" onClick={withdraw}>
+                withdraw
+              </li>
               <li className="px-2 cursor-pointer">Strategies</li>
             </ul>
           </nav>

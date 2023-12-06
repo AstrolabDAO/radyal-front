@@ -7,7 +7,6 @@ import { TokensProvider } from "./context/tokens-context";
 import routes from "./utils/routes";
 
 import { Web3Provider } from "./context/web3-context.tsx";
-import "./styles/App.css";
 
 const router = createBrowserRouter(routes);
 

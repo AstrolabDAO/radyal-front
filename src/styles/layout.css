@@ -1,0 +1,6 @@
+@layer utilities {
+  .bg-blur {
+    background: $blurBackground;
+    backdrop-filter: blur(8px);
+  }
+}

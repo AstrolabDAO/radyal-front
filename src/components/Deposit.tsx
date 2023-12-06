@@ -44,41 +44,33 @@ const Deposit = () => {
     switchSelectMode,
   ]);
 
+  const modalActions = [
+    {
+      label: "Deposit",
+      onClick: () => {
+        generateAndSwap({
+          address,
+          fromToken,
+          toToken,
+          amount: Number(fromValue),
+          strat: selectedStrategy,
+        });
+      },
+    },
+  ];
   return (
-    <div className="deposit block">
-      <div className="box w-full">
-        <>
-          <CrossChainTokenSelect
-            selected={fromToken}
-            onChange={(value) => updateFromValue(value)}
-          />
-          <hr />
-          <CrossChainTokenSelect
-            locked={true}
-            isReceive={true}
-            selected={toToken}
-          />
-        </>
-      </div>
-      <div className="bg-gray-50 py-3 sm:flex sm:flex-row-reverse">
-        <div className="flex w-full justify-center">
-          <button
-            className="btn btn-primary w-full"
-            onClick={() => {
-              generateAndSwap({
-                address,
-                fromToken,
-                toToken,
-                amount: Number(fromValue),
-                strat: selectedStrategy,
-              });
-            }}
-          >
-            Deposit
-          </button>
-        </div>
-      </div>
-    </div>
+    <ModalLayout actions={modalActions}>
+      <CrossChainTokenSelect
+        selected={fromToken}
+        onChange={(value) => updateFromValue(value)}
+      />
+      <hr />
+      <CrossChainTokenSelect
+        locked={true}
+        isReceive={true}
+        selected={toToken}
+      />
+    </ModalLayout>
   );
 };
 export default Deposit;
