@@ -106,7 +106,7 @@ const CrossChainTokenSelect = ({
             )}
             {!isReceive && (
               <input
-                className="input w-full max-w-xs text-right text-4xl"
+                className="input w-full max-w-xs text-right text-4xl bg-transparent"
                 type="text"
                 placeholder="100"
                 value={depositValue?.toString() ?? ""}

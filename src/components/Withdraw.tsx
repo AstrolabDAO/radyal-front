@@ -4,6 +4,7 @@ import { SwapContext } from "~/context/swap-context";
 import { TokensContext } from "~/context/tokens-context";
 import CrossChainTokenSelect from "./CrossChainTokenSelect";
 import SelectToken from "./SelectToken";
+import ModalLayout from "./layout/ModalLayout";
 const Withdraw = () => {
   const { selectedStrategy } = useContext(StrategyContext);
   const {
@@ -36,21 +37,11 @@ const Withdraw = () => {
     );
   }
   return (
-    <div className="withdraw block">
-      <div className="box w-full">
-        <CrossChainTokenSelect
-          locked={true}
-          selected={selectedStrategy.token}
-        />
-        <hr />
-        <CrossChainTokenSelect selected={toToken} isReceive={true} />
-      </div>
-      <div className="bg-gray-50 py-3 sm:flex sm:flex-row-reverse">
-        <div className="flex w-full justify-center">
-          <button className="btn btn-primary w-full">Withdraw</button>
-        </div>
-      </div>
-    </div>
+    <ModalLayout actions={[{ label: "Withdraw", onClick: () => {} }]}>
+      <CrossChainTokenSelect locked={true} selected={selectedStrategy.token} />
+      <hr />
+      <CrossChainTokenSelect selected={toToken} isReceive={true} />
+    </ModalLayout>
   );
 };
 export default Withdraw;

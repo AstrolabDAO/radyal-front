@@ -33,7 +33,7 @@ const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
       : tokens;
   }, [mode, sortedBalances, tokens]);
   return (
-    <div className="bg-white p-4">
+    <div className="p-4">
       <div className="select-token block">
         <div className="box w-full">
           <SelectToken

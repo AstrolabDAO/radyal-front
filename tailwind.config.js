@@ -1,29 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 import * as daisyui from 'daisyui'
 import  * as themes from 'daisyui/src/theming/themes'
-
-const colors = {
-  blue: "#4159f3",
-  red: "FF4242",
-  lightBlue:"#6979e4",
-  darkBlue: "#14248c",
-  beige: "#f1f0ec",
-  darker: "#0C0C0C",
-  lighter: "#FDFDFD",
-};
-
-
-const themeColors = {
-  ...colors,
-  "light-blue": colors.lightBlue,
-  "blue-dark": colors.blueDark,
-  "darker-blue": colors.darkerBlue,
-  primary: colors.blue,
-  "dark-primary": "#3870ff",
-  "light-primary": "#5686ff",
-  secondary: colors.lightBlue,
-  active: colors.lightBlue,
-};
+import { COLORS } from "./src/styles/constants"
 
 export default {
   content: [
@@ -32,18 +10,18 @@ export default {
   ],
   theme: {
     extend: {
-      colors: themeColors
+      colors: COLORS,
     },
   },
   plugins: [
-    daisyui
+    daisyui,
   ],
   daisyui: {
     themes: [
       {
-        light: {
-          ...themes["light"],
-          ...themeColors,
+        dark: {
+          ...themes["dark"],
+          ...COLORS,
         },
       },
     ], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]

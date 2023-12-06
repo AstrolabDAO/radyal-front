@@ -8,6 +8,7 @@ import { balanceBySlug } from "~/utils/mappings";
 
 import { Web3Context } from "~/context/web3-context";
 import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
+import ModalLayout from "./layout/ModalLayout";
 
 const SelectToken = ({ tokens, onSelect }) => {
   const { tokenPrices } = useContext(TokensContext);
@@ -31,9 +32,8 @@ const SelectToken = ({ tokens, onSelect }) => {
   }, [search, tokens, networksFilter]);
 
   return (
-    <div className="token-list card pt-4">
-      <h1 className="text-center mb-8">Select </h1>
-      <div>
+    <ModalLayout title="Select token">
+      <header>
         <label>search by name...</label>
         <input
           type="text"
@@ -54,8 +54,7 @@ const SelectToken = ({ tokens, onSelect }) => {
             setNetworksFilter(value.map((v) => v.network?.slug));
           }}
         />
-      </div>
-
+      </header>
       <div>
         {filteredTokens.map((token, index) => {
           const convertedPrice = Number(tokenPrices[token.coinGeckoId]?.usd);
@@ -107,7 +106,7 @@ const SelectToken = ({ tokens, onSelect }) => {
           );
         })}
       </div>
-    </div>
+    </ModalLayout>
   );
 };
 export default SelectToken;

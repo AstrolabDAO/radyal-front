@@ -37,3 +37,29 @@ export const lisibleAmount = (amount: string | number, decimals = 2) => {
 export const unwrapSymbol = (symbol: string): string => {
   return unwraps?.[symbol.toLowerCase()] ?? symbol.toLowerCase();
 };
+
+/**
+ * Converts a hexadecimal color value to an RGBA string.
+ *
+ * @param {`#${string}`} hex - The hexadecimal color value. Should start with '#'.
+ * @param {number} opacity - The opacity level for the color. Must be a number between 0 and 1.
+ * @returns {string} The RGBA color string.
+ *
+ * @example
+ * // returns 'rgba(255, 255, 255, 0.5)'
+ * hexToRgba('#FFFFFF', 0.5);
+ *
+ * @throws Will throw an error if the opacity is not between 0 and 1.
+ */
+export const hexToRgba = (hex: string, opacity: number) => {
+  // Remove the '#' if it's present
+  const _hex = hex.replace("#", "");
+
+  // Convert the hexadecimal values to decimal RGB values
+  const r = parseInt(_hex.substring(0, 2), 16);
+  const g = parseInt(_hex.substring(2, 4), 16);
+  const b = parseInt(_hex.substring(4, 6), 16);
+
+  // Return the formatted RGBA string
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
