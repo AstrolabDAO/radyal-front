@@ -117,6 +117,7 @@ export const TokensProvider = ({ children }) => {
     const _tokens = tokensData;
 
     const _balances = [];
+    setBalances(_balances);
     balancesData?.forEach(([balance, token]) => {
       if (token && !_tokens.find((t) => t.slug === token.slug)) {
         _tokens.push(token);
@@ -133,7 +134,7 @@ export const TokensProvider = ({ children }) => {
     setTokens(_tokens);
     setBalances(_balances);
     setLoadPrices(true);
-  }, [balancesData, tokensData, tokens]);
+  }, [balancesData, tokensData, tokens, address]);
 
   const sortedBalances = useMemo(() => {
     if (!tokenPrices || Object.values(tokenBySlugMapping).length === 0)
@@ -164,7 +165,7 @@ export const TokensProvider = ({ children }) => {
 
         return valueA > valueB ? -1 : 1;
       });
-  }, [balances, tokenBySlug, tokenPrices, tokens]);
+  }, [balances, tokenPrices]);
 
   useEffect(() => {
     balances.forEach((balance) => updateBalanceMapping(balance));

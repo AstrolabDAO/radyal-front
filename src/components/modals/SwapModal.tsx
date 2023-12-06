@@ -1,15 +1,11 @@
 import clsx from "clsx";
 import { useContext, useState } from "react";
-import { SwapContext, SwapProvider } from "~/context/swap-context";
+import { SwapContext } from "~/context/swap-context";
 import Deposit from "../Deposit";
 import Withdraw from "../Withdraw";
 
 const SwapModal = () => {
-  return (
-    <SwapProvider>
-      <SwapModalContent />
-    </SwapProvider>
-  );
+  return <SwapModalContent />;
 };
 
 const SwapModalContent = () => {
