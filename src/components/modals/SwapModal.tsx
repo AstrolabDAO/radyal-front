@@ -33,7 +33,7 @@ const SwapModalContent = () => {
             <a
               key={title}
               role="tab"
-              className={clsx("tab", {
+              className={clsx("tab text-xl", {
                 "tab-active": selectedTab === index,
               })}
               onClick={() => setSelectedTab(index)}

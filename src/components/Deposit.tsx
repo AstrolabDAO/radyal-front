@@ -11,6 +11,7 @@ import SelectTokenModal, {
   SelectTokenModalMode,
 } from "./modals/SelectTokenModal";
 import CrossChainTokenSelect from "./CrossChainTokenSelect";
+import SwapInput from "./SwapInput";
 
 const Deposit = () => {
   const {
@@ -62,16 +63,25 @@ const Deposit = () => {
   ];
   return (
     <ModalLayout actions={modalActions}>
-      <CrossChainTokenSelect
-        selected={fromToken}
-        onChange={(value) => updateFromValue(value)}
-      />
-      <hr />
-      <CrossChainTokenSelect
-        locked={true}
-        isReceive={true}
-        selected={toToken}
-      />
+      <div className="flex gap-5 relative w-full mb-6 pt-6">
+        <CrossChainTokenSelect
+          selected={fromToken}
+          //onChange={(value) => updateFromValue(value)}
+        />
+
+        <CrossChainTokenSelect
+          locked={true}
+          //isReceive={true}
+          selected={toToken}
+        />
+      </div>
+      <div className="flex gap-5 relative w-full flex-col">
+        <SwapInput
+          selected={fromToken}
+          onChange={(value) => updateFromValue(value)}
+        />
+        <SwapInput selected={toToken} isDestination={true} />
+      </div>
     </ModalLayout>
   );
 };

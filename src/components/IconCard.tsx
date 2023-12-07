@@ -10,13 +10,14 @@ const IconCard = ({ icon }: IconCardProps) => {
   return (
     <div
       className={clsx("avatar", classes, {
-        "h-7 w-7 bottom-right-icon": small,
+        "h-8 w-8 translate-y-4 -ml-6": small,
+        "mb-3": !small,
       })}
     >
       <div
         className={clsx({
-          "w-8 h-8": !small,
-          "w-7 h-7 border-none": small,
+          "w-10 h-10": !small,
+          "w-8 h-8 border-none ": small,
         })}
       >
         <img src={icon.url} alt={icon.alt} className="centerXY" />

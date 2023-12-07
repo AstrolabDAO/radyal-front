@@ -25,7 +25,7 @@ interface SwapContextType {
   toToken: Token;
   fromValue: string;
   sortedBalances: any;
-  receiveEstimation: any;
+  toValue: any;
   selectTokenMode: boolean;
   estimationPromise: Promise<any>;
 }
@@ -39,7 +39,7 @@ export const SwapContext = createContext<SwapContextType>({
   toToken: null,
   fromValue: null,
   sortedBalances: [],
-  receiveEstimation: null,
+  toValue: null,
   selectTokenMode: false,
   estimationPromise: null,
 });
@@ -49,7 +49,7 @@ export const SwapProvider = ({ children }) => {
   const { selectedStrategy } = useContext(StrategyContext);
   const [fromValue, setFromValue] = useState<string>(null);
 
-  const [receiveEstimation, setReceiveEstimation] = useState(0);
+  const [toValue, setToValue] = useState(0);
   const [estimationPromise, setEstimationPromise] = useState(null);
   const [selectTokenMode, setSelectTokenMode] = useState(false);
 
@@ -82,7 +82,7 @@ export const SwapProvider = ({ children }) => {
               const { estimatedExchangeRate } = result;
               const receiveEstimation =
                 Number(depositValue) * Number(estimatedExchangeRate);
-              setReceiveEstimation(receiveEstimation as number);
+              setToValue(receiveEstimation as number);
               return result;
             })
             .catch((err) => {
@@ -148,7 +148,7 @@ export const SwapProvider = ({ children }) => {
         toToken,
         fromValue,
         sortedBalances,
-        receiveEstimation,
+        toValue,
         selectTokenMode,
         estimationPromise,
       }}

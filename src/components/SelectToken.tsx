@@ -68,8 +68,12 @@ const SelectToken = ({ tokens, onSelect }) => {
           );
 
           const icons = [
-            { url: token?.network?.icon, alt: token?.network?.name },
-            { url: token?.icon, alt: token?.symbol, small: true },
+            { url: token?.icon, alt: token?.symbol },
+            {
+              url: token?.network?.icon,
+              alt: token?.network?.name,
+              small: true,
+            },
           ];
 
           return (

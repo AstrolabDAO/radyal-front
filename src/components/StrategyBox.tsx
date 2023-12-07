@@ -23,13 +23,13 @@ const StrategyCard = ({ strategy }: StrategyProps) => {
 
   const icons = [
     {
-      url: network.icon,
-      alt: network.name,
+      url: token.icon,
+      alt: token.symbol,
       classes: "border-primary",
     },
     {
-      url: token.icon,
-      alt: token.symbol,
+      url: network.icon,
+      alt: network.name,
       small: true,
       classes: "border-primary",
     },
