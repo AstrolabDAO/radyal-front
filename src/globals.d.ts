@@ -12,3 +12,5 @@ declare module "*.svg" {
   const content: string;
   export default content;
 }
+
+declare const COLORS_PALETTE: { [key: string]: string };

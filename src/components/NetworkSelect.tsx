@@ -2,18 +2,12 @@ import ReactSelect, {
   components,
   OptionProps as ReactSelectOptionsProps,
   Props as ReactSelectProps,
-} from "react-select";
 
+} from "react-select";
+import { BACKGROUNDS } from "~/styles/constants";
 import { Network } from "~/utils/interfaces";
 
-export interface NetworkSelectData {
-  value: string;
-  label: any;
-  network: Network;
-}
-interface OptionProps extends ReactSelectOptionsProps {
-  data: NetworkSelectData;
-}
+
 
 const Option = ({ ...props }: OptionProps) => {
   const { network } = props.data;
@@ -30,10 +24,10 @@ const Option = ({ ...props }: OptionProps) => {
   );
 };
 
-interface NetworkSelectProps extends ReactSelectProps {
-  networks: Network[];
-}
+
+
 const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
+  console.log("🚀 ~ file: NetworkSelect.tsx:44 ~ NetworkSelect ~ COLORS_PALETTE:", COLORS_PALETTE["base-550"])
   return (
     <ReactSelect
       isMulti
@@ -42,7 +36,14 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
           ...baseStyles,
           borderRadius: "0.375rem",
           height: "3rem",
+          backgroundColor: BACKGROUNDS.base,
         }),
+        option: (baseStyles, {  isFocused }) => ({
+          ...baseStyles,
+          backgroundColor: isFocused ? COLORS_PALETTE["base-550"] : COLORS_PALETTE["base"],
+          
+          
+        })
       }}
       options={networks.map((network) => ({
         value: network.slug,
@@ -54,5 +55,18 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
     />
   );
 };
+
+interface NetworkSelectProps extends ReactSelectProps {
+  networks: Network[];
+}
+
+export interface NetworkSelectData {
+  value: string;
+  label: any;
+  network: Network;
+}
+interface OptionProps extends ReactSelectOptionsProps {
+  data: NetworkSelectData;
+}
 
 export default NetworkSelect;
