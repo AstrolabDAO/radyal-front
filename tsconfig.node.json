@@ -4,12 +4,10 @@
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   },
-  "include": [
-    "vite.config.ts",
-    "postcss.config.ts",
-    "src/styles/constants.ts",
-    "src/utils/*ts"
-  ]
+  "include": ["vite.config.ts", "postcss.config.ts", "src"]
 }

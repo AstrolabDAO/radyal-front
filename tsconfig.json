@@ -23,6 +23,6 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": ["src", "postcss.config.ts"],
+  "include": [],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
