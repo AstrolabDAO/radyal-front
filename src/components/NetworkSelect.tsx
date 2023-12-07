@@ -2,6 +2,7 @@ import ReactSelect, {
   components,
   OptionProps as ReactSelectOptionsProps,
   Props as ReactSelectProps,
+  StylesConfig,
 
 } from "react-select";
 import { BACKGROUNDS } from "~/styles/constants";
@@ -27,24 +28,25 @@ const Option = ({ ...props }: OptionProps) => {
 
 
 const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
-  console.log("🚀 ~ file: NetworkSelect.tsx:44 ~ NetworkSelect ~ COLORS_PALETTE:", COLORS_PALETTE["base-550"])
+  
+
+  const styleOptions: StylesConfig<NetworkSelectData> = {
+    control: (baseStyles: any) => {
+      return {
+        ...baseStyles,
+      backgroundColor: BACKGROUNDS.base,
+      borderRadius: "0.375rem",
+      height: "3rem",
+    }},
+    option: (baseStyles: any, {  isFocused }) => ({
+      ...baseStyles,
+      backgroundColor: isFocused ? COLORS_PALETTE["base-550"] : COLORS_PALETTE["base"],
+    })
+  }
   return (
     <ReactSelect
       isMulti
-      styles={{
-        control: (baseStyles) => ({
-          ...baseStyles,
-          borderRadius: "0.375rem",
-          height: "3rem",
-          backgroundColor: BACKGROUNDS.base,
-        }),
-        option: (baseStyles, {  isFocused }) => ({
-          ...baseStyles,
-          backgroundColor: isFocused ? COLORS_PALETTE["base-550"] : COLORS_PALETTE["base"],
-          
-          
-        })
-      }}
+      styles={styleOptions}
       options={networks.map((network) => ({
         value: network.slug,
         label: <img src={network.icon} width={20} height={20} />,
