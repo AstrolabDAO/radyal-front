@@ -7,7 +7,7 @@ import { _switchNetwork, approve, swap } from "./web3";
 import {
   getTransactionRequest,
   routerByChainId,
-} from "@astrolabs/swapper/dist/src/LiFi";
+} from "../../../swapperUpdateToDate/src/LiFi/index";
 
 import { queryClient } from "~/main";
 import { QueryClient } from "react-query";
@@ -94,14 +94,12 @@ export const generateRequest = async ({
     amountWei: amountWei,
     outputChainId: toToken.network.id,
     output: toToken.address,
-    maxSlippage: 50,
+    maxSlippage: 500,
     payer: address,
     customContractCalls: customContractCalls.length
       ? customContractCalls
       : undefined,
   };
-  console.log("amountWei: ", lifiOptions);
-
   return getTransactionRequest(lifiOptions);
 };
 
