@@ -1,6 +1,6 @@
 import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
 import { erc20Abi } from "abitype/abis";
-import { ethers } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 
 import { Strategy, Token } from "./interfaces";
 import { _switchNetwork, approve, swap } from "./web3";
@@ -16,7 +16,7 @@ export const generateCallData = async (
   functionName: string,
   fromAddress: string,
   toAddress: string,
-  amount: string,
+  amount: BigNumberish,
   abi = erc20Abi
 ) => {
   const contract = new ethers.Contract(fromAddress, abi);
@@ -31,7 +31,7 @@ export const generateCallData = async (
 export const depositCallData = async (
   stratAddress: string,
   address: string,
-  toAmount: string
+  toAmount: BigNumberish
 ) => {
   return await generateCallData(
     "safeDeposit",
@@ -76,14 +76,14 @@ export const generateRequest = async ({
   }
 
   const customContractCalls = [];
+  amount = amount - (amount * .05);
 
-  const amountWei = fromToken.weiPerUnit * amount;
-
+  const amountWei = ethers.parseUnits(amount.toString(), fromToken.decimals);
   if (!estimateOnly) {
     const { to, data } = await depositCallData(
       strat.address,
       address,
-      amountWei.toString()
+      amountWei
     );
     customContractCalls.push({ toAddress: to, callData: data });
   }
@@ -99,6 +99,7 @@ export const generateRequest = async ({
     customContractCalls: customContractCalls.length
       ? customContractCalls
       : undefined,
+    denyBridges: ['amarok'],
   };
   return getTransactionRequest(lifiOptions);
 };
