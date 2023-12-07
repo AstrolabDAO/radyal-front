@@ -88,17 +88,17 @@ export const safeWithdraw = async (
   if (!owner) owner = receiver;
   return await writeTx(
     "safeWithdraw",
-    [amount, minAmount, receiver, owner],
+    [amount, minAmount,receiver, owner],
     contractAddress,
     abi as any
   );
 };
 
-
 export const withdraw = async () => {
+  // todo: make it dynamic
   const address = '0x7B56288776Cae4260770981b6BcC0f6D011C7b72';
-  const amount = ethers.parseUnits('3.99922', 6);
-  const contractAddress = '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83';
+  const amount = ethers.parseUnits('3.30', 6);
+  const contractAddress = '0x11C8f790d252F4A49cFBFf5766310873898BF5D3';
   const chainId = 100;
   await _switchNetwork(chainId);
   const res = await safeWithdraw(contractAddress, amount, address);
