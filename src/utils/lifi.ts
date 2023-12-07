@@ -7,7 +7,7 @@ import { _switchNetwork, approve, swap } from "./web3";
 import {
   getTransactionRequest,
   routerByChainId,
-} from "../../../swapperUpdateToDate/src/LiFi/index";
+} from "@astrolabs/swapper/dist/src/LiFi";
 
 import { queryClient } from "~/main";
 import { QueryClient } from "react-query";
