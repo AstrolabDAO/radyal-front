@@ -60,9 +60,9 @@ const SwapInput = ({
     <div className={clsx("relative bg-base-100 card p-4 py-2", className)}>
       <div className="p-2 w-full">
         <header className="flex text-xs mb-2 items-center">
-          <h1 className="text-xl transform-uppercase">
+          <h2 className="text-xl transform-uppercase">
             {!isDestination ? "You pay" : "You receive"}
-          </h1>
+          </h2>
           <div></div>
         </header>
         <div className="flex">

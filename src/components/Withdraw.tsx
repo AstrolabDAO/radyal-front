@@ -40,7 +40,7 @@ const Withdraw = () => {
     <ModalLayout actions={[{ label: "Withdraw", onClick: () => {} }]}>
       <CrossChainTokenSelect locked={true} selected={selectedStrategy.token} />
       <hr />
-      <CrossChainTokenSelect selected={toToken} isReceive={true} />
+      <CrossChainTokenSelect selected={toToken} />
     </ModalLayout>
   );
 };

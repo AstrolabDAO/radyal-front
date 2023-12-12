@@ -27,7 +27,7 @@ export const clearFrom = (s: string, regex: string): string =>
 
 export const clearNetworkTypeFromSlug = (slug: string): string =>
   clearFrom(slug, "-mainnet|-testnet");
-export const amountToEth = (bigInt: bigint, decimals) =>
+export const amountToEth = (bigInt: bigint | string, decimals) =>
   Number(bigInt) / 10 ** decimals;
 
 export const lisibleAmount = (amount: string | number, decimals = 2) => {
@@ -62,4 +62,15 @@ export const hexToRgba = (hex: string, opacity: number) => {
 
   // Return the formatted RGBA string
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
+
+export const stripName = (name: string): string => {
+  return name.replace(/\s?(Finance|Protocol|Network|Capital|Exchange)\b/g, "");
+};
+export const stripSlug = (slug: string): string => {
+  const base = slug.split("-")[0];
+  return base.replace(
+    /\s?(finance|protocol|network|capital|exchange|-)\b/g,
+    ""
+  );
 };

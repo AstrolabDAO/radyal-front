@@ -3,15 +3,18 @@ import {
   BalanceBySlugMapping,
   CoingeckoPrices,
   Network,
+  Protocol,
   Token,
   TokenBySlugMapping,
 } from "./interfaces";
 
 export const networkBySlug: { [slug: string]: Network } = {};
-
 export const networkByChainId: { [chainId: number]: Network } = {};
 export const deFiIdByChainId: { [chainId: number]: number } = {};
 export const chainIdByDeFiId: { [deFiId: number]: number } = {};
+
+export const protocolBySlug: { [slug: string]: Protocol } = {};
+export const protocolByStrippedSlug: { [slug: string]: Protocol } = {};
 
 export const chainImages: { [id: number]: string } = {};
 
@@ -62,4 +65,9 @@ export const unwraps: { [symbol: string]: string } = {
   wcro: "cro",
   wcelo: "celo",
   wrose: "rose",
+};
+
+export const SwapRouteStepTypeTraduction = {
+  swap: "Swap",
+  cross: "Bridge",
 };

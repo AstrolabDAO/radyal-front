@@ -12,6 +12,7 @@ import { TokensContext } from "./tokens-context";
 import { generateRequest } from "~/utils/lifi";
 import { toast } from "react-toastify";
 import { useQueryClient } from "react-query";
+import { ICommonStep } from "@astrolabs/swapper";
 
 let debounceTimer;
 
@@ -28,6 +29,7 @@ interface SwapContextType {
   toValue: any;
   selectTokenMode: boolean;
   estimationPromise: Promise<any>;
+  steps: any[];
 }
 export const SwapContext = createContext<SwapContextType>({
   estimate: () => {},
@@ -42,12 +44,15 @@ export const SwapContext = createContext<SwapContextType>({
   toValue: null,
   selectTokenMode: false,
   estimationPromise: null,
+  steps: [],
 });
 
 export const SwapProvider = ({ children }) => {
   const { address } = useAccount();
   const { selectedStrategy } = useContext(StrategyContext);
   const [fromValue, setFromValue] = useState<string>(null);
+  const [steps, setSteps] = useState<ICommonStep[]>([]);
+  console.log("🚀 ~ file: swap-context.tsx:52 ~ SwapProvider ~ steps:", steps);
 
   const [toValue, setToValue] = useState(0);
   const [estimationPromise, setEstimationPromise] = useState(null);
@@ -56,6 +61,7 @@ export const SwapProvider = ({ children }) => {
   const { sortedBalances } = useContext(TokensContext);
   const { tokenBySlug, tokensBySlug, tokens } = useContext(TokensContext);
 
+  // TODO: Message if don't have balances
   const [fromToken, setFromToken] = useState<Token>(null);
 
   const [toToken, setToToken] = useState<Token>(null);
@@ -71,7 +77,7 @@ export const SwapProvider = ({ children }) => {
         `estimate-${depositValue}`,
         async () => {
           const promise = generateRequest({
-            estimateOnly: true,
+            //estimateOnly: true,
             address: address,
             fromToken,
             toToken,
@@ -79,10 +85,16 @@ export const SwapProvider = ({ children }) => {
             strat: selectedStrategy,
           })
             .then((result) => {
-              const { estimatedExchangeRate } = result;
+              if (!result) throw new Error("route not found from Swapper 🤯");
+
+              const { estimatedExchangeRate, steps } = result;
+
               const receiveEstimation =
                 Number(depositValue) * Number(estimatedExchangeRate);
               setToValue(receiveEstimation as number);
+
+              setSteps(steps ?? []);
+
               return result;
             })
             .catch((err) => {
@@ -100,6 +112,7 @@ export const SwapProvider = ({ children }) => {
         {
           staleTime: 1000 * 15,
           cacheTime: 1000 * 15,
+          retry: true,
         }
       );
     }, 1000);
@@ -151,6 +164,7 @@ export const SwapProvider = ({ children }) => {
         toValue,
         selectTokenMode,
         estimationPromise,
+        steps,
       }}
     >
       {children}

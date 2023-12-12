@@ -10,6 +10,14 @@ export interface Network {
   icon?: string;
 }
 
+export interface Protocol {
+  app: string;
+  name: string;
+  landing: string;
+  slug: string;
+  icon: string;
+}
+
 export interface Token {
   address?: `0x${string}`;
   name?: string;
@@ -88,8 +96,9 @@ export interface ChainRpcUrls {
 
 export interface Icon {
   url: string;
-  alt: string;
+  alt?: string;
   small?: boolean;
+  size?: { width: number; height: number };
   classes?: string;
 }
 

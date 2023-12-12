@@ -4,29 +4,33 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { useQuery } from "react-query";
 import { WagmiConfig, useNetwork, useWalletClient } from "wagmi";
-import { getNetworks } from "~/utils/api.ts";
+import { getNetworks, getProtocols } from "~/utils/api.ts";
 import {
   chainIdByDeFiId,
   chainImages,
   deFiIdByChainId,
   networkByChainId,
   networkBySlug,
+  protocolBySlug,
+  protocolByStrippedSlug,
 } from "~/utils/mappings";
 import { NETWORKS } from "~/utils/web3-constants";
-import { clearNetworkTypeFromSlug } from "~/utils/format";
+import { clearNetworkTypeFromSlug, stripSlug } from "~/utils/format";
 import { networkToWagmiChain } from "~/utils/converters";
 import { setupWeb3modal } from "~/utils/setup-web3modal";
 import deFiNetworks from "../data/defi-networks.json";
-import { Network } from "~/utils/interfaces";
+import { Network, Protocol } from "~/utils/interfaces";
 
 interface Web3ContextType {
   config: any;
   networks: Network[];
+  protocols: Protocol[];
 }
 
 const Web3Context = createContext<Web3ContextType>({
   config: null,
   networks: [],
+  protocols: [],
 });
 
 export let currentChain = null;
@@ -37,9 +41,31 @@ const Web3Provider = ({ children }) => {
 
   const { data: networksData, isLoading } = useQuery("networks", getNetworks);
 
+  const { data: protocolsData, isLoading: protocolsLoading } = useQuery(
+    "protocols",
+    getProtocols
+  );
+
   const networks = useMemo(() => {
     return networksData?.filter((network) => NETWORKS.includes(network.slug));
   }, [networksData]);
+  const protocols = useMemo(() => {
+    if (!protocolsData) return [];
+
+    return protocolsData.map((_protocol) => {
+      const { app, landing, name, slug } = _protocol;
+      const protocol = {
+        app,
+        landing,
+        name,
+        slug,
+        icon: `/protocols/${slug}.svg`,
+      };
+      protocolBySlug[slug] = protocol;
+      protocolByStrippedSlug[stripSlug(slug)] = protocol;
+      return protocol;
+    });
+  }, [protocolsData]);
 
   useEffect(() => {
     if (isLoading || !networks) return;
@@ -70,7 +96,7 @@ const Web3Provider = ({ children }) => {
   if (!config) return null;
 
   return (
-    <Web3Context.Provider value={{ config, networks }}>
+    <Web3Context.Provider value={{ config, networks, protocols }}>
       <WagmiConfig config={config}>
         <UpdateSigner>{children}</UpdateSigner>
       </WagmiConfig>

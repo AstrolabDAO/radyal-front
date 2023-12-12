@@ -200,3 +200,9 @@ export const getStrategies = () => {
         });
     });
 };
+
+export const getProtocols = () => {
+  return axios
+    .get(`${process.env.ASTROLAB_API}/protocols`)
+    .then((res) => res.data.data);
+};

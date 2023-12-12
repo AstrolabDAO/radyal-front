@@ -5,22 +5,23 @@ interface IconCardProps {
   icon: Icon;
 }
 const IconCard = ({ icon }: IconCardProps) => {
-  const { small, classes } = icon;
+  const { small, classes, size } = icon;
 
   return (
     <div
       className={clsx("avatar", classes, {
-        "h-8 w-8 translate-y-4 -ml-6": small,
+        "h-8 w-8 translate-y-4 -ml-6": small && !size,
         "mb-3": !small,
       })}
     >
       <div
+        style={{ width: size?.width, height: size?.height }}
         className={clsx({
-          "w-10 h-10": !small,
-          "w-8 h-8 border-none ": small,
+          "w-10 h-10": !small && !size,
+          "w-8 h-8 border-none ": small && !size,
         })}
       >
-        <img src={icon.url} alt={icon.alt} className="centerXY" />
+        <img src={icon.url} alt={icon.alt} />
       </div>
     </div>
   );
