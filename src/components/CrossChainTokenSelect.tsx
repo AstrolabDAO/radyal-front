@@ -33,7 +33,7 @@ const CrossChainTokenSelect = ({ selected, locked = false }) => {
             if (!locked) switchSelectMode();
           }}
         >
-          <Loader state={selected}>
+          <Loader value={selected}>
             <IconGroup icons={icons} className="mr-6" />
             <span className="text-xl mr-2">{selected?.symbol}</span>
             {!locked && <FaChevronDown className="mr-2" />}

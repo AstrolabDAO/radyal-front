@@ -11,9 +11,10 @@
     backdrop-filter: blur(0.66rem);
     -webkit-backdrop-filter: blur(0.66rem);
   }
+
   .backdrop-blur-strong {
-    backdrop-filter: blur(10rem);
-    -webkit-backdrop-filter: blur(10rem);
+    backdrop-filter: blur(8rem);
+    -webkit-backdrop-filter: blur(8rem);
   }
 
   .border-none-force {

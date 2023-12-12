@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { SwapContext } from "~/context/swap-context";
-import { amountToEth } from "~/utils/format";
+import { amountToEth, lisibleAmount } from "~/utils/format";
 import { Protocol } from "~/utils/interfaces";
 import {
   SwapRouteStepTypeTraduction,
@@ -34,14 +34,14 @@ const SwapRouteDetail = () => {
             const fromNetwork = networkByChainId[fromChain];
             const toNetwork = networkByChainId[toChain];
 
-            const fromAmount = `${amountToEth(
-              estimate.fromAmount,
-              fromToken?.decimals
+            const fromAmount = `${lisibleAmount(
+              amountToEth(estimate.fromAmount, fromToken?.decimals),
+              4
             )} ${fromToken?.symbol}`;
 
-            const toAmount = `${amountToEth(
-              estimate.toAmount,
-              toToken?.decimals
+            const toAmount = `${lisibleAmount(
+              amountToEth(estimate.toAmount, toToken?.decimals),
+              4
             )} ${toToken?.symbol}`;
 
             const protocol: Protocol = protocolByStrippedSlug[tool];
@@ -71,7 +71,7 @@ const SwapRouteDetail = () => {
                       )}
                       <span className="mx-2">on</span>
                       <a href={protocol?.app} target="_blank">
-                        {tool}
+                        {protocol?.name ?? tool}
                       </a>
                     </div>
                     <span className="block w-full flex justify-center">

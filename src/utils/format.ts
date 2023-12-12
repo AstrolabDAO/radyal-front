@@ -1,5 +1,6 @@
+import { Token } from "./interfaces";
 import { unwraps } from "./mappings";
-
+import * as md5 from "md5";
 export function toRaw(s: string): string {
   return s
     .replace(/[^0-9A-Za-zÀ-ÖØ-öø-ÿ-_.,:;\s]+/g, "")
@@ -27,6 +28,7 @@ export const clearFrom = (s: string, regex: string): string =>
 
 export const clearNetworkTypeFromSlug = (slug: string): string =>
   clearFrom(slug, "-mainnet|-testnet");
+
 export const amountToEth = (bigInt: bigint | string, decimals) =>
   Number(bigInt) / 10 ** decimals;
 
@@ -73,4 +75,17 @@ export const stripSlug = (slug: string): string => {
     /\s?(finance|protocol|network|capital|exchange|-)\b/g,
     ""
   );
+};
+
+export const estimationQuerySlug = (
+  fromToken: Token,
+  toToken: Token,
+  fromValue: string
+) => {
+  if (!fromToken || !toToken || !fromValue) return null;
+  return `estimate-${fromToken?.slug}-${toToken?.slug}-${fromValue}`;
+};
+
+export const cacheHash = (...params: any[]) => {
+  return md5(JSON.stringify(params));
 };

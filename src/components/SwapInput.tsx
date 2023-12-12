@@ -16,7 +16,7 @@ const SwapInput = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onChange = (value: string) => {},
 }) => {
-  const { estimate, switchSelectMode, toValue, estimationPromise, fromValue } =
+  const { switchSelectMode, toValue, estimationPromise, fromValue } =
     useContext(SwapContext);
 
   const [depositValue, setDepositValue] = useState<string>(
@@ -51,11 +51,6 @@ const SwapInput = ({
     return isNaN(price) ? 0 : price;
   }, [tokenPrices, selected]);
 
-  useEffect(() => {
-    estimate(Number(depositValue));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [depositValue]);
-
   return (
     <div className={clsx("relative bg-base-100 card p-4 py-2", className)}>
       <div className="p-2 w-full">
@@ -67,16 +62,14 @@ const SwapInput = ({
         </header>
         <div className="flex">
           <div className="flex items-center">
-            <Loader state={selected}>
+            <Loader value={selected}>
               <IconGroup icons={icons} />
             </Loader>
           </div>
           {isDestination && (
             <div className="flex-0">
               <div className="text-left text-4xl ml-4">
-                <Loader promise={estimationPromise}>
-                  {lisibleAmount(toValue, 4)}
-                </Loader>
+                <Loader value={toValue}>{lisibleAmount(toValue, 4)}</Loader>
               </div>
               <div className="pl-2">
                 <i>~ </i>
@@ -97,7 +90,9 @@ const SwapInput = ({
                 placeholder="100"
                 value={depositValue?.toString() ?? ""}
                 onChange={({ target }) => {
-                  const replace = target.value.replace(/[^0-9.]/g, "");
+                  const replace = target.value
+                    .replace(/[^0-9.,]/g, "")
+                    .replace(",", ".");
                   setDepositValue(replace);
                   onChange(replace);
                 }}

@@ -41,10 +41,7 @@ const Web3Provider = ({ children }) => {
 
   const { data: networksData, isLoading } = useQuery("networks", getNetworks);
 
-  const { data: protocolsData, isLoading: protocolsLoading } = useQuery(
-    "protocols",
-    getProtocols
-  );
+  const { data: protocolsData } = useQuery("protocols", getProtocols);
 
   const networks = useMemo(() => {
     return networksData?.filter((network) => NETWORKS.includes(network.slug));

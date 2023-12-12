@@ -13,6 +13,7 @@ import SelectTokenModal, {
 import CrossChainTokenSelect from "./CrossChainTokenSelect";
 import SwapInput from "./SwapInput";
 import SwapRouteDetail from "./SwapRouteDetail";
+import SwapStepsModal from "./modals/SwapStepsModal";
 
 const Deposit = () => {
   const {
@@ -24,7 +25,7 @@ const Deposit = () => {
   } = useContext(SwapContext);
 
   const { address } = useAccount();
-  const { fromValue, updateFromValue, toValue } = useContext(SwapContext);
+  const { fromValue, updateFromValue, toValue, swap } = useContext(SwapContext);
 
   const { openModal } = useContext(SwapModalContext);
   const { selectedStrategy } = useContext(StrategyContext);
@@ -51,14 +52,9 @@ const Deposit = () => {
   const modalActions = [
     {
       label: "Deposit",
-      onClick: () => {
-        generateAndSwap({
-          address,
-          fromToken,
-          toToken,
-          amount: Number(fromValue),
-          strat: selectedStrategy,
-        });
+      onClick: async () => {
+        swap();
+        openModal(<SwapStepsModal />);
       },
     },
   ];
