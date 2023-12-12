@@ -8,10 +8,12 @@ import {
 } from "wagmi/actions";
 import { erc20Abi } from "abitype/abis";
 import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
+import { defaultAbiCoder } from '@ethersproject/abi';
 import { currentChain } from "~/context/web3-context";
 import { switchNetwork } from "wagmi/actions";
 import { BigNumberish, ethers } from "ethers";
 import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
+import { getQuote } from "@astrolabs/swapper/dist/src/LiFi";
 
 export const swap = async (tr: ITransactionRequestWithEstimate) => {
   if (!tr) return;
@@ -103,4 +105,58 @@ export const withdraw = async () => {
   await _switchNetwork(chainId);
   const res = await safeWithdraw(contractAddress, amount, address);
   return res;
+}
+  // input: string,
+  // amount: BigNumberish,
+  // receiver: string,
+  // minShareAmount: BigNumberish = "0",
+  // params: string,
+  // stratAddress: string,
+  // allowance: string | number | bigint | boolean = 0n,
+export const swapAndDeposit = async (
+
+) => {
+  const inputChainId = 100;
+  const input = '0x4ecaba5870353805a9f068101a40e0f32ed605c6';
+  const outputChainId = 100;
+  const output = '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83';
+  const stratAddress = '0x11C8f790d252F4A49cFBFf5766310873898BF5D3';
+  const payer = '0x7B56288776Cae4260770981b6BcC0f6D011C7b72';
+  const amountWei = '1000000';
+  const abi = StratV5Abi.abi;
+  await _switchNetwork(inputChainId);
+
+  const {transactionRequest} = await getQuote({
+    aggregatorId: ["LIFI"],
+    inputChainId,
+    input,
+    outputChainId,
+    output,
+    amountWei,
+    maxSlippage: 500,
+    payer,
+  });
+  console.log(transactionRequest);
+  const params = defaultAbiCoder.encode(
+    ["address", "uint256", "bytes"],
+    [transactionRequest.to, amountWei, transactionRequest.data]
+  );
+  console.log(params);
+  const allowance = 0n;
+  if (Number(amountWei.toString()) > Number(allowance.toString())) {
+    const approvalAmount = amountWei + amountWei / 500n; // 5%
+    await approve(stratAddress, approvalAmount, output);
+  }
+  return await writeTx(
+    'swapSafeDeposit',
+    [
+      input,
+      amountWei.toString(),
+      payer,
+      "0",
+      params
+    ],
+    stratAddress,
+    abi as any
+  );
 }
