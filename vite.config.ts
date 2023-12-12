@@ -5,6 +5,7 @@ import { existsSync, readFileSync } from "fs";
 import * as dotenv from "dotenv";
 import postCssConfig from "./postcss.config";
 import svgr from "vite-plugin-svgr";
+import { PALETTE } from "./tailwind.config";
 
 const envPath = ".env";
 
@@ -13,6 +14,7 @@ export default ({ mode }) => {
   const appEnv = existsSync(envPath)
     ? dotenv.parse(readFileSync(envPath, { encoding: "utf8" }))
     : {}; // <-- .env only
+
   return defineConfig({
     css: {
       postcss: {
@@ -24,6 +26,7 @@ export default ({ mode }) => {
       global: "globalThis",
       __version__: JSON.stringify(process.env.npm_package_version),
       "process.env": appEnv,
+      COLORS_PALETTE: PALETTE,
     },
     resolve: {
       alias: [{ find: "~", replacement: resolve(__dirname, "./src") }],

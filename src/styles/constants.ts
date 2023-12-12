@@ -1,24 +1,30 @@
 import { hexToRgba } from "../utils/format";
 
 export const SENTIMENT_COLORS = {
-  positive: "00cc7a",
-  negative: "f8b024",
+  positive: "#00cc7a",
+  negative: "#f8b024",
   warning: "#f8b024",
 };
-export const BACKGROUNDS = {
+const BASE_BACKGROUNDS = {
   primary: "#191f2f",
 };
+export const BACKGROUNDS = {
+  base: BASE_BACKGROUNDS.primary,
+  "base-100": BASE_BACKGROUNDS.primary,
+  "base-half-transparent": hexToRgba(BASE_BACKGROUNDS.primary, 0.55),
+  "base-dark-transparent": hexToRgba(BASE_BACKGROUNDS.primary, 0.75),
+};
+
 export const COLORS = {
   primary: "#f0d816",
   secondary: "#ffd61e",
   tertiary: "#ffd61e",
   background: "#191f2f",
   active: "#ffd61e",
+  base: BACKGROUNDS.base,
   success: SENTIMENT_COLORS.positive,
   failure: SENTIMENT_COLORS.negative,
   error: SENTIMENT_COLORS.negative,
-  "base-100": BACKGROUNDS.primary,
-  blurBackground: hexToRgba(BACKGROUNDS.primary, 0.55),
   ...SENTIMENT_COLORS,
 };
 

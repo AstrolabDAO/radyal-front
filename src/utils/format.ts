@@ -1,5 +1,6 @@
+import { Token } from "./interfaces";
 import { unwraps } from "./mappings";
-
+import * as md5 from "md5";
 export function toRaw(s: string): string {
   return s
     .replace(/[^0-9A-Za-zÀ-ÖØ-öø-ÿ-_.,:;\s]+/g, "")
@@ -27,7 +28,8 @@ export const clearFrom = (s: string, regex: string): string =>
 
 export const clearNetworkTypeFromSlug = (slug: string): string =>
   clearFrom(slug, "-mainnet|-testnet");
-export const amountToEth = (bigInt: bigint, decimals) =>
+
+export const amountToEth = (bigInt: bigint | string, decimals) =>
   Number(bigInt) / 10 ** decimals;
 
 export const lisibleAmount = (amount: string | number, decimals = 2) => {
@@ -62,4 +64,28 @@ export const hexToRgba = (hex: string, opacity: number) => {
 
   // Return the formatted RGBA string
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
+
+export const stripName = (name: string): string => {
+  return name.replace(/\s?(Finance|Protocol|Network|Capital|Exchange)\b/g, "");
+};
+export const stripSlug = (slug: string): string => {
+  const base = slug.split("-")[0];
+  return base.replace(
+    /\s?(finance|protocol|network|capital|exchange|-)\b/g,
+    ""
+  );
+};
+
+export const estimationQuerySlug = (
+  fromToken: Token,
+  toToken: Token,
+  fromValue: string
+) => {
+  if (!fromToken || !toToken || !fromValue) return null;
+  return `estimate-${fromToken?.slug}-${toToken?.slug}-${fromValue}`;
+};
+
+export const cacheHash = (...params: any[]) => {
+  return md5(JSON.stringify(params));
 };

@@ -11,6 +11,9 @@ import SelectTokenModal, {
   SelectTokenModalMode,
 } from "./modals/SelectTokenModal";
 import CrossChainTokenSelect from "./CrossChainTokenSelect";
+import SwapInput from "./SwapInput";
+import SwapRouteDetail from "./SwapRouteDetail";
+import SwapStepsModal from "./modals/SwapStepsModal";
 
 const Deposit = () => {
   const {
@@ -22,7 +25,7 @@ const Deposit = () => {
   } = useContext(SwapContext);
 
   const { address } = useAccount();
-  const { fromValue, updateFromValue } = useContext(SwapContext);
+  const { fromValue, updateFromValue, toValue, swap } = useContext(SwapContext);
 
   const { openModal } = useContext(SwapModalContext);
   const { selectedStrategy } = useContext(StrategyContext);
@@ -49,29 +52,27 @@ const Deposit = () => {
   const modalActions = [
     {
       label: "Deposit",
-      onClick: () => {
-        generateAndSwap({
-          address,
-          fromToken,
-          toToken,
-          amount: Number(fromValue),
-          strat: selectedStrategy,
-        });
+      onClick: async () => {
+        swap();
+        openModal(<SwapStepsModal />);
       },
     },
   ];
+
   return (
     <ModalLayout actions={modalActions}>
-      <CrossChainTokenSelect
-        selected={fromToken}
-        onChange={(value) => updateFromValue(value)}
-      />
-      <hr />
-      <CrossChainTokenSelect
-        locked={true}
-        isReceive={true}
-        selected={toToken}
-      />
+      <div className="flex gap-5 relative w-full mb-6 pt-6">
+        <CrossChainTokenSelect selected={fromToken} />
+        <CrossChainTokenSelect locked={true} selected={toToken} />
+      </div>
+      <div className="flex gap-5 relative w-full flex-col">
+        <SwapInput
+          selected={fromToken}
+          onChange={(value) => updateFromValue(value)}
+        />
+        <SwapInput selected={toToken} isDestination={true} />
+      </div>
+      {toValue !== 0 && <SwapRouteDetail />}
     </ModalLayout>
   );
 };

@@ -2,7 +2,7 @@
 @import "typo.css";
 @import "base.css";
 @import "layout.css";
-
+@import "stepper.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

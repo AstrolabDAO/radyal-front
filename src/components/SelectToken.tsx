@@ -38,7 +38,7 @@ const SelectToken = ({ tokens, onSelect }) => {
         <input
           type="text"
           placeholder="USDC..."
-          className="input input-bordered w-full w-full"
+          className="input input-bordered w-full"
           onChange={({ target }) => {
             setSearch(target.value);
           }}
@@ -68,8 +68,12 @@ const SelectToken = ({ tokens, onSelect }) => {
           );
 
           const icons = [
-            { url: token?.network?.icon, alt: token?.network?.name },
-            { url: token?.icon, alt: token?.symbol, small: true },
+            { url: token?.icon, alt: token?.symbol },
+            {
+              url: token?.network?.icon,
+              alt: token?.network?.name,
+              small: true,
+            },
           ];
 
           return (
@@ -78,7 +82,7 @@ const SelectToken = ({ tokens, onSelect }) => {
               className={clsx(
                 "flex items-center cursor-pointer py-4 border-white-800 border-b-solid overflow-scroll",
                 index !== tokens.length - 1 && "border-b",
-                "hover:bg-gray-100"
+                "hover:bg-base"
               )}
               onClick={() => {
                 switchSelectMode();

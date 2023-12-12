@@ -12,6 +12,8 @@ import {
 } from "./mappings";
 import updateBalances from "./multicall";
 import { NETWORKS } from "./web3-constants";
+import { LifiRequest, generateRequest } from "./lifi";
+import { amountToEth } from "./format";
 
 export const getBalancesFromDeFI = (
   address: `0x${string}`,
@@ -199,4 +201,42 @@ export const getStrategies = () => {
           } as Strategy;
         });
     });
+};
+
+export const getProtocols = () => {
+  return axios
+    .get(`${process.env.ASTROLAB_API}/protocols`)
+    .then((res) => res.data.data);
+};
+
+export const getSwapRouteRequest = async ({
+  fromToken,
+  toToken,
+  strat,
+  amount,
+  address,
+}: LifiRequest) => {
+  const result = await generateRequest({
+    estimateOnly: false,
+    address: address,
+    fromToken,
+    toToken,
+    amount,
+    strat,
+  });
+  if (!result) throw new Error("route not found from Swapper 🤯");
+
+  const { steps } = result;
+
+  const lastStep = steps[steps.length - 2];
+
+  const receiveEstimation = amountToEth(
+    lastStep?.estimate?.toAmount,
+    lastStep?.toToken?.decimals
+  );
+  return {
+    estimation: receiveEstimation,
+    steps,
+    request: result,
+  };
 };

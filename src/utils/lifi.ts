@@ -11,6 +11,8 @@ import {
 
 import { queryClient } from "~/main";
 import { QueryClient } from "react-query";
+import { estimationQuerySlug } from "./format";
+import { ICommonStep } from "@astrolabs/swapper";
 
 export const generateCallData = async (
   functionName: string,
@@ -91,10 +93,10 @@ export const generateRequest = async ({
     aggregatorId: ["LIFI"],
     inputChainId: fromToken.network.id,
     input: fromToken.address,
-    amountWei: amountWei,
+    amountWei: amountWei - amountWei * 0.02, // because if not 2%, the fromAmount is lower. Why ? I don't know.
     outputChainId: toToken.network.id,
     output: toToken.address,
-    maxSlippage: 500,
+    maxSlippage: 50,
     payer: address,
     customContractCalls: customContractCalls.length
       ? customContractCalls
@@ -109,11 +111,18 @@ export const generateAndSwap = async (
   _queryClient: QueryClient = queryClient
 ) => {
   await _switchNetwork(fromToken?.network?.id);
-  const oldEstimation: number = _queryClient.getQueryData(`estimate-${amount}`);
-  let toAmount: number = oldEstimation;
+  const oldEstimation: {
+    estimation: number;
+    steps: ICommonStep[];
+    request: any;
+  } = _queryClient.getQueryData(
+    estimationQuerySlug(fromToken, toToken, amount.toString())
+  );
 
-  if (!oldEstimation) {
-    const trEstimation = await generateRequest({
+  let tr = oldEstimation?.request;
+
+  if (!tr) {
+    tr = await generateRequest({
       estimateOnly: true,
       fromToken,
       toToken,
@@ -121,28 +130,21 @@ export const generateAndSwap = async (
       amount,
       address,
     });
-    console.log("🚀 ~ file: lifi.ts:125 ~ trEstimation:", trEstimation);
-
-    toAmount = Number(trEstimation?.estimatedExchangeRate) * Number(amount);
   }
-  const amountWei = BigInt(Math.round(amount * fromToken.weiPerUnit));
 
-  const tr = await generateRequest({
-    fromToken,
-    toToken,
-    strat,
-    amount: toAmount,
-    address,
-  });
-  console.log("🚀 ~ file: lifi.ts:137 ~ tr:", tr);
+  const amountWei = BigInt(Math.round(amount * fromToken.weiPerUnit));
 
   const approvalAmount = amountWei + amountWei / 500n; // 5%
 
-  if (Number(amountWei.toString()) > Number(allowance.toString()))
-    await approve(
-      routerByChainId[fromToken.network.id],
-      approvalAmount.toString(),
-      fromToken.address
-    );
-  return swap(tr);
+  if (Number(amountWei.toString()) > Number(allowance.toString())) {
+    return [
+      tr,
+      approve(
+        routerByChainId[fromToken.network.id],
+        approvalAmount.toString(),
+        fromToken.address
+      ).then(() => swap(tr)),
+    ];
+  }
+  return [tr, swap(tr)];
 };

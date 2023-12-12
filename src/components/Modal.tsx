@@ -44,7 +44,7 @@ const Modal = () => {
           leaveTo="opacity-0"
         >
           <div
-            className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            className="fixed inset-0 bg-base-half-transparent bg-opacity-75 transition-opacity backdrop-blur-medium"
             onClick={onClose}
           />
         </Transition.Child>
@@ -60,7 +60,7 @@ const Modal = () => {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-y-auto rounded-lg text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg overflow-auto max-h-80vh bg-blur">
+              <Dialog.Panel className="relative transform overflow-y-auto rounded-lg text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg overflow-auto max-h-80vh backdrop-blur-medium bg-base-dark-transparent">
                 <div className="relative z-50">
                   <button
                     className="right-0 top-0 absolute p-2 z-50"

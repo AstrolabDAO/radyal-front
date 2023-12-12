@@ -8,7 +8,7 @@ import {
 } from "wagmi/actions";
 import { erc20Abi } from "abitype/abis";
 import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
-import { defaultAbiCoder } from '@ethersproject/abi';
+import { defaultAbiCoder } from "@ethersproject/abi";
 import { currentChain } from "~/context/web3-context";
 import { switchNetwork } from "wagmi/actions";
 import { BigNumberish, ethers } from "ethers";
@@ -83,14 +83,14 @@ export const safeWithdraw = async (
   contractAddress: string,
   amount: BigNumberish,
   receiver: string,
-  owner?: string,
   minAmount = "0",
-  abi = StratV5Abi.abi
+  abi = StratV5Abi.abi,
+  owner?: string
 ) => {
   if (!owner) owner = receiver;
   return await writeTx(
     "safeWithdraw",
-    [amount, minAmount,receiver, owner],
+    [amount, minAmount, receiver, owner],
     contractAddress,
     abi as any
   );
@@ -98,35 +98,33 @@ export const safeWithdraw = async (
 
 export const withdraw = async () => {
   // todo: make it dynamic
-  const address = '0x7B56288776Cae4260770981b6BcC0f6D011C7b72';
-  const amount = ethers.parseUnits('3.30', 6);
-  const contractAddress = '0x11C8f790d252F4A49cFBFf5766310873898BF5D3';
+  const address = "0x7B56288776Cae4260770981b6BcC0f6D011C7b72";
+  const amount = ethers.parseUnits("3.30", 6);
+  const contractAddress = "0x11C8f790d252F4A49cFBFf5766310873898BF5D3";
   const chainId = 100;
   await _switchNetwork(chainId);
   const res = await safeWithdraw(contractAddress, amount, address);
   return res;
-}
-  // input: string,
-  // amount: BigNumberish,
-  // receiver: string,
-  // minShareAmount: BigNumberish = "0",
-  // params: string,
-  // stratAddress: string,
-  // allowance: string | number | bigint | boolean = 0n,
-export const swapAndDeposit = async (
-
-) => {
+};
+// input: string,
+// amount: BigNumberish,
+// receiver: string,
+// minShareAmount: BigNumberish = "0",
+// params: string,
+// stratAddress: string,
+// allowance: string | number | bigint | boolean = 0n,
+export const swapAndDeposit = async () => {
   const inputChainId = 100;
-  const input = '0x4ecaba5870353805a9f068101a40e0f32ed605c6';
+  const input = "0x4ecaba5870353805a9f068101a40e0f32ed605c6";
   const outputChainId = 100;
-  const output = '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83';
-  const stratAddress = '0x11C8f790d252F4A49cFBFf5766310873898BF5D3';
-  const payer = '0x7B56288776Cae4260770981b6BcC0f6D011C7b72';
-  const amountWei = '1000000';
+  const output = "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83";
+  const stratAddress = "0x11C8f790d252F4A49cFBFf5766310873898BF5D3";
+  const payer = "0x7B56288776Cae4260770981b6BcC0f6D011C7b72";
+  const amountWei = "1000000";
   const abi = StratV5Abi.abi;
   await _switchNetwork(inputChainId);
 
-  const {transactionRequest} = await getQuote({
+  const { transactionRequest } = await getQuote({
     aggregatorId: ["LIFI"],
     inputChainId,
     input,
@@ -148,15 +146,9 @@ export const swapAndDeposit = async (
     await approve(stratAddress, approvalAmount, output);
   }
   return await writeTx(
-    'swapSafeDeposit',
-    [
-      input,
-      amountWei.toString(),
-      payer,
-      "0",
-      params
-    ],
+    "swapSafeDeposit",
+    [input, amountWei.toString(), payer, "0", params],
     stratAddress,
     abi as any
   );
-}
+};

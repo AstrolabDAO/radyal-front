@@ -7,13 +7,7 @@ interface Props extends ButtonHTMLAttributes<HTMLDivElement> {
 }
 const IconGroup = ({ icons, className, ...props }: Props) => {
   return (
-    <div
-      {...props}
-      className={clsx(
-        "avatar-group -space-x-6 rtl:space-x-reverse overflow-visible",
-        className
-      )}
-    >
+    <div {...props} className={clsx("flex overflow-visible", className)}>
       {icons.map((icon) => (
         <IconCard key={icon.url} icon={icon} />
       ))}
