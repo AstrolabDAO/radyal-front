@@ -38,6 +38,10 @@ const SwapRouteDetail = () => {
               amountToEth(estimate.fromAmount, fromToken?.decimals),
               4
             )} ${fromToken?.symbol}`;
+            console.log(
+              "🚀 ~ file: SwapRouteDetail.tsx:41 ~ {steps.map ~ fromAmount:",
+              fromAmount
+            );
 
             const toAmount = `${lisibleAmount(
               amountToEth(estimate.toAmount, toToken?.decimals),
@@ -58,7 +62,7 @@ const SwapRouteDetail = () => {
                 <div className="content w-full p-2">
                   <div className="block w-full" key={id}>
                     <div className="flex">
-                      {SwapRouteStepTypeTraduction[type]}
+                      {SwapRouteStepTypeTraduction[type] ?? type}
                       <span className="mx-2">from</span>
                       <IconCard icon={{ url: fromNetwork.icon, size }} />
                       {fromNetwork.name}
@@ -71,7 +75,7 @@ const SwapRouteDetail = () => {
                       )}
                       <span className="mx-2">on</span>
                       <a href={protocol?.app} target="_blank">
-                        {protocol?.name ?? tool}
+                        {tool}
                       </a>
                     </div>
                     <span className="block w-full flex justify-center">

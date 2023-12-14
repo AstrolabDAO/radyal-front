@@ -4,18 +4,21 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
-import { useAccount } from "wagmi";
+import { useAccount, usePublicClient } from "wagmi";
 import { getSwapRouteRequest } from "~/utils/api";
-import { Token } from "~/utils/interfaces";
 import { StrategyContext } from "./strategy-context";
 import { TokensContext } from "./tokens-context";
-import { estimationQuerySlug } from "~/utils/format";
-import { generateAndSwap } from "~/utils/lifi";
+import { cacheHash } from "~/utils/format";
+import { useExecuteSwap } from "~/hooks/swap";
+import { SwapMode } from "~/utils/constants";
+import { Token } from "~/utils/interfaces";
+import { tokensIsEqual } from "~/utils";
+import { previewStrategyTokenMove } from "~/utils/web3";
+import { Client } from "viem";
 
 let debounceTimer;
 
@@ -24,6 +27,7 @@ interface SwapContextType {
   selectFromToken: (token: Token) => void;
   selectToToken: (token: Token) => void;
   updateFromValue: (value: string) => void;
+  setSwapMode: (mode: SwapMode) => void;
   swap: () => void;
   fromToken: Token;
   toToken: Token;
@@ -38,6 +42,7 @@ export const SwapContext = createContext<SwapContextType>({
   selectFromToken: () => {},
   selectToToken: () => {},
   updateFromValue: () => {},
+  setSwapMode: () => {},
   swap: () => {},
   fromToken: null,
   toToken: null,
@@ -51,6 +56,7 @@ export const SwapContext = createContext<SwapContextType>({
 export const SwapProvider = ({ children }) => {
   const { address } = useAccount();
 
+  const [mode, setMode] = useState<SwapMode>(SwapMode.DEPOSIT);
   const { selectedStrategy } = useContext(StrategyContext);
   const { sortedBalances } = useContext(TokensContext);
   const { tokenBySlug, tokensBySlug, tokens } = useContext(TokensContext);
@@ -61,36 +67,52 @@ export const SwapProvider = ({ children }) => {
 
   // TODO: Message if don't have balances
   const [fromToken, setFromToken] = useState<Token>(null);
+
   const [toToken, setToToken] = useState<Token>(null);
 
   const [writeOnProgress, setWriteOnprogress] = useState<boolean>(false);
   const [estimationOnProgress, setEstimationOnProgress] =
     useState<boolean>(false);
 
+  const executeSwap = useExecuteSwap(fromToken);
+  const publicClient = usePublicClient({
+    chainId: selectedStrategy?.network?.id,
+  }) as Client;
   const { data: estimation } = useQuery(
-    estimationQuerySlug(fromToken, toToken, fromValue),
-    () => {
+    cacheHash("estimate", mode, fromToken, toToken, fromValue),
+    async () => {
       setEstimationOnProgress(true);
-      const promise = getSwapRouteRequest({
-        fromToken,
-        toToken,
-        strat: selectedStrategy,
-        amount: Number(fromValue),
-        address,
-      })
-        .then((res) => {
+      try {
+        if (tokensIsEqual(fromToken, toToken)) {
+          const result = await previewStrategyTokenMove(
+            {
+              strategy: selectedStrategy,
+              amount: fromValue,
+              mode,
+              address,
+            },
+
+            publicClient
+          );
+          console.log("🚀 ~ file: swap-context.tsx:98 ~ result:", result);
           setEstimationOnProgress(false);
-          return res;
-        })
-        .catch((e) => {
+          return result;
+        } else {
+          const result = await getSwapRouteRequest({
+            address,
+            fromToken,
+            toToken,
+            strat: selectedStrategy,
+            amount: Number(fromValue),
+            swapMode: mode,
+          });
+          console.log("🚀 ~ file: swap-context.tsx:109 ~ result:", result);
           setEstimationOnProgress(false);
-          throw new Error(e);
-        });
-      toast.promise(promise, {
-        pending: "Calculating...",
-        error: "route not found from Swapper 🤯",
-      });
-      return promise;
+          return result;
+        }
+      } catch (err) {
+        setEstimationOnProgress(false);
+      }
     },
     {
       onSuccess() {
@@ -103,11 +125,12 @@ export const SwapProvider = ({ children }) => {
       cacheTime: 1000 * 15,
       retry: true,
       refetchInterval: 1000 * 15,
-      enabled:
+      enabled: !!(
         fromToken &&
         Number(fromValue) > 0 &&
         !writeOnProgress &&
-        !estimationOnProgress,
+        !estimationOnProgress
+      ),
     }
   );
 
@@ -139,12 +162,12 @@ export const SwapProvider = ({ children }) => {
 
   const swap = async () => {
     if (!fromToken || !toToken) return;
-    const [tr, promise] = await generateAndSwap({
-      address,
+    const [tr, promise] = await executeSwap({
       fromToken,
       toToken,
       amount: Number(fromValue),
       strat: selectedStrategy,
+      swapMode: mode,
     });
     setSteps(tr.steps);
   };
@@ -154,7 +177,7 @@ export const SwapProvider = ({ children }) => {
 
   useEffect(() => {
     if (!fromToken) {
-      const token = tokenBySlug(sortedBalances?.[0]?.slug) ?? null;
+      const token = tokensBySlug[sortedBalances?.[0]?.slug] ?? null;
 
       selectFromToken(token);
     }
@@ -176,6 +199,10 @@ export const SwapProvider = ({ children }) => {
     setFromValue(value);
   }, []);
 
+  const setSwapMode = useCallback((mode: SwapMode) => {
+    setMode(mode);
+  }, []);
+
   return (
     <SwapContext.Provider
       value={{
@@ -183,6 +210,7 @@ export const SwapProvider = ({ children }) => {
         selectFromToken,
         selectToToken,
         updateFromValue,
+        setSwapMode,
         swap,
         fromToken,
         toToken,

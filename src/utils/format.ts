@@ -1,5 +1,5 @@
-import { Token } from "./interfaces";
 import { unwraps } from "./mappings";
+
 import * as md5 from "md5";
 export function toRaw(s: string): string {
   return s
@@ -75,15 +75,6 @@ export const stripSlug = (slug: string): string => {
     /\s?(finance|protocol|network|capital|exchange|-)\b/g,
     ""
   );
-};
-
-export const estimationQuerySlug = (
-  fromToken: Token,
-  toToken: Token,
-  fromValue: string
-) => {
-  if (!fromToken || !toToken || !fromValue) return null;
-  return `estimate-${fromToken?.slug}-${toToken?.slug}-${fromValue}`;
 };
 
 export const cacheHash = (...params: any[]) => {

@@ -3,44 +3,49 @@ import { useContext, useState } from "react";
 import { SwapContext } from "~/context/swap-context";
 import Deposit from "../Deposit";
 import Withdraw from "../Withdraw";
-import ModalLayout from "../layout/ModalLayout";
+import { SwapMode } from "~/utils/constants";
 
 const SwapModal = () => {
   return <SwapModalContent />;
 };
 
 const SwapModalContent = () => {
-  const tabs = [
-    {
+  const tabs = {
+    deposit: {
       title: "Deposit",
       component: <Deposit />,
-      actions: [{ label: "Deposit", onClick: () => {} }],
+      swapMode: SwapMode.DEPOSIT,
     },
-    {
+    withdraw: {
       title: "Withdraw",
       component: <Withdraw />,
-      actions: [{ label: "Withdraw", onClick: () => {} }],
+      swapMode: SwapMode.WITHDRAW,
     },
-  ];
-  const [selectedTab, setSelectedTab] = useState(0);
-  const { selectTokenMode } = useContext(SwapContext);
+  };
+  const [selectedTab, setSelectedTab] = useState("deposit");
+  const { selectTokenMode, setSwapMode } = useContext(SwapContext);
 
   return (
     <div className="p-4">
       {!selectTokenMode && (
         <div role="tablist" className="tabs tabs-bordered inline-block mb-4">
-          {tabs.map(({ title }, index) => (
-            <a
-              key={title}
-              role="tab"
-              className={clsx("tab text-xl", {
-                "tab-active": selectedTab === index,
-              })}
-              onClick={() => setSelectedTab(index)}
-            >
-              {title}
-            </a>
-          ))}
+          {Object.entries(tabs)
+            .sort(([key]) => (key === selectedTab ? -1 : 0))
+            .map(([key, { title, swapMode }]) => (
+              <a
+                key={key}
+                role="tab"
+                className={clsx("tab text-xl", {
+                  "tab-active": key === selectedTab,
+                })}
+                onClick={() => {
+                  setSelectedTab(key);
+                  setSwapMode(swapMode);
+                }}
+              >
+                {title}
+              </a>
+            ))}
         </div>
       )}
       {tabs[selectedTab].component}

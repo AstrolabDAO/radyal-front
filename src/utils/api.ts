@@ -1,7 +1,14 @@
 import { erc20Abi } from "abitype/abis";
 import axios from "axios";
 import { COINGECKO_API, DeFI_API, TOKEN_BASENAME_REGEX } from "./constants";
-import { Balance, DeFiBalance, Network, Strategy, Token } from "./interfaces";
+import {
+  Balance,
+  DeFiBalance,
+  LifiRequest,
+  Network,
+  Strategy,
+  Token,
+} from "./interfaces";
 import {
   deFiIdByChainId,
   networkBySlug,
@@ -12,8 +19,8 @@ import {
 } from "./mappings";
 import updateBalances from "./multicall";
 import { NETWORKS } from "./web3-constants";
-import { LifiRequest, generateRequest } from "./lifi";
 import { amountToEth } from "./format";
+import { getSwapRoute } from "./lifi";
 
 export const getBalancesFromDeFI = (
   address: `0x${string}`,
@@ -209,30 +216,20 @@ export const getProtocols = () => {
     .then((res) => res.data.data);
 };
 
-export const getSwapRouteRequest = async ({
-  fromToken,
-  toToken,
-  strat,
-  amount,
-  address,
-}: LifiRequest) => {
-  const result = await generateRequest({
-    estimateOnly: false,
-    address: address,
-    fromToken,
-    toToken,
-    amount,
-    strat,
-  });
+export const getSwapRouteRequest = async (params: LifiRequest) => {
+  const result = await getSwapRoute(params);
+
   if (!result) throw new Error("route not found from Swapper 🤯");
 
   const { steps } = result;
+  const lastStep = steps[steps.length - 1];
 
-  const lastStep = steps[steps.length - 2];
+  const estimationStep =
+    lastStep.type === "custom" ? steps[steps.length - 2] : lastStep;
 
   const receiveEstimation = amountToEth(
-    lastStep?.estimate?.toAmount,
-    lastStep?.toToken?.decimals
+    estimationStep?.estimate?.toAmount,
+    estimationStep?.toToken?.decimals
   );
   return {
     estimation: receiveEstimation,

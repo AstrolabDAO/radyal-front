@@ -2,17 +2,24 @@ import { useContext, useEffect } from "react";
 import { StrategyContext } from "~/context/strategy-context";
 import { SwapContext } from "~/context/swap-context";
 import { TokensContext } from "~/context/tokens-context";
-import CrossChainTokenSelect from "./CrossChainTokenSelect";
 import SelectToken from "./SelectToken";
 import ModalLayout from "./layout/ModalLayout";
+import SwapInput from "./SwapInput";
+import SwapRouteDetail from "./SwapRouteDetail";
+import { withdraw } from "~/utils/web3";
+import { tokensIsEqual } from "~/utils";
 const Withdraw = () => {
   const { selectedStrategy } = useContext(StrategyContext);
   const {
     selectTokenMode,
+    toToken,
+    toValue,
+    fromToken,
     selectToToken,
     switchSelectMode,
     selectFromToken,
-    toToken,
+    updateFromValue,
+    swap,
   } = useContext(SwapContext);
 
   useEffect(() => {
@@ -36,11 +43,31 @@ const Withdraw = () => {
       </div>
     );
   }
+  const modalActions = [
+    {
+      label: "Withdraw",
+      onClick: async () => {
+        const withdrawPromise = withdraw({
+          strategy: selectedStrategy,
+          amount: toValue,
+        });
+        if (tokensIsEqual(fromToken, toToken)) {
+          await withdrawPromise;
+          swap();
+        }
+      },
+    },
+  ];
   return (
-    <ModalLayout actions={[{ label: "Withdraw", onClick: () => {} }]}>
-      <CrossChainTokenSelect locked={true} selected={selectedStrategy.token} />
-      <hr />
-      <CrossChainTokenSelect selected={toToken} />
+    <ModalLayout actions={modalActions}>
+      <div className="flex gap-5 relative w-full flex-col">
+        <SwapInput
+          selected={selectedStrategy?.token}
+          onChange={(value) => updateFromValue(value)}
+        />
+        <SwapInput selected={toToken} isDestination={true} />
+      </div>
+      {toValue !== 0 && <SwapRouteDetail />}
     </ModalLayout>
   );
 };

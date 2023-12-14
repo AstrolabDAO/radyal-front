@@ -1,5 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { FaChevronDown } from "react-icons/fa";
+import { useContext, useMemo, useState } from "react";
 import { TokensContext } from "~/context/tokens-context";
 import { amountToEth, lisibleAmount } from "~/utils/format";
 import IconGroup from "./IconGroup";
@@ -7,17 +6,16 @@ import clsx from "clsx";
 import { SwapContext } from "~/context/swap-context";
 import Loader from "./Loader";
 import { balanceBySlug } from "~/utils/mappings";
+import CrossChainTokenSelect from "./CrossChainTokenSelect";
 
 const SwapInput = ({
   selected,
   className = "",
-  locked = false,
   isDestination = false,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onChange = (value: string) => {},
 }) => {
-  const { switchSelectMode, toValue, estimationPromise, fromValue } =
-    useContext(SwapContext);
+  const { toValue, fromValue } = useContext(SwapContext);
 
   const [depositValue, setDepositValue] = useState<string>(
     isDestination ? null : fromValue ?? null
@@ -61,11 +59,7 @@ const SwapInput = ({
           <div></div>
         </header>
         <div className="flex">
-          <div className="flex items-center">
-            <Loader value={selected}>
-              <IconGroup icons={icons} />
-            </Loader>
-          </div>
+          <CrossChainTokenSelect selected={selected} />
           {isDestination && (
             <div className="flex-0">
               <div className="text-left text-4xl ml-4">

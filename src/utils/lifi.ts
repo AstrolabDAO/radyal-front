@@ -2,7 +2,7 @@ import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
 import { erc20Abi } from "abitype/abis";
 import { ethers } from "ethers";
 
-import { Strategy, Token } from "./interfaces";
+import { LifiRequest, SwapEstimation } from "./interfaces";
 import { _switchNetwork, approve, swap } from "./web3";
 import {
   getTransactionRequest,
@@ -11,8 +11,8 @@ import {
 
 import { queryClient } from "~/main";
 import { QueryClient } from "react-query";
-import { estimationQuerySlug } from "./format";
-import { ICommonStep } from "@astrolabs/swapper";
+import { cacheHash } from "./format";
+import { SwapMode } from "./constants";
 
 export const generateCallData = async (
   functionName: string,
@@ -44,23 +44,13 @@ export const depositCallData = async (
   );
 };
 
-export interface LifiRequest {
-  address: `0x${string}`;
-  fromToken: Token;
-  toToken: Token;
-  strat: Strategy;
-  amount: number;
-  estimateOnly?: boolean;
-  allowance?: string | number | bigint | boolean;
-}
-
-export const generateRequest = async ({
+export const getSwapRoute = async ({
+  address,
   fromToken,
   toToken,
-  strat,
   amount,
-  address,
-  estimateOnly = false,
+  strat,
+  swapMode = SwapMode.DEPOSIT,
 }: LifiRequest) => {
   const [inputChainId, outputChainId] = [
     fromToken.network.id,
@@ -81,12 +71,13 @@ export const generateRequest = async ({
 
   const amountWei = fromToken.weiPerUnit * amount;
 
-  if (!estimateOnly) {
+  if (swapMode) {
     const { to, data } = await depositCallData(
       strat.address,
       address,
       amountWei.toString()
     );
+
     customContractCalls.push({ toAddress: to, callData: data });
   }
   const lifiOptions = {
@@ -98,42 +89,34 @@ export const generateRequest = async ({
     output: toToken.address,
     maxSlippage: 50,
     payer: address,
+    denyExchanges: ["1inch"],
     customContractCalls: customContractCalls.length
       ? customContractCalls
       : undefined,
   };
+
   return getTransactionRequest(lifiOptions);
 };
 
-export const generateAndSwap = async (
-  { fromToken, toToken, strat, amount, address }: LifiRequest,
+export const executeSwap = async (
+  opts: LifiRequest,
   allowance: string | number | bigint | boolean = 0n,
   _queryClient: QueryClient = queryClient
 ) => {
+  const { fromToken, toToken, amount, swapMode } = opts;
   await _switchNetwork(fromToken?.network?.id);
-  const oldEstimation: {
-    estimation: number;
-    steps: ICommonStep[];
-    request: any;
-  } = _queryClient.getQueryData(
-    estimationQuerySlug(fromToken, toToken, amount.toString())
+
+  const oldEstimation: SwapEstimation = _queryClient.getQueryData(
+    cacheHash("estimate", swapMode, fromToken, toToken, amount)
   );
 
   let tr = oldEstimation?.request;
 
   if (!tr) {
-    tr = await generateRequest({
-      estimateOnly: true,
-      fromToken,
-      toToken,
-      strat,
-      amount,
-      address,
-    });
+    tr = await getSwapRoute(opts);
   }
 
   const amountWei = BigInt(Math.round(amount * fromToken.weiPerUnit));
-
   const approvalAmount = amountWei + amountWei / 500n; // 5%
 
   if (Number(amountWei.toString()) > Number(allowance.toString())) {

@@ -1,3 +1,8 @@
+import { ICommonStep } from "@astrolabs/swapper";
+import { BigNumberish } from "ethers";
+
+import { SwapMode } from "./constants";
+
 export interface Network {
   id: number;
   name: string;
@@ -114,4 +119,28 @@ export interface TokenBySlugMapping {
 
 export interface BalanceBySlugMapping {
   [slug: string]: Balance;
+}
+
+// requests
+
+export interface LifiRequest {
+  fromToken: Token;
+  toToken: Token;
+  strat: Strategy;
+  amount: number;
+  address?: `0x${string}`;
+  allowance?: string | number | bigint | boolean;
+  swapMode?: SwapMode;
+}
+
+export interface SwapEstimation {
+  estimation: number;
+  steps: ICommonStep[];
+  request: any;
+}
+
+export interface WithdrawRequest {
+  amount: BigNumberish;
+  strategy: Strategy;
+  address?: `0x${string}`;
 }

@@ -35,7 +35,7 @@ const StrategyCard = ({ strategy }: StrategyProps) => {
     },
   ];
   return (
-    <div className="w-full md:w-1/2 xl:w-1/3 strategy-box">
+    <li className="w-full md:w-1/2 xl:w-1/3 strategy-box">
       <div
         className={clsx(
           "card bg-base-100 shadow-xl w-full p-2 cursor-pointer transition-500 active-bordered active-shadow",
@@ -59,7 +59,7 @@ const StrategyCard = ({ strategy }: StrategyProps) => {
           </ul>
         </div>
       </div>
-    </div>
+    </li>
   );
 };
 
