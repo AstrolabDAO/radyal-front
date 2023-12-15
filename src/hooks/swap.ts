@@ -29,7 +29,7 @@ export const useExecuteSwap = (fromToken: Token) => {
 
   return useCallback(
     (params: LifiRequest) =>
-      executeSwap({ address, ...params }, allowance, queryClient),
+      executeSwap({ address, ...params }, allowance as bigint, queryClient),
     [allowance, queryClient, address]
   );
 };
@@ -60,9 +60,8 @@ export const useWithdraw = () => {
 };
 
 export const usePreviewStrategyTokenMove = (mode: SwapMode) => {
-  const { address } = useAccount();
   const { selectedStrategy } = useContext(StrategyContext);
-  const { fromAmount } = useContext(SwapContext);
+  const { fromValue } = useContext(SwapContext);
   const publicClient = usePublicClient({
     chainId: selectedStrategy.id,
   }) as Client;
@@ -72,10 +71,9 @@ export const usePreviewStrategyTokenMove = (mode: SwapMode) => {
       {
         strategy: selectedStrategy,
         mode,
-        address,
-        amount: fromAmount,
+        value: fromValue,
       },
       publicClient
     );
-  }, [address, fromAmount, mode, publicClient, selectedStrategy]);
+  }, [fromValue, mode, publicClient, selectedStrategy]);
 };

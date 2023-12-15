@@ -1,23 +1,28 @@
+import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
+import {
+  ICommonStep,
+  ITransactionRequestWithEstimate,
+} from "@astrolabs/swapper";
 import { PrepareSendTransactionArgs } from "@wagmi/core";
-import { parseGwei, parseUnits } from "viem/utils";
+import { erc20Abi } from "abitype/abis";
+import { BigNumberish } from "ethers";
+import {
+  BaseError,
+  Client,
+  ContractFunctionRevertedError,
+  getContract,
+} from "viem";
+import { parseGwei } from "viem/utils";
 import {
   prepareSendTransaction,
   prepareWriteContract,
   sendTransaction,
+  switchNetwork,
   writeContract,
 } from "wagmi/actions";
-import { erc20Abi } from "abitype/abis";
-import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
-import { defaultAbiCoder } from "@ethersproject/abi";
 import { currentChain } from "~/context/web3-context";
-import { switchNetwork } from "wagmi/actions";
-import { BigNumberish } from "ethers";
-import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
-import { getQuote } from "@astrolabs/swapper/dist/src/LiFi";
-import { BaseError, ContractFunctionRevertedError } from "viem";
-import { Strategy, WithdrawRequest } from "./interfaces";
 import { SwapMode } from "./constants";
-import { Client, getContract } from "viem";
+import { Strategy, WithdrawRequest } from "./interfaces";
 
 export const swap = async (tr: ITransactionRequestWithEstimate) => {
   if (!tr) return;
@@ -132,7 +137,7 @@ export const withdraw = async ({
 // params: string,
 // stratAddress: string,
 // allowance: string | number | bigint | boolean = 0n,
-export const swapAndDeposit = async () => {
+/*export const swapAndDeposit = async () => {
   const inputChainId = 100;
   const input = "0x4ecaba5870353805a9f068101a40e0f32ed605c6";
   const outputChainId = 100;
@@ -175,7 +180,7 @@ export const swapAndDeposit = async () => {
     abi as any
   );
 };
-
+*/
 interface PreviewStrategyMoveProps {
   strategy: Strategy;
   mode: SwapMode;
@@ -204,17 +209,17 @@ export const previewStrategyTokenMove = async (
       : await contract.read.previewWithdraw([amount])
   ) as bigint;
 
-  const step = {
+  const step: ICommonStep = {
     type: mode,
     tool: "radyal",
     fromChain: strategy.network.id,
     toChain: strategy.network.id,
     estimate: {
-      fromAmount: amount,
-      toAmount: previewAmount,
+      fromAmount: amount.toString(),
+      toAmount: previewAmount.toString(),
     },
-    fromToken: strategy.token,
-    toToken: strategy.token,
+    fromToken: strategy.token as any,
+    toToken: strategy.token as any,
   };
 
   const estimation = Number(previewAmount) / strategy.token.weiPerUnit;

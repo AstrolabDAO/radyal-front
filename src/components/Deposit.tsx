@@ -22,7 +22,7 @@ const Deposit = () => {
     switchSelectMode,
   } = useContext(SwapContext);
 
-  const { updateFromValue, toValue, swap } = useContext(SwapContext);
+  const { updateFromValue, swap } = useContext(SwapContext);
 
   const { openModal } = useContext(SwapModalContext);
 

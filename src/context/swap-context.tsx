@@ -190,7 +190,7 @@ export const SwapProvider = ({ children }) => {
 
   const swap = async () => {
     if (!fromToken || !toToken) return;
-    const [tr, promise] = await executeSwap({
+    const [tr] = await executeSwap({
       fromToken,
       toToken,
       value: fromValue,
