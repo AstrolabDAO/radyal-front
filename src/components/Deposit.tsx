@@ -4,13 +4,12 @@ import { SwapModalContext } from "~/context/swap-modal-context";
 import { TokensContext } from "~/context/tokens-context";
 
 import ModalLayout from "./layout/ModalLayout";
-import SelectTokenModal, {
-  SelectTokenModalMode,
-} from "./modals/SelectTokenModal";
+import SelectTokenModal from "./modals/SelectTokenModal";
 import SwapInput from "./SwapInput";
 import SwapRouteDetail from "./SwapRouteDetail";
 import SwapStepsModal from "./modals/SwapStepsModal";
 import { tokensIsEqual } from "~/utils";
+import { SelectTokenModalMode } from "~/utils/constants";
 
 const Deposit = () => {
   const {
@@ -22,7 +21,7 @@ const Deposit = () => {
     switchSelectMode,
   } = useContext(SwapContext);
 
-  const { updateFromValue, swap } = useContext(SwapContext);
+  const { setFromValue, swap } = useContext(SwapContext);
 
   const { openModal } = useContext(SwapModalContext);
 
@@ -63,7 +62,7 @@ const Deposit = () => {
       <div className="flex gap-5 relative w-full flex-col">
         <SwapInput
           selected={fromToken}
-          onChange={(value) => updateFromValue(Number(value))}
+          onChange={(value) => setFromValue(Number(value))}
         />
         <SwapInput selected={toToken} isDestination={true} locked={true} />
       </div>

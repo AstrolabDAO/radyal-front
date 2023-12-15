@@ -6,8 +6,9 @@ import SelectToken from "./SelectToken";
 import ModalLayout from "./layout/ModalLayout";
 import SwapInput from "./SwapInput";
 import SwapRouteDetail from "./SwapRouteDetail";
-import { withdraw } from "~/utils/web3";
+
 import { tokensIsEqual } from "~/utils";
+import { withdraw } from "~/utils/flows/strategy";
 const Withdraw = () => {
   const { selectedStrategy } = useContext(StrategyContext);
   const {
@@ -18,7 +19,7 @@ const Withdraw = () => {
     selectToToken,
     switchSelectMode,
     selectFromToken,
-    updateFromValue,
+    setFromValue,
     swap,
   } = useContext(SwapContext);
 
@@ -64,7 +65,7 @@ const Withdraw = () => {
         <SwapInput
           locked={true}
           selected={selectedStrategy?.token}
-          onChange={(value) => updateFromValue(value)}
+          onChange={(value) => setFromValue(value)}
         />
         <SwapInput selected={toToken} isDestination={true} />
       </div>

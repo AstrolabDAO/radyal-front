@@ -1,3 +1,4 @@
+import { Chain } from "viem";
 import {
   Balance,
   BalanceBySlugMapping,
@@ -7,6 +8,7 @@ import {
   Token,
   TokenBySlugMapping,
 } from "./interfaces";
+import * as wagmiChains from "wagmi/chains";
 
 export const networkBySlug: { [slug: string]: Network } = {};
 export const networkByChainId: { [chainId: number]: Network } = {};
@@ -25,6 +27,9 @@ export const tokenBySymbol: { [symbol: string]: Token } = {};
 export const tokensByNetworkId: { [networkId: number]: Token[] } = {};
 export const tokensByNetworkSlug: { [networkSlug: string]: Token[] } = {};
 export const coinGeckoIdBySymbol: { [symbol: string]: string } = {};
+
+export const wagmiChainById: { [id: number]: Chain } = {};
+Object.values(wagmiChains).map((chain) => (wagmiChainById[chain.id] = chain));
 
 export const updateTokenMapping = (token: Token) => {
   tokenBySlug[token.slug] = token;

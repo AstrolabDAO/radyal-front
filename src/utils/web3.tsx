@@ -1,17 +1,8 @@
 import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
-import {
-  ICommonStep,
-  ITransactionRequestWithEstimate,
-} from "@astrolabs/swapper";
+import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
 import { PrepareSendTransactionArgs } from "@wagmi/core";
 import { erc20Abi } from "abitype/abis";
-import { BigNumberish } from "ethers";
-import {
-  BaseError,
-  Client,
-  ContractFunctionRevertedError,
-  getContract,
-} from "viem";
+import { BaseError, ContractFunctionRevertedError } from "viem";
 import { parseGwei } from "viem/utils";
 import {
   prepareSendTransaction,
@@ -21,8 +12,6 @@ import {
   writeContract,
 } from "wagmi/actions";
 import { currentChain } from "~/context/web3-context";
-import { SwapMode } from "./constants";
-import { Strategy, WithdrawRequest } from "./interfaces";
 
 export const swap = async (tr: ITransactionRequestWithEstimate) => {
   if (!tr) return;
@@ -103,33 +92,6 @@ export const _switchNetwork = async (chainId: number) => {
   if (currentChain.id !== chainId) await switchNetwork({ chainId });
 };
 
-export const safeWithdraw = async (
-  contractAddress: string,
-  amount: BigNumberish,
-  receiver: string,
-  owner?: string,
-  // todo: minAmount from preview withdraw
-  minAmount = "0",
-  abi = StratV5Abi.abi
-) => {
-  if (!owner) owner = receiver;
-  return await writeTx(
-    "safeWithdraw",
-    [amount, minAmount, receiver, owner],
-    contractAddress,
-    abi as any
-  );
-};
-
-export const withdraw = async ({
-  value,
-  strategy,
-  address,
-}: WithdrawRequest) => {
-  await _switchNetwork(strategy.network.id);
-  const amount = value * strategy.token.weiPerUnit;
-  return safeWithdraw(strategy.address, amount, address);
-};
 // input: string,
 // amount: BigNumberish,
 // receiver: string,
@@ -181,52 +143,3 @@ export const withdraw = async ({
   );
 };
 */
-interface PreviewStrategyMoveProps {
-  strategy: Strategy;
-  mode: SwapMode;
-  value: number;
-}
-
-export const previewStrategyTokenMove = async (
-  { strategy, mode, value }: PreviewStrategyMoveProps,
-  publicClient: Client
-) => {
-  console.log("🚀 ~ file: web3.tsx:168 ~ mode:", mode);
-  const contract = getContract({
-    address: strategy.address,
-    abi: StratV5Abi.abi,
-    publicClient,
-  });
-
-  if (![SwapMode.DEPOSIT, SwapMode.WITHDRAW].includes(mode))
-    throw new Error("Invalid mode");
-
-  const amount = BigInt(value * strategy.token.weiPerUnit);
-
-  const previewAmount = (
-    mode === SwapMode.DEPOSIT
-      ? await contract.read.previewDeposit([amount])
-      : await contract.read.previewWithdraw([amount])
-  ) as bigint;
-
-  const step: ICommonStep = {
-    type: mode,
-    tool: "radyal",
-    fromChain: strategy.network.id,
-    toChain: strategy.network.id,
-    estimate: {
-      fromAmount: amount.toString(),
-      toAmount: previewAmount.toString(),
-    },
-    fromToken: strategy.token as any,
-    toToken: strategy.token as any,
-  };
-
-  const estimation = Number(previewAmount) / strategy.token.weiPerUnit;
-
-  return {
-    estimation: estimation,
-    steps: [step],
-    request: null,
-  };
-};

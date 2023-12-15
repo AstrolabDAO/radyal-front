@@ -3,7 +3,7 @@ import { ISwapperParams } from "@astrolabs/swapper/dist/src/types";
 import { erc20Abi } from "abitype/abis";
 import { ethers } from "ethers";
 import { currentChain } from "~/context/web3-context";
-import { _switchNetwork } from "./web3";
+import { _switchNetwork } from "../utils/web3";
 
 export const encodeData = (
   functionName: string,
