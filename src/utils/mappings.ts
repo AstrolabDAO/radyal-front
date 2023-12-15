@@ -18,8 +18,8 @@ export const protocolByStrippedSlug: { [slug: string]: Protocol } = {};
 
 export const chainImages: { [id: number]: string } = {};
 
-export const tokenBySlug: TokenBySlugMapping = {};
 export const balanceBySlug: BalanceBySlugMapping = {};
+export const tokenBySlug: TokenBySlugMapping = {};
 export const tokenPriceBycoinGeckoId: CoingeckoPrices = {};
 export const tokenBySymbol: { [symbol: string]: Token } = {};
 export const tokensByNetworkId: { [networkId: number]: Token[] } = {};
@@ -70,4 +70,8 @@ export const unwraps: { [symbol: string]: string } = {
 export const SwapRouteStepTypeTraduction = {
   swap: "Swap",
   cross: "Bridge",
+  custom: "Deposit",
+};
+export const SwaptoolTraduction = {
+  custom: "radyal",
 };

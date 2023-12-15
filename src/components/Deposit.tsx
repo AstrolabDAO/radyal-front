@@ -1,37 +1,32 @@
 import { useContext, useEffect } from "react";
-import { useAccount } from "wagmi";
-import { StrategyContext } from "~/context/strategy-context";
 import { SwapContext } from "~/context/swap-context";
 import { SwapModalContext } from "~/context/swap-modal-context";
 import { TokensContext } from "~/context/tokens-context";
-import { useGenerateAndSwap } from "~/hooks/swap";
 
 import ModalLayout from "./layout/ModalLayout";
 import SelectTokenModal, {
   SelectTokenModalMode,
 } from "./modals/SelectTokenModal";
-import CrossChainTokenSelect from "./CrossChainTokenSelect";
 import SwapInput from "./SwapInput";
 import SwapRouteDetail from "./SwapRouteDetail";
 import SwapStepsModal from "./modals/SwapStepsModal";
+import { tokensIsEqual } from "~/utils";
 
 const Deposit = () => {
   const {
     selectTokenMode,
     fromToken,
     toToken,
+    estimation,
     selectFromToken,
     switchSelectMode,
   } = useContext(SwapContext);
 
-  const { address } = useAccount();
-  const { fromValue, updateFromValue, toValue, swap } = useContext(SwapContext);
+  const { updateFromValue, swap } = useContext(SwapContext);
 
   const { openModal } = useContext(SwapModalContext);
-  const { selectedStrategy } = useContext(StrategyContext);
-  const { sortedBalances } = useContext(TokensContext);
 
-  const generateAndSwap = useGenerateAndSwap(fromToken);
+  const { sortedBalances } = useContext(TokensContext);
 
   useEffect(() => {
     if (!selectTokenMode) return;
@@ -53,26 +48,26 @@ const Deposit = () => {
     {
       label: "Deposit",
       onClick: async () => {
-        swap();
-        openModal(<SwapStepsModal />);
+        if (tokensIsEqual(fromToken, toToken)) {
+          swap();
+          openModal(<SwapStepsModal />);
+        } else {
+          // deposit
+        }
       },
     },
   ];
 
   return (
     <ModalLayout actions={modalActions}>
-      <div className="flex gap-5 relative w-full mb-6 pt-6">
-        <CrossChainTokenSelect selected={fromToken} />
-        <CrossChainTokenSelect locked={true} selected={toToken} />
-      </div>
       <div className="flex gap-5 relative w-full flex-col">
         <SwapInput
           selected={fromToken}
-          onChange={(value) => updateFromValue(value)}
+          onChange={(value) => updateFromValue(Number(value))}
         />
-        <SwapInput selected={toToken} isDestination={true} />
+        <SwapInput selected={toToken} isDestination={true} locked={true} />
       </div>
-      {toValue !== 0 && <SwapRouteDetail />}
+      {estimation && <SwapRouteDetail />}
     </ModalLayout>
   );
 };

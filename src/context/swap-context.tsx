@@ -4,18 +4,20 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 import { useQuery } from "react-query";
-import { toast } from "react-toastify";
-import { useAccount } from "wagmi";
+import { useAccount, usePublicClient } from "wagmi";
 import { getSwapRouteRequest } from "~/utils/api";
-import { Token } from "~/utils/interfaces";
 import { StrategyContext } from "./strategy-context";
 import { TokensContext } from "./tokens-context";
-import { estimationQuerySlug } from "~/utils/format";
-import { generateAndSwap } from "~/utils/lifi";
+import { cacheHash } from "~/utils/format";
+import { useExecuteSwap } from "~/hooks/swap";
+import { SwapMode } from "~/utils/constants";
+import { Balance, SwapEstimation, Token } from "~/utils/interfaces";
+import { tokensIsEqual } from "~/utils";
+import { previewStrategyTokenMove } from "~/utils/web3";
+import { Client } from "viem";
 
 let debounceTimer;
 
@@ -23,74 +25,106 @@ interface SwapContextType {
   switchSelectMode: () => void;
   selectFromToken: (token: Token) => void;
   selectToToken: (token: Token) => void;
-  updateFromValue: (value: string) => void;
+  updateFromValue: (value: number) => void;
+  setSwapMode: (mode: SwapMode) => void;
   swap: () => void;
   fromToken: Token;
   toToken: Token;
-  fromValue: string;
-  sortedBalances: any;
-  toValue: any;
+  fromValue: number;
+  toValue: number;
+  sortedBalances: Balance[];
   selectTokenMode: boolean;
-  steps: any[];
+  steps: ICommonStep[];
+  estimation?: SwapEstimation;
 }
 export const SwapContext = createContext<SwapContextType>({
   switchSelectMode: () => {},
   selectFromToken: () => {},
   selectToToken: () => {},
   updateFromValue: () => {},
+  setSwapMode: () => {},
   swap: () => {},
   fromToken: null,
   toToken: null,
   fromValue: null,
-  sortedBalances: [],
   toValue: null,
+  sortedBalances: [],
   selectTokenMode: false,
   steps: [],
+  estimation: null,
 });
 
 export const SwapProvider = ({ children }) => {
-  const { address } = useAccount();
-
   const { selectedStrategy } = useContext(StrategyContext);
   const { sortedBalances } = useContext(TokensContext);
+  const { address } = useAccount();
+
+  const [mode, setMode] = useState<SwapMode>(SwapMode.DEPOSIT);
+
   const { tokenBySlug, tokensBySlug, tokens } = useContext(TokensContext);
 
-  const [fromValue, setFromValue] = useState<string>(null);
-
   const [selectTokenMode, setSelectTokenMode] = useState(false);
+
+  const [fromValue, setFromValue] = useState<number>(null);
+
+  const [toValue, setToValue] = useState<number>(null);
 
   // TODO: Message if don't have balances
   const [fromToken, setFromToken] = useState<Token>(null);
   const [toToken, setToToken] = useState<Token>(null);
 
-  const [writeOnProgress, setWriteOnprogress] = useState<boolean>(false);
+  const [steps, setSteps] = useState<ICommonStep[]>([]);
+
+  const [writeOnProgress, setWriteOnprogress] = useState<boolean>(true);
   const [estimationOnProgress, setEstimationOnProgress] =
     useState<boolean>(false);
 
+  const executeSwap = useExecuteSwap(fromToken);
+  const publicClient = usePublicClient({
+    chainId: selectedStrategy?.network?.id,
+  }) as Client;
+
   const { data: estimation } = useQuery(
-    estimationQuerySlug(fromToken, toToken, fromValue),
-    () => {
+    cacheHash("estimate", mode, fromToken, toToken, fromValue),
+    async () => {
       setEstimationOnProgress(true);
-      const promise = getSwapRouteRequest({
-        fromToken,
-        toToken,
-        strat: selectedStrategy,
-        amount: Number(fromValue),
-        address,
-      })
-        .then((res) => {
+      try {
+        const interactionEstimation =
+          tokensIsEqual(fromToken, toToken) || mode === SwapMode.WITHDRAW
+            ? await previewStrategyTokenMove(
+                {
+                  strategy: selectedStrategy,
+                  value: fromValue,
+                  mode,
+                },
+
+                publicClient
+              )
+            : null;
+
+        if (tokensIsEqual(fromToken, toToken)) {
           setEstimationOnProgress(false);
-          return res;
-        })
-        .catch((e) => {
-          setEstimationOnProgress(false);
-          throw new Error(e);
+          return interactionEstimation;
+        }
+        const result = await getSwapRouteRequest({
+          address,
+          fromToken,
+          toToken,
+          strat: selectedStrategy,
+          value: interactionEstimation
+            ? interactionEstimation.estimation
+            : fromValue,
+          swapMode: mode,
         });
-      toast.promise(promise, {
-        pending: "Calculating...",
-        error: "route not found from Swapper 🤯",
-      });
-      return promise;
+        if (interactionEstimation) {
+          result.steps = [...interactionEstimation.steps, ...result.steps];
+        }
+        setEstimationOnProgress(false);
+        return result;
+      } catch (err) {
+        console.error(err);
+        setEstimationOnProgress(false);
+      }
     },
     {
       onSuccess() {
@@ -103,17 +137,33 @@ export const SwapProvider = ({ children }) => {
       cacheTime: 1000 * 15,
       retry: true,
       refetchInterval: 1000 * 15,
-      enabled:
+      enabled: !!(
         fromToken &&
-        Number(fromValue) > 0 &&
+        fromValue > 0 &&
         !writeOnProgress &&
-        !estimationOnProgress,
+        !estimationOnProgress
+      ),
     }
   );
 
-  const [toValue, setToValue] = useState<number>(null);
-  const [steps, setSteps] = useState<ICommonStep[]>([]);
-
+  useEffect(() => {
+    switch (mode) {
+      case SwapMode.DEPOSIT:
+        setFromToken(null);
+        setToToken(selectedStrategy?.token);
+        break;
+      case SwapMode.WITHDRAW:
+        setFromToken(selectedStrategy?.token);
+        setToToken(null);
+        break;
+      default:
+        break;
+    }
+  }, [mode, selectedStrategy?.token]);
+  useEffect(() => {
+    setWriteOnprogress(false);
+    setWriteOnprogress(false);
+  }, [fromToken, toToken]);
   useEffect(() => {
     if (!estimation) {
       setToValue(estimationOnProgress ? null : 0);
@@ -127,6 +177,7 @@ export const SwapProvider = ({ children }) => {
 
   useEffect(() => {
     setWriteOnprogress(true);
+
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
       setWriteOnprogress(false);
@@ -139,12 +190,12 @@ export const SwapProvider = ({ children }) => {
 
   const swap = async () => {
     if (!fromToken || !toToken) return;
-    const [tr, promise] = await generateAndSwap({
-      address,
+    const [tr] = await executeSwap({
       fromToken,
       toToken,
-      amount: Number(fromValue),
+      value: fromValue,
       strat: selectedStrategy,
+      swapMode: mode,
     });
     setSteps(tr.steps);
   };
@@ -154,7 +205,7 @@ export const SwapProvider = ({ children }) => {
 
   useEffect(() => {
     if (!fromToken) {
-      const token = tokenBySlug(sortedBalances?.[0]?.slug) ?? null;
+      const token = tokensBySlug[sortedBalances?.[0]?.slug] ?? null;
 
       selectFromToken(token);
     }
@@ -170,10 +221,15 @@ export const SwapProvider = ({ children }) => {
     selectedStrategy,
     tokens,
     toToken,
+    estimation,
   ]);
 
-  const updateFromValue = useCallback((value: string) => {
-    setFromValue(value);
+  const updateFromValue = useCallback((amount: number) => {
+    setFromValue(amount);
+  }, []);
+
+  const setSwapMode = useCallback((mode: SwapMode) => {
+    setMode(mode);
   }, []);
 
   return (
@@ -183,14 +239,16 @@ export const SwapProvider = ({ children }) => {
         selectFromToken,
         selectToToken,
         updateFromValue,
+        setSwapMode,
         swap,
         fromToken,
         toToken,
         fromValue,
-        sortedBalances,
         toValue,
+        sortedBalances,
         selectTokenMode,
         steps,
+        estimation: estimation as any, // TODO: change it
       }}
     >
       {children}

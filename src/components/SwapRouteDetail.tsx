@@ -5,6 +5,7 @@ import { amountToEth, lisibleAmount } from "~/utils/format";
 import { Protocol } from "~/utils/interfaces";
 import {
   SwapRouteStepTypeTraduction,
+  SwaptoolTraduction,
   networkByChainId,
   protocolByStrippedSlug,
 } from "~/utils/mappings";
@@ -58,7 +59,7 @@ const SwapRouteDetail = () => {
                 <div className="content w-full p-2">
                   <div className="block w-full" key={id}>
                     <div className="flex">
-                      {SwapRouteStepTypeTraduction[type]}
+                      {SwapRouteStepTypeTraduction[type] ?? type}
                       <span className="mx-2">from</span>
                       <IconCard icon={{ url: fromNetwork.icon, size }} />
                       {fromNetwork.name}
@@ -71,7 +72,7 @@ const SwapRouteDetail = () => {
                       )}
                       <span className="mx-2">on</span>
                       <a href={protocol?.app} target="_blank">
-                        {protocol?.name ?? tool}
+                        {protocol?.name ?? SwaptoolTraduction[tool] ?? tool}
                       </a>
                     </div>
                     <span className="block w-full flex justify-center">
