@@ -5,6 +5,7 @@ import { amountToEth, lisibleAmount } from "~/utils/format";
 import { Protocol } from "~/utils/interfaces";
 import {
   SwapRouteStepTypeTraduction,
+  SwaptoolTraduction,
   networkByChainId,
   protocolByStrippedSlug,
 } from "~/utils/mappings";
@@ -38,10 +39,6 @@ const SwapRouteDetail = () => {
               amountToEth(estimate.fromAmount, fromToken?.decimals),
               4
             )} ${fromToken?.symbol}`;
-            console.log(
-              "🚀 ~ file: SwapRouteDetail.tsx:41 ~ {steps.map ~ fromAmount:",
-              fromAmount
-            );
 
             const toAmount = `${lisibleAmount(
               amountToEth(estimate.toAmount, toToken?.decimals),
@@ -75,7 +72,7 @@ const SwapRouteDetail = () => {
                       )}
                       <span className="mx-2">on</span>
                       <a href={protocol?.app} target="_blank">
-                        {tool}
+                        {protocol?.name ?? SwaptoolTraduction[tool] ?? tool}
                       </a>
                     </div>
                     <span className="block w-full flex justify-center">

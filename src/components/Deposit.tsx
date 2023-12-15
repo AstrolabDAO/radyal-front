@@ -17,6 +17,7 @@ const Deposit = () => {
     selectTokenMode,
     fromToken,
     toToken,
+    estimation,
     selectFromToken,
     switchSelectMode,
   } = useContext(SwapContext);
@@ -62,11 +63,11 @@ const Deposit = () => {
       <div className="flex gap-5 relative w-full flex-col">
         <SwapInput
           selected={fromToken}
-          onChange={(value) => updateFromValue(value)}
+          onChange={(value) => updateFromValue(Number(value))}
         />
-        <SwapInput selected={toToken} isDestination={true} />
+        <SwapInput selected={toToken} isDestination={true} locked={true} />
       </div>
-      {toValue !== 0 && <SwapRouteDetail />}
+      {estimation && <SwapRouteDetail />}
     </ModalLayout>
   );
 };

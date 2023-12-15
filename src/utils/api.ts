@@ -55,6 +55,7 @@ export const getBalancesFromDeFI = (
               name: apiToken.name,
               decimals: apiToken.decimals,
               coinGeckoId: apiToken.coingeckoId,
+              weiPerUnit: 10 ** apiToken.decimals,
               icon: apiToken.icon,
               network,
               symbol: apiToken.symbol,
@@ -231,6 +232,7 @@ export const getSwapRouteRequest = async (params: LifiRequest) => {
     estimationStep?.estimate?.toAmount,
     estimationStep?.toToken?.decimals
   );
+
   return {
     estimation: receiveEstimation,
     steps,

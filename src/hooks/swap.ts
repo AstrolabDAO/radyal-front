@@ -62,7 +62,7 @@ export const useWithdraw = () => {
 export const usePreviewStrategyTokenMove = (mode: SwapMode) => {
   const { address } = useAccount();
   const { selectedStrategy } = useContext(StrategyContext);
-  const { fromValue } = useContext(SwapContext);
+  const { fromAmount } = useContext(SwapContext);
   const publicClient = usePublicClient({
     chainId: selectedStrategy.id,
   }) as Client;
@@ -73,9 +73,9 @@ export const usePreviewStrategyTokenMove = (mode: SwapMode) => {
         strategy: selectedStrategy,
         mode,
         address,
-        amount: fromValue,
+        amount: fromAmount,
       },
       publicClient
     );
-  }, [address, fromValue, mode, publicClient, selectedStrategy]);
+  }, [address, fromAmount, mode, publicClient, selectedStrategy]);
 };

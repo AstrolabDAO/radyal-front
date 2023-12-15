@@ -1,7 +1,6 @@
 import { useContext, useMemo, useState } from "react";
 import { TokensContext } from "~/context/tokens-context";
 import { amountToEth, lisibleAmount } from "~/utils/format";
-import IconGroup from "./IconGroup";
 import clsx from "clsx";
 import { SwapContext } from "~/context/swap-context";
 import Loader from "./Loader";
@@ -12,28 +11,18 @@ const SwapInput = ({
   selected,
   className = "",
   isDestination = false,
+  locked = false,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onChange = (value: string) => {},
+  onChange = (value: number) => {},
 }) => {
   const { toValue, fromValue } = useContext(SwapContext);
 
   const [depositValue, setDepositValue] = useState<string>(
-    isDestination ? null : fromValue ?? null
+    isDestination ? null : fromValue?.toString() ?? null
   );
 
   const { tokenPrices } = useContext(TokensContext);
 
-  const icons = useMemo(
-    () => [
-      { url: selected?.icon, alt: selected?.symbol },
-      {
-        url: selected?.network?.icon,
-        alt: selected?.network?.name,
-        small: true,
-      },
-    ],
-    [selected]
-  );
   const selectedBalance = useMemo(() => {
     if (!selected) return 0;
     const balance = balanceBySlug[selected.slug];
@@ -59,7 +48,7 @@ const SwapInput = ({
           <div></div>
         </header>
         <div className="flex">
-          <CrossChainTokenSelect selected={selected} />
+          <CrossChainTokenSelect selected={selected} locked={locked} />
           {isDestination && (
             <div className="flex-0">
               <div className="text-left text-4xl ml-4">
@@ -87,8 +76,9 @@ const SwapInput = ({
                   const replace = target.value
                     .replace(/[^0-9.,]/g, "")
                     .replace(",", ".");
+
                   setDepositValue(replace);
-                  onChange(replace);
+                  onChange(Number(replace));
                 }}
               />
               <div className="pl-2">

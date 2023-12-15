@@ -49,7 +49,7 @@ const Withdraw = () => {
       onClick: async () => {
         const withdrawPromise = withdraw({
           strategy: selectedStrategy,
-          amount: toValue,
+          value: toValue,
         });
         if (tokensIsEqual(fromToken, toToken)) {
           await withdrawPromise;
@@ -62,6 +62,7 @@ const Withdraw = () => {
     <ModalLayout actions={modalActions}>
       <div className="flex gap-5 relative w-full flex-col">
         <SwapInput
+          locked={true}
           selected={selectedStrategy?.token}
           onChange={(value) => updateFromValue(value)}
         />

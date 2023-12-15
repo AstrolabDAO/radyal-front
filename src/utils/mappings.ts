@@ -70,4 +70,8 @@ export const unwraps: { [symbol: string]: string } = {
 export const SwapRouteStepTypeTraduction = {
   swap: "Swap",
   cross: "Bridge",
+  custom: "Deposit",
+};
+export const SwaptoolTraduction = {
+  custom: "radyal",
 };

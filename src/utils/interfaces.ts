@@ -1,5 +1,4 @@
 import { ICommonStep } from "@astrolabs/swapper";
-import { BigNumberish } from "ethers";
 
 import { SwapMode } from "./constants";
 
@@ -127,7 +126,7 @@ export interface LifiRequest {
   fromToken: Token;
   toToken: Token;
   strat: Strategy;
-  amount: number;
+  value: number;
   address?: `0x${string}`;
   allowance?: string | number | bigint | boolean;
   swapMode?: SwapMode;
@@ -140,7 +139,7 @@ export interface SwapEstimation {
 }
 
 export interface WithdrawRequest {
-  amount: BigNumberish;
+  value: number;
   strategy: Strategy;
   address?: `0x${string}`;
 }

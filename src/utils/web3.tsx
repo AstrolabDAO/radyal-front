@@ -7,11 +7,7 @@ import {
   writeContract,
 } from "wagmi/actions";
 import { erc20Abi } from "abitype/abis";
-import {
-  ICommonStep,
-  IEstimateParams,
-  ITransactionRequestWithEstimate,
-} from "@astrolabs/swapper";
+import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
 import { defaultAbiCoder } from "@ethersproject/abi";
 import { currentChain } from "~/context/web3-context";
 import { switchNetwork } from "wagmi/actions";
@@ -31,7 +27,7 @@ export const swap = async (tr: ITransactionRequestWithEstimate) => {
     ...tr,
     gas: parseGwei("0.00001"),
   };
-  console.log(params);
+
   const { hash } = await send(params);
 
   console.log("lifiExplorer: ", `https://explorer.li.fi/tx/${hash}`);
@@ -121,11 +117,12 @@ export const safeWithdraw = async (
 };
 
 export const withdraw = async ({
-  amount,
+  value,
   strategy,
   address,
 }: WithdrawRequest) => {
   await _switchNetwork(strategy.network.id);
+  const amount = value * strategy.token.weiPerUnit;
   return safeWithdraw(strategy.address, amount, address);
 };
 // input: string,
@@ -182,14 +179,14 @@ export const swapAndDeposit = async () => {
 interface PreviewStrategyMoveProps {
   strategy: Strategy;
   mode: SwapMode;
-  amount: string;
-  address: `0x${string}`;
+  value: number;
 }
 
 export const previewStrategyTokenMove = async (
-  { strategy, mode, amount, address }: PreviewStrategyMoveProps,
+  { strategy, mode, value }: PreviewStrategyMoveProps,
   publicClient: Client
 ) => {
+  console.log("🚀 ~ file: web3.tsx:168 ~ mode:", mode);
   const contract = getContract({
     address: strategy.address,
     abi: StratV5Abi.abi,
@@ -199,28 +196,29 @@ export const previewStrategyTokenMove = async (
   if (![SwapMode.DEPOSIT, SwapMode.WITHDRAW].includes(mode))
     throw new Error("Invalid mode");
 
-  const fromAmount = parseUnits(amount, strategy.token.decimals);
+  const amount = BigInt(value * strategy.token.weiPerUnit);
 
   const previewAmount = (
     mode === SwapMode.DEPOSIT
-      ? await contract.read.previewDeposit([
-          parseUnits(amount, strategy.token.decimals),
-        ])
-      : await contract.read.previewWithdraw([fromAmount])
+      ? await contract.read.previewDeposit([amount])
+      : await contract.read.previewWithdraw([amount])
   ) as bigint;
 
-  console.log("🚀 ~ file: web3.tsx:182 ~ fromAmount:", fromAmount);
   const step = {
-    type: "withdraw",
+    type: mode,
     tool: "radyal",
     fromChain: strategy.network.id,
     toChain: strategy.network.id,
     estimate: {
-      fromAmount: fromAmount.toString(),
-      toAmount: previewAmount.toString(),
+      fromAmount: amount,
+      toAmount: previewAmount,
     },
+    fromToken: strategy.token,
+    toToken: strategy.token,
   };
-  const estimation = Number(previewAmount) / 10 ** strategy.token.decimals;
+
+  const estimation = Number(previewAmount) / strategy.token.weiPerUnit;
+
   return {
     estimation: estimation,
     steps: [step],

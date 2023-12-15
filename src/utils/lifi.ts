@@ -48,10 +48,12 @@ export const getSwapRoute = async ({
   address,
   fromToken,
   toToken,
-  amount,
+  value,
   strat,
   swapMode = SwapMode.DEPOSIT,
 }: LifiRequest) => {
+  const amount = BigInt(Math.round(value * fromToken.weiPerUnit));
+
   const [inputChainId, outputChainId] = [
     fromToken.network.id,
     toToken.network.id,
@@ -69,22 +71,21 @@ export const getSwapRoute = async ({
 
   const customContractCalls = [];
 
-  const amountWei = fromToken.weiPerUnit * amount;
-
-  if (swapMode) {
+  if (swapMode === SwapMode.DEPOSIT) {
     const { to, data } = await depositCallData(
       strat.address,
       address,
-      amountWei.toString()
+      amount.toString()
     );
 
     customContractCalls.push({ toAddress: to, callData: data });
   }
+
   const lifiOptions = {
     aggregatorId: ["LIFI"],
     inputChainId: fromToken.network.id,
     input: fromToken.address,
-    amountWei: amountWei - amountWei * 0.02, // because if not 2%, the fromAmount is lower. Why ? I don't know.
+    amountWei: Math.round(Number(amount) - Number(amount) * 0.02), // because if not 2%, the fromAmount is lower. Why ? I don't know.
     outputChainId: toToken.network.id,
     output: toToken.address,
     maxSlippage: 50,
@@ -100,14 +101,15 @@ export const getSwapRoute = async ({
 
 export const executeSwap = async (
   opts: LifiRequest,
-  allowance: string | number | bigint | boolean = 0n,
+  allowance: bigint = 0n,
   _queryClient: QueryClient = queryClient
 ) => {
-  const { fromToken, toToken, amount, swapMode } = opts;
+  const { fromToken, toToken, value, swapMode } = opts;
   await _switchNetwork(fromToken?.network?.id);
 
+  const amount = BigInt(Math.round(value * fromToken.weiPerUnit));
   const oldEstimation: SwapEstimation = _queryClient.getQueryData(
-    cacheHash("estimate", swapMode, fromToken, toToken, amount)
+    cacheHash("estimate", swapMode, fromToken, toToken, value)
   );
 
   let tr = oldEstimation?.request;
@@ -116,10 +118,9 @@ export const executeSwap = async (
     tr = await getSwapRoute(opts);
   }
 
-  const amountWei = BigInt(Math.round(amount * fromToken.weiPerUnit));
-  const approvalAmount = amountWei + amountWei / 500n; // 5%
+  const approvalAmount = amount + amount / 500n; // 5%
 
-  if (Number(amountWei.toString()) > Number(allowance.toString())) {
+  if (amount > allowance) {
     return [
       tr,
       approve(
