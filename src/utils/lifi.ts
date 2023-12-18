@@ -6,16 +6,12 @@ import { LifiRequest, SwapEstimation } from "./interfaces";
 import { _switchNetwork, approve, swap } from "./web3";
 import {
   getAllTransactionRequests,
-  getTransactionRequest,
-  // routerByChainId,
 } from "@astrolabs/swapper/dist/src/";
 
 import { queryClient } from "~/main";
 import { QueryClient } from "react-query";
 import { cacheHash } from "./format";
 import { SwapMode } from "./constants";
-import { estimationQuerySlug } from "./format";
-import { ICommonStep } from "@astrolabs/swapper";
 import { encodeData } from "./squid";
 import { routerByChainId } from "@astrolabs/swapper/dist/src/LiFi";
 
