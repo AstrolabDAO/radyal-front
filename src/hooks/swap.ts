@@ -134,7 +134,7 @@ export const useWithdraw = () => {
   );
 };
 
-export const usePreviewStrategyTokenMove = (mode: SwapMode) => {
+export const usePreviewStrategyTokenMove = (swapMode: SwapMode) => {
   const { selectedStrategy } = useContext(StrategyContext);
   const { fromValue } = useContext(MinimalSwapContext);
   const publicClient = usePublicClient({
@@ -145,10 +145,10 @@ export const usePreviewStrategyTokenMove = (mode: SwapMode) => {
     return previewStrategyTokenMove(
       {
         strategy: selectedStrategy,
-        mode,
+        swapMode,
         value: fromValue,
       },
       publicClient
     );
-  }, [fromValue, mode, publicClient, selectedStrategy]);
+  }, [fromValue, swapMode, publicClient, selectedStrategy]);
 };

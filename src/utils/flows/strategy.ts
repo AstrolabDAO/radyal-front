@@ -3,7 +3,7 @@ import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
 import { Client, getContract } from "viem";
 import { SwapMode } from "../constants";
 import { Strategy, WithdrawRequest } from "../interfaces";
-import { _switchNetwork } from "../web3";
+import { _switchNetwork, writeTx } from "../web3";
 import { BigNumberish } from "ethers";
 import { ICommonStep } from "@astrolabs/swapper";
 
