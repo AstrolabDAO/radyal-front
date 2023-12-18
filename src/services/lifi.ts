@@ -2,8 +2,8 @@ import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
 import { erc20Abi } from "abitype/abis";
 import { ethers } from "ethers";
 
-import { LifiRequest, SwapEstimation } from "./interfaces";
-import { _switchNetwork, approve, swap } from "./web3";
+import { LifiRequest, SwapEstimation } from "../utils/interfaces";
+import { _switchNetwork, approve, swap } from "../utils/web3";
 import {
   getTransactionRequest,
   routerByChainId,
@@ -11,8 +11,8 @@ import {
 
 import { queryClient } from "~/main";
 import { QueryClient } from "react-query";
-import { cacheHash } from "./format";
-import { SwapMode } from "./constants";
+import { cacheHash } from "../utils/format";
+import { SwapMode } from "../utils/constants";
 
 export const generateCallData = async (
   functionName: string,

@@ -15,8 +15,11 @@ import {
   protocolByStrippedSlug,
 } from "~/utils/mappings";
 import { NETWORKS } from "~/utils/web3-constants";
-import { clearNetworkTypeFromSlug, stripSlug } from "~/utils/format";
-import { networkToWagmiChain } from "~/utils/converters";
+import {
+  clearNetworkTypeFromSlug,
+  networkToWagmiChain,
+  stripSlug,
+} from "~/utils/format";
 import { setupWeb3modal } from "~/utils/setup-web3modal";
 import deFiNetworks from "../data/defi-networks.json";
 import { Network, Protocol } from "~/utils/interfaces";

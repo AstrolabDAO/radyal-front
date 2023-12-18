@@ -5,11 +5,8 @@ import { tokenBySlug } from "~/utils/mappings";
 import { SwapContext } from "~/context/swap-context";
 import { SwapModalContext } from "~/context/swap-modal-context";
 import { BaseModalProps } from "../Modal";
+import { SelectTokenModalMode } from "~/utils/constants";
 
-export enum SelectTokenModalMode {
-  Deposit = "deposit",
-  Withdraw = "withdraw",
-}
 interface SelectTokenModalProps extends BaseModalProps {
   mode: SelectTokenModalMode;
 }

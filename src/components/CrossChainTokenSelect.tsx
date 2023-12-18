@@ -1,9 +1,10 @@
 import clsx from "clsx";
 import { useContext, useMemo } from "react";
 import { FaChevronDown } from "react-icons/fa";
-import { SwapContext } from "~/context/swap-context";
+
 import IconGroup from "./IconGroup";
 import Loader from "./Loader";
+import { SwapContext } from "~/context/swap-context";
 
 const CrossChainTokenSelect = ({ selected, locked = false }) => {
   const { switchSelectMode } = useContext(SwapContext);

@@ -1,6 +1,7 @@
-import { unwraps } from "./mappings";
+import { unwraps, wagmiChainById } from "./mappings";
+import { ChainRpcUrls, Network } from "./interfaces";
 
-import * as md5 from "md5";
+import md5 from "md5";
 export function toRaw(s: string): string {
   return s
     .replace(/[^0-9A-Za-zÀ-ÖØ-öø-ÿ-_.,:;\s]+/g, "")
@@ -79,4 +80,16 @@ export const stripSlug = (slug: string): string => {
 
 export const cacheHash = (...params: any[]) => {
   return md5(JSON.stringify(params));
+};
+
+export const networkToWagmiChain = (network: Network) => {
+  if (!network) return;
+
+  const wagmiNetwork = wagmiChainById[network.id];
+
+  if (wagmiNetwork) return wagmiNetwork;
+
+  wagmiNetwork.rpcUrls.default = {
+    http: network.httpRpcs,
+  } as ChainRpcUrls;
 };

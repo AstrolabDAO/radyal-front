@@ -7,3 +7,8 @@ export enum SwapMode {
   WITHDRAW = "WITHDRAW",
   SWAP = "SWAP",
 }
+
+export enum SelectTokenModalMode {
+  Deposit = "deposit",
+  Withdraw = "withdraw",
+}
