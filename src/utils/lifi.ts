@@ -5,14 +5,19 @@ import { ethers } from "ethers";
 import { LifiRequest, SwapEstimation } from "./interfaces";
 import { _switchNetwork, approve, swap } from "./web3";
 import {
+  getAllTransactionRequests,
   getTransactionRequest,
-  routerByChainId,
-} from "@astrolabs/swapper/dist/src/LiFi";
+  // routerByChainId,
+} from "@astrolabs/swapper/dist/src/";
 
 import { queryClient } from "~/main";
 import { QueryClient } from "react-query";
 import { cacheHash } from "./format";
 import { SwapMode } from "./constants";
+import { estimationQuerySlug } from "./format";
+import { ICommonStep } from "@astrolabs/swapper";
+import { encodeData } from "./squid";
+import { routerByChainId } from "@astrolabs/swapper/dist/src/LiFi";
 
 export const generateCallData = async (
   functionName: string,
@@ -54,6 +59,7 @@ export const getSwapRoute = async ({
 }: LifiRequest) => {
   const amount = BigInt(Math.round(value * fromToken.weiPerUnit));
 
+  console.log('generateRequest', fromToken, toToken, strat, amount, address);
   const [inputChainId, outputChainId] = [
     fromToken.network.id,
     toToken.network.id,
@@ -80,9 +86,8 @@ export const getSwapRoute = async ({
 
     customContractCalls.push({ toAddress: to, callData: data });
   }
-
   const lifiOptions = {
-    aggregatorId: ["LIFI"],
+    aggregatorId: ["LIFI", "SQUID"],
     inputChainId: fromToken.network.id,
     input: fromToken.address,
     amountWei: Math.round(Number(amount) - Number(amount) * 0.02), // because if not 2%, the fromAmount is lower. Why ? I don't know.
@@ -94,9 +99,13 @@ export const getSwapRoute = async ({
     customContractCalls: customContractCalls.length
       ? customContractCalls
       : undefined,
+    postHook: [{
+      callData: encodeData("transfer", [strat.address, "0"], erc20Abi),
+    }]
   };
-
-  return getTransactionRequest(lifiOptions);
+  const res = await getAllTransactionRequests(lifiOptions);
+  console.log(res);
+  return res;
 };
 
 export const executeSwap = async (
@@ -116,6 +125,14 @@ export const executeSwap = async (
 
   if (!tr) {
     tr = await getSwapRoute(opts);
+    // tr = await generateRequest({
+    //   estimateOnly: false,
+    //   fromToken,
+    //   toToken,
+    //   strat,
+    //   amount,
+    //   address,
+    // });
   }
 
   const approvalAmount = amount + amount / 500n; // 5%
