@@ -5,15 +5,11 @@ import clsx from "clsx";
 interface Props extends ButtonHTMLAttributes<HTMLDivElement> {
   icons?: Icon[];
 }
-const IconGroup = ({ icons, className, ...props }: Props, index) => {
+const IconGroup = ({ icons, className, ...props }: Props) => {
   return (
-    <div
-      key={index}
-      {...props}
-      className={clsx("flex overflow-visible", className)}
-    >
-      {icons.map((icon) => (
-        <IconCard key={icon.url} icon={icon} />
+    <div {...props} className={clsx("flex overflow-visible", className)}>
+      {icons.map((icon, index) => (
+        <IconCard key={index} icon={icon} />
       ))}
     </div>
   );

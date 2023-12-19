@@ -125,11 +125,10 @@ export interface BalanceBySlugMapping {
 export interface LifiRequest {
   fromToken: Token;
   toToken: Token;
-  strat: Strategy;
-  value: number;
-  address?: `0x${string}`;
-  allowance?: string | number | bigint | boolean;
-  swapMode?: SwapMode;
+  strategy: Strategy;
+  amount: bigint;
+  address: `0x${string}`;
+  swapMode: SwapMode;
 }
 
 export interface SwapEstimation {

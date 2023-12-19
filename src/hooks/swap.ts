@@ -1,52 +1,35 @@
-import { routerByChainId } from "@astrolabs/swapper/dist/src/LiFi";
 import { useCallback, useContext, useMemo } from "react";
-import { useQueryClient } from "react-query";
 import { Client } from "viem";
 import { useAccount, usePublicClient } from "wagmi";
 import { StrategyContext } from "~/context/strategy-context";
 import { MinimalSwapContext } from "~/context/swap-context";
 import { currentChain } from "~/context/web3-context";
 import { useReadTx } from "~/hooks/transactions";
-import { executeSwap, getSwapRoute } from "~/services/lifi";
 import { tokensIsEqual } from "~/utils";
 import { SwapMode } from "~/utils/constants";
 import { previewStrategyTokenMove, withdraw } from "~/utils/flows/strategy";
 import { amountToEth } from "~/utils/format";
-import { LifiRequest, WithdrawRequest } from "~/utils/interfaces.ts";
+import { WithdrawRequest } from "~/utils/interfaces.ts";
+import { useLiFiExecuteSwap } from "./lifi";
+
+import { getSwapRoute } from "~/services/swap";
 
 export const useExecuteSwap = () => {
-  const { fromToken } = useContext(MinimalSwapContext);
+  const lifiExecuteSwap = useLiFiExecuteSwap();
 
-  const { address } = useAccount();
-  const routerAddress = useMemo(() => {
-    if (!fromToken) return null;
-    return routerByChainId[fromToken?.network.id];
-  }, [fromToken]);
-
-  const allowance = useAllowance(
-    fromToken?.address,
-    routerAddress,
-    address,
-    fromToken?.network?.id
-  );
-  const queryClient = useQueryClient();
-
-  return useCallback(
-    (params: LifiRequest) =>
-      executeSwap({ address, ...params }, allowance as bigint, queryClient),
-    [allowance, queryClient, address]
-  );
+  return useCallback(() => lifiExecuteSwap(), [lifiExecuteSwap]);
 };
 
 export const useEstimateRoute = () => {
   const { fromToken, toToken, fromValue, swapMode } =
     useContext(MinimalSwapContext);
-  const { address } = useAccount();
   const { selectedStrategy } = useContext(StrategyContext);
 
   const publicClient = usePublicClient({
     chainId: selectedStrategy?.network?.id,
   }) as Client;
+
+  const getSwapRoute = useGetSwapRoute();
 
   return useCallback(async () => {
     try {
@@ -65,18 +48,11 @@ export const useEstimateRoute = () => {
       if (tokensIsEqual(fromToken, toToken)) {
         return interactionEstimation;
       }
-      const result = await getSwapRoute({
-        address,
-        fromToken,
-        toToken,
-        value: fromValue,
-        strat: selectedStrategy,
-        swapMode,
-      });
+      const result = await getSwapRoute();
 
       if (!result) throw new Error("route not found from Swapper 🤯");
 
-      const { steps } = result;
+      const { steps } = result[0];
       const lastStep = steps[steps.length - 1];
 
       const estimationStep =
@@ -92,16 +68,16 @@ export const useEstimateRoute = () => {
         steps: !interactionEstimation
           ? steps
           : [...interactionEstimation.steps, ...steps],
-        request: result,
+        request: result[0],
       };
     } catch (error) {
       console.error(error);
       return null;
     }
   }, [
-    address,
     fromToken,
     fromValue,
+    getSwapRoute,
     publicClient,
     selectedStrategy,
     swapMode,
@@ -111,10 +87,25 @@ export const useEstimateRoute = () => {
 
 export const useGetSwapRoute = () => {
   const { address } = useAccount();
-  return useCallback(
-    (params: LifiRequest) => getSwapRoute({ address, ...params }),
-    [address]
-  );
+  const { fromToken, toToken, fromValue, swapMode } =
+    useContext(MinimalSwapContext);
+
+  const { selectedStrategy } = useContext(StrategyContext);
+  const amount = useMemo(() => {
+    if (!fromToken) return 0n;
+    return BigInt(Math.round(fromValue * fromToken?.weiPerUnit));
+  }, [fromToken, fromValue]);
+
+  return useCallback(async () => {
+    return getSwapRoute({
+      address,
+      amount,
+      fromToken,
+      toToken,
+      strategy: selectedStrategy,
+      swapMode,
+    });
+  }, [address, amount, fromToken, selectedStrategy, swapMode, toToken]);
 };
 
 export const useAllowance = (

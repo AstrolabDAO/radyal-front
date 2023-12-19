@@ -4,7 +4,6 @@ import { Client, getContract } from "viem";
 import { SwapMode } from "../constants";
 import { Strategy, WithdrawRequest } from "../interfaces";
 import { _switchNetwork, writeTx } from "../web3";
-import { BigNumberish } from "ethers";
 import { ICommonStep } from "@astrolabs/swapper";
 
 export const previewStrategyTokenMove = async (
@@ -62,7 +61,7 @@ export const withdraw = async ({
 
 export const safeWithdraw = async (
   contractAddress: string,
-  amount: BigNumberish,
+  amount: number,
   receiver: string,
   owner?: string,
   // todo: minAmount from preview withdraw

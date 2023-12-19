@@ -79,4 +79,5 @@ export const SwapRouteStepTypeTraduction = {
 };
 export const SwaptoolTraduction = {
   custom: "radyal",
+  "sushiswap-dai": "sushiswap",
 };

@@ -2,15 +2,21 @@ import { getTransactionRequest } from "@astrolabs/swapper/dist/src/Squid";
 import { ISwapperParams } from "@astrolabs/swapper/dist/src/types";
 import { erc20Abi } from "abitype/abis";
 import { ethers } from "ethers";
+import { parseUnits } from "viem";
 import { currentChain } from "~/context/web3-context";
 import { _switchNetwork } from "../utils/web3";
+import { depositCallData } from "./swap";
+import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5Agent.json";
 
 export const encodeData = (
-  functionName: string,
+  functionName: any,
   args: unknown[],
-  abi = erc20Abi
+  abi = AgentABI
 ) => {
-  const iface = new ethers.Interface(abi);
+  console.log("🚀 ~ file: squid.ts:16 ~ args:", args);
+  const iface = new ethers.Interface(AgentABI);
+  console.log(iface.encodeFunctionData(functionName, args));
+  console.log(depositCallData(args[2] as any, args[0] as string));
   return iface.encodeFunctionData(functionName, args);
 };
 
@@ -18,7 +24,8 @@ export const getRoute = async () => {
   const slippage = 3.0;
   const fromChain = 137;
   const fromToken = "0x2791bca1f2de4661ed88a30c99a7a9449aa84174";
-  const fromAmount = ethers.parseUnits("1.4", 6).toString();
+  const fromAmount = parseUnits("1.4", 6).toString();
+
   const toChain = 42161;
   const toToken = "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8";
   // receiver = caller here
