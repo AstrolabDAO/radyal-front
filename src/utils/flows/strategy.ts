@@ -1,10 +1,10 @@
-import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
+import StratV5Abi from "@astrolabs/registry/abis/StrategyV5Agent.json";
 
 import { Client, getContract } from "viem";
 import { SwapMode } from "../constants";
 import { Strategy, WithdrawRequest } from "../interfaces";
-import { _switchNetwork, writeTx } from "../web3";
 import { ICommonStep } from "@astrolabs/swapper";
+import { executeContract } from "~/services/transaction";
 
 export const previewStrategyTokenMove = async (
   { strategy, swapMode, value }: PreviewStrategyMoveProps,
@@ -40,7 +40,11 @@ export const previewStrategyTokenMove = async (
     toToken: strategy.token as any,
   };
 
-  const estimation = Number(previewAmount) / strategy.token.weiPerUnit;
+  const estimation =
+    Number(previewAmount) /
+    (swapMode === SwapMode.DEPOSIT
+      ? strategy.startToken.decimals
+      : strategy.token.weiPerUnit);
 
   return {
     estimation: estimation,
@@ -54,7 +58,7 @@ export const withdraw = async ({
   strategy,
   address,
 }: WithdrawRequest) => {
-  await _switchNetwork(strategy.network.id);
+  //await _switchNetwork(strategy.network.id);
   const amount = value * strategy.token.weiPerUnit;
   return safeWithdraw(strategy.address, amount, address);
 };
@@ -69,7 +73,7 @@ export const safeWithdraw = async (
   abi = StratV5Abi.abi
 ) => {
   if (!owner) owner = receiver;
-  return await writeTx(
+  return await executeContract(
     "safeWithdraw",
     [amount, minAmount, receiver, owner],
     contractAddress,

@@ -1,14 +1,7 @@
 import { erc20Abi } from "abitype/abis";
 import axios from "axios";
 import { COINGECKO_API, DeFI_API, TOKEN_BASENAME_REGEX } from "./constants";
-import {
-  Balance,
-  DeFiBalance,
-  LifiRequest,
-  Network,
-  Strategy,
-  Token,
-} from "./interfaces";
+import { Balance, DeFiBalance, Network, Strategy, Token } from "./interfaces";
 import {
   deFiIdByChainId,
   networkBySlug,
@@ -17,10 +10,9 @@ import {
   tokensByNetworkSlug,
   updateTokenMapping,
 } from "./mappings";
-import updateBalances from "./multicall";
+import updateBalances, { multicall } from "./multicall";
 import { NETWORKS } from "./web3-constants";
-import { amountToEth } from "./format";
-import { getSwapRoute } from "~/services/swap";
+import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5Agent.json";
 
 export const getBalancesFromDeFI = (
   address: `0x${string}`,
@@ -175,67 +167,100 @@ export const loadBalancesByAddress = async (address: `0x${string}`) => {
   return _balances;
 };
 
-export const getStrategies = () => {
-  return axios
+export const getStrategies = async () => {
+  const strategiesData = await axios
     .get(`${process.env.ASTROLAB_API}/strategies`)
-    .then((res) => res.data.data)
-    .then((strategies) => {
-      return strategies
-        .filter((strategy) => {
-          const { nativeNetwork, denomination } = strategy;
-          const network = networkBySlug[nativeNetwork];
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const [_, symbol] = denomination.split(":");
-          const token = tokenBySlug[`${network?.slug}:${symbol}`];
-
-          return !!network && !!token ? true : false;
-        })
-        .map((strategy) => {
-          const { id, name, nativeNetwork, nativeAddress, denomination, slug } =
-            strategy;
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const [_, symbol] = denomination.split(":");
-          const network = networkBySlug[nativeNetwork];
-
-          const token = tokenBySlug[`${network.slug}:${symbol}`];
-
-          return {
-            id,
-            name,
-            address: nativeAddress,
-            network: network,
-            token,
-            slug,
-          } as Strategy;
-        });
-    });
-};
-
-export const getProtocols = () => {
-  return axios
-    .get(`${process.env.ASTROLAB_API}/protocols`)
     .then((res) => res.data.data);
+
+  const strategiesByNetwork = {};
+
+  // Generate strategies mapping by Network with api Data
+  for (let i = 0; i < strategiesData.length; i++) {
+    const strategy = strategiesData[i];
+    const { nativeNetwork } = strategy;
+    const network = networkBySlug[nativeNetwork];
+    if (!network) continue;
+    if (!strategiesByNetwork[network.id]) strategiesByNetwork[network.id] = [];
+    // Add index on strategy to retrieve it after
+    strategy.index = i;
+    strategiesByNetwork[network.id].push(strategy);
+  }
+
+  // Loop on Strategies by networks to multicall (getting strategy token details)
+  for (const chainId of Object.keys(strategiesByNetwork)) {
+    const networkStrategies = strategiesByNetwork[chainId];
+    const contractsCalls = networkStrategies
+      .map((strategy) => {
+        const call = {
+          abi: AgentABI,
+          address: strategy.nativeAddress,
+        };
+        return [
+          {
+            ...call,
+            functionName: "symbol",
+          },
+          {
+            ...call,
+            functionName: "decimals",
+          },
+        ];
+      })
+      .flat(1);
+
+    const result = await multicall(Number(chainId), contractsCalls);
+
+    // Add multicall result on api Data
+    networkStrategies.forEach((strategy, index) => {
+      const resultIndex = index === 0 ? index : index + 2;
+      strategiesData[strategy.index].startToken = {
+        symbol: result[resultIndex]?.result ?? null,
+        decimals: result[resultIndex + 1]?.result ?? null,
+      };
+    });
+  }
+
+  const strategies = strategiesData
+    .filter((strategy) => {
+      const { nativeNetwork, denomination } = strategy;
+      const network = networkBySlug[nativeNetwork];
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [_, symbol] = denomination.split(":");
+      const token = tokenBySlug[`${network?.slug}:${symbol}`];
+
+      return !!network && !!token ? true : false;
+    })
+    .map((strategy) => {
+      const {
+        id,
+        name,
+        nativeNetwork,
+        nativeAddress,
+        denomination,
+        slug,
+        startToken,
+      } = strategy;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [_, symbol] = denomination.split(":");
+      const network = networkBySlug[nativeNetwork];
+
+      const token = tokenBySlug[`${network.slug}:${symbol}`];
+
+      return {
+        id,
+        name,
+        address: nativeAddress,
+        network: network,
+        startToken,
+        token,
+        slug,
+      } as Strategy;
+    });
+
+  return strategies;
 };
 
-export const getSwapRouteRequest = async (params: LifiRequest) => {
-  const result = await getSwapRoute(params);
-
-  if (!result) throw new Error("route not found from Swapper 🤯");
-
-  const { steps } = result;
-  const lastStep = steps[steps.length - 1];
-
-  const estimationStep =
-    lastStep.type === "custom" ? steps[steps.length - 2] : lastStep;
-
-  const receiveEstimation = amountToEth(
-    estimationStep?.estimate?.toAmount,
-    estimationStep?.toToken?.decimals
-  );
-
-  return {
-    estimation: receiveEstimation,
-    steps,
-    request: result,
-  };
+export const getProtocols = async () => {
+  const result = await axios.get(`${process.env.ASTROLAB_API}/protocols`);
+  return result.data.data;
 };

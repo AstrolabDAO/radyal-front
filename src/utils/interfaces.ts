@@ -54,6 +54,7 @@ export interface Strategy {
   rewardsTokens: string[];
   token: Token;
   network: Network;
+  startToken: { symbol: string; decimals: number };
 }
 
 export interface DeFiMetadata {

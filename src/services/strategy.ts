@@ -1,7 +1,7 @@
 import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
 import { PrepareSendTransactionArgs } from "@wagmi/core";
 import { parseGwei } from "viem";
-import { send } from "~/utils/web3";
+import { executeContract, executeTransaction } from "./transaction";
 
 export const swap = async (tr: ITransactionRequestWithEstimate) => {
   if (!tr) return;
@@ -12,10 +12,18 @@ export const swap = async (tr: ITransactionRequestWithEstimate) => {
     gas: parseGwei("0.00001"),
   };
 
-  const { hash } = await send(params);
+  const { hash } = await executeTransaction(params);
 
   console.log("lifiExplorer: ", `https://explorer.li.fi/tx/${hash}`);
   console.log("squidExplorer: ", `https://axelarscan.io/gmp/${hash}`);
   console.log("hash: ", hash);
   return hash;
+};
+
+export const approve = async (
+  address: string,
+  amountInWei: string,
+  tokenAddress: string
+) => {
+  return executeContract("approve", [address, amountInWei], tokenAddress);
 };

@@ -1,24 +1,8 @@
 import { getTransactionRequest } from "@astrolabs/swapper/dist/src/Squid";
 import { ISwapperParams } from "@astrolabs/swapper/dist/src/types";
 import { erc20Abi } from "abitype/abis";
-import { ethers } from "ethers";
 import { parseUnits } from "viem";
-import { currentChain } from "~/context/web3-context";
-import { _switchNetwork } from "../utils/web3";
-import { depositCallData } from "./swap";
-import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5Agent.json";
-
-export const encodeData = (
-  functionName: any,
-  args: unknown[],
-  abi = AgentABI
-) => {
-  console.log("🚀 ~ file: squid.ts:16 ~ args:", args);
-  const iface = new ethers.Interface(AgentABI);
-  console.log(iface.encodeFunctionData(functionName, args));
-  console.log(depositCallData(args[2] as any, args[0] as string));
-  return iface.encodeFunctionData(functionName, args);
-};
+import { generateCallData } from "./swap";
 
 export const getRoute = async () => {
   const slippage = 3.0;
@@ -42,21 +26,14 @@ export const getRoute = async () => {
     maxSlippage: slippage,
     customContractCalls: [
       {
-        callData: encodeData("transfer", [stratAddress, "0"], erc20Abi),
+        callData: generateCallData({
+          functionName: "transfer",
+          abi: erc20Abi,
+          args: [stratAddress, "0"],
+        }),
       },
     ],
   };
 
   return await getTransactionRequest(params);
-};
-
-export const routeAndSwap = async () => {
-  _switchNetwork(currentChain.id);
-  //const tr = await getRoute();
-  /*await approve(
-    tr.to,
-    tr.steps[0].fromToken?.fromAmount,
-    tr.steps[0].fromToken.address
-  );
-  await swap(tr);*/
 };

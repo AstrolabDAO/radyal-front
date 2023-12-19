@@ -5,6 +5,7 @@ import {
   CoingeckoPrices,
   Network,
   Protocol,
+  Strategy,
   Token,
   TokenBySlugMapping,
 } from "./interfaces";
