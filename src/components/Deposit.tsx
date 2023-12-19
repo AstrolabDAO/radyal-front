@@ -47,7 +47,7 @@ const Deposit = () => {
     {
       label: "Deposit",
       onClick: async () => {
-        if (tokensIsEqual(fromToken, toToken)) {
+        if (!tokensIsEqual(fromToken, toToken)) {
           swap();
           openModal(<SwapStepsModal />);
         } else {

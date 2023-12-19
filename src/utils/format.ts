@@ -2,6 +2,7 @@ import { unwraps, wagmiChainById } from "./mappings";
 import { ChainRpcUrls, Network } from "./interfaces";
 
 import md5 from "md5";
+import { zeroAddress } from "viem";
 export function toRaw(s: string): string {
   return s
     .replace(/[^0-9A-Za-zÀ-ÖØ-öø-ÿ-_.,:;\s]+/g, "")
@@ -92,4 +93,10 @@ export const networkToWagmiChain = (network: Network) => {
   wagmiNetwork.rpcUrls.default = {
     http: network.httpRpcs,
   } as ChainRpcUrls;
+};
+
+export const overrideZeroAddress = (address: string) => {
+  return zeroAddress === address
+    ? "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+    : address;
 };

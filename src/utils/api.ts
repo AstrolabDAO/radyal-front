@@ -20,7 +20,7 @@ import {
 import updateBalances from "./multicall";
 import { NETWORKS } from "./web3-constants";
 import { amountToEth } from "./format";
-import { getSwapRoute } from "../services/lifi";
+import { getSwapRoute } from "~/services/swap";
 
 export const getBalancesFromDeFI = (
   address: `0x${string}`,

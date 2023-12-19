@@ -40,7 +40,6 @@ const SwapContext = createContext<SwapContext>({
 });
 
 const CompleteProvider = ({ children }) => {
-  const { selectedStrategy } = useContext(StrategyContext);
   const baseContext = useContext(MinimalSwapContext);
   const { fromToken, toToken, fromValue, swapMode } = baseContext;
 
@@ -50,6 +49,8 @@ const CompleteProvider = ({ children }) => {
   const [writeOnProgress, setWriteOnprogress] = useState<boolean>(true);
   const [estimationOnProgress, setEstimationOnProgress] =
     useState<boolean>(false);
+
+  const [updateEstimation, setUpdateEstimation] = useState(true);
   const executeSwap = useExecuteSwap();
 
   const estimateRoute = useEstimateRoute();
@@ -73,7 +74,8 @@ const CompleteProvider = ({ children }) => {
         fromToken &&
         fromValue > 0 &&
         !writeOnProgress &&
-        !estimationOnProgress
+        !estimationOnProgress &&
+        updateEstimation
       ),
     }
   );
@@ -90,13 +92,8 @@ const CompleteProvider = ({ children }) => {
   }, [estimation, estimationOnProgress]);
 
   useEffect(() => {
-    setWriteOnprogress(false);
-    setWriteOnprogress(false);
-  }, [fromToken, toToken]);
-
-  useEffect(() => {
+    if (!fromValue) return;
     setWriteOnprogress(true);
-
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
       setWriteOnprogress(false);
@@ -105,13 +102,8 @@ const CompleteProvider = ({ children }) => {
 
   const swap = async () => {
     if (!fromToken || !toToken) return;
-    const [tr] = await executeSwap({
-      fromToken,
-      toToken,
-      value: fromValue,
-      strat: selectedStrategy,
-      swapMode,
-    });
+    setUpdateEstimation(false);
+    const [tr] = await executeSwap();
     setSteps(tr.steps);
   };
 
@@ -126,7 +118,6 @@ const CompleteProvider = ({ children }) => {
 const SwapProvider = ({ children }) => {
   const { sortedBalances } = useContext(TokensContext);
   const { selectedStrategy } = useContext(StrategyContext);
-
   const [swapMode, setSwapMode] = useState<SwapMode>(SwapMode.DEPOSIT);
   const [selectTokenMode, setSelectTokenMode] = useState(false);
 

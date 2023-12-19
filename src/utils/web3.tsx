@@ -85,61 +85,9 @@ export const approve = async (
   amountInWei: string,
   tokenAddress: string
 ) => {
-  return await writeTx("approve", [address, amountInWei], tokenAddress);
+  return writeTx("approve", [address, amountInWei], tokenAddress);
 };
 
 export const _switchNetwork = async (chainId: number) => {
-  if (currentChain.id !== chainId) await switchNetwork({ chainId });
+  if (currentChain.id !== chainId) switchNetwork({ chainId });
 };
-
-// input: string,
-// amount: BigNumberish,
-// receiver: string,
-// minShareAmount: BigNumberish = "0",
-// params: string,
-// stratAddress: string,
-// allowance: string | number | bigint | boolean = 0n,
-/*export const swapAndDeposit = async () => {
-  const inputChainId = 100;
-  const input = "0x4ecaba5870353805a9f068101a40e0f32ed605c6";
-  const outputChainId = 100;
-  const output = "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83";
-  const stratAddress = "0x11c8f790d252f4a49cfbff5766310873898bf5d3";
-  const payer = "0x7B56288776Cae4260770981b6BcC0f6D011C7b72";
-  const amountWei = "2000000";
-  const abi = StratV5Abi.abi;
-  await _switchNetwork(inputChainId);
-
-  const { transactionRequest } = await getQuote({
-    aggregatorId: ["LIFI"],
-    inputChainId,
-    input,
-    outputChainId,
-    output,
-    amountWei,
-    maxSlippage: 500,
-    payer,
-  });
-  console.log(transactionRequest);
-  const params = defaultAbiCoder.encode(
-    ["address", "uint256", "bytes"],
-    [transactionRequest.to, amountWei, transactionRequest.data]
-  );
-  console.log(params);
-  const allowance = 0n;
-  if (Number(amountWei.toString()) > Number(allowance.toString())) {
-    const approvalAmount = amountWei + amountWei / 500n; // 5%
-    await approve(
-      "0x78D5ECF1fBd052F7D8914DFBd7e3e5B5cD9aa6BB",
-      "50000000",
-      input
-    );
-  }
-  return await writeTx(
-    "swapSafeDeposit",
-    [input, amountWei, payer, "1000000", params],
-    stratAddress,
-    abi as any
-  );
-};
-*/

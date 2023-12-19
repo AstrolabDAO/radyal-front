@@ -45,6 +45,7 @@ const SwapRouteDetail = () => {
               4
             )} ${toToken?.symbol}`;
 
+            const convertedTool = SwaptoolTraduction[tool] ?? tool;
             const protocol: Protocol = protocolByStrippedSlug[tool];
             return (
               <li className="icon-step" key={`stepper-${id}`}>
