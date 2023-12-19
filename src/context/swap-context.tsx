@@ -103,7 +103,8 @@ const CompleteProvider = ({ children }) => {
   const swap = async () => {
     if (!fromToken || !toToken) return;
     setUpdateEstimation(false);
-    const [tr] = await executeSwap();
+    const tr = await executeSwap();
+
     setSteps(tr.steps);
   };
 
@@ -166,7 +167,7 @@ const SwapProvider = ({ children }) => {
         switchSelectMode,
         selectFromToken,
         selectToToken,
-        setFromValue: (value: number) => setFromValue(value),
+        setFromValue: (value: number) => setFromValue(value ?? 0),
         setSwapMode: (mode: SwapMode) => setSwapMode(mode),
         fromToken,
         toToken,
