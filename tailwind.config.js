@@ -30,6 +30,9 @@ Object.entries(COLORS).forEach((value) => {
   });
 });
 
+console.log("🚀 ~ file: tailwind.config.js:50 ~ themes[dark]:", themes["dark"])
+
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {

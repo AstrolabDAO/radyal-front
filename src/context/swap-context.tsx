@@ -119,6 +119,7 @@ const CompleteProvider = ({ children }) => {
 const SwapProvider = ({ children }) => {
   const { sortedBalances } = useContext(TokensContext);
   const { selectedStrategy } = useContext(StrategyContext);
+
   const [swapMode, setSwapMode] = useState<SwapMode>(SwapMode.DEPOSIT);
   const [selectTokenMode, setSelectTokenMode] = useState(false);
 
@@ -134,16 +135,16 @@ const SwapProvider = ({ children }) => {
     switch (swapMode) {
       case SwapMode.DEPOSIT:
         setFromToken(null);
-        setToToken(selectedStrategy?.token);
+        setToToken(selectedStrategy?.asset);
         break;
       case SwapMode.WITHDRAW:
-        setFromToken(selectedStrategy?.token);
+        setFromToken(selectedStrategy?.asset);
         setToToken(null);
         break;
       default:
         break;
     }
-  }, [swapMode, selectedStrategy?.token]);
+  }, [swapMode, selectedStrategy?.asset]);
 
   const switchSelectMode = useCallback(() => {
     setSelectTokenMode(!selectTokenMode);
@@ -156,10 +157,15 @@ const SwapProvider = ({ children }) => {
       selectFromToken(token);
     }
     if (!toToken) {
-      const token = selectedStrategy ? selectedStrategy.token : null;
-      selectToToken(token);
+      if (swapMode === SwapMode.DEPOSIT) {
+        const token = selectedStrategy?.share ?? null;
+        selectToToken(token);
+      } else {
+        const token = selectedStrategy?.asset ?? null;
+        selectToToken(token);
+      }
     }
-  }, [fromToken, selectedStrategy, sortedBalances, toToken]);
+  }, [fromToken, selectedStrategy, sortedBalances, swapMode, toToken]);
 
   return (
     <MinimalSwapContext.Provider

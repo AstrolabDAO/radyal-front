@@ -6,22 +6,25 @@ export const SENTIMENT_COLORS = {
   warning: "#f8b024",
 };
 const BASE_BACKGROUNDS = {
-  primary: "#191f2f",
+  primary: "#131829",
+  dark: "#1B1B1B",
 };
 export const BACKGROUNDS = {
   base: BASE_BACKGROUNDS.primary,
+  dark: BASE_BACKGROUNDS.dark,
   "base-100": BASE_BACKGROUNDS.primary,
   "base-half-transparent": hexToRgba(BASE_BACKGROUNDS.primary, 0.55),
   "base-dark-transparent": hexToRgba(BASE_BACKGROUNDS.primary, 0.75),
 };
 
 export const COLORS = {
-  primary: "#f0d816",
-  secondary: "#ffd61e",
-  tertiary: "#ffd61e",
-  background: "#191f2f",
+  primary: "#FFB800",
+  secondary: "#F6F6F6",
+  tertiary: "#FFFFFF",
+  //background: BACKGROUNDS.base,
   active: "#ffd61e",
   base: BACKGROUNDS.base,
+  dark: BASE_BACKGROUNDS.dark,
   success: SENTIMENT_COLORS.positive,
   failure: SENTIMENT_COLORS.negative,
   error: SENTIMENT_COLORS.negative,

@@ -13,12 +13,12 @@ export const multicall = (
   });
 };
 
-export const updateBalances = (
+export const getBalances = async (
   network: Network,
   contracts: any,
   address: string
 ) => {
-  return wagmiMulticalll({
+  const result = await wagmiMulticalll({
     chainId: network.id,
     contracts: contracts
       .map((contract) => [
@@ -29,29 +29,29 @@ export const updateBalances = (
         },
       ])
       .flat(1),
-  }).then(async (result) => {
-    const filteredResults = result.map((res) => res.result);
-    const balances = [];
-
-    for (let i = 0; i < filteredResults.length; i++) {
-      const balanceResult = filteredResults[i] as bigint;
-
-      if (balanceResult === 0n) continue;
-
-      const result = balanceResult as bigint;
-
-      const contract = contracts[i];
-
-      const balance: Balance = {
-        slug: `${network.slug}:${contract.symbol.toLowerCase()}`,
-        amount: result.toString(),
-      };
-
-      balances.push([balance, null]);
-      updateBalanceMapping(balance);
-    }
-
-    return balances;
   });
+
+  const filteredResults = result.map((res) => res.result);
+  const balances = [];
+
+  for (let i = 0; i < filteredResults.length; i++) {
+    const balanceResult = filteredResults[i] as bigint;
+
+    if (balanceResult === 0n) continue;
+
+    const result = balanceResult as bigint;
+
+    const contract = contracts[i];
+
+    const balance: Balance = {
+      slug: `${network.slug}:${contract.symbol.toLowerCase()}`,
+      amount: result.toString(),
+    };
+
+    balances.push([balance, null]);
+    updateBalanceMapping(balance);
+  }
+
+  return balances;
 };
-export default updateBalances;
+export default getBalances;

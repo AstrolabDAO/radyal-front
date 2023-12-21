@@ -1,14 +1,23 @@
+import { abi as AgentAbi } from "@astrolabs/registry/abis/StrategyV5Agent.json";
 import { createContext, useContext, useMemo, useState } from "react";
 import { useQuery } from "react-query";
-import { Strategy } from "~/utils/interfaces";
-import { TokensContext } from "./tokens-context";
-import { getStrategies } from "~/utils/api";
+import { useAccount } from "wagmi";
 import { ONE_MINUTE } from "~/main";
-
+import { getStrategies } from "~/utils/api";
+import { Balance, GrouppedStrategies, Strategy } from "~/utils/interfaces";
+import {
+  networkByChainId,
+  strategiesByChainId,
+  updateBalanceMapping,
+  updateStrategyMapping,
+} from "~/utils/mappings";
+import getBalances from "~/utils/multicall";
+import { TokensContext } from "./tokens-context";
 interface StrategyContextType {
   strategies: Strategy[];
   selectedStrategy: Strategy;
-  filteredStrategies: Strategy[];
+  filteredStrategies: { [slug: string]: Strategy[] };
+  balances: Balance[];
   selectStrategy: (strategy: Strategy) => void;
   search: (searchString: string) => void;
   filterByNetworks: (networks: string[]) => void;
@@ -17,13 +26,15 @@ interface StrategyContextType {
 export const StrategyContext = createContext<StrategyContextType>({
   strategies: [],
   selectedStrategy: null,
-  filteredStrategies: [],
+  filteredStrategies: {},
+  balances: [],
   selectStrategy: () => {},
   search: () => {},
   filterByNetworks: () => {},
 });
 
 export const StrategyProvider = ({ children }) => {
+  const { address, isConnected } = useAccount();
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(null);
 
   const [search, setSearch] = useState<string>("");
@@ -37,18 +48,65 @@ export const StrategyProvider = ({ children }) => {
     setSelectedStrategy(strategy);
   };
 
-  const { data: strategiesData } = useQuery("strategies", getStrategies, {
+  const { data: strategiesData, isLoading: strategiesIsLoading } = useQuery<
+    Strategy[]
+  >("strategies", getStrategies, {
     enabled: tokensIsLoaded,
     staleTime: ONE_MINUTE * 5,
   });
 
   const strategies = useMemo<Strategy[]>(() => {
     if (!strategiesData) return [];
-    return strategiesData as Strategy[];
+    return strategiesData.map((strategy) => {
+      updateStrategyMapping(strategy);
+      return strategy;
+    }) as Strategy[];
   }, [strategiesData]);
 
-  const filteredStrategies = useMemo<Strategy[]>(() => {
-    return strategies
+  const { data: strategiesBalancesData } = useQuery<Balance[]>(
+    "strategiesBalances",
+    async () => {
+      const balances = [];
+
+      try {
+        for (const key of Object.keys(strategiesByChainId)) {
+          const strategies = strategiesByChainId[key];
+
+          const calls = strategies.map((strategy) => ({
+            address: strategy.address,
+            abi: AgentAbi,
+            symbol: strategy.share.symbol,
+          }));
+
+          const network = networkByChainId[key];
+
+          const result = await getBalances(network, calls, address);
+          balances.push(result.map(([balance]) => balance));
+          return balances.flat(1);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    {
+      enabled: isConnected && !strategiesIsLoading && tokensIsLoaded,
+      staleTime: ONE_MINUTE,
+      refetchInterval: ONE_MINUTE,
+    }
+  );
+
+  const balances = useMemo(() => {
+    if (!strategiesBalancesData) return [];
+
+    strategiesBalancesData.forEach((balance: Balance) => {
+      updateBalanceMapping(balance);
+    });
+    return strategiesBalancesData;
+  }, [strategiesBalancesData]);
+
+  const filteredStrategies = useMemo<GrouppedStrategies>(() => {
+    const grouppedStrategies: GrouppedStrategies = {};
+    strategies
       .filter(({ network }) => {
         if (!networksFilter.length) return true;
         return networksFilter.includes(network.slug);
@@ -57,8 +115,20 @@ export const StrategyProvider = ({ children }) => {
         Object.values(item).some((value) =>
           value.toString().toLowerCase().includes(search.toLowerCase())
         )
-      );
+      )
+      .map((strategy) => {
+        const splittedSlug = strategy.slug.split(":")[2];
+        if (!grouppedStrategies[splittedSlug])
+          grouppedStrategies[splittedSlug] = [];
+        grouppedStrategies[splittedSlug].push(strategy);
+      });
+
+    return grouppedStrategies;
   }, [search, strategies, networksFilter]);
+  console.log(
+    "🚀 ~ file: strategy-context.tsx:128 ~ filteredStrategies ~ filteredStrategies:",
+    filteredStrategies
+  );
 
   return (
     <Provider
@@ -67,6 +137,7 @@ export const StrategyProvider = ({ children }) => {
         strategies,
         filteredStrategies,
         selectStrategy,
+        balances,
         search: (value) => setSearch(value),
         filterByNetworks: (value) => setNetworksFilter(value),
       }}

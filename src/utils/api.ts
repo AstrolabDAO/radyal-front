@@ -8,56 +8,57 @@ import {
   tokenBySlug,
   tokenPriceBycoinGeckoId,
   tokensByNetworkSlug,
+  updateStrategyMapping,
   updateTokenMapping,
 } from "./mappings";
-import updateBalances, { multicall } from "./multicall";
+import getBalances, { multicall } from "./multicall";
 import { NETWORKS } from "./web3-constants";
 import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5Agent.json";
 
-export const getBalancesFromDeFI = (
+export const getBalancesFromDeFI = async (
   address: `0x${string}`,
   network: Network
 ) => {
-  return axios
+  const balances = await axios
     .get(
       `${DeFI_API}/balances?addresses[]=${address}&chains[]=${
         deFiIdByChainId[network.id]
       }`
     )
-    .then((res) => res.data)
-    .then((data) => {
-      const tokens = data[address].tokens;
-      return tokens
-        .filter(({ amount }) => {
-          const convertedAmount = BigInt(amount);
-          return convertedAmount > 0;
-        })
-        .map((result: DeFiBalance) => {
-          const { amount, token: apiToken } = result;
-          const balance: Balance = {
-            slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
-            amount,
-          };
+    .then((res) => res.data);
 
-          const existingToken = tokenBySlug[balance.slug];
+  const tokens = balances[address].tokens;
 
-          if (!existingToken) {
-            const _token = {
-              address: apiToken.address,
-              name: apiToken.name,
-              decimals: apiToken.decimals,
-              coinGeckoId: apiToken.coingeckoId,
-              weiPerUnit: 10 ** apiToken.decimals,
-              icon: apiToken.icon,
-              network,
-              symbol: apiToken.symbol,
-              slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
-            } as Token;
-            return [balance, _token];
-          }
+  return tokens
+    .filter(({ amount }) => {
+      const convertedAmount = BigInt(amount);
+      return convertedAmount > 0;
+    })
+    .map((result: DeFiBalance) => {
+      const { amount, token: apiToken } = result;
+      const balance: Balance = {
+        slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
+        amount,
+      };
 
-          return [balance, null];
-        });
+      const existingToken = tokenBySlug[balance.slug];
+
+      if (!existingToken) {
+        const _token = {
+          address: apiToken.address,
+          name: apiToken.name,
+          decimals: apiToken.decimals,
+          coinGeckoId: apiToken.coingeckoId,
+          weiPerUnit: 10 ** apiToken.decimals,
+          icon: apiToken.icon,
+          network,
+          symbol: apiToken.symbol,
+          slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
+        } as Token;
+        return [balance, _token];
+      }
+
+      return [balance, null];
     });
 };
 
@@ -152,7 +153,7 @@ export const loadBalancesByAddress = async (address: `0x${string}`) => {
         abi: erc20Abi,
       }));
 
-      const promise = updateBalances(network, contracts, address);
+      const promise = getBalances(network, contracts, address);
 
       requests.push(promise);
     }
@@ -204,20 +205,26 @@ export const getStrategies = async () => {
             ...call,
             functionName: "decimals",
           },
+          { ...call, functionName: "name" },
         ];
       })
       .flat(1);
 
-    const result = await multicall(Number(chainId), contractsCalls);
+    const result: any[] = await multicall(Number(chainId), contractsCalls);
 
     // Add multicall result on api Data
-    networkStrategies.forEach((strategy, index) => {
-      const resultIndex = index === 0 ? index : index + 2;
-      strategiesData[strategy.index].startToken = {
-        symbol: result[resultIndex]?.result ?? null,
-        decimals: result[resultIndex + 1]?.result ?? null,
+
+    for (let i = 0; i < result.length; i += 3) {
+      const [symbol, decimals, name] = result.slice(i, i + 3);
+
+      if (!symbol?.result || !decimals?.result || !name?.result) continue;
+      const strategy = networkStrategies[i / 3];
+      strategiesData[strategy.index].stratToken = {
+        symbol: symbol?.result,
+        decimals: decimals?.result,
+        name: name?.result,
       };
-    });
+    }
   }
 
   const strategies = strategiesData
@@ -238,23 +245,39 @@ export const getStrategies = async () => {
         nativeAddress,
         denomination,
         slug,
-        startToken,
+        stratToken,
       } = strategy;
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_, symbol] = denomination.split(":");
       const network = networkBySlug[nativeNetwork];
 
       const token = tokenBySlug[`${network.slug}:${symbol}`];
+      const strategyToken: Token | null = !stratToken?.symbol
+        ? null
+        : {
+            symbol: stratToken.symbol,
+            decimals: stratToken.decimals,
+            network: network,
+            address: token?.address,
+            icon: `/tokens/${stratToken?.symbol?.toLowerCase()}.svg`,
+            slug: `${network.slug}:${stratToken?.symbol?.toLowerCase()}`,
+            weiPerUnit: 10 ** stratToken.decimals,
+            name: stratToken.name,
+          };
 
-      return {
+      if (strategyToken) updateTokenMapping(strategyToken);
+      const _strat = {
         id,
         name,
         address: nativeAddress,
         network: network,
-        startToken,
-        token,
+        share: strategyToken,
+        asset: token,
         slug,
       } as Strategy;
+      updateStrategyMapping(_strat);
+      return _strat;
     });
 
   return strategies;

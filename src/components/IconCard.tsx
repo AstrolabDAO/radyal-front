@@ -11,7 +11,6 @@ const IconCard = ({ icon }: IconCardProps) => {
     <div
       className={clsx("avatar", classes, {
         "h-8 w-8 translate-y-4 -ml-6": small && !size,
-        "mb-3": !small,
       })}
     >
       <div

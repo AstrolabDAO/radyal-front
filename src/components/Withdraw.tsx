@@ -24,7 +24,7 @@ const Withdraw = () => {
   } = useContext(SwapContext);
 
   useEffect(() => {
-    selectFromToken(selectedStrategy.token);
+    selectFromToken(selectedStrategy.asset);
   }, [selectedStrategy, selectFromToken]);
 
   const { tokens } = useContext(TokensContext);
@@ -64,7 +64,7 @@ const Withdraw = () => {
       <div className="flex gap-5 relative w-full flex-col">
         <SwapInput
           locked={true}
-          selected={selectedStrategy?.token}
+          selected={selectedStrategy?.share}
           onChange={(value) => setFromValue(value)}
         />
         <SwapInput selected={toToken} isDestination={true} />

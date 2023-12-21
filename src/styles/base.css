@@ -30,7 +30,7 @@
   line-height: 1.5;
   font-weight: 400;
 
-  background: #101c3b;
+  //background: var(--bg-b);
   color-scheme: light dark;
   color: var(--fg-0);
   //background-color: var(--bg-1);

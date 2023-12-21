@@ -1,4 +1,4 @@
-import Strategies from "~/components/Strategies";
+import Strategies from "~/components/StrategyList";
 import { StrategyProvider } from "~/context/strategy-context";
 import { SwapModalProvider } from "~/context/swap-modal-context";
 

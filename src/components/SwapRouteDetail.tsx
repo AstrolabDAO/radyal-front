@@ -46,7 +46,7 @@ const SwapRouteDetail = () => {
             )} ${toToken?.symbol}`;
 
             const convertedTool = SwaptoolTraduction[tool] ?? tool;
-            const protocol: Protocol = protocolByStrippedSlug[tool];
+            const protocol: Protocol = protocolByStrippedSlug[convertedTool];
             return (
               <li className="icon-step" key={`stepper-${id}`}>
                 <div className="icon w-50">
@@ -73,7 +73,9 @@ const SwapRouteDetail = () => {
                       )}
                       <span className="mx-2">on</span>
                       <a href={protocol?.app} target="_blank">
-                        {protocol?.name ?? SwaptoolTraduction[tool] ?? tool}
+                        {protocol?.name ??
+                          SwaptoolTraduction[tool] ??
+                          convertedTool}
                       </a>
                     </div>
                     <span className="block w-full flex justify-center">

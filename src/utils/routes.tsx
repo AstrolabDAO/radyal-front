@@ -1,5 +1,5 @@
 import SwapPage from "~/pages/SwapPage";
-import Strategies from "~/components/Strategies";
+import Strategies from "~/components/StrategyList";
 import HomePage from "~/pages/HomePage";
 
 export default [

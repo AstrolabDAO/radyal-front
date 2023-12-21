@@ -1,11 +1,16 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { StrategyContext } from "~/context/strategy-context";
-import StrategyCard from "./StrategyBox";
+import StrategyCard from "./StrategyCard";
 import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
 
-const Strategies = () => {
+const StrategyList = () => {
   const { filteredStrategies, search, filterByNetworks, strategies } =
     useContext(StrategyContext);
+
+  const grouppedStrategies = useMemo(
+    () => Object.values(filteredStrategies),
+    [filteredStrategies]
+  );
 
   return (
     <div className="strategies w-full small-container mx-auto p-2">
@@ -39,16 +44,19 @@ const Strategies = () => {
           />
         </div>
       </div>
-      <ul className="flex w-full flex-wrap">
-        {filteredStrategies.length === 0 && (
+      <ul className="flex w-full flex-wrap gap-4 mt-12">
+        {grouppedStrategies.length === 0 && (
           <div className="flex w-full justify-center">No strategies...</div>
         )}
-        {filteredStrategies.map((strategy) => (
-          <StrategyCard strategy={strategy} key={strategy.slug} />
+        {grouppedStrategies.map((strategyGroup, index) => (
+          <StrategyCard
+            strategyGroup={strategyGroup}
+            key={`strategy-group-${index}`}
+          />
         ))}
       </ul>
     </div>
   );
 };
 
-export default Strategies;
+export default StrategyList;

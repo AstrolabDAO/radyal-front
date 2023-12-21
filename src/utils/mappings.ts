@@ -29,6 +29,9 @@ export const tokensByNetworkId: { [networkId: number]: Token[] } = {};
 export const tokensByNetworkSlug: { [networkSlug: string]: Token[] } = {};
 export const coinGeckoIdBySymbol: { [symbol: string]: string } = {};
 
+export const strategiesByChainId: { [networkId: number]: Strategy[] } = {};
+export const strategyBalanceBySlug: { [slug: string]: Balance } = {};
+
 export const wagmiChainById: { [id: number]: Chain } = {};
 Object.values(wagmiChains).map((chain) => (wagmiChainById[chain.id] = chain));
 
@@ -45,6 +48,14 @@ export const updateTokenMapping = (token: Token) => {
 
   tokensByNetworkSlug[token.network.slug].push(token);
   tokensByNetworkId[token.network.id].push(token);
+};
+
+export const updateStrategyMapping = (strategy: Strategy) => {
+  if (!strategiesByChainId[strategy.network.id]) {
+    strategiesByChainId[strategy.network.id] = [];
+  }
+  if (!strategiesByChainId[strategy.network.id].includes(strategy))
+    strategiesByChainId[strategy.network.id].push(strategy);
 };
 export const updateBalanceMapping = (balance: Balance) => {
   balanceBySlug[balance.slug] = balance;

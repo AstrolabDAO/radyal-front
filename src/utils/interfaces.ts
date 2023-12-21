@@ -46,15 +46,19 @@ export interface GetRouteResult {
   toAmount: number;
 }
 
+// TODO Strategy is Token
 export interface Strategy {
-  id: number;
   name: string;
   slug: string;
   address: `0x${string}`;
   rewardsTokens: string[];
-  token: Token;
+  asset: Token;
+  share: Token;
   network: Network;
-  startToken: { symbol: string; decimals: number };
+}
+
+export interface GrouppedStrategies {
+  [slug: string]: Strategy[];
 }
 
 export interface DeFiMetadata {

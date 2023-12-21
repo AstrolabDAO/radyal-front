@@ -19,13 +19,22 @@ export const previewStrategyTokenMove = async (
   if (![SwapMode.DEPOSIT, SwapMode.WITHDRAW].includes(swapMode))
     throw new Error("Invalid mode");
 
-  const amount = BigInt(value * strategy.token.weiPerUnit);
+  const weiPerUnit =
+    swapMode === SwapMode.DEPOSIT
+      ? strategy.asset.weiPerUnit
+      : strategy.share.weiPerUnit;
+  const amount = BigInt(value * weiPerUnit);
 
   const previewAmount = (
     swapMode === SwapMode.DEPOSIT
       ? await contract.read.previewDeposit([amount])
-      : await contract.read.previewWithdraw([amount])
+      : await contract.read.previewRedeem([amount])
   ) as bigint;
+
+  const fromToken: any =
+    swapMode === SwapMode.DEPOSIT ? strategy.asset : strategy.share;
+  const toToken: any =
+    swapMode === SwapMode.DEPOSIT ? strategy.share : strategy.asset;
 
   const step: ICommonStep = {
     type: swapMode,
@@ -36,15 +45,11 @@ export const previewStrategyTokenMove = async (
       fromAmount: amount.toString(),
       toAmount: previewAmount.toString(),
     },
-    fromToken: strategy.token as any,
-    toToken: strategy.token as any,
+    fromToken,
+    toToken,
   };
 
-  const estimation =
-    Number(previewAmount) /
-    (swapMode === SwapMode.DEPOSIT
-      ? strategy.startToken.decimals
-      : strategy.token.weiPerUnit);
+  const estimation = Number(previewAmount) / strategy.asset.weiPerUnit;
 
   return {
     estimation: estimation,
@@ -59,7 +64,7 @@ export const withdraw = async ({
   address,
 }: WithdrawRequest) => {
   //await _switchNetwork(strategy.network.id);
-  const amount = value * strategy.token.weiPerUnit;
+  const amount = value * strategy.asset.weiPerUnit;
   return safeWithdraw(strategy.address, amount, address);
 };
 

@@ -1,3 +1,4 @@
+import { erc20Abi } from "abitype/abis";
 import { useCallback } from "react";
 import { useContractRead, useNetwork } from "wagmi";
 import { switchNetwork } from "wagmi/actions";

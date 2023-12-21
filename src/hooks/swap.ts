@@ -1,6 +1,6 @@
 import { useCallback, useContext, useMemo } from "react";
-import { Client, getContract, zeroAddress } from "viem";
-import { useAccount, useContractRead, usePublicClient } from "wagmi";
+import { Client, getContract } from "viem";
+import { useAccount, usePublicClient } from "wagmi";
 import { StrategyContext } from "~/context/strategy-context";
 import { MinimalSwapContext } from "~/context/swap-context";
 import { currentChain } from "~/context/web3-context";
@@ -10,11 +10,11 @@ import { previewStrategyTokenMove, withdraw } from "~/utils/flows/strategy";
 import { amountToEth, cacheHash } from "~/utils/format";
 import { WithdrawRequest } from "~/utils/interfaces.ts";
 
-import { aproveAndSwap, getSwapRoute } from "~/services/swap";
-import { useReadTx, useSwitchNetwork } from "./transaction";
 import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
 import { erc20Abi } from "abitype/abis";
 import { useQueryClient } from "react-query";
+import { aproveAndSwap, getSwapRoute } from "~/services/swap";
+import { useReadTx, useSwitchNetwork } from "./transaction";
 
 export const useExecuteSwap = () => {
   const { fromToken, toToken, fromValue, swapMode } =
@@ -31,6 +31,7 @@ export const useExecuteSwap = () => {
     if (!fromToken) return 0n;
     return BigInt(Math.round(fromValue * fromToken.weiPerUnit));
   }, [fromToken, fromValue]);
+
   const getSwapRoute = useGetSwapRoute();
   const switchNetwork = useSwitchNetwork(fromToken?.network?.id);
 
