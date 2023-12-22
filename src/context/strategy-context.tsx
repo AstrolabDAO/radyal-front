@@ -5,6 +5,7 @@ import { useAccount } from "wagmi";
 import { ONE_MINUTE } from "~/main";
 import { getStrategies } from "~/utils/api";
 import { Balance, GrouppedStrategies, Strategy } from "~/utils/interfaces";
+
 import {
   networkByChainId,
   strategiesByChainId,

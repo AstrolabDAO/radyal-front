@@ -1,4 +1,4 @@
-import Header from "./components/Header";
+import Header from "./components/layer/MainHeader.tsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { TokensProvider } from "./context/tokens-context";
