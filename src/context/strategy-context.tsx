@@ -5,6 +5,7 @@ import { useAccount } from "wagmi";
 import { ONE_MINUTE } from "~/main";
 import { getStrategies } from "~/utils/api";
 import { Balance, GrouppedStrategies, Strategy } from "~/utils/interfaces";
+
 import {
   networkByChainId,
   strategiesByChainId,
@@ -13,6 +14,7 @@ import {
 } from "~/utils/mappings";
 import getBalances from "~/utils/multicall";
 import { TokensContext } from "./tokens-context";
+
 interface StrategyContextType {
   strategies: Strategy[];
   selectedStrategy: Strategy;

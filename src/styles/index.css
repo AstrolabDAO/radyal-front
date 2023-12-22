@@ -39,8 +39,12 @@ body {
 #root {
   min-height: 100vh;
 }
-.title {
+.title,
+.gilroy {
   font-family: "Gilroy", sans-serif;
+}
+
+.title {
   font-weight: 600;
 }
 
