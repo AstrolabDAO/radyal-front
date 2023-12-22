@@ -1,0 +1,4 @@
+.background-icon-blender {
+  filter: grayscale(1);
+  mix-blend-mode: overlay;
+}
