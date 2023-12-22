@@ -8,8 +8,6 @@ import ReactSelect, {
 import { BACKGROUNDS } from "~/styles/constants";
 import { Network } from "~/utils/interfaces";
 
-
-
 const Option = ({ ...props }: OptionProps) => {
   const { network } = props.data;
   return (
@@ -25,11 +23,7 @@ const Option = ({ ...props }: OptionProps) => {
   );
 };
 
-
-
 const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
-  
-
   const styleOptions: StylesConfig<NetworkSelectData> = {
     control: (baseStyles: any) => {
       return {

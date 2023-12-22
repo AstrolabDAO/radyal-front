@@ -10,7 +10,7 @@ const IconCard = ({ icon }: IconCardProps) => {
   return (
     <div
       className={clsx("avatar", classes, {
-        "h-8 w-8 translate-y-4 -ml-6": small && !size,
+        "h-8 w-8 translate-y-4": small && !size,
       })}
     >
       <div
