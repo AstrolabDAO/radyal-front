@@ -28,7 +28,10 @@ const Header = () => {
               >
                 {shortenAddress(address.toLowerCase())}
               </Button>
-              <Button onClick={() => disconnect()}>Logout</Button>
+              <Button
+                className="hover:text-primary"
+                onClick={() => disconnect() }>Logout
+              </Button>
             </>
           )}
         </div>

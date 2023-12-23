@@ -1,7 +1,9 @@
-import { Icon } from "~/utils/interfaces";
-import IconCard from "./IconCard";
-import { ButtonHTMLAttributes } from "react";
 import clsx from "clsx";
+import { ButtonHTMLAttributes } from "react";
+
+import IconCard from "./IconCard";
+import { Icon } from "~/utils/interfaces";
+
 interface Props extends ButtonHTMLAttributes<HTMLDivElement> {
   icons?: Icon[];
 }

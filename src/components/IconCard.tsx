@@ -10,13 +10,13 @@ const IconCard = ({ icon }: IconCardProps) => {
   return (
     <div
       className={clsx("avatar", classes, {
-        "h-8 w-8 translate-y-4": small && !size,
+        "h-8 w-8 translate-y-10 -ms-5": small && !size,
       })}
     >
       <div
         style={{ width: size?.width, height: size?.height }}
         className={clsx({
-          "w-10 h-10": !small && !size,
+          "w-16 h-16": !small && !size,
           "w-8 h-8 border-none ": small && !size,
         })}
       >
