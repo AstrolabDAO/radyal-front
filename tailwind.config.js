@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 import * as daisyui from "daisyui";
 import * as themes from "daisyui/src/theming/themes";
-import { COLORS, BACKGROUNDS } from "./src/styles/constants";
+import { COLORS } from "./src/styles/constants";
 
 import pSBCLib from "shade-blend-color";
 
@@ -29,13 +29,13 @@ Object.entries(COLORS).forEach((value) => {
     //PALETTE_EXPORTED[key].push(pSBC(offset / 3500, color,"#ffffff"))
   });
 });
-
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      colors: {
-       ...PALETTE
+      colors: PALETTE,
+      fontSize: {
+        "2xs": ".55rem",
       },
     },
   },
@@ -45,10 +45,6 @@ export default {
       {
         dark: {
           ...themes.default.dark,
-          primary: PALETTE["primary"],
-          "primary-content": BACKGROUNDS["base"],
-          "base-100": PALETTE["base-100"],
-          "neutral": PALETTE["neutral"]
         },
       },
     ], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
