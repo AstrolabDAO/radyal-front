@@ -9,12 +9,12 @@ const StrategyCardAPY = ({ apy }: StrategyCardAPYProps) => {
         FOR
       </div>
       <div className="flex flex-row font-bold">
-        <div className="text-3xl"> {apy} </div>
-        <div className="flex flex-col">
-          <span className="text-1xl">
+        <div className="text-3xl mt-auto"> {apy} </div>
+        <div className="flex flex-col text-center">
+          <span className="text-1xl strategy-card-data-unit">
             %
           </span>
-          <span className="text-xs -mt-2">
+          <span className="text-2xs strategy-card-data-label">
             APY
           </span>
         </div>

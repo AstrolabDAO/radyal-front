@@ -29,20 +29,20 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   const [title, subtitle]  = name.replace("Astrolab ", "").split(" ");
 
   const { openModal } = useContext(SwapModalContext);
-  const { selectStrategy, selectedStrategy } = useContext(StrategyContext);
+  const { selectStrategy, selectedStrategy, selectGroup } = useContext(StrategyContext);
 
-  const openModalStrategy = async () => {
+  const openModalStrategy = () => {
     selectStrategy(strategy);
-    if (!isConnected) {
-      await web3Modal.open();
-    }
-    openModal(<SwapModal />);
+    selectGroup(strategyGroup);
+    if (!isConnected) web3Modal.open().then(() => openModal(<SwapModal />));
+    else openModal(<SwapModal />);
   }
 
   return (
     <div
       className={clsx(
-        "card bg-dark h-48 basis-1/3 relative rounded-3xl",
+        "card bg-dark h-48 basis-1/3 relative rounded-3xl cursor-pointer",
+        "hover:bg-primary hover:text-dark hover:shadow hover:shadow-primary",
         { active: selectedStrategy?.slug === strategy.slug }
       )}
       onClick={ openModalStrategy }
