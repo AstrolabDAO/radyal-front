@@ -5,7 +5,7 @@ import { existsSync, readFileSync } from "fs";
 import * as dotenv from "dotenv";
 import postCssConfig from "./postcss.config";
 import svgr from "vite-plugin-svgr";
-import { PALETTE } from "./tailwind.config";
+// import { PALETTE } from "./tailwind.config";
 
 const envPath = ".env";
 
@@ -27,7 +27,7 @@ export default ({ mode }) => {
       global: "globalThis",
       __version__: JSON.stringify(process.env.npm_package_version),
       "process.env": appEnv,
-      COLORS_PALETTE: PALETTE,
+      // COLORS_PALETTE: PALETTE,
     },
     resolve: {
       alias: [

@@ -25,6 +25,6 @@
       "@/static/*": ["./static/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "postcss.config.ts"],
   //"references": [{ "path": "./tsconfig.node.json" }]
 }

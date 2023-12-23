@@ -30,11 +30,8 @@
   line-height: 1.5;
   font-weight: 400;
 
-  //background: var(--bg-b);
   color-scheme: light dark;
   color: var(--fg-0);
-  //background-color: var(--bg-1);
-  //background-color: @apply;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

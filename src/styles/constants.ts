@@ -8,9 +8,11 @@ export const SENTIMENT_COLORS = {
 const BASE_BACKGROUNDS = {
   primary: "#131829",
   dark: "#1B1B1B",
+  home: "#1C1C1C",
 };
+
 export const BACKGROUNDS = {
-  base: BASE_BACKGROUNDS.primary,
+  base: BASE_BACKGROUNDS.home,
   dark: BASE_BACKGROUNDS.dark,
   "base-100": BASE_BACKGROUNDS.primary,
   "base-half-transparent": hexToRgba(BASE_BACKGROUNDS.primary, 0.55),
