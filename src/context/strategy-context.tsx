@@ -12,25 +12,30 @@ import {
   updateBalanceMapping,
   updateStrategyMapping,
 } from "~/utils/mappings";
+
 import getBalances from "~/utils/multicall";
 import { TokensContext } from "./tokens-context";
 
 interface StrategyContextType {
   strategies: Strategy[];
+  selectedGroup: Strategy[],
   selectedStrategy: Strategy;
   filteredStrategies: { [slug: string]: Strategy[] };
   balances: Balance[];
   selectStrategy: (strategy: Strategy) => void;
   search: (searchString: string) => void;
+  selectGroup: (strategies: Strategy[]) => void;
   filterByNetworks: (networks: string[]) => void;
 }
 
 export const StrategyContext = createContext<StrategyContextType>({
   strategies: [],
+  selectedGroup: [],
   selectedStrategy: null,
   filteredStrategies: {},
   balances: [],
   selectStrategy: () => {},
+  selectGroup : () => {},
   search: () => {},
   filterByNetworks: () => {},
 });
@@ -38,6 +43,7 @@ export const StrategyContext = createContext<StrategyContextType>({
 export const StrategyProvider = ({ children }) => {
   const { address, isConnected } = useAccount();
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(null);
+  const [selectedGroup, setSelectedGroup] = useState<Strategy[]>([]);
 
   const [search, setSearch] = useState<string>("");
   const [networksFilter, setNetworksFilter] = useState<string[]>([]);
@@ -47,6 +53,10 @@ export const StrategyProvider = ({ children }) => {
   const selectStrategy = (strategy: Strategy) => {
     setSelectedStrategy(strategy);
   };
+
+  const selectGroup = (strategies: Strategy[]) => {
+    setSelectedGroup(strategies);
+  }
 
   const { data: strategiesData, isLoading: strategiesIsLoading } = useQuery<
     Strategy[]
@@ -137,9 +147,12 @@ export const StrategyProvider = ({ children }) => {
         strategies,
         filteredStrategies,
         selectStrategy,
+        selectGroup,
         balances,
+        selectedGroup,
         search: (value) => setSearch(value),
         filterByNetworks: (value) => setNetworksFilter(value),
+
       }}
     >
       {children}

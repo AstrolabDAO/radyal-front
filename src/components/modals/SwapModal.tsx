@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useContext, useState } from "react";
 import { SwapContext } from "~/context/swap-context";
-import Deposit from "../Deposit";
+import DepositTab from "../swap/DepositTab";
 import Withdraw from "../Withdraw";
 import { SwapMode } from "~/utils/constants";
 
@@ -13,7 +13,7 @@ const SwapModalContent = () => {
   const tabs = {
     deposit: {
       title: "Deposit",
-      component: <Deposit />,
+      component: <DepositTab />,
       swapMode: SwapMode.DEPOSIT,
     },
     withdraw: {
@@ -26,7 +26,7 @@ const SwapModalContent = () => {
   const { selectTokenMode, setSwapMode } = useContext(SwapContext);
 
   return (
-    <div className="p-4">
+    <div className="p-6 bg-dark">
       {!selectTokenMode && (
         <div role="tablist" className="tabs tabs-bordered inline-block mb-4">
           {Object.entries(tabs)
