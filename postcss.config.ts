@@ -15,7 +15,6 @@ const CSS_VARIABLES = {
 Object.entries({...COLORS,...SIZES}).map(([key,value]) => {
   CSS_VARIABLES[`--${key}`] = value
 })
-
 export default {
   syntax: "postcss-scss",
   plugins: [
