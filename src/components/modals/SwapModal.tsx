@@ -1,7 +1,6 @@
 import clsx from "clsx";
 
 import { useContext, useState } from "react";
-
 import { SwapMode } from "~/utils/constants";
 import { SwapContext } from "~/context/swap-context";
 
