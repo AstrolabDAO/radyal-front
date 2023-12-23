@@ -12,9 +12,12 @@ const StrategyCardIcons = ({ strategyGroup }: StrategyCardIconsProps) => {
       <div
         className={"flex flex-row border border-solid border-gray-500 rounded-3xl"}
       >
-        { strategyGroup.map((strategy) => {
+        { strategyGroup.map((strategy, index) => {
           return (
-            <div className="flex py-1 mx-1">
+            <div
+              key={`${strategy.network.id}-${index}`}
+              className="flex py-1 mx-1"
+            >
               <IconCard
                 icon={{
                   url: strategy.network.icon,

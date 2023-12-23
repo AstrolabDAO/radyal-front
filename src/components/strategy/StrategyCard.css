@@ -2,3 +2,11 @@
   filter: grayscale(1);
   mix-blend-mode: overlay;
 }
+
+.strategy-card-data-unit {
+  transform: scale(1.35,1);
+  margin-top: 0.1rem;
+}
+.strategy-card-data-label {
+  margin-top: -0.4rem;
+}
