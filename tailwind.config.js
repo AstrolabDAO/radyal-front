@@ -30,14 +30,13 @@ Object.entries(COLORS).forEach((value) => {
   });
 });
 
-console.log("🚀 ~ file: tailwind.config.js:50 ~ themes[dark]:", themes["dark"])
-
-
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      colors: PALETTE,
+      colors: {
+       ...PALETTE
+      },
     },
   },
   plugins: [daisyui],
@@ -46,8 +45,10 @@ export default {
       {
         dark: {
           ...themes["dark"],
-          ...PALETTE,
-          ...BACKGROUNDS,
+          primary: PALETTE["primary"],
+          "primary-content": BACKGROUNDS["base"],
+          "base-100": PALETTE["base-100"],
+          "neutral": PALETTE["neutral"]
         },
       },
     ], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]

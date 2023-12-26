@@ -23,9 +23,11 @@ const baseValues = {
   selectToToken: () => {},
   setFromValue: () => {},
   setSwapMode: () => {},
+  setCanSwap: () => {},
   fromToken: null,
   toToken: null,
   fromValue: null,
+  canSwap: false,
   swapMode: SwapMode.DEPOSIT,
   selectTokenMode: false,
 };
@@ -41,7 +43,8 @@ const SwapContext = createContext<SwapContext>({
 
 const CompleteProvider = ({ children }) => {
   const baseContext = useContext(MinimalSwapContext);
-  const { fromToken, toToken, fromValue, swapMode } = baseContext;
+  const { fromToken, toToken, fromValue, swapMode, canSwap, setCanSwap } =
+    baseContext;
 
   const [toValue, setToValue] = useState<number>(null);
   const [steps, setSteps] = useState<ICommonStep[]>([]);
@@ -57,14 +60,14 @@ const CompleteProvider = ({ children }) => {
 
   const { data: estimation } = useQuery(
     cacheHash("estimate", swapMode, fromToken, toToken, fromValue),
-    estimateRoute,
+    () => estimateRoute(),
     {
       onSuccess() {
+        console.log("Ca success putian");
         setEstimationOnProgress(false);
       },
-      onError(e) {
-        console.error(e);
-        setEstimationOnProgress(false);
+      onError() {
+        console.log("JE SUIS UNE ERREUR");
       },
       staleTime: 1000 * 15,
       cacheTime: 1000 * 15,
@@ -84,12 +87,14 @@ const CompleteProvider = ({ children }) => {
     if (!estimation) {
       setToValue(estimationOnProgress ? null : 0);
       setSteps([]);
+      setCanSwap(false);
       return;
     }
 
     setToValue(estimation.estimation);
     setSteps(estimation.steps);
-  }, [estimation, estimationOnProgress]);
+    setCanSwap(true);
+  }, [estimation, estimationOnProgress, setCanSwap]);
 
   useEffect(() => {
     if (!fromValue) return;
@@ -101,7 +106,7 @@ const CompleteProvider = ({ children }) => {
   }, [fromValue]);
 
   const swap = async () => {
-    if (!fromToken || !toToken) return;
+    if (!fromToken || !toToken || !canSwap) return;
     setUpdateEstimation(false);
     const tr = await executeSwap();
 
@@ -127,6 +132,8 @@ const SwapProvider = ({ children }) => {
 
   const [fromToken, setFromToken] = useState<Token>(null);
   const [toToken, setToToken] = useState<Token>(null);
+
+  const [canSwap, setCanSwap] = useState(false);
 
   const selectFromToken = (token: Token) => setFromToken(token);
   const selectToToken = (token: Token) => setToToken(token);
@@ -156,14 +163,12 @@ const SwapProvider = ({ children }) => {
 
       selectFromToken(token);
     }
-    if (!toToken) {
-      if (swapMode === SwapMode.DEPOSIT) {
-        const token = selectedStrategy?.share ?? null;
-        selectToToken(token);
-      } else {
-        const token = selectedStrategy?.asset ?? null;
-        selectToToken(token);
-      }
+    if (swapMode === SwapMode.DEPOSIT) {
+      const token = selectedStrategy?.share ?? null;
+      selectToToken(token);
+    } else {
+      const token = selectedStrategy?.asset ?? null;
+      selectToToken(token);
     }
   }, [fromToken, selectedStrategy, sortedBalances, swapMode, toToken]);
 
@@ -174,11 +179,13 @@ const SwapProvider = ({ children }) => {
         selectFromToken,
         selectToToken,
         setFromValue: (value: number) => setFromValue(value ?? 0),
+        setCanSwap: (value: boolean) => setCanSwap(value),
         setSwapMode: (mode: SwapMode) => setSwapMode(mode),
         fromToken,
         toToken,
         fromValue,
         swapMode,
+        canSwap,
         selectTokenMode,
       }}
     >
@@ -193,10 +200,12 @@ interface MinimalSwapContextType {
   selectToToken: (token: Token) => void;
   setFromValue: (value: number) => void;
   setSwapMode: (mode: SwapMode) => void;
+  setCanSwap: (value: boolean) => void;
   fromToken: Token;
   toToken: Token;
   fromValue: number;
   swapMode: SwapMode;
+  canSwap: boolean;
   selectTokenMode: boolean;
 }
 

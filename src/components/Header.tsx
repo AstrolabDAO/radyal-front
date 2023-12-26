@@ -4,7 +4,6 @@ import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 import { shortenAddress } from "~/utils/format";
 import Button from "./Button";
-import Logo from "~/assets/logo.svg?react";
 
 const Header = () => {
   const { address, isConnected } = useAccount();
@@ -15,7 +14,7 @@ const Header = () => {
       <div className="container mx-auto">
         <div className="relative flex w-full">
           <div className="logo h-full relative block">
-            <Logo className="flex w-64 fill-white" />
+            <img src="/images/logo.svg" className="flex w-64 fill-white" />
           </div>
           <nav className="flex w-full justify-end items-center mr-6">
             <ul className="flex font-bold text-xl">

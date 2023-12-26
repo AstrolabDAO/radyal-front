@@ -49,7 +49,10 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
             >
               {strategyGroup.map((strategy) => {
                 return (
-                  <li className="flex items-center p-2">
+                  <li
+                    key={strategy.network.id}
+                    className="flex items-center p-2"
+                  >
                     <IconCard
                       icon={{
                         url: strategy.network.icon,
