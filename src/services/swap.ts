@@ -15,7 +15,7 @@ import { Token } from "~/utils/interfaces";
 
 import { PublicClient } from "wagmi";
 import { approve } from "./strategy";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 export const depositCallData = (address: string, toAmount: string) => {
   return generateCallData({
@@ -125,7 +125,7 @@ export const aproveAndSwap = async (
         hash: approveHash,
       });
       toast.promise(approvePending, {
-        pending: "Approve is pending...",
+        loading: "Approve is pending...",
         success: "Approve transaction successful",
         error: "approve reverted rejected 🤯",
       });

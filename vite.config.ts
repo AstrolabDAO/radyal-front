@@ -22,6 +22,7 @@ export default ({ mode }) => {
       },
     },
     plugins: [react(), svgr()],
+    publicDir: "./static",
     define: {
       global: "globalThis",
       __version__: JSON.stringify(process.env.npm_package_version),
@@ -29,7 +30,11 @@ export default ({ mode }) => {
       COLORS_PALETTE: PALETTE,
     },
     resolve: {
-      alias: [{ find: "~", replacement: resolve(__dirname, "./src") }],
+      alias: [
+        { find: "@/static", replacement: resolve(__dirname, "./static") },
+        { find: "~", replacement: resolve(__dirname, "./src") },
+        { find: "@", replacement: resolve(__dirname, "./src") },
+      ],
     },
   });
 };

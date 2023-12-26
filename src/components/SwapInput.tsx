@@ -75,7 +75,8 @@ const SwapInput = ({
                 onChange={({ target }) => {
                   const replace = target.value
                     .replace(/[^0-9.,]/g, "")
-                    .replace(",", ".");
+                    .replace(",", ".")
+                    .replace(/^[.]$/, "0.");
 
                   setDepositValue(replace);
                   onChange(Number(replace));

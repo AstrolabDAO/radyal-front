@@ -1,7 +1,5 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 
-import "react-toastify/dist/ReactToastify.css";
-
 import { useQuery } from "react-query";
 import { WagmiConfig, useNetwork, useWalletClient } from "wagmi";
 import { getNetworks, getProtocols } from "~/utils/api.ts";
@@ -59,7 +57,7 @@ const Web3Provider = ({ children }) => {
         landing,
         name,
         slug,
-        icon: `/protocols/${slug}.svg`,
+        icon: `/images/protocols/${slug}.svg`,
       };
       protocolBySlug[slug] = protocol;
       protocolByStrippedSlug[stripSlug(slug)] = protocol;
@@ -83,9 +81,13 @@ const Web3Provider = ({ children }) => {
 
     const convertedNetworks = NETWORKS.map((n) => {
       const network = networkBySlug[n];
-      const icon = `/networks/${clearNetworkTypeFromSlug(network.slug)}.svg`;
+      const icon = `/images/networks/${clearNetworkTypeFromSlug(
+        network.slug
+      )}.svg`;
       chainImages[network.id] = icon;
-      network.icon = `/networks/${clearNetworkTypeFromSlug(network.slug)}.svg`;
+      network.icon = `/images/networks/${clearNetworkTypeFromSlug(
+        network.slug
+      )}.svg`;
 
       return network ? networkToWagmiChain(network) : null;
     });

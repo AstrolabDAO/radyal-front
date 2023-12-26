@@ -125,10 +125,6 @@ export const StrategyProvider = ({ children }) => {
 
     return grouppedStrategies;
   }, [search, strategies, networksFilter]);
-  console.log(
-    "🚀 ~ file: strategy-context.tsx:128 ~ filteredStrategies ~ filteredStrategies:",
-    filteredStrategies
-  );
 
   return (
     <Provider

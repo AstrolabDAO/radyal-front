@@ -115,7 +115,7 @@ export const getTokens = async () => {
             symbol,
             decimals: scale,
             weiPerUnit: 10 ** scale,
-            icon: `/tokens/${cleanSymbol.toLowerCase()}.svg`,
+            icon: `/images/tokens/${cleanSymbol.toLowerCase()}.svg`,
             network,
             slug: `${network.slug}:${symbol.toLocaleLowerCase()}`,
             coinGeckoId,

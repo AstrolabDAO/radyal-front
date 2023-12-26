@@ -7,8 +7,9 @@ const ModalLayout = ({ children, title, actions }: ModalLayoutProps) => {
       {actions && (
         <div className="py-3 sm:flex sm:flex-row-reverse">
           <div className="flex w-full justify-center">
-            {actions.map(({ label, onClick }, index) => (
+            {actions.map(({ label, onClick, disabled }, index) => (
               <button
+                disabled={disabled}
                 key={label + index}
                 className="btn btn-primary w-full"
                 onClick={onClick}
@@ -23,8 +24,9 @@ const ModalLayout = ({ children, title, actions }: ModalLayoutProps) => {
   );
 };
 
-interface ModalAction {
+export interface ModalAction {
   label: string;
+  disabled: boolean;
   onClick: () => void;
 }
 interface ModalLayoutProps {

@@ -3,13 +3,14 @@ import { SwapContext } from "~/context/swap-context";
 import { SwapModalContext } from "~/context/swap-modal-context";
 import { TokensContext } from "~/context/tokens-context";
 
-import ModalLayout from "./layout/ModalLayout";
+import ModalLayout, { ModalAction } from "./layout/ModalLayout";
 import SelectTokenModal from "./modals/SelectTokenModal";
 import SwapInput from "./SwapInput";
 import SwapRouteDetail from "./SwapRouteDetail";
 import SwapStepsModal from "./modals/SwapStepsModal";
 import { tokensIsEqual } from "~/utils";
 import { SelectTokenModalMode } from "~/utils/constants";
+import toast from "react-hot-toast";
 
 const Deposit = () => {
   const {
@@ -21,7 +22,7 @@ const Deposit = () => {
     switchSelectMode,
   } = useContext(SwapContext);
 
-  const { setFromValue, swap } = useContext(SwapContext);
+  const { setFromValue, swap, canSwap } = useContext(SwapContext);
 
   const { openModal } = useContext(SwapModalContext);
 
@@ -43,10 +44,12 @@ const Deposit = () => {
     switchSelectMode,
   ]);
 
-  const modalActions = [
+  const modalActions: ModalAction[] = [
     {
       label: "Deposit",
+      disabled: !canSwap,
       onClick: async () => {
+        toast("test");
         if (!tokensIsEqual(fromToken, toToken)) {
           swap();
           openModal(<SwapStepsModal />);

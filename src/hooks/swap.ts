@@ -97,41 +97,37 @@ export const useEstimateRoute = () => {
 
   const previewStrategyTokenMove = usePreviewStrategyTokenMove();
   return useCallback(async () => {
-    try {
-      const interactionEstimation =
-        tokensIsEqual(fromToken, toToken) || swapMode === SwapMode.WITHDRAW
-          ? await previewStrategyTokenMove()
-          : null;
+    const interactionEstimation =
+      tokensIsEqual(fromToken, toToken) || swapMode === SwapMode.WITHDRAW
+        ? await previewStrategyTokenMove()
+        : null;
 
-      if (tokensIsEqual(fromToken, toToken)) {
-        return interactionEstimation;
-      }
-      const result = await getSwapRoute();
-
-      if (!result) throw new Error("route not found from Swapper 🤯");
-
-      const { steps } = result[0];
-      const lastStep = steps[steps.length - 1];
-
-      const estimationStep =
-        lastStep.type === "custom" ? steps[steps.length - 2] : lastStep;
-
-      const receiveEstimation = amountToEth(
-        estimationStep?.estimate?.toAmount,
-        estimationStep?.toToken?.decimals
-      );
-
-      return {
-        estimation: receiveEstimation,
-        steps: !interactionEstimation
-          ? steps
-          : [...interactionEstimation.steps, ...steps],
-        request: result[0],
-      };
-    } catch (error) {
-      console.error(error);
-      return null;
+    if (tokensIsEqual(fromToken, toToken)) {
+      return interactionEstimation;
     }
+    const result = await getSwapRoute();
+
+    if (!result) {
+      throw new Error("route not found from Swapper 🤯");
+    }
+    const { steps } = result[0];
+    const lastStep = steps[steps.length - 1];
+
+    const estimationStep =
+      lastStep.type === "custom" ? steps[steps.length - 2] : lastStep;
+
+    const receiveEstimation = amountToEth(
+      estimationStep?.estimate?.toAmount,
+      estimationStep?.toToken?.decimals
+    );
+
+    return {
+      estimation: receiveEstimation,
+      steps: !interactionEstimation
+        ? steps
+        : [...interactionEstimation.steps, ...steps],
+      request: result[0],
+    };
   }, [fromToken, getSwapRoute, previewStrategyTokenMove, swapMode, toToken]);
 };
 
