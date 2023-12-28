@@ -36,7 +36,6 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
 
   const { isConnected } = useAccount({ onConnect: handleConnect });
 
-
   const [strategy] = strategyGroup;
   const { share: { name } } = strategy;
   const [title, subtitle]  = name.replace("Astrolab ", "").split(" ");
@@ -60,7 +59,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   return (
     <div
       className={clsx(
-        "card bg-dark h-48 basis-1/3 relative rounded-3xl cursor-pointer rainbow-effect",
+        "card bg-dark h-48 basis-1/3 relative rounded-3xl cursor-pointer",
         "hover:bg-primary hover:text-dark hover:shadow hover:shadow-primary",
         { active: selectedStrategy?.slug === strategy.slug }
       )}
@@ -68,7 +67,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
     >
       <div className="absolute inset-0 flex items-center ms-4 z-0 background-icon-blender">
         <img
-          src={strategy.asset.icon}
+          src={ strategy.asset.icon }
           className="h-32 w-32"
         />
       </div>
@@ -76,14 +75,14 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
         className="absolute rounded-3xl inset-0 flex items-center justify-end z-0 background-icon-blender overflow-hidden"
       >
         <img
-          src={strategy.network.icon}
+          src={ strategy.network.icon }
           className="h-52 w-52 -mr-16 opacity-25"
         />
       </div>
       <div className="card-body py-3 px-4 z-10">
         <div className="flex flex-row">
           <div className="flex flex-col m-0 p-0 gilroy">
-            <div className="font-bold italic text-4xl -mb-1"> { title } </div>
+            <div className="font-bold italic uppercase text-4xl -mb-1"> { title } </div>
             <div className="font-light"> { subtitle } </div>
           </div>
           <StrategyCardIcons strategyGroup={ strategyGroup } />

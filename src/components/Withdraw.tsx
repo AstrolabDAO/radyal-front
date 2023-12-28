@@ -61,7 +61,6 @@ const Withdraw = () => {
         setLocked(true);
         try {
           await withdraw(toValue);
-          const result = await withdraw(toValue);
           toast.success("Withdrawal successful");
           if (!tokensIsEqual(fromToken, toToken)) {
             swap();
