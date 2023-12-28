@@ -1,9 +1,12 @@
 import clsx from "clsx";
+
 import { useContext, useState } from "react";
+
+import { SwapMode } from "~/utils/constants";
 import { SwapContext } from "~/context/swap-context";
+
 import DepositTab from "../swap/DepositTab";
 import Withdraw from "../Withdraw";
-import { SwapMode } from "~/utils/constants";
 
 const SwapModal = () => {
   return <SwapModalContent />;
@@ -12,43 +15,49 @@ const SwapModal = () => {
 const SwapModalContent = () => {
   const tabs = {
     deposit: {
-      title: "Deposit",
       component: <DepositTab />,
-      swapMode: SwapMode.DEPOSIT,
     },
     withdraw: {
-      title: "Withdraw",
       component: <Withdraw />,
-      swapMode: SwapMode.WITHDRAW,
     },
   };
   const [selectedTab, setSelectedTab] = useState("deposit");
   const { selectTokenMode, setSwapMode } = useContext(SwapContext);
 
   return (
-    <div className="p-6 bg-dark">
+    <div className="bg-dark px-6 pt-6">
       {!selectTokenMode && (
-        <div role="tablist" className="tabs tabs-bordered inline-block mb-4">
-          {Object.entries(tabs)
-            .sort(([key]) => (key === selectedTab ? -1 : 0))
-            .map(([key, { title, swapMode }]) => (
-              <a
-                key={key}
-                role="tab"
-                className={clsx("tab text-xl", {
-                  "tab-active": key === selectedTab,
-                })}
-                onClick={() => {
-                  setSelectedTab(key);
-                  setSwapMode(swapMode);
-                }}
-              >
-                {title}
-              </a>
-            ))}
+        <div className="flex flex-row justify-between px-3">
+          <div
+            className={
+              clsx("text-2xl cursor-pointer",
+              { "font-bold border-white border-b border-solid	": selectedTab === "deposit" })
+            }
+            onClick={() => {
+              setSelectedTab('deposit');
+              setSwapMode(SwapMode.DEPOSIT);
+            }}
+          >
+            DEPOSIT
+          </div>
+          <div>
+            or
+          </div>
+          <div
+            className={
+              clsx("text-2xl cursor-pointer",
+              { "font-bold border-white border-b border-solid	": selectedTab === "withdraw" })
+            }
+            onClick={() => {
+              setSelectedTab('withdraw');
+              setSwapMode(SwapMode.WITHDRAW);
+            }}
+          >
+            WITHDRAW
+          </div>
         </div>
       )}
-      {tabs[selectedTab].component}
+      { tabs[selectedTab].component }
     </div>
   );
 };

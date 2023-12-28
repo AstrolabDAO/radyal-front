@@ -30,7 +30,7 @@ const Modal = () => {
       <Dialog
         open={visible}
         as="div"
-        className="relative z-10"
+        className="relative z-20"
         initialFocus={cancelButtonRef}
         onClose={onClose}
       >
@@ -60,8 +60,8 @@ const Modal = () => {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-y-auto rounded-lg text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl overflow-auto max-h-80vh backdrop-blur-medium bg-base-dark-transparent">
-                <div className="relative z-50">
+              <Dialog.Panel className="transform overflow-y-auto rounded-lg shadow-xl transition-all backdrop-blur-medium bg-base-dark-transparent">
+                <div className="relative text-left z-50 max-h-screen md:max-w-xl max-h-90">
                   <button
                     className="right-0 top-0 absolute p-2 z-50"
                     onClick={onClose}

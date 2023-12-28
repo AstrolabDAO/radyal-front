@@ -12,9 +12,9 @@ const Header = () => {
 
   return (
     <header>
-      <div className="fixed navbar bg-base-100 z-10">
+      <div className="fixed navbar z-20">
         <div className="navbar-start">
-          <Logo className="flex w-64 fill-white" />
+          <Logo className="flex w-32 md:w-64 fill-white" />
         </div>
         <div className="navbar-end">
           { !isConnected && (
@@ -29,6 +29,7 @@ const Header = () => {
                 {shortenAddress(address.toLowerCase())}
               </Button>
               <Button
+                primary={false}
                 className="hover:text-primary"
                 onClick={() => disconnect() }>Logout
               </Button>
