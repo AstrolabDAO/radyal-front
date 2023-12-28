@@ -5,7 +5,7 @@ import { useContext, useState } from "react";
 import { SwapMode } from "~/utils/constants";
 import { SwapContext } from "~/context/swap-context";
 
-import DepositTab from "../swap/DepositTab";
+import DepositTab from "~/components/swap/DepositTab";
 import Withdraw from "../Withdraw";
 
 const SwapModal = () => {
@@ -21,43 +21,64 @@ const SwapModalContent = () => {
       component: <Withdraw />,
     },
   };
+
+  const [animationEnter, setAnimationEnter] = useState<'left' | 'right'>(null)
+  const [animationLeave, setAnimationLeave] = useState<'left' | 'right'>(null)
   const [selectedTab, setSelectedTab] = useState("deposit");
   const { selectTokenMode, setSwapMode } = useContext(SwapContext);
 
+  function handleTransition(selectedTab: string) {
+    const animationKey = selectedTab === "deposit" ? "left" : "right";
+    const swapMode = selectedTab === "deposit" ? SwapMode.DEPOSIT : SwapMode.WITHDRAW;
+    setAnimationEnter(null);
+    setAnimationLeave(animationKey);
+    setTimeout(() => {
+      setAnimationEnter(animationKey);
+      setSelectedTab(selectedTab);
+      setSwapMode(swapMode);
+      setAnimationLeave(null);
+    }, 500);
+  }
+
   return (
-    <div className="bg-dark px-6 pt-6">
+    <div className="bg-dark pb-4 pt-6 px-3">
       {!selectTokenMode && (
-        <div className="flex flex-row justify-between px-3">
+        <div className="flex flex-row justify-between px-3 ">
           <div
             className={
-              clsx("text-2xl cursor-pointer",
-              { "font-bold border-white border-b border-solid	": selectedTab === "deposit" })
+              clsx("text-3xl cursor-pointer",
+              { "font-bold border-white text-primary": selectedTab === "deposit" })
             }
-            onClick={() => {
-              setSelectedTab('deposit');
-              setSwapMode(SwapMode.DEPOSIT);
-            }}
+            onClick={() => { handleTransition('deposit') }}
           >
             DEPOSIT
           </div>
-          <div>
+          <div className="my-auto">
             or
           </div>
           <div
             className={
               clsx("text-2xl cursor-pointer",
-              { "font-bold border-white border-b border-solid	": selectedTab === "withdraw" })
+              { "font-bold border-white text-primary": selectedTab === "withdraw" })
             }
-            onClick={() => {
-              setSelectedTab('withdraw');
-              setSwapMode(SwapMode.WITHDRAW);
-            }}
+            onClick={() => { handleTransition('withdraw') }}
           >
             WITHDRAW
           </div>
         </div>
       )}
-      { tabs[selectedTab].component }
+      <div
+        key={ selectedTab }
+        className={
+          clsx("overflow-x-hidden", {
+            'enter-slide-in-left': animationEnter === 'left',
+            'enter-slide-in-right': animationEnter === 'right',
+            'leave-slide-in-right': animationLeave === 'left',
+            'leave-slide-in-left': animationLeave === 'right',
+          })
+        }>
+        { tabs[selectedTab].component }
+      </div>
     </div>
   );
 };

@@ -1,0 +1,56 @@
+@keyframes enterFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes enterFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes leaveFromRight {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes leaveFromLeft {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+.enter-slide-in-left {
+  animation: enterFromLeft 0.5s ease-in-out;
+}
+.enter-slide-in-right {
+  animation: enterFromRight 0.5s ease-in-out;
+}
+.leave-slide-in-left {
+  animation: leaveFromRight 0.5s ease-in-out;
+}
+.leave-slide-in-right {
+  animation: leaveFromLeft 0.5s ease-in-out;
+}
