@@ -13,9 +13,9 @@ const DepositSelectNetwork = () => {
   return (
     <div className="flex flex-col md:basis-2/5 ps-3 my-auto">
       <div className='flex flex-row text-center'>
-        <div className='basis-1/5'/>
-        <div className='basis-2/5'>APY</div>
-        <div className='basis-2/5'>TVL</div>
+        <div className='basis-1/3 text-start'>CHAIN</div>
+        <div className='basis-1/3'>APY</div>
+        <div className='basis-1/3'>TVL</div>
       </div>
       {strategies.map((strategy, index) => {
         return (
@@ -24,15 +24,15 @@ const DepositSelectNetwork = () => {
             onClick={ () => selectStrategy(strategy) }
           >
             <div className='flex flex-row items-center my-1 text-center'>
-              <div className='basis-1/5'>
+              <div className='basis-1/3'>
                 <img
-                  className='h-8 w-8 mx-auto'
+                  className='h-6 w-6 ms-2'
                   src={ strategy.network.icon }
                   alt={strategy.network.slug}
                 />
               </div>
-              <div className='basis-2/5 font-bold text-xl'>{ strategy.apy }%</div>
-              <div className='basis-2/5 font-light text-xl'>{ strategy.tvl }%</div>
+              <div className='basis-1/3 font-bold'>{ strategy.apy }%</div>
+              <div className='basis-1/3 font-light'>{ strategy.tvl }%</div>
             </div>
           </div>
         )
