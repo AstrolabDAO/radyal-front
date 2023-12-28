@@ -17,7 +17,7 @@ const StrategyList = () => {
       <h2 className="text-2xl text-center text-primary mb-8">
         Select your strategy...
       </h2>
-      <div className="flex w-full justify-end">
+      <div className="flex flex-col md:flex-row w-full justify-end">
         <div className="mr-4">
           <span className="label-text block w-full mb-2">search anything</span>
           <input

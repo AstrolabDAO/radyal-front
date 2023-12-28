@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useAccount } from "wagmi";
 
 import { Strategy } from "~/utils/interfaces";
@@ -22,26 +22,45 @@ interface StrategyProps {
 const StrategyCard = ({ strategyGroup }: StrategyProps) => {
 
   const web3Modal = useWeb3Modal();
-  const { isConnected } = useAccount();
+  const [shouldOpenModal, setShouldOpenModal] = useState<boolean>(false);
+
+  const { openModal } = useContext(SwapModalContext);
+
+  // handleConnect is called when the user connects to the wallet
+  // isReconnected is true if the user was already connected
+  const handleConnect = ({ isReconnected }) => {
+    if (!isReconnected && isConnected && shouldOpenModal) {
+      openModal(<SwapModal />)
+    }
+  }
+
+  const { isConnected } = useAccount({ onConnect: handleConnect });
+
 
   const [strategy] = strategyGroup;
   const { share: { name } } = strategy;
   const [title, subtitle]  = name.replace("Astrolab ", "").split(" ");
 
-  const { openModal } = useContext(SwapModalContext);
-  const { selectStrategy, selectedStrategy, selectGroup } = useContext(StrategyContext);
+  const {
+    selectStrategy,
+    selectedStrategy,
+    selectGroup,
+  } = useContext(StrategyContext);
 
   const openModalStrategy = () => {
     selectStrategy(strategy);
     selectGroup(strategyGroup);
-    if (!isConnected) web3Modal.open().then(() => openModal(<SwapModal />));
+    if (!isConnected) {
+      web3Modal.open();
+      setShouldOpenModal(true);
+    }
     else openModal(<SwapModal />);
   }
 
   return (
     <div
       className={clsx(
-        "card bg-dark h-48 basis-1/3 relative rounded-3xl cursor-pointer",
+        "card bg-dark h-48 basis-1/3 relative rounded-3xl cursor-pointer rainbow-effect",
         "hover:bg-primary hover:text-dark hover:shadow hover:shadow-primary",
         { active: selectedStrategy?.slug === strategy.slug }
       )}
