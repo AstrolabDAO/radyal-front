@@ -11,7 +11,7 @@ const DepositSelectNetwork = () => {
       tvl: '22.3'
     }));
   return (
-    <div className="flex flex-col basis-2/5 ps-3 my-auto">
+    <div className="flex flex-col md:basis-2/5 ps-3 my-auto">
       <div className='flex flex-row text-center'>
         <div className='basis-1/5'/>
         <div className='basis-2/5'>APY</div>

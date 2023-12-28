@@ -20,7 +20,7 @@ const DepositWith = ({ strategy } : { strategy: Strategy }) => {
   return (
     <div className="flex flex-col my-3">
       <div className="ms-3 mb-2 text-xl">WITH</div>
-      <div className="flex flex-row py-3 px-3 border border-solid border-gray-500 rounded-xl bg-dark-600">
+      <div className="flex flex-col md:flex-row py-3 px-3 border border-solid border-gray-500 rounded-xl bg-dark-600">
         <div className="flex flex-row rounded-xl bg-gray-500 px-3">
           <div className="my-auto">
             <IconGroup icons={ icons }/>

@@ -12,7 +12,7 @@ const DepositTab = () => {
   const { selectedStrategy } = useContext(StrategyContext);
   return (
     <div className="flex flex-col p-3">
-      <div className="flex flex-row mb-3">
+      <div className="flex md:flex-row flex-col mb-3">
         <DepositInto />
         <DepositSelectNetwork />
       </div>
