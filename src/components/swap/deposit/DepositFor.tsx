@@ -21,7 +21,7 @@ const DepositFor = () => {
   return (
     <div className="flex flex-col">
       <div className="ms-3 mb-2 text-xl">FOR</div>
-      <div className="flex flex-row p-3 border border-solid border-gray-500 rounded-xl">
+      <div className="flex flex-col md:flex-row p-3 border border-solid border-gray-500 rounded-xl">
         <div className="flex flex-row px-3">
           <div className="my-auto">
             <IconGroup icons={ icons }/>
