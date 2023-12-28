@@ -4,7 +4,7 @@ import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 import { shortenAddress } from "~/utils/format";
 import Button from "../Button";
-import Logo from "~/assets/logo.svg?react";
+import Logo from "~/assets/logo/logo.svg?react";
 
 const Header = () => {
   const { address, isConnected } = useAccount();
