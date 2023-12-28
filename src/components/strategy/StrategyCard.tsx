@@ -59,7 +59,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   return (
     <div
       className={clsx(
-        "card bg-dark h-48 basis-1/3 relative rounded-3xl cursor-pointer",
+        "card bg-dark h-48 basis-1/3 relative rounded-3xl cursor-pointer rainbow-effect",
         "hover:bg-primary hover:text-dark hover:shadow hover:shadow-primary",
         { active: selectedStrategy?.slug === strategy.slug }
       )}
