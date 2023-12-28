@@ -34,7 +34,7 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
     }},
     option: (baseStyles: any, {  isFocused }) => ({
       ...baseStyles,
-      backgroundColor: isFocused ? COLORS_PALETTE["base-550"] : COLORS_PALETTE["base"],
+      backgroundColor: isFocused ? BACKGROUNDS.base : BACKGROUNDS.dark,
     })
   }
   return (
