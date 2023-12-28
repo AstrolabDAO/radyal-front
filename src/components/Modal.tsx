@@ -13,7 +13,7 @@ export interface BaseModalProps {
 }
 
 const Modal = () => {
-  const { visible, closeModal, selectedModal } = useContext(ModalContext);
+  const { render, closeModal, selectedModal } = useContext(ModalContext);
 
   const onClose = useCallback(() => {
     if (selectedModal) {
@@ -26,9 +26,9 @@ const Modal = () => {
 
   const cancelButtonRef = useRef(null);
   return (
-    <Transition.Root show={visible} as={Fragment}>
+    <Transition.Root show={render} as={Fragment}>
       <Dialog
-        open={visible}
+        open={render}
         as="div"
         className="relative z-20"
         initialFocus={cancelButtonRef}
@@ -36,10 +36,10 @@ const Modal = () => {
       >
         <Transition.Child
           as={Fragment}
-          enter="ease-out duration-300"
+          enter="ease-out duration-500"
           enterFrom="opacity-0"
           enterTo="opacity-100"
-          leave="ease-in duration-200"
+          leave="ease-in duration-500"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
@@ -53,14 +53,14 @@ const Modal = () => {
           <div className="flex min-h-full items-end justify-center text-center sm:items-center sm:p-0">
             <Transition.Child
               as={Fragment}
-              enter="ease-out duration-300"
+              enter="ease-out duration-600"
               enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               enterTo="opacity-100 translate-y-0 sm:scale-100"
               leave="ease-in duration-200"
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="transform overflow-y-auto rounded-lg shadow-xl transition-all backdrop-blur-medium bg-base-dark-transparent">
+              <Dialog.Panel className="transform overflow-y-auto overflow-x-hidden rounded-lg shadow-xl transition-all backdrop-blur-medium bg-base-dark-transparent">
                 <div className="relative text-left z-50 max-h-screen md:max-w-xl max-h-90">
                   <button
                     className="right-0 top-0 absolute p-2 z-50"
