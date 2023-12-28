@@ -1,4 +1,5 @@
 import Header from "./components/layer/MainHeader.tsx";
+import Footer from "./components/layer/MainFooter.tsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { TokensProvider } from "./context/tokens-context";
@@ -27,6 +28,7 @@ function App() {
               }}*/
             />
           </div>
+          <Footer />
         </TokensProvider>
       </Web3Provider>
     </>
