@@ -44,7 +44,7 @@ export default {
     themes: [
       {
         dark: {
-          ...themes["dark"],
+          ...themes.default.dark,
           primary: PALETTE["primary"],
           "primary-content": BACKGROUNDS["base"],
           "base-100": PALETTE["base-100"],

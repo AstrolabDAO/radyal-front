@@ -12,83 +12,86 @@ import {
 import IconCard from "./IconCard";
 
 const SwapRouteDetail = () => {
-  const { steps } = useContext(SwapContext);
+  const { steps, estimationError } = useContext(SwapContext);
   const size = { width: 20, height: 20 };
 
   return (
     <div>
-      <h2 className="">Route details: </h2>
+      <h2 className="mt-8">Route details: </h2>
       <div className="card bg-base-100 flex flex-col mt-4 p-4">
-        <ul className="icon-steps icon-steps-vertical">
-          {steps.map((step) => {
-            const {
-              id,
-              type,
-              tool,
-              estimate,
-              toChain,
-              fromToken,
-              toToken,
-              fromChain,
-            } = step;
+        {estimationError && estimationError}
+        {!estimationError && (
+          <ul className="icon-steps icon-steps-vertical">
+            {steps.map((step) => {
+              const {
+                id,
+                type,
+                tool,
+                estimate,
+                toChain,
+                fromToken,
+                toToken,
+                fromChain,
+              } = step;
 
-            const fromNetwork = networkByChainId[fromChain];
-            const toNetwork = networkByChainId[toChain];
+              const fromNetwork = networkByChainId[fromChain];
+              const toNetwork = networkByChainId[toChain];
 
-            const fromAmount = `${lisibleAmount(
-              amountToEth(estimate.fromAmount, fromToken?.decimals),
-              4
-            )} ${fromToken?.symbol}`;
+              const fromAmount = `${lisibleAmount(
+                amountToEth(estimate.fromAmount, fromToken?.decimals),
+                4
+              )} ${fromToken?.symbol}`;
 
-            const toAmount = `${lisibleAmount(
-              amountToEth(estimate.toAmount, toToken?.decimals),
-              4
-            )} ${toToken?.symbol}`;
+              const toAmount = `${lisibleAmount(
+                amountToEth(estimate.toAmount, toToken?.decimals),
+                4
+              )} ${toToken?.symbol}`;
 
-            const convertedTool = SwaptoolTraduction[tool] ?? tool;
-            const protocol: Protocol = protocolByStrippedSlug[convertedTool];
-            return (
-              <li className="icon-step" key={`stepper-${id}`}>
-                <div className="icon w-50">
-                  <IconCard
-                    icon={{
-                      url: protocol?.icon,
-                      size: { width: 30, height: 30 },
-                    }}
-                  />
-                </div>
-                <div className="content w-full p-2">
-                  <div className="block w-full" key={id}>
-                    <div className="flex">
-                      {SwapRouteStepTypeTraduction[type] ?? type}
-                      <span className="mx-2">from</span>
-                      <IconCard icon={{ url: fromNetwork.icon, size }} />
-                      {fromNetwork.name}
-                      {type === "cross" && (
-                        <>
-                          <span className="mx-2">to</span>
-                          <IconCard icon={{ url: toNetwork.icon, size }} />
-                          {toNetwork.name}
-                        </>
-                      )}
-                      <span className="mx-2">on</span>
-                      <a href={protocol?.app} target="_blank">
-                        {protocol?.name ??
-                          SwaptoolTraduction[tool] ??
-                          convertedTool}
-                      </a>
-                    </div>
-                    <span className="block w-full flex justify-center">
-                      {fromAmount}
-                      <FaLongArrowAltRight className="mx-2" />
-                      {toAmount}
-                    </span>
+              const convertedTool = SwaptoolTraduction[tool] ?? tool;
+              const protocol: Protocol = protocolByStrippedSlug[convertedTool];
+              return (
+                <li className="icon-step" key={`stepper-${id}`}>
+                  <div className="icon w-50">
+                    <IconCard
+                      icon={{
+                        url: protocol?.icon,
+                        size: { width: 30, height: 30 },
+                      }}
+                    />
                   </div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+                  <div className="content w-full p-2">
+                    <div className="block w-full" key={id}>
+                      <div className="flex">
+                        {SwapRouteStepTypeTraduction[type] ?? type}
+                        <span className="mx-2">from</span>
+                        <IconCard icon={{ url: fromNetwork.icon, size }} />
+                        {fromNetwork.name}
+                        {type === "cross" && (
+                          <>
+                            <span className="mx-2">to</span>
+                            <IconCard icon={{ url: toNetwork.icon, size }} />
+                            {toNetwork.name}
+                          </>
+                        )}
+                        <span className="mx-2">on</span>
+                        <a href={protocol?.app} target="_blank">
+                          {protocol?.name ??
+                            SwaptoolTraduction[tool] ??
+                            convertedTool}
+                        </a>
+                      </div>
+                      <span className="block w-full flex justify-center">
+                        {fromAmount}
+                        <FaLongArrowAltRight className="mx-2" />
+                        {toAmount}
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </div>
   );

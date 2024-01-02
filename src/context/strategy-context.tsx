@@ -41,8 +41,6 @@ export const StrategyProvider = ({ children }) => {
   const [networksFilter, setNetworksFilter] = useState<string[]>([]);
   const { tokensIsLoaded } = useContext(TokensContext);
 
-  // const data = useAllowance("0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE", "0x7B56288776Cae4260770981b6BcC0f6D011C7b72");
-
   const Provider = StrategyContext.Provider;
   const selectStrategy = (strategy: Strategy) => {
     setSelectedStrategy(strategy);
@@ -64,7 +62,7 @@ export const StrategyProvider = ({ children }) => {
   }, [strategiesData]);
 
   const { data: strategiesBalancesData } = useQuery<Balance[]>(
-    "strategiesBalances",
+    `strategiesBalances-${address}`,
     async () => {
       const balances = [];
 
@@ -75,12 +73,14 @@ export const StrategyProvider = ({ children }) => {
           const calls = strategies.map((strategy) => ({
             address: strategy.address,
             abi: AgentAbi,
-            symbol: strategy.share.symbol,
+            symbol: strategy.symbol,
+            slug: strategy.slug,
           }));
 
           const network = networkByChainId[key];
 
           const result = await getBalances(network, calls, address);
+
           balances.push(result.map(([balance]) => balance));
           return balances.flat(1);
         }

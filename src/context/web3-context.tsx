@@ -67,17 +67,40 @@ const Web3Provider = ({ children }) => {
 
   useEffect(() => {
     if (isLoading || !networks) return;
-    networks.map((network) => {
-      networkBySlug[network.slug] = network;
-      networkByChainId[network.id] = network;
-      const deFiNetwork = deFiNetworks.find(
-        (n) => n.metadata.absoluteChainId === network.id
-      );
-      if (deFiNetwork) {
-        deFiIdByChainId[network.id] = deFiNetwork.id;
-        chainIdByDeFiId[deFiNetwork.id] = network.id;
+    networks.map(
+      ({
+        id,
+        name,
+        httpRpcs,
+        wsRpcs,
+        explorers,
+        explorerApi,
+        gasToken,
+        slug,
+        icon,
+      }) => {
+        const network = {
+          id,
+          name,
+          httpRpcs,
+          wsRpcs,
+          explorers,
+          explorerApi,
+          gasToken,
+          slug,
+          icon,
+        };
+        networkBySlug[network.slug] = network;
+        networkByChainId[network.id] = network;
+        const deFiNetwork = deFiNetworks.find(
+          (n) => n.metadata.absoluteChainId === network.id
+        );
+        if (deFiNetwork) {
+          deFiIdByChainId[network.id] = deFiNetwork.id;
+          chainIdByDeFiId[deFiNetwork.id] = network.id;
+        }
       }
-    });
+    );
 
     const convertedNetworks = NETWORKS.map((n) => {
       const network = networkBySlug[n];

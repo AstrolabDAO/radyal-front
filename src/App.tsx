@@ -17,7 +17,6 @@ function App() {
           <Header />
           <div id="page-content" className="pt-32 relative">
             <RouterProvider router={router} />
-
             <Toaster
               position="top-right"
               reverseOrder={false}

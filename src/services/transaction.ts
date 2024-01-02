@@ -1,11 +1,11 @@
 import { PrepareSendTransactionArgs } from "@wagmi/core";
 import { prepareSendTransaction, sendTransaction } from "wagmi/actions";
-import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
 import { erc20Abi } from "abitype/abis";
 import { BaseError, ContractFunctionRevertedError } from "viem";
 import { prepareWriteContract } from "wagmi/actions";
 import { writeContract } from "@wagmi/core";
 export const executeTransaction = async (opts: PrepareSendTransactionArgs) => {
+  console.log("🚀 ~ file: transaction.ts:8 ~ executeTransaction ~ opts:", opts);
   try {
     const prepare = await prepareSendTransaction(opts);
     return await sendTransaction(prepare);
@@ -15,30 +15,14 @@ export const executeTransaction = async (opts: PrepareSendTransactionArgs) => {
   }
 };
 
-export const executeContract = async (
-  functionName: string,
-  args: unknown[],
-  toAddress: string,
-  abi = erc20Abi
-) => {
-  return await writeContract(
-    await prepareWriteTx(args, toAddress, functionName, abi as any)
-  );
+export const executeContract = async ({ abi = erc20Abi, ...args }: TxArgs) => {
+  return await writeContract(await prepareWriteTx({ abi, ...args }));
 };
 
-export const prepareWriteTx = async (
-  args: unknown[],
-  toAddress: string,
-  functionName: string,
-  abi = StratV5Abi.abi
-) => {
+export const prepareWriteTx = async ({ abi = erc20Abi, ...args }: TxArgs) => {
   try {
-    const { request } = await prepareWriteContract({
-      address: toAddress,
-      abi: abi as any,
-      functionName,
-      args,
-    });
+    const { request } = await prepareWriteContract({ abi, ...args });
+
     return request;
   } catch (err) {
     // get Wagmi custom error
@@ -55,3 +39,35 @@ export const prepareWriteTx = async (
     }
   }
 };
+
+export const approve = async ({
+  spender,
+  address,
+  amount,
+  chainId,
+}: ApproveArgs) => {
+  return executeContract({
+    functionName: "approve",
+    args: [spender, amount],
+    address: address,
+    chainId,
+  });
+};
+
+export interface BaseTxArgs {
+  address: `0x${string}`;
+  chainId: number;
+  args: unknown[];
+  abi?: any;
+}
+
+export interface TxArgs extends BaseTxArgs {
+  functionName: any;
+}
+
+interface ApproveArgs {
+  address: `0x${string}`;
+  spender: `0x${string}`;
+  amount: bigint;
+  chainId: number;
+}

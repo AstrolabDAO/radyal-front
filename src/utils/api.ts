@@ -14,6 +14,7 @@ import {
 import getBalances, { multicall } from "./multicall";
 import { NETWORKS } from "./web3-constants";
 import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5Agent.json";
+import { clearNetworkTypeFromSlug, slugify } from "./format";
 
 export const getBalancesFromDeFI = async (
   address: `0x${string}`,
@@ -37,7 +38,9 @@ export const getBalancesFromDeFI = async (
     .map((result: DeFiBalance) => {
       const { amount, token: apiToken } = result;
       const balance: Balance = {
-        slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
+        slug: `${clearNetworkTypeFromSlug(
+          network.slug
+        )}:${apiToken.symbol.toLowerCase()}`,
         amount,
       };
 
@@ -53,7 +56,9 @@ export const getBalancesFromDeFI = async (
           icon: apiToken.icon,
           network,
           symbol: apiToken.symbol,
-          slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
+          slug: `${clearNetworkTypeFromSlug(
+            network.slug
+          )}:${apiToken.symbol.toLowerCase()}`,
         } as Token;
         return [balance, _token];
       }
@@ -108,7 +113,7 @@ export const getTokens = async () => {
           token.network = network;
           return true;
         })
-        .map(({ nativeAddress, symbol, network, scale, coinGeckoId }) => {
+        .map(({ nativeAddress, symbol, network, scale, coinGeckoId, slug }) => {
           const cleanSymbol = symbol.replace(TOKEN_BASENAME_REGEX, "$1");
           const token = {
             address: nativeAddress,
@@ -117,9 +122,10 @@ export const getTokens = async () => {
             weiPerUnit: 10 ** scale,
             icon: `/images/tokens/${cleanSymbol.toLowerCase()}.svg`,
             network,
-            slug: `${network.slug}:${symbol.toLocaleLowerCase()}`,
+            slug, //: `${network.slug}:${symbol.toLocaleLowerCase()}`,
             coinGeckoId,
           } as Token;
+
           updateTokenMapping(token);
           return token;
         });
@@ -138,10 +144,12 @@ export const loadBalancesByAddress = async (address: `0x${string}`) => {
   let _balances = [];
 
   const filteredNetworks = NETWORKS.map((slug) => networkBySlug[slug]);
+
   const requests = [];
 
   for (const network of filteredNetworks) {
     const chain = deFiIdByChainId[network.id];
+
     if (chain) {
       requests.push(getBalancesFromDeFI(address, network));
     } else {
@@ -151,6 +159,7 @@ export const loadBalancesByAddress = async (address: `0x${string}`) => {
         address: token.nativeAddress,
         coinGeckoId: token.coinGeckoId,
         abi: erc20Abi,
+        slug: token.slug,
       }));
 
       const promise = getBalances(network, contracts, address);
@@ -162,6 +171,7 @@ export const loadBalancesByAddress = async (address: `0x${string}`) => {
     const flatData = data.flat(1);
 
     _balances = flatData;
+
     return flatData;
   });
 
@@ -205,6 +215,10 @@ export const getStrategies = async () => {
             ...call,
             functionName: "decimals",
           },
+          {
+            ...call,
+            functionName: "sharePrice",
+          },
           { ...call, functionName: "name" },
         ];
       })
@@ -214,14 +228,16 @@ export const getStrategies = async () => {
 
     // Add multicall result on api Data
 
-    for (let i = 0; i < result.length; i += 3) {
-      const [symbol, decimals, name] = result.slice(i, i + 3);
+    for (let i = 0; i < result.length; i += 4) {
+      const [symbol, decimals, sharePrice, name] = result.slice(i, i + 4);
 
       if (!symbol?.result || !decimals?.result || !name?.result) continue;
-      const strategy = networkStrategies[i / 3];
-      strategiesData[strategy.index].stratToken = {
+      const strategy = networkStrategies[i / 4];
+      strategiesData[strategy.index] = {
+        ...strategiesData[strategy.index],
         symbol: symbol?.result,
         decimals: decimals?.result,
+        sharePrice: Number(sharePrice?.result),
         name: name?.result,
       };
     }
@@ -229,53 +245,48 @@ export const getStrategies = async () => {
 
   const strategies = strategiesData
     .filter((strategy) => {
+      console.log("🚀 ~ file: api.ts:244 ~ .filter ~ strategy:", strategy);
       const { nativeNetwork, denomination } = strategy;
       const network = networkBySlug[nativeNetwork];
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_, symbol] = denomination.split(":");
-      const token = tokenBySlug[`${network?.slug}:${symbol}`];
 
+      const token = tokenBySlug[strategy.denomination];
       return !!network && !!token ? true : false;
     })
     .map((strategy) => {
       const {
-        id,
         name,
         nativeNetwork,
         nativeAddress,
         denomination,
+        symbol,
+        decimals,
+        sharePrice,
         slug,
-        stratToken,
       } = strategy;
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [_, symbol] = denomination.split(":");
+      const [_, _symbol] = denomination.split(":");
       const network = networkBySlug[nativeNetwork];
 
-      const token = tokenBySlug[`${network.slug}:${symbol}`];
-      const strategyToken: Token | null = !stratToken?.symbol
-        ? null
-        : {
-            symbol: stratToken.symbol,
-            decimals: stratToken.decimals,
-            network: network,
-            address: token?.address,
-            icon: `/tokens/${stratToken?.symbol?.toLowerCase()}.svg`,
-            slug: `${network.slug}:${stratToken?.symbol?.toLowerCase()}`,
-            weiPerUnit: 10 ** stratToken.decimals,
-            name: stratToken.name,
-          };
+      const token = tokenBySlug[strategy.denomination];
 
-      if (strategyToken) updateTokenMapping(strategyToken);
       const _strat = {
-        id,
         name,
+        symbol,
+        decimals,
         address: nativeAddress,
-        network: network,
-        share: strategyToken,
+        network,
         asset: token,
+        icon: `/tokens/${symbol?.toLowerCase()}.svg`,
         slug,
+        weiPerUnit: 10 ** decimals,
+        sharePrice,
       } as Strategy;
+
+      updateTokenMapping(_strat);
       updateStrategyMapping(_strat);
       return _strat;
     });

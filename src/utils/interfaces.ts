@@ -47,14 +47,10 @@ export interface GetRouteResult {
 }
 
 // TODO Strategy is Token
-export interface Strategy {
-  name: string;
-  slug: string;
-  address: `0x${string}`;
-  rewardsTokens: string[];
+export interface Strategy extends Token {
+  rewardsTokens?: string[];
   asset: Token;
-  share: Token;
-  network: Network;
+  sharePrice: number;
 }
 
 export interface GrouppedStrategies {
@@ -142,8 +138,7 @@ export interface SwapEstimation {
   request: any;
 }
 
-export interface WithdrawRequest {
+export interface DirectStrategyAction {
   value: number;
-  strategy: Strategy;
   address?: `0x${string}`;
 }

@@ -2,6 +2,7 @@ import { useContext, useMemo } from "react";
 import { StrategyContext } from "~/context/strategy-context";
 import StrategyCard from "./StrategyCard";
 import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
+import { networkByChainId } from "~/utils/mappings";
 
 const StrategyList = () => {
   const { filteredStrategies, search, filterByNetworks, strategies } =
@@ -10,6 +11,10 @@ const StrategyList = () => {
   const grouppedStrategies = useMemo(
     () => Object.values(filteredStrategies),
     [filteredStrategies]
+  );
+
+  const networkIds = Array.from(
+    new Set(strategies.map(({ network }) => network.id))
   );
 
   return (
@@ -37,7 +42,9 @@ const StrategyList = () => {
             isSearchable
             className="basic-multi-select w-64 h-12"
             classNamePrefix="select"
-            networks={strategies.map(({ network }) => network)}
+            networks={networkIds.map((id) => {
+              return networkByChainId[id];
+            })}
             onChange={(value: Array<NetworkSelectData>) => {
               filterByNetworks(value.map((v) => v.network?.slug));
             }}

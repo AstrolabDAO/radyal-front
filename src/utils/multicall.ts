@@ -2,6 +2,7 @@ import { MulticallContracts, Narrow } from "viem";
 import { multicall as wagmiMulticalll } from "wagmi/actions";
 import { Balance, Network } from "./interfaces";
 import { updateBalanceMapping } from "./mappings";
+import { clearNetworkTypeFromSlug } from "./format";
 
 export const multicall = (
   chainId: number,
@@ -21,7 +22,8 @@ export const getBalances = async (
   const result = await wagmiMulticalll({
     chainId: network.id,
     contracts: contracts
-      .map((contract) => [
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .map(({ slug, ...contract }) => [
         {
           ...contract,
           functionName: "balanceOf",
@@ -44,7 +46,11 @@ export const getBalances = async (
     const contract = contracts[i];
 
     const balance: Balance = {
-      slug: `${network.slug}:${contract.symbol.toLowerCase()}`,
+      slug: contract.slug
+        ? contract.slug
+        : `${clearNetworkTypeFromSlug(
+            network.slug
+          )}:${contract.symbol.toLowerCase()}`,
       amount: result.toString(),
     };
 

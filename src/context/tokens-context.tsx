@@ -78,22 +78,18 @@ export const TokensProvider = ({ children }) => {
     setTokensBySlugs({ ...tokenBySlugMapping });
   }, []);
 
-  const { data: tokensData, isLoading } = useQuery("tokens", getTokens, {
-    onSuccess(data) {
-      setTokens(data);
-    },
-  });
+  const { data: tokensData, isLoading } = useQuery("tokens", getTokens);
+
   useEffect(() => {
     tokensData?.forEach((token) => updateTokenMapping(token));
+    setTokens(tokensData);
     setTokensBySlugs({ ...tokenBySlugMapping });
     setCanLoadBalances(true);
   }, [tokensData]);
 
   const { data: balancesData } = useQuery(
     `balances-${address}`,
-    () => {
-      return loadBalancesByAddress(address);
-    },
+    () => loadBalancesByAddress(address),
     {
       enabled: !!address && !isLoading && isConnected && canLoadBalances,
       staleTime: ONE_MINUTE,
@@ -118,14 +114,15 @@ export const TokensProvider = ({ children }) => {
 
     const _balances = [];
     setBalances(_balances);
+
     balancesData?.forEach(([balance, token]) => {
-      if (token && !_tokens.find((t) => t.slug === token.slug)) {
+      if (token && !tokenBySlugMapping[token.slug]) {
         _tokens.push(token);
       }
       _balances.push(balance);
     });
 
-    tokens?.forEach((token) => {
+    _tokens?.forEach((token) => {
       updateTokenMapping(token);
     });
 
@@ -137,6 +134,14 @@ export const TokensProvider = ({ children }) => {
   }, [balancesData, tokensData, tokens, address]);
 
   const sortedBalances = useMemo(() => {
+    console.log(
+      "🚀 ~ file: tokens-context.tsx:121 ~ balancesData?.forEach ~ tokenBySlugMapping:",
+      tokenBySlugMapping
+    );
+    console.log(
+      "🚀 ~ file: tokens-context.tsx:143 ~ sortedBalances ~ tokenPrices:",
+      tokenPrices
+    );
     if (!tokenPrices || Object.values(tokenBySlugMapping).length === 0)
       return [];
 

@@ -30,12 +30,22 @@ const SwapInput = ({
     return amountToEth(BigInt(balance?.amount ?? 0), selected.decimals);
   }, [selected]);
 
+  console.log(
+    "🚀 ~ file: SwapInput.tsx:32 ~ selectedBalance ~ selectedBalance:",
+    selectedBalance
+  );
+
   const tokenPrice = useMemo(() => {
     if (!selected || !tokenPrices) return 0;
 
-    const price = Number(tokenPrices[selected?.coinGeckoId]?.usd);
+    const { sharePrice, asset, weiPerUnit } = selected;
+    const price = Number(
+      tokenPrices[asset ? asset?.coinGeckoId : selected?.coinGeckoId]?.usd
+    );
 
-    return isNaN(price) ? 0 : price;
+    const priceValue = sharePrice ? (price * sharePrice) / weiPerUnit : price;
+
+    return isNaN(priceValue) ? 0 : priceValue;
   }, [tokenPrices, selected]);
 
   return (

@@ -4,17 +4,16 @@ import {
   getAllTransactionRequests,
 } from "@astrolabs/swapper";
 import { erc20Abi } from "abitype/abis";
-import { encodeFunctionData, parseGwei } from "viem";
+import { encodeFunctionData, getContract, parseGwei } from "viem";
 import { tokensIsEqual } from "~/utils";
 import { SwapMode } from "~/utils/constants";
 import { overrideZeroAddress } from "~/utils/format";
 import { LifiRequest } from "~/utils/interfaces";
 import { PrepareSendTransactionArgs } from "@wagmi/core";
-import { executeTransaction } from "./transaction";
+import { approve, executeTransaction } from "./transaction";
 import { Token } from "~/utils/interfaces";
 
 import { PublicClient } from "wagmi";
-import { approve } from "./strategy";
 import toast from "react-hot-toast";
 
 export const depositCallData = (address: string, toAmount: string) => {
@@ -53,8 +52,11 @@ export const getSwapRoute = async (params: LifiRequest) => {
   }
   const customContractCalls = [];
 
-  if (swapMode === SwapMode.DEPOSIT) {
-    const callData = await depositCallData(address, amount.toString());
+  if (
+    swapMode === SwapMode.DEPOSIT
+    //&&fromToken.network.id !== toToken.network.id
+  ) {
+    const callData = depositCallData(address, amount.toString());
     customContractCalls.push({
       toAddress: strategy.address,
       callData,
@@ -101,25 +103,43 @@ export const executeSwap = async (route: ITransactionRequestWithEstimate) => {
     gas: parseGwei("0.00001"),
   };
 
+  console.log("🚀 ~ file: swap.ts:96 ~ executeSwap ~ route:", route);
   const { hash } = await executeTransaction(params);
 
   console.log("lifiExplorer: ", `https://explorer.li.fi/tx/${hash}`);
   console.log("squidExplorer: ", `https://axelarscan.io/gmp/${hash}`);
   console.log("hash: ", hash);
-  return hash;
+  return { hash };
 };
 
 export const aproveAndSwap = async (
-  { route, allowance, routerAddress, fromToken, amount }: ExecuteSwapProps,
+  { route, fromToken, amount, clientAddress }: ExecuteSwapProps,
   publicClient: PublicClient
 ) => {
-  if (allowance !== null && amount > allowance) {
+  const routerAddress = route ? route?.to : null;
+
+  const contract = getContract({
+    address: fromToken.address,
+    abi: erc20Abi,
+    publicClient: publicClient as any,
+  }) as any;
+  console.log("🚀 ~ file: swap.ts:123 ~ fromToken:", fromToken);
+
+  const allowance: bigint = (await contract.read.allowance([
+    clientAddress,
+    routerAddress,
+  ])) as bigint;
+
+  const approvalAmount = amount + amount / 500n; // 5%
+  console.log("allowance", routerAddress, allowance, approvalAmount, amount);
+  if (allowance !== null && approvalAmount > allowance) {
     try {
-      const { hash: approveHash } = await approve(
-        routerAddress,
-        amount.toString(),
-        fromToken.address
-      );
+      const { hash: approveHash } = await approve({
+        spender: routerAddress as `0x${string}`,
+        amount: approvalAmount,
+        address: fromToken.address,
+        chainId: fromToken.network.id,
+      });
 
       const approvePending = publicClient.waitForTransactionReceipt({
         hash: approveHash,
@@ -134,12 +154,13 @@ export const aproveAndSwap = async (
       console.log("🚀 ~ file: swap.ts:130 ~ err:", err);
       toast.error(`An error has occured`);
     }
-    const swapHash = await executeSwap(route);
+
+    const { hash: swapHash } = await executeSwap(route);
     const swapPending = publicClient.waitForTransactionReceipt({
       hash: swapHash,
     });
     toast.promise(swapPending, {
-      pending: "Swap transaction is pending...",
+      loading: "Swap transaction is pending...",
       success: "Swap transaction successful",
       error: "Swap reverted rejected 🤯",
     });
@@ -152,8 +173,7 @@ export const aproveAndSwap = async (
 
 interface ExecuteSwapProps {
   route: ITransactionRequestWithEstimate;
-  allowance: bigint | null;
-  routerAddress: `0x${string}`;
   fromToken: Token;
   amount: bigint;
+  clientAddress: `0x${string}`;
 }

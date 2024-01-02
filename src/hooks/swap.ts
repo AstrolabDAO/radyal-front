@@ -1,20 +1,20 @@
 import { useCallback, useContext, useMemo } from "react";
-import { Client, getContract } from "viem";
+import { Client } from "viem";
 import { useAccount, usePublicClient } from "wagmi";
 import { StrategyContext } from "~/context/strategy-context";
 import { MinimalSwapContext } from "~/context/swap-context";
-import { currentChain } from "~/context/web3-context";
 import { tokensIsEqual } from "~/utils";
-import { SwapMode } from "~/utils/constants";
-import { previewStrategyTokenMove, withdraw } from "~/utils/flows/strategy";
+import { previewStrategyTokenMove } from "~/utils/flows/strategy";
 import { amountToEth, cacheHash } from "~/utils/format";
-import { WithdrawRequest } from "~/utils/interfaces.ts";
+import { Strategy } from "~/utils/interfaces.ts";
 
 import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
-import { erc20Abi } from "abitype/abis";
+
 import { useQueryClient } from "react-query";
 import { aproveAndSwap, getSwapRoute } from "~/services/swap";
-import { useReadTx, useSwitchNetwork } from "./transaction";
+import { useSwitchNetwork } from "./transaction";
+import { SwapMode } from "~/utils/constants";
+import toast from "react-hot-toast";
 
 export const useExecuteSwap = () => {
   const { fromToken, toToken, fromValue, swapMode } =
@@ -23,7 +23,7 @@ export const useExecuteSwap = () => {
   const { address } = useAccount();
 
   const queryClient = useQueryClient();
-  const publicClient: Client = usePublicClient({
+  const publicClient = usePublicClient({
     chainId: fromToken?.network?.id,
   });
 
@@ -49,30 +49,12 @@ export const useExecuteSwap = () => {
       tr = routes[0];
     }
 
-    const routerAddress = estimationRequest
-      ? estimationRequest?.request?.to
-      : null;
-
-    const contract = getContract({
-      address: fromToken.address,
-      abi: erc20Abi,
-      publicClient,
-    });
-
-    const allowance: bigint = (await contract.read.allowance([
-      address,
-      routerAddress,
-    ])) as bigint;
-
-    const approvalAmount = amount + amount / 500n; // 5%
-
     return aproveAndSwap(
       {
         route: tr,
-        routerAddress,
-        allowance,
         fromToken,
-        amount: approvalAmount,
+        amount,
+        clientAddress: address,
       },
       publicClient
     );
@@ -97,18 +79,33 @@ export const useEstimateRoute = () => {
 
   const previewStrategyTokenMove = usePreviewStrategyTokenMove();
   return useCallback(async () => {
-    const interactionEstimation =
-      tokensIsEqual(fromToken, toToken) || swapMode === SwapMode.WITHDRAW
-        ? await previewStrategyTokenMove()
-        : null;
-
     if (tokensIsEqual(fromToken, toToken)) {
-      return interactionEstimation;
+      return await previewStrategyTokenMove();
     }
-    const result = await getSwapRoute();
+
+    let result, interactionEstimation;
+    if (
+      fromToken.network.id === toToken.network.id ||
+      SwapMode.WITHDRAW === swapMode
+    ) {
+      if (swapMode === SwapMode.DEPOSIT) {
+        result = await getSwapRoute();
+        interactionEstimation = await previewStrategyTokenMove(
+          result[0].estimatedOutput
+        );
+      } else {
+        interactionEstimation = await previewStrategyTokenMove();
+        result = await getSwapRoute(interactionEstimation.estimation);
+      }
+    } else {
+      result = await getSwapRoute();
+    }
 
     if (!result) {
-      throw new Error("route not found from Swapper 🤯");
+      toast.error("route not found from Swapper 🤯");
+      return {
+        error: "route not found from Swapper 🤯",
+      };
     }
     const { steps } = result[0];
     const lastStep = steps[steps.length - 1];
@@ -121,11 +118,19 @@ export const useEstimateRoute = () => {
       estimationStep?.toToken?.decimals
     );
 
+    const computedSteps = !interactionEstimation
+      ? steps
+      : swapMode === SwapMode.DEPOSIT
+      ? [
+          ...steps,
+          ...(tokensIsEqual(fromToken, toToken)
+            ? interactionEstimation.steps
+            : []),
+        ]
+      : [...interactionEstimation.steps, ...steps];
     return {
       estimation: receiveEstimation,
-      steps: !interactionEstimation
-        ? steps
-        : [...interactionEstimation.steps, ...steps],
+      steps: computedSteps,
       request: result[0],
     };
   }, [fromToken, getSwapRoute, previewStrategyTokenMove, swapMode, toToken]);
@@ -142,32 +147,22 @@ export const useGetSwapRoute = () => {
     return BigInt(Math.round(fromValue * fromToken?.weiPerUnit));
   }, [fromToken, fromValue]);
 
-  return useCallback(async () => {
-    return getSwapRoute({
-      address,
-      amount,
-      fromToken,
-      toToken,
-      strategy: selectedStrategy,
-      swapMode,
-    });
-  }, [address, amount, fromToken, selectedStrategy, swapMode, toToken]);
-};
-
-export const useAllowance = (
-  toAddress: `0x${string}`,
-  address: string,
-  owner,
-  chainId: number = currentChain
-) => {
-  return useReadTx("allowance", toAddress, [owner, address], chainId);
-};
-
-export const useWithdraw = () => {
-  const { address } = useAccount();
   return useCallback(
-    (params: WithdrawRequest) => withdraw({ address, ...params }),
-    [address]
+    async (value: number = null) => {
+      return getSwapRoute({
+        address,
+        amount: value
+          ? BigInt(Math.round(value * fromToken?.weiPerUnit))
+          : amount,
+        fromToken,
+        toToken: (toToken as Strategy)?.asset
+          ? (toToken as Strategy).asset
+          : toToken,
+        strategy: selectedStrategy,
+        swapMode,
+      });
+    },
+    [address, amount, fromToken, selectedStrategy, swapMode, toToken]
   );
 };
 
@@ -175,17 +170,20 @@ export const usePreviewStrategyTokenMove = () => {
   const { selectedStrategy } = useContext(StrategyContext);
   const { fromValue, swapMode } = useContext(MinimalSwapContext);
   const publicClient = usePublicClient({
-    chainId: selectedStrategy.id,
+    chainId: selectedStrategy.network?.id,
   }) as Client;
 
-  return useCallback(() => {
-    return previewStrategyTokenMove(
-      {
-        strategy: selectedStrategy,
-        swapMode,
-        value: fromValue,
-      },
-      publicClient
-    );
-  }, [fromValue, swapMode, publicClient, selectedStrategy]);
+  return useCallback(
+    (value: number = null) => {
+      return previewStrategyTokenMove(
+        {
+          strategy: selectedStrategy,
+          swapMode,
+          value: value ? value : fromValue,
+        },
+        publicClient
+      );
+    },
+    [fromValue, swapMode, publicClient, selectedStrategy]
+  );
 };

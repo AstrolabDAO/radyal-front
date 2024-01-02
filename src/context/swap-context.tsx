@@ -10,7 +10,7 @@ import { useQuery } from "react-query";
 import { useEstimateRoute, useExecuteSwap } from "~/hooks/swap";
 import { SwapMode } from "~/utils/constants";
 import { cacheHash } from "~/utils/format";
-import { Token } from "~/utils/interfaces";
+import { Strategy, Token } from "~/utils/interfaces";
 import { tokenBySlug } from "~/utils/mappings";
 import { StrategyContext } from "./strategy-context";
 import { TokensContext } from "./tokens-context";
@@ -24,6 +24,7 @@ const baseValues = {
   setFromValue: () => {},
   setSwapMode: () => {},
   setCanSwap: () => {},
+
   fromToken: null,
   toToken: null,
   fromValue: null,
@@ -35,10 +36,13 @@ const MinimalSwapContext = createContext<MinimalSwapContextType>(baseValues);
 
 const SwapContext = createContext<SwapContext>({
   ...baseValues,
-  swap: () => {},
+  swap: async () => {},
+  lockEstimate: () => {},
+  unlockEstimate: () => {},
   toValue: null,
   steps: [],
   estimation: null,
+  estimationError: null,
 });
 
 const CompleteProvider = ({ children }) => {
@@ -53,22 +57,17 @@ const CompleteProvider = ({ children }) => {
   const [estimationOnProgress, setEstimationOnProgress] =
     useState<boolean>(false);
 
+  const [estimationError, setEstimationError] = useState<string>(null);
   const [updateEstimation, setUpdateEstimation] = useState(true);
+
   const executeSwap = useExecuteSwap();
 
   const estimateRoute = useEstimateRoute();
 
   const { data: estimation } = useQuery(
     cacheHash("estimate", swapMode, fromToken, toToken, fromValue),
-    () => estimateRoute(),
+    estimateRoute,
     {
-      onSuccess() {
-        console.log("Ca success putian");
-        setEstimationOnProgress(false);
-      },
-      onError() {
-        console.log("JE SUIS UNE ERREUR");
-      },
       staleTime: 1000 * 15,
       cacheTime: 1000 * 15,
       retry: true,
@@ -84,10 +83,11 @@ const CompleteProvider = ({ children }) => {
   );
 
   useEffect(() => {
-    if (!estimation) {
+    if (!estimation || estimation?.error) {
       setToValue(estimationOnProgress ? null : 0);
       setSteps([]);
       setCanSwap(false);
+      if (estimation?.error) setEstimationError(estimation.error);
       return;
     }
 
@@ -115,7 +115,16 @@ const CompleteProvider = ({ children }) => {
 
   return (
     <SwapContext.Provider
-      value={{ ...baseContext, swap, toValue, steps, estimation }}
+      value={{
+        ...baseContext,
+        swap,
+        toValue,
+        steps,
+        estimation,
+        estimationError,
+        unlockEstimate: () => setUpdateEstimation(true),
+        lockEstimate: () => setUpdateEstimation(false),
+      }}
     >
       {children}
     </SwapContext.Provider>
@@ -126,32 +135,33 @@ const SwapProvider = ({ children }) => {
   const { selectedStrategy } = useContext(StrategyContext);
 
   const [swapMode, setSwapMode] = useState<SwapMode>(SwapMode.DEPOSIT);
+
   const [selectTokenMode, setSelectTokenMode] = useState(false);
 
   const [fromValue, setFromValue] = useState<number>(null);
 
-  const [fromToken, setFromToken] = useState<Token>(null);
-  const [toToken, setToToken] = useState<Token>(null);
+  const [fromToken, setFromToken] = useState<Token | Strategy>(null);
+  const [toToken, setToToken] = useState<Token | Strategy>(null);
 
   const [canSwap, setCanSwap] = useState(false);
 
-  const selectFromToken = (token: Token) => setFromToken(token);
-  const selectToToken = (token: Token) => setToToken(token);
+  const selectFromToken = (from: Token | Strategy) => setFromToken(from);
+  const selectToToken = (to: Token | Strategy) => setToToken(to);
 
   useEffect(() => {
     switch (swapMode) {
       case SwapMode.DEPOSIT:
         setFromToken(null);
-        setToToken(selectedStrategy?.asset);
+        setToToken(selectedStrategy);
         break;
       case SwapMode.WITHDRAW:
-        setFromToken(selectedStrategy?.asset);
-        setToToken(null);
+        setFromToken(selectedStrategy);
+        setToToken(selectedStrategy?.asset);
         break;
       default:
         break;
     }
-  }, [swapMode, selectedStrategy?.asset]);
+  }, [swapMode, selectedStrategy]);
 
   const switchSelectMode = useCallback(() => {
     setSelectTokenMode(!selectTokenMode);
@@ -160,15 +170,7 @@ const SwapProvider = ({ children }) => {
   useEffect(() => {
     if (!fromToken) {
       const token = tokenBySlug[sortedBalances?.[0]?.slug] ?? null;
-
       selectFromToken(token);
-    }
-    if (swapMode === SwapMode.DEPOSIT) {
-      const token = selectedStrategy?.share ?? null;
-      selectToToken(token);
-    } else {
-      const token = selectedStrategy?.asset ?? null;
-      selectToToken(token);
     }
   }, [fromToken, selectedStrategy, sortedBalances, swapMode, toToken]);
 
@@ -180,7 +182,9 @@ const SwapProvider = ({ children }) => {
         selectToToken,
         setFromValue: (value: number) => setFromValue(value ?? 0),
         setCanSwap: (value: boolean) => setCanSwap(value),
-        setSwapMode: (mode: SwapMode) => setSwapMode(mode),
+        setSwapMode: (mode: SwapMode) => {
+          setSwapMode(mode);
+        },
         fromToken,
         toToken,
         fromValue,
@@ -196,13 +200,13 @@ const SwapProvider = ({ children }) => {
 
 interface MinimalSwapContextType {
   switchSelectMode: () => void;
-  selectFromToken: (token: Token) => void;
-  selectToToken: (token: Token) => void;
+  selectFromToken: (token: Token | Strategy) => void;
+  selectToToken: (token: Token | Strategy) => void;
   setFromValue: (value: number) => void;
   setSwapMode: (mode: SwapMode) => void;
   setCanSwap: (value: boolean) => void;
-  fromToken: Token;
-  toToken: Token;
+  fromToken: Token | Strategy;
+  toToken: Token | Strategy;
   fromValue: number;
   swapMode: SwapMode;
   canSwap: boolean;
@@ -210,9 +214,12 @@ interface MinimalSwapContextType {
 }
 
 interface SwapContext extends MinimalSwapContextType {
-  swap: () => void;
+  swap: () => Promise<void>;
+  lockEstimate: () => void;
+  unlockEstimate: () => void;
   steps: ICommonStep[];
   estimation: any; // todo: change it;
+  estimationError: string;
   toValue: number;
 }
 

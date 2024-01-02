@@ -3,23 +3,27 @@ import { StrategyContext } from "~/context/strategy-context";
 import { SwapContext } from "~/context/swap-context";
 import { TokensContext } from "~/context/tokens-context";
 import SelectToken from "./SelectToken";
-import ModalLayout from "./layout/ModalLayout";
 import SwapInput from "./SwapInput";
 import SwapRouteDetail from "./SwapRouteDetail";
+import ModalLayout, { ModalAction } from "./layout/ModalLayout";
 
+import { usePreviewStrategyTokenMove } from "~/hooks/swap";
 import { tokensIsEqual } from "~/utils";
-import { withdraw } from "~/utils/flows/strategy";
+import { useWithdraw } from "~/hooks/strategy";
+import toast from "react-hot-toast";
 const Withdraw = () => {
   const { selectedStrategy } = useContext(StrategyContext);
   const {
     selectTokenMode,
+    fromToken,
     toToken,
     toValue,
-    fromToken,
     selectToToken,
     switchSelectMode,
     selectFromToken,
     setFromValue,
+    unlockEstimate,
+    canSwap,
     swap,
   } = useContext(SwapContext);
 
@@ -29,6 +33,11 @@ const Withdraw = () => {
 
   const { tokens } = useContext(TokensContext);
 
+  const withdraw = useWithdraw();
+
+  useEffect(() => {
+    unlockEstimate();
+  }, [unlockEstimate]);
   if (selectTokenMode) {
     return (
       <div className="select-token block">
@@ -44,27 +53,35 @@ const Withdraw = () => {
       </div>
     );
   }
-  const modalActions = [
+
+  const modalActions: ModalAction[] = [
     {
       label: "Withdraw",
+      disabled: !canSwap,
       onClick: async () => {
-        const withdrawPromise = withdraw({
-          strategy: selectedStrategy,
-          value: toValue,
-        });
-        if (tokensIsEqual(fromToken, toToken)) {
-          await withdrawPromise;
-          swap();
+        try {
+          const result = await withdraw(toValue);
+          console.log(
+            "🚀 ~ file: Withdraw.tsx:62 ~ onClick: ~ result:",
+            result
+          );
+          toast.success("Withdrawal successful");
+          if (!tokensIsEqual(fromToken, toToken)) {
+            swap();
+          }
+        } catch (e) {
+          toast.error(e.message);
         }
       },
     },
   ];
+
   return (
     <ModalLayout actions={modalActions}>
       <div className="flex gap-5 relative w-full flex-col">
         <SwapInput
           locked={true}
-          selected={selectedStrategy?.share}
+          selected={selectedStrategy}
           onChange={(value) => setFromValue(value)}
         />
         <SwapInput selected={toToken} isDestination={true} />
