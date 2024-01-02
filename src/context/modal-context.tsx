@@ -38,15 +38,12 @@ export const ModalProvider = ({ children }: ModalContextProps) => {
     [modals]
   );
 
-  const openModal = useCallback(
-    (modal: BaseModal) => {
-      setModals([...modals, modal]);
-      setSelectedModal(modals.length);
-      setVisible(true);
-      return () => closeModal([...modals, modal]);
-    },
-    [closeModal, modals]
-  );
+  const openModal = (modal: BaseModal) => {
+    setModals([...modals, modal]);
+    setSelectedModal(modals.length);
+    setVisible(true);
+    return () => closeModal([...modals, modal]);
+  };
 
   return (
     <Provider

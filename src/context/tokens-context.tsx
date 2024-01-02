@@ -140,13 +140,11 @@ export const TokensProvider = ({ children }) => {
     return balances
       .filter((balance) => {
         const token = tokenBySlugMapping[balance.slug];
-
         const price = tokenPrices[token?.coinGeckoId]?.usd;
 
         if (!price) {
           return false;
         }
-
         const value = amountToEth(BigInt(balance.amount), token?.decimals);
         return value * price > 1;
       })
