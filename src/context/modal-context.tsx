@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useCallback, useState } from "react";
 import { BaseModal } from "~/components/Modal";
 
 export interface ModalContextType {
@@ -24,21 +24,28 @@ export const ModalProvider = ({ children }: ModalContextProps) => {
 
   const [selectedModal, setSelectedModal] = useState<number>();
 
+  const closeModal = useCallback(
+    (_modals?: any[]) => {
+      const modalList = _modals ?? modals;
+
+      setModals(modalList.slice(0, modalList.length - 1));
+      if (modalList.length === 1) {
+        setSelectedModal(null);
+        setVisible(false);
+      } else {
+        setSelectedModal(modalList.length - 2);
+      }
+    },
+    [modals]
+  );
+
   const openModal = (modal: BaseModal) => {
     setModals([...modals, modal]);
     setSelectedModal(modals.length);
     setVisible(true);
+    return () => closeModal([...modals, modal]);
   };
-  const closeModal = () => {
-    setModals(modals.slice(0, modals.length - 1));
 
-    if (modals.length === 1) {
-      setSelectedModal(null);
-      setVisible(false);
-    } else {
-      setSelectedModal(modals.length - 2);
-    }
-  };
   return (
     <Provider
       value={{

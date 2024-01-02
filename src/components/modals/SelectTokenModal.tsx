@@ -14,7 +14,8 @@ interface SelectTokenModalProps extends BaseModalProps {
 
 const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
   const { sortedBalances } = useContext(TokensContext);
-  const { selectFromToken, switchSelectMode } = useContext(SwapContext);
+  const { selectFromToken, switchSelectMode, selectToToken } =
+    useContext(SwapContext);
   const { tokens } = useContext(TokensContext);
   const { closeModal } = useContext(SwapModalContext);
 
@@ -39,7 +40,7 @@ const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
               if (mode === SelectTokenModalMode.Deposit) {
                 selectFromToken(token);
               } else {
-                SelectToken(token);
+                selectToToken(token);
               }
               switchSelectMode();
               closeModal();
