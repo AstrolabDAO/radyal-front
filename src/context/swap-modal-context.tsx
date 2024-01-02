@@ -6,7 +6,7 @@ import { SwapProvider } from "./swap-context";
 export const SwapModalContext = createContext<ModalContextType>({
   visible: false,
   selectedModal: null,
-  openModal: () => {},
+  openModal: () => () => {},
   closeModal: () => {},
 });
 

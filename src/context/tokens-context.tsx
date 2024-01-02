@@ -134,14 +134,6 @@ export const TokensProvider = ({ children }) => {
   }, [balancesData, tokensData, tokens, address]);
 
   const sortedBalances = useMemo(() => {
-    console.log(
-      "🚀 ~ file: tokens-context.tsx:121 ~ balancesData?.forEach ~ tokenBySlugMapping:",
-      tokenBySlugMapping
-    );
-    console.log(
-      "🚀 ~ file: tokens-context.tsx:143 ~ sortedBalances ~ tokenPrices:",
-      tokenPrices
-    );
     if (!tokenPrices || Object.values(tokenBySlugMapping).length === 0)
       return [];
 
