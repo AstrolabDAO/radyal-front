@@ -1,7 +1,7 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 
 import { useQuery } from "react-query";
-import { WagmiConfig, useNetwork, useWalletClient } from "wagmi";
+import { WagmiConfig } from "wagmi";
 import { getNetworks, getProtocols } from "~/utils/api.ts";
 import {
   chainIdByDeFiId,
@@ -33,9 +33,6 @@ const Web3Context = createContext<Web3ContextType>({
   networks: [],
   protocols: [],
 });
-
-export let currentChain = null;
-export let etherSigner = null;
 
 const Web3Provider = ({ children }) => {
   const [config, setConfig] = useState(null);
@@ -122,20 +119,9 @@ const Web3Provider = ({ children }) => {
 
   return (
     <Web3Context.Provider value={{ config, networks, protocols }}>
-      <WagmiConfig config={config}>
-        <UpdateSigner>{children}</UpdateSigner>
-      </WagmiConfig>
+      <WagmiConfig config={config}>{children}</WagmiConfig>
     </Web3Context.Provider>
   );
 };
 
-const UpdateSigner = ({ children }) => {
-  const { data: signer } = useWalletClient();
-  const { chain } = useNetwork();
-  useEffect(() => {
-    etherSigner = signer;
-    currentChain = chain;
-  }, [chain, signer]);
-  return <>{children}</>;
-};
 export { Web3Context, Web3Provider };

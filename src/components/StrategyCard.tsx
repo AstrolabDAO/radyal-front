@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { StrategyContext } from "~/context/strategy-context";
 import { Strategy } from "~/utils/interfaces";
@@ -9,8 +9,6 @@ import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { SwapModalContext } from "~/context/swap-modal-context";
 import IconCard from "./IconCard";
 import SwapModal from "./modals/SwapModal";
-
-import StrategyCardBackground from "../assets/strategy-card-background.svg?react";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -22,19 +20,28 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   const { selectStrategy, selectedStrategy } = useContext(StrategyContext);
   const { openModal } = useContext(SwapModalContext);
 
+  const [connectionAsked, setConnectionAsked] = useState(false);
   const { isConnected } = useAccount();
   const web3Modal = useWeb3Modal();
 
+  useEffect(() => {
+    if (isConnected && connectionAsked) {
+      openModal(<SwapModal />);
+      setConnectionAsked(false);
+    }
+  }, [connectionAsked, isConnected, openModal]);
   return (
     <li
       className={clsx(
         "card bg-base-100 shadow-xl p-2 cursor-pointer transition-500 active-bordered active-shadow bg-dark",
         { active: selectedStrategy?.slug === strategy.slug }
       )}
-      onClick={() => {
+      onClick={async () => {
         selectStrategy(strategy);
-        if (!isConnected) web3Modal.open().then(() => openModal(<SwapModal />));
-        else openModal(<SwapModal />);
+        if (!isConnected) {
+          await web3Modal.open({ view: "Connect" });
+          setConnectionAsked(true);
+        } else openModal(<SwapModal />);
       }}
     >
       <div>

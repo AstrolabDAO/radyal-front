@@ -1,12 +1,12 @@
-import { useAccount } from "wagmi";
-import { disconnect } from "wagmi/actions";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { useAccount } from "wagmi";
 
 import { shortenAddress } from "~/utils/format";
 import Button from "./Button";
 
 const Header = () => {
   const { address, isConnected } = useAccount();
+
   const web3Modal = useWeb3Modal();
 
   return (
@@ -27,15 +27,12 @@ const Header = () => {
                 <Button onClick={() => web3Modal.open()}>Connect wallet</Button>
               )}
               {isConnected && (
-                <>
-                  <Button
-                    className="flex mr-4 cursor-pointer transition-ease hover:text-primary"
-                    onClick={() => web3Modal.open()}
-                  >
-                    {shortenAddress(address.toLowerCase())}
-                  </Button>
-                  <Button onClick={() => disconnect()}>Logout</Button>
-                </>
+                <Button
+                  className="flex mr-4 cursor-pointer transition-ease hover:text-primary"
+                  onClick={() => web3Modal.open()}
+                >
+                  {shortenAddress(address.toLowerCase())}
+                </Button>
               )}
             </div>
           </div>
