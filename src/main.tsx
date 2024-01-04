@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { QueryClient, QueryClientProvider, QueryKey } from "react-query";
-
+import { LayoutProvider } from "./context/layout-context.tsx";
 import { persistQueryClient } from "react-query/persistQueryClient-experimental";
 import { createWebStoragePersistor } from "react-query/createWebStoragePersistor-experimental";
 
@@ -40,7 +40,9 @@ persistQueryClient({
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <LayoutProvider>
+        <App />
+      </LayoutProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );

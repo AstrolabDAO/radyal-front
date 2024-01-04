@@ -1,8 +1,8 @@
 import { useAccount } from "wagmi";
-import { disconnect } from "wagmi/actions";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 import { shortenAddress } from "~/utils/format";
+
 import Button from "../Button";
 import Logo from "~/assets/logo/logo.svg?react";
 
@@ -11,10 +11,13 @@ const Header = () => {
   const web3Modal = useWeb3Modal();
 
   return (
-    <header>
-      <div className="fixed navbar z-20">
+    <header className="sticky top-0 z-20">
+      <div className="navbar container mx-auto">
         <div className="navbar-start">
-          <Logo className="flex w-32 md:w-64 fill-white" />
+          <Logo
+            className="flex w-32 md:w-64 fill-white"
+            onClick={() => window.location.replace("/disclaimer")}
+          />
         </div>
         <div className="navbar-end">
           { !isConnected && (
@@ -23,15 +26,10 @@ const Header = () => {
           { isConnected && (
             <>
               <Button
-                className="mr-4 transition-ease hover:text-primary"
+                className="mr-4 transition-ease hover:text-primary h-4 btn-small"
                 onClick={() => web3Modal.open()}
               >
-                {shortenAddress(address.toLowerCase())}
-              </Button>
-              <Button
-                primary={false}
-                className="hover:text-primary"
-                onClick={() => disconnect() }>Logout
+                { shortenAddress(address.toLowerCase()) }
               </Button>
             </>
           )}
