@@ -117,13 +117,10 @@ export const TokensProvider = ({ children }) => {
 
     balancesData?.forEach(([balance, token]) => {
       if (token && !tokenBySlugMapping[token.slug]) {
+        updateTokenMapping(token);
         _tokens.push(token);
       }
       _balances.push(balance);
-    });
-
-    _tokens?.forEach((token) => {
-      updateTokenMapping(token);
     });
 
     setTokensBySlugs({ ...tokenBySlugMapping });
@@ -134,14 +131,6 @@ export const TokensProvider = ({ children }) => {
   }, [balancesData, tokensData, tokens, address]);
 
   const sortedBalances = useMemo(() => {
-    console.log(
-      "🚀 ~ file: tokens-context.tsx:121 ~ balancesData?.forEach ~ tokenBySlugMapping:",
-      tokenBySlugMapping
-    );
-    console.log(
-      "🚀 ~ file: tokens-context.tsx:143 ~ sortedBalances ~ tokenPrices:",
-      tokenPrices
-    );
     if (!tokenPrices || Object.values(tokenBySlugMapping).length === 0)
       return [];
 
@@ -154,7 +143,6 @@ export const TokensProvider = ({ children }) => {
         if (!price) {
           return false;
         }
-
         const value = amountToEth(BigInt(balance.amount), token?.decimals);
         return value * price > 1;
       })

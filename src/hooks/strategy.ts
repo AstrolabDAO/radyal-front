@@ -145,7 +145,7 @@ export const useApproveAndDeposit = () => {
           });
           await approvePending;
         }
-        const { hash: depositHash } = await deposit(amount);
+        const depositHash = (await deposit(amount)) as `0x${string}`;
 
         const depositPending = publicClient.waitForTransactionReceipt({
           hash: depositHash,

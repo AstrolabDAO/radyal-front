@@ -58,6 +58,7 @@ const CompleteProvider = ({ children }) => {
     useState<boolean>(false);
 
   const [estimationError, setEstimationError] = useState<string>(null);
+
   const [updateEstimation, setUpdateEstimation] = useState(true);
 
   const executeSwap = useExecuteSwap();
@@ -66,7 +67,15 @@ const CompleteProvider = ({ children }) => {
 
   const { data: estimation } = useQuery(
     cacheHash("estimate", swapMode, fromToken, toToken, fromValue),
-    estimateRoute,
+    async () => {
+      if (estimationOnProgress) return;
+      setEstimationOnProgress(true);
+      setEstimationError(null);
+      const estimate = await estimateRoute();
+
+      setEstimationOnProgress(false);
+      return estimate;
+    },
     {
       staleTime: 1000 * 15,
       cacheTime: 1000 * 15,
@@ -87,6 +96,7 @@ const CompleteProvider = ({ children }) => {
       setToValue(estimationOnProgress ? null : 0);
       setSteps([]);
       setCanSwap(false);
+
       if (estimation?.error) setEstimationError(estimation.error);
       return;
     }

@@ -14,7 +14,7 @@ import {
 import getBalances, { multicall } from "./multicall";
 import { NETWORKS } from "./web3-constants";
 import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5Agent.json";
-import { clearNetworkTypeFromSlug, slugify } from "./format";
+import { clearNetworkTypeFromSlug } from "./format";
 
 export const getBalancesFromDeFI = async (
   address: `0x${string}`,
@@ -60,6 +60,7 @@ export const getBalancesFromDeFI = async (
             network.slug
           )}:${apiToken.symbol.toLowerCase()}`,
         } as Token;
+
         return [balance, _token];
       }
 
