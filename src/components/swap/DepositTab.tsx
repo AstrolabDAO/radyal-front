@@ -31,7 +31,7 @@ const DepositTab = () => {
       />
       <DepositFrom strategy={ selectedStrategy } />
       <div className="sticky top-0">
-        <button className="btn btn-primary mt-5 w-full">Bridge and Deposit</button>
+        <button className="btn btn-primary mt-5 w-full button-primary-gradient button-primary-gradient-inverse border-0">Bridge and Deposit</button>
       </div>
     </div>
   );
