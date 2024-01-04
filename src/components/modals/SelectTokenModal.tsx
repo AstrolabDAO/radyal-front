@@ -23,8 +23,7 @@ const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
       ? sortedBalances
           .filter((balance) => {
             const token = tokenBySlug[balance.slug];
-            if (!token) return false;
-            return true;
+            return !!token;
           })
           .map((balance) => tokenBySlug[balance.slug])
       : tokens;

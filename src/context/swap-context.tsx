@@ -141,6 +141,7 @@ const CompleteProvider = ({ children }) => {
     </SwapContext.Provider>
   );
 };
+
 const SwapProvider = ({ children }) => {
   const { sortedBalances } = useContext(TokensContext);
   const { selectedStrategy } = useContext(StrategyContext);
