@@ -10,7 +10,6 @@ import { SelectTokenModalMode } from "~/utils/constants";
 interface SelectTokenModalProps extends BaseModalProps {
   mode: SelectTokenModalMode;
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
   const { sortedBalances } = useContext(TokensContext);

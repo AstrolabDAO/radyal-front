@@ -37,7 +37,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   const { isConnected } = useAccount({ onConnect: handleConnect });
 
   const [strategy] = strategyGroup;
-  const { share: { name } } = strategy;
+  const { name } = strategy;
   const [title, subtitle]  = name.replace("Astrolab ", "").split(" ");
 
   const {
