@@ -2,7 +2,7 @@
 
 import * as daisyui from "daisyui";
 import * as themes from "daisyui/src/theming/themes";
-import { COLORS } from "./src/styles/constants";
+import { COLORS, BACKGROUNDS } from "./src/styles/constants";
 
 import pSBCLib from "shade-blend-color";
 
@@ -43,6 +43,10 @@ export default {
       {
         dark: {
           ...themes.default.dark,
+          primary: PALETTE["primary"],
+          "primary-content": BACKGROUNDS["base"],
+          "base-100": PALETTE["base-100"],
+          "neutral": PALETTE["neutral"]
         },
       },
     ],
