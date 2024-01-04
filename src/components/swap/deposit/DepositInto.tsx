@@ -1,6 +1,12 @@
-const DepositInto = ({ strategy }) => {
+import { Strategy } from "~/utils/interfaces";
 
-  const { share: { name } } = strategy;
+type DepositIntoProps = {
+  strategy: Strategy;
+}
+
+const DepositInto = ({ strategy }: DepositIntoProps) => {
+
+  const { name } = strategy;
   const [title, subtitle]  = name.replace("Astrolab ", "").split(" ");
 
   const description = `Algorithmically provides liquidity across stable pools on ${title}.`
