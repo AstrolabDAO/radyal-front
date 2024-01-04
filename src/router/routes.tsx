@@ -18,10 +18,6 @@ const routes: RouteObject[] = [
     path: "/swap",
     element: <SwapPage />,
   },
-  {
-    path: "/disclaimer",
-    element: <DisclaimerPage />,
-  },
 ];
 
 export default routes;
