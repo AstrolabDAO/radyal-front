@@ -3,9 +3,9 @@ import { FaTwitter, FaDiscord, FaGithub } from "react-icons/fa";
 
 import router from "~/router/router";
 import LocalStorageService from "~/services/localStorage";
-import { LayoutContext } from "~/context/layout-context.tsx";
 
-import RiskDisclaimerMd from '@/assets/docs/risk-disclaimer.md';
+import { LayoutContext } from "~/context/layout-context";
+import RiskDisclaimerMd from "~/assets/docs/risk.mdx";
 
 const DisclaimerPage = () => {
   const localStorageKey = 'disclaimerAccepted';
@@ -47,7 +47,7 @@ const DisclaimerPage = () => {
         </div>
         <div className="w-2/3 xl:w-5/12 mx-auto mt-6 mb-3">
           <div className="border-solid border-2 border-sky-500 rounded-xl p-4 h-64 overflow-scroll">
-            <RiskDisclaimerMd />
+            <RiskDisclaimerMd/>
           </div>
         </div>
         <div className="flex flex-row mx-auto my-3">
