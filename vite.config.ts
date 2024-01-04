@@ -5,8 +5,7 @@ import { existsSync, readFileSync } from "fs";
 import * as dotenv from "dotenv";
 import postCssConfig from "./postcss.config";
 import svgr from "vite-plugin-svgr";
-import Markdown from 'vite-plugin-md';
-
+import mdx from '@mdx-js/rollup'
 
 // import { PALETTE } from "./tailwind.config";
 
@@ -24,8 +23,22 @@ export default ({ mode }) => {
         plugins: postCssConfig.plugins,
       },
     },
-    plugins: [react(), svgr(), Markdown()],
+    plugins: [
+      { enforce: 'pre', ...mdx() },
+      react({ include: /\.(mdx|js|jsx|ts|tsx)$/ }),
+      svgr(),
+      /*{
+        name: "markdown-loader",
+        transform(code, id) {
+          if (id.slice(-3) === ".md") {
+            // For .md files, get the raw content
+            return `export default ${JSON.stringify(code)};`;
+          }
+        }
+      }*/
+    ],
     publicDir: "./static",
+    assetsInclude: ["**/*.md"],
     define: {
       global: "globalThis",
       __version__: JSON.stringify(process.env.npm_package_version),
