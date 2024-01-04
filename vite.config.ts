@@ -5,6 +5,9 @@ import { existsSync, readFileSync } from "fs";
 import * as dotenv from "dotenv";
 import postCssConfig from "./postcss.config";
 import svgr from "vite-plugin-svgr";
+import Markdown from 'vite-plugin-md';
+
+
 // import { PALETTE } from "./tailwind.config";
 
 const envPath = ".env";
@@ -21,7 +24,7 @@ export default ({ mode }) => {
         plugins: postCssConfig.plugins,
       },
     },
-    plugins: [react(), svgr()],
+    plugins: [react(), svgr(), Markdown()],
     publicDir: "./static",
     define: {
       global: "globalThis",

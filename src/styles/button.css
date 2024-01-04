@@ -1,0 +1,32 @@
+
+.btn-primary {
+  background: linear-gradient(
+    180deg,
+    #FFD25F 0%,
+    #F5B100 14.06%,
+    #FFB800 46.88%,
+    #FFC327 86.98%,
+    #9D7100 100%
+  );
+
+}
+.btn-secondary {
+  background: linear-gradient(
+    180deg,
+    #6B6B6B 0%,
+    rgba(70, 70, 70, 1.00) 4.17%,
+    rgba(58, 57, 57, 1.00) 11.98%,
+    rgba(67, 67, 67, 0.99) 48.44%,
+    rgba(61, 61, 61, 0.98) 90.1%,
+    rgba(36, 36, 36, 0.98) 100%
+  ), #2D2D2D;
+}
+
+.btn.btn-small {
+  min-height: 2.85rem;
+}
+
+.btn-primary,
+.btn.btn-secondary {
+  border: 0;
+}
