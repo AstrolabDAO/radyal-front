@@ -13,6 +13,7 @@ import SwapStepsModal from "./modals/SwapStepsModal";
 import { useApproveAndDeposit } from "~/hooks/strategy";
 import { tokensIsEqual } from "~/utils";
 import toast from "react-hot-toast";
+import { StrategyContext } from "~/context/strategy-context";
 
 const Deposit = () => {
   const {
@@ -28,9 +29,10 @@ const Deposit = () => {
   const { setFromValue, swap, canSwap, unlockEstimate } =
     useContext(SwapContext);
 
+  const { selectedStrategy } = useContext(StrategyContext);
   const [locked, setLocked] = useState(false);
 
-  const { openModal, closeModal } = useContext(SwapModalContext);
+  const { openModal } = useContext(SwapModalContext);
 
   const { sortedBalances } = useContext(TokensContext);
 
@@ -59,7 +61,7 @@ const Deposit = () => {
         const close = openModal(<SwapStepsModal />);
         try {
           setLocked(true);
-          if (!tokensIsEqual(fromToken, toToken)) {
+          if (!tokensIsEqual(fromToken, selectedStrategy.asset)) {
             await swap();
           } else {
             await approveAndDeposit(fromValue);

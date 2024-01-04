@@ -8,5 +8,8 @@ export const tokensIsEqual = (
   const b = tokenB as Strategy;
   const A = a?.asset ? a.asset : tokenA;
   const B = b.asset ? b.asset : tokenB;
-  return A?.address === B?.address && A?.network.id === B?.network.id;
+  return (
+    A?.address.toLocaleLowerCase() === B?.address.toLocaleLowerCase() &&
+    A?.network.id === B?.network.id
+  );
 };

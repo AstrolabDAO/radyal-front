@@ -117,13 +117,10 @@ export const TokensProvider = ({ children }) => {
 
     balancesData?.forEach(([balance, token]) => {
       if (token && !tokenBySlugMapping[token.slug]) {
+        updateTokenMapping(token);
         _tokens.push(token);
       }
       _balances.push(balance);
-    });
-
-    _tokens?.forEach((token) => {
-      updateTokenMapping(token);
     });
 
     setTokensBySlugs({ ...tokenBySlugMapping });
@@ -140,6 +137,7 @@ export const TokensProvider = ({ children }) => {
     return balances
       .filter((balance) => {
         const token = tokenBySlugMapping[balance.slug];
+
         const price = tokenPrices[token?.coinGeckoId]?.usd;
 
         if (!price) {
