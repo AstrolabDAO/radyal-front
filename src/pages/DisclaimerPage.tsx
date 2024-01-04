@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 import { FaTwitter, FaDiscord, FaGithub } from "react-icons/fa";
-import { disclaimerContext } from "~/context/disclaimer-context";
+import { DisclaimerContext } from "~/context/disclaimer-context";
 
 import RiskDisclaimerMd from "~/assets/docs/risk.mdx";
 
 const DisclaimerPage = () => {
-  const { accept } = useContext(disclaimerContext);
+  const { accept } = useContext(DisclaimerContext);
   const [saveDisclaimerStatus, setSaveDisclaimerStatus] =
     useState<boolean>(false);
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
