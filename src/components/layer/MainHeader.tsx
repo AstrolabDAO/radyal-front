@@ -19,6 +19,11 @@ const Header = () => {
             onClick={() => window.location.replace("/disclaimer")}
           />
         </div>
+        <div className="navbar flex flex-row justify-center gap-10">
+          <div className="flex font-extrabold text-white">FARM</div>
+          <div className="flex">STAKE</div>
+          <div className="flex">MINT</div>
+        </div>
         <div className="navbar-end">
           { !isConnected && (
             <Button onClick={() => web3Modal.open()}>Connect wallet</Button>
@@ -26,7 +31,7 @@ const Header = () => {
           { isConnected && (
             <>
               <Button
-                className="mr-4 transition-ease hover:text-primary h-4 btn-small"
+                className="transition-ease hover:text-primary h-4 btn-small"
                 onClick={() => web3Modal.open()}
               >
                 { shortenAddress(address.toLowerCase()) }

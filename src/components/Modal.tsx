@@ -61,7 +61,7 @@ const Modal = () => {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="transform overflow-y-auto overflow-x-hidden rounded-lg shadow-xl transition-all backdrop-blur-medium bg-base-dark-transparent">
-                <div className="relative text-left z-50 max-h-screen md:max-w-xl max-h-90">
+                <div className="relative text-left z-50 max-h-screen w-screen lg:max-w-xl max-h-90">
                   <button
                     className="right-0 top-0 absolute p-2 z-50"
                     onClick={onClose}
