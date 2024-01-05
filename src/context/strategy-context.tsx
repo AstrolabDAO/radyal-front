@@ -106,23 +106,25 @@ export const StrategyProvider = ({ children }) => {
 
   const filteredStrategies = useMemo<GrouppedStrategies>(() => {
     const grouppedStrategies: GrouppedStrategies = {};
+    console.log(strategies);
     strategies
       .filter(({ network }) => {
         if (!networksFilter.length) return true;
         return networksFilter.includes(network.slug);
       })
+      .filter(({ address }) => address !== "0x0000000000000000000000000000000000000000")
       .filter((item) =>
         Object.values(item).some((value) =>
           value.toString().toLowerCase().includes(search.toLowerCase())
         )
       )
       .map((strategy) => {
-        const splittedSlug = strategy.slug.split(":")[2];
+        const splittedSlug = strategy.slug.split(":")[1];
+        console.log('slug', splittedSlug);
         if (!grouppedStrategies[splittedSlug])
           grouppedStrategies[splittedSlug] = [];
         grouppedStrategies[splittedSlug].push(strategy);
       });
-
     return grouppedStrategies;
   }, [search, strategies, networksFilter]);
 

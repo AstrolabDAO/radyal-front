@@ -76,18 +76,39 @@ export const getTokenPrice = (token: Token) => {
     },
   });
 };
-export const getTokensPrices = async (tokens: Token[]) => {
-  if (!tokens) return;
-  const tokensIds = new Set(tokens.map((token) => token.coinGeckoId));
 
-  return axios
-    .get(`${COINGECKO_API}/simple/price`, {
+export const getTokensPrices = async (tokens) => {
+
+  if (!tokens || tokens.length === 0) return;
+
+  const { data: supportedCoins } = await axios.get(`${COINGECKO_API}/coins/list`);
+
+  const tokensIds = new Set(tokens
+    .filter((token) => supportedCoins.some((coin) => coin.id === token.coinGeckoId))
+    .map((token) => token.coinGeckoId)
+  );
+  const idsArray = Array.from(tokensIds);
+  const chunkSize = Math.ceil(idsArray.length / 30);
+  const requests = [];
+
+  for (let i = 0; i < idsArray.length; i += chunkSize) {
+    const chunkIds = idsArray.slice(i, i + chunkSize);
+    const request = axios.get(`${COINGECKO_API}/simple/price`, {
       params: {
-        ids: Array.from(tokensIds).join(","),
+        ids: chunkIds.join(","),
         vs_currencies: "usd",
       },
-    })
-    .then((data) => data.data);
+    }).then(response => response.data);
+    requests.push(request);
+  }
+
+  try {
+    const results = await Promise.all(requests);
+    return results.reduce((acc, data) => ({ ...acc, ...data }), {});
+  } catch (error) {
+    console.error('Error fetching token prices:', error);
+    throw error;
+  }
 };
 
 export const updateTokenPrices = async (tokens: Token[]) => {
@@ -248,6 +269,9 @@ export const getStrategies = async () => {
     .filter((strategy) => {
       console.log("🚀 ~ file: api.ts:244 ~ .filter ~ strategy:", strategy);
       const { nativeNetwork, denomination } = strategy;
+
+      if (denomination === null) return false;
+
       const network = networkBySlug[nativeNetwork];
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
