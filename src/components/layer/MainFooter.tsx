@@ -1,5 +1,8 @@
 const MainFooter = () =>
-  <footer className="footer p-10 bg-neutral text-neutral-content">
+  <footer
+    className="footer p-10 bg-neutral text-neutral-content"
+    style={{ borderTop: '0.1px solid #fff' }}
+  >
     <div className="footer container mx-auto">
       <nav>
         <header className="footer-title">Services</header>

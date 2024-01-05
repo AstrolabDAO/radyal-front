@@ -10,13 +10,13 @@ const StrategyCardIcons = ({ strategyGroup }: StrategyCardIconsProps) => {
     <div className="flex w-full justify-end items-center">
       <span className="mr-2">ON</span>
       <div
-        className={"flex flex-row border border-solid border-gray-500 rounded-3xl"}
+        className={"flex flex-row border border-solid border-gray-500 rounded-3xl px-0.5"}
       >
-        { strategyGroup.map((strategy, index) => {
+        { strategyGroup.slice(0,2).map((strategy, index) => {
           return (
             <div
               key={`${strategy.network.id}-${index}`}
-              className="flex py-1 mx-1"
+              className="flex py-1 mx-0.5"
             >
               <IconCard
                 icon={{
@@ -28,6 +28,15 @@ const StrategyCardIcons = ({ strategyGroup }: StrategyCardIconsProps) => {
             </div>
           );
         })}
+        {
+          strategyGroup.length > 2 &&
+          <div
+            style={{ width: 20, height: 20 }}
+            className="my-auto p-0.5 bg-white rounded-xl mx-0.5 text-xs"
+          >
+            +{strategyGroup.length - 2}
+          </div>
+        }
       </div>
     </div>
   );

@@ -1,23 +1,28 @@
+import { useContext } from "react";
+
 import { Strategy } from "~/utils/interfaces";
-import DepositSwapBlock from "../helpers/DepositSwapBlock";
+import { SwapContext } from "~/context/swap-context";
+
+import SwapBlock from "../helpers/SwapBlock";
 
 const DepositFor = ({ strategy }: { strategy: Strategy }) => {
-  const number = 123;
+  const { toValue: depositToValue } = useContext(SwapContext);
   const icons = {
-    background: `/images/${strategy.icon}`,
-    foreground: strategy.network.icon,
+    background: `/images/${strategy?.icon}`,
+    foreground: strategy?.network?.icon,
   };
 
-
   return (
-    <DepositSwapBlock
-      disabled={true}
+    <SwapBlock
+      token={ strategy }
+      disabled={ true }
       label="FOR"
-      icons={icons}
+      icons={ icons }
       onTokenClick={() => { } }
-      symbol={strategy?.symbol}
-      network={strategy?.network.name}
-      children={<div className="text-xl font-bold mt-2 mb-1"> { number } </div>}
+      symbol={ strategy?.symbol }
+      network={ strategy?.network.name }
+      value={ depositToValue }
+      children={ <div className="text-xl font-bold mt-2 mb-1"> { depositToValue } </div> }
     />
   )
 }
