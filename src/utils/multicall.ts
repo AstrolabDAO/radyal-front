@@ -51,7 +51,7 @@ export const getBalances = async (
         : `${clearNetworkTypeFromSlug(
             network.slug
           )}:${contract.symbol.toLowerCase()}`,
-      amount: result.toString(),
+      amount: result?.toString() ?? '0',
     };
 
     balances.push([balance, null]);

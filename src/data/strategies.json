@@ -205,14 +205,14 @@
   },
   {
     "name": "Spark USDC Gnosis",
-    "slug": "gnosis-mainnet:spark-usdc",
-    "underlying": "gnosis-mainnet:usdc",
+    "slug": "gnosis-chain-mainnet:spark-usdc",
+    "underlying": "gnosis-chain-mainnet:usdc",
     "rewardTokens": []
   },
   {
     "name": "Spark ETH Gnosis",
-    "slug": "gnosis-mainnet:spark-eth",
-    "underlying": "gnosis-mainnet:eth",
+    "slug": "gnosis-chain-mainnet:spark-eth",
+    "underlying": "gnosis-chain-mainnet:eth",
     "rewardTokens": []
   }
 ]
