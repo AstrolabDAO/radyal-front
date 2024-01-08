@@ -17,7 +17,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   const strategy = strategyGroup[0];
 
   const { name } = strategy;
-  const { selectStrategy, selectedStrategy } = useContext(StrategyContext);
+  const { selectStrategy, selectedStrategy, selectGroup} = useContext(StrategyContext);
   const { openModal } = useContext(SwapModalContext);
 
   const [connectionAsked, setConnectionAsked] = useState(false);

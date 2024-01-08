@@ -54,6 +54,7 @@ const CompleteProvider = ({ children }) => {
   const [steps, setSteps] = useState<ICommonStep[]>([]);
 
   const [writeOnProgress, setWriteOnprogress] = useState<boolean>(true);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [estimationOnProgress, setEstimationOnProgress] =
     useState<boolean>(false);
 
@@ -140,6 +141,7 @@ const CompleteProvider = ({ children }) => {
     </SwapContext.Provider>
   );
 };
+
 const SwapProvider = ({ children }) => {
   const { sortedBalances } = useContext(TokensContext);
   const { selectedStrategy } = useContext(StrategyContext);

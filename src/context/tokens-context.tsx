@@ -57,6 +57,7 @@ export const TokensProvider = ({ children }) => {
   const [loadPrices, setLoadPrices] = useState<boolean>(false);
   const [canLoadBalances, setCanLoadBalances] = useState<boolean>(false);
   const [tokensBySlug, setTokensBySlugs] = useState<TokenBySlugMapping>({});
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [balancesBySlug, setBalancesBySlug] = useState<BalanceBySlugMapping>(
     {}
   );

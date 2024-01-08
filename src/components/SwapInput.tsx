@@ -30,11 +30,6 @@ const SwapInput = ({
     return amountToEth(BigInt(balance?.amount ?? 0), selected.decimals);
   }, [selected]);
 
-  console.log(
-    "🚀 ~ file: SwapInput.tsx:32 ~ selectedBalance ~ selectedBalance:",
-    selectedBalance
-  );
-
   const tokenPrice = useMemo(() => {
     if (!selected || !tokenPrices) return 0;
 
