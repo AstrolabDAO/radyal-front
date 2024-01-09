@@ -1,24 +1,12 @@
-import {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 
 import { getTokens, getTokensPrices, loadBalancesByAddress } from "~/utils/api";
+import { Balance, CoingeckoPrices, Token } from "~/utils/interfaces";
 import {
-  Balance,
-  BalanceBySlugMapping,
-  CoingeckoPrices,
-  Token,
-  TokenBySlugMapping,
-} from "~/utils/interfaces";
-import {
-  tokenBySlug as tokenBySlugMapping,
   updateTokenMapping,
   updateBalanceMapping,
-  balanceBySlug as balanceBySlugMapping,
+  tokensBySlugForPriceAPI,
+  tokenBySlug,
 } from "~/utils/mappings";
 
 import { useQuery } from "react-query";
@@ -31,11 +19,7 @@ interface TokensContextType {
   balances: Balance[];
   sortedBalances: Balance[];
   tokenPrices: CoingeckoPrices;
-  tokensBySlug?: TokenBySlugMapping;
   tokensIsLoaded: boolean;
-  updateTokenBySlug: (token: Token) => void;
-  refreshTokenBySlugs: () => void;
-  tokenBySlug: (slug: string) => Token;
 }
 
 export const TokensContext = createContext<TokensContextType>({
@@ -43,11 +27,7 @@ export const TokensContext = createContext<TokensContextType>({
   balances: [],
   sortedBalances: [],
   tokenPrices: {},
-  tokensBySlug: {},
   tokensIsLoaded: false,
-  updateTokenBySlug: () => {},
-  refreshTokenBySlugs: () => {},
-  tokenBySlug: (): any => {},
 });
 
 export const TokensProvider = ({ children }) => {
@@ -55,35 +35,16 @@ export const TokensProvider = ({ children }) => {
 
   const [balances, setBalances] = useState<Balance[]>([]);
   const [loadPrices, setLoadPrices] = useState<boolean>(false);
+
   const [canLoadBalances, setCanLoadBalances] = useState<boolean>(false);
-  const [tokensBySlug, setTokensBySlugs] = useState<TokenBySlugMapping>({});
-  const [balancesBySlug, setBalancesBySlug] = useState<BalanceBySlugMapping>(
-    {}
-  );
 
   const { address, isConnected } = useAccount();
-
-  const updateTokenBySlug = useCallback((token: Token) => {
-    tokenBySlugMapping[token.slug] = token;
-  }, []);
-
-  const tokenBySlug = useCallback(
-    (slug: string) => {
-      return tokensBySlug[slug];
-    },
-    [tokensBySlug]
-  );
-
-  const refreshTokenBySlugs = useCallback(() => {
-    setTokensBySlugs({ ...tokenBySlugMapping });
-  }, []);
 
   const { data: tokensData, isLoading } = useQuery("tokens", getTokens);
 
   useEffect(() => {
     tokensData?.forEach((token) => updateTokenMapping(token));
     setTokens(tokensData);
-    setTokensBySlugs({ ...tokenBySlugMapping });
     setCanLoadBalances(true);
   }, [tokensData]);
 
@@ -99,7 +60,10 @@ export const TokensProvider = ({ children }) => {
 
   const { data: tokenPrices } = useQuery(
     "prices",
-    () => getTokensPrices(tokens),
+
+    () => {
+      return getTokensPrices(Object.values(tokensBySlugForPriceAPI));
+    },
     {
       enabled: !!tokens && loadPrices,
       staleTime: ONE_MINUTE,
@@ -113,17 +77,19 @@ export const TokensProvider = ({ children }) => {
     const _tokens = tokensData;
 
     const _balances = [];
+
     setBalances(_balances);
 
-    balancesData?.forEach(([balance, token]) => {
-      if (token && !tokenBySlugMapping[token.slug]) {
+    balancesData?.forEach((data) => {
+      const [balance, token] = data;
+      const _token = token ?? tokenBySlug[balance.slug];
+      if (token && !tokenBySlug[token.slug]) {
         updateTokenMapping(token);
         _tokens.push(token);
       }
+      tokensBySlugForPriceAPI[_token.slug] = _token;
       _balances.push(balance);
     });
-
-    setTokensBySlugs({ ...tokenBySlugMapping });
 
     setTokens(_tokens);
     setBalances(_balances);
@@ -131,12 +97,11 @@ export const TokensProvider = ({ children }) => {
   }, [balancesData, tokensData, tokens, address]);
 
   const sortedBalances = useMemo(() => {
-    if (!tokenPrices || Object.values(tokenBySlugMapping).length === 0)
-      return [];
+    if (!tokenPrices || Object.values(tokenBySlug).length === 0) return [];
 
     return balances
       .filter((balance) => {
-        const token = tokenBySlugMapping[balance.slug];
+        const token = tokenBySlug[balance.slug];
 
         const price = tokenPrices[token?.coinGeckoId]?.usd;
 
@@ -147,8 +112,8 @@ export const TokensProvider = ({ children }) => {
         return value * price > 1;
       })
       .sort((a, b) => {
-        const tokenA = tokenBySlugMapping[a.slug];
-        const tokenB = tokenBySlugMapping[b.slug];
+        const tokenA = tokenBySlug[a.slug];
+        const tokenB = tokenBySlug[b.slug];
 
         const priceA = tokenPrices[tokenA?.coinGeckoId]?.usd;
         const priceB = tokenPrices[tokenB?.coinGeckoId]?.usd;
@@ -162,7 +127,6 @@ export const TokensProvider = ({ children }) => {
 
   useEffect(() => {
     balances.forEach((balance) => updateBalanceMapping(balance));
-    setBalancesBySlug(balanceBySlugMapping);
   }, [balances]);
 
   return (
@@ -172,11 +136,7 @@ export const TokensProvider = ({ children }) => {
         balances,
         sortedBalances,
         tokenPrices,
-        tokensBySlug,
         tokensIsLoaded: !isLoading,
-        updateTokenBySlug,
-        refreshTokenBySlugs,
-        tokenBySlug,
       }}
     >
       {children}

@@ -1,4 +1,11 @@
-import { useContext, useMemo, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { TokensContext } from "~/context/tokens-context";
 import { amountToEth, lisibleAmount } from "~/utils/format";
 import IconGroup from "./IconGroup";
@@ -20,6 +27,10 @@ const SelectToken = ({ tokens, onSelect }) => {
 
   const { switchSelectMode } = useContext(SwapContext);
 
+  const [displayedTokens, setDisplayedTokens] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const loadMoreRef = useRef(null);
+
   const filteredTokens = useMemo(() => {
     return tokens
       .filter(({ network }) => {
@@ -30,6 +41,43 @@ const SelectToken = ({ tokens, onSelect }) => {
         symbol.toString().toLowerCase().includes(search.toLowerCase())
       );
   }, [search, tokens, networksFilter]);
+
+  useEffect(() => {
+    setDisplayedTokens(filteredTokens.slice(0, 100));
+  }, [filteredTokens]);
+
+  const loadMoreTokens = useCallback(() => {
+    if (loading) return;
+    setLoading(true);
+
+    setDisplayedTokens((prevTokens) => [
+      ...prevTokens,
+      ...filteredTokens.slice(prevTokens.length, prevTokens.length + 100),
+    ]);
+    setLoading(false);
+  }, [filteredTokens, loading]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMoreTokens();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [loadMoreRef, loadMoreTokens, loading]);
 
   return (
     <ModalLayout title="Select token">
@@ -56,7 +104,7 @@ const SelectToken = ({ tokens, onSelect }) => {
         />
       </header>
       <div>
-        {filteredTokens.map((token, index) => {
+        {displayedTokens.map((token, index) => {
           const convertedPrice = Number(tokenPrices[token.coinGeckoId]?.usd);
           const tokenPrice = isNaN(convertedPrice) ? 0 : convertedPrice;
 
@@ -109,6 +157,7 @@ const SelectToken = ({ tokens, onSelect }) => {
             </div>
           );
         })}
+        <div ref={loadMoreRef} />
       </div>
     </ModalLayout>
   );

@@ -87,7 +87,9 @@ const Web3Provider = ({ children }) => {
           slug,
           icon,
         };
+
         networkBySlug[network.slug] = network;
+
         networkByChainId[network.id] = network;
         const deFiNetwork = deFiNetworks.find(
           (n) => n.metadata.absoluteChainId === network.id

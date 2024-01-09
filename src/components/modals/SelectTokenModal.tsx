@@ -30,6 +30,7 @@ const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
           .map((balance) => tokenBySlug[balance.slug])
       : tokens;
   }, [mode, sortedBalances, tokens]);
+
   return (
     <div className="p-4">
       <div className="select-token block">

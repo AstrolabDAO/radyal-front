@@ -11,7 +11,7 @@ import { useEstimateRoute, useExecuteSwap } from "~/hooks/swap";
 import { SwapMode } from "~/utils/constants";
 import { cacheHash } from "~/utils/format";
 import { Strategy, Token } from "~/utils/interfaces";
-import { tokenBySlug } from "~/utils/mappings";
+import { tokenBySlug, tokensBySlugForPriceAPI } from "~/utils/mappings";
 import { StrategyContext } from "./strategy-context";
 import { TokensContext } from "./tokens-context";
 
@@ -157,6 +157,11 @@ const SwapProvider = ({ children }) => {
 
   const selectFromToken = (from: Token | Strategy) => setFromToken(from);
   const selectToToken = (to: Token | Strategy) => setToToken(to);
+
+  useEffect(() => {
+    if (fromToken) tokensBySlugForPriceAPI[fromToken?.slug] = fromToken;
+    if (toToken) tokensBySlugForPriceAPI[toToken?.slug] = toToken;
+  }, [fromToken, toToken]);
 
   useEffect(() => {
     switch (swapMode) {

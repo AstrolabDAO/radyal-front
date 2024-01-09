@@ -8,11 +8,13 @@ import { Balance, GrouppedStrategies, Strategy } from "~/utils/interfaces";
 import {
   networkByChainId,
   strategiesByChainId,
+  tokensBySlugForPriceAPI,
   updateBalanceMapping,
   updateStrategyMapping,
 } from "~/utils/mappings";
 import getBalances from "~/utils/multicall";
 import { TokensContext } from "./tokens-context";
+import { zeroAddress } from "viem";
 interface StrategyContextType {
   strategies: Strategy[];
   selectedStrategy: Strategy;
@@ -56,6 +58,8 @@ export const StrategyProvider = ({ children }) => {
   const strategies = useMemo<Strategy[]>(() => {
     if (!strategiesData) return [];
     return strategiesData.map((strategy) => {
+      const { asset } = strategy;
+      tokensBySlugForPriceAPI[asset.slug] = asset;
       updateStrategyMapping(strategy);
       return strategy;
     }) as Strategy[];
@@ -106,13 +110,13 @@ export const StrategyProvider = ({ children }) => {
 
   const filteredStrategies = useMemo<GrouppedStrategies>(() => {
     const grouppedStrategies: GrouppedStrategies = {};
-    console.log(strategies);
+
     strategies
       .filter(({ network }) => {
         if (!networksFilter.length) return true;
         return networksFilter.includes(network.slug);
       })
-      .filter(({ address }) => address !== "0x0000000000000000000000000000000000000000")
+      .filter(({ address }) => address !== zeroAddress)
       .filter((item) =>
         Object.values(item).some((value) =>
           value.toString().toLowerCase().includes(search.toLowerCase())
@@ -120,7 +124,7 @@ export const StrategyProvider = ({ children }) => {
       )
       .map((strategy) => {
         const splittedSlug = strategy.slug.split(":")[1];
-        console.log('slug', splittedSlug);
+
         if (!grouppedStrategies[splittedSlug])
           grouppedStrategies[splittedSlug] = [];
         grouppedStrategies[splittedSlug].push(strategy);
