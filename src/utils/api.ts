@@ -14,7 +14,6 @@ import {
 import getBalances, { multicall } from "./multicall";
 import { NETWORKS } from "./web3-constants";
 import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5Agent.json";
-import { clearNetworkTypeFromSlug } from "./format";
 
 export const getBalancesFromDeFI = async (
   address: `0x${string}`,
@@ -38,9 +37,7 @@ export const getBalancesFromDeFI = async (
     .map((result: DeFiBalance) => {
       const { amount, token: apiToken } = result;
       const balance: Balance = {
-        slug: `${clearNetworkTypeFromSlug(
-          network.slug
-        )}:${apiToken.symbol.toLowerCase()}`,
+        slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
         amount,
       };
 
@@ -56,15 +53,15 @@ export const getBalancesFromDeFI = async (
           icon: apiToken.icon,
           network,
           symbol: apiToken.symbol,
-          slug: `${clearNetworkTypeFromSlug(
-            network.slug
-          )}:${apiToken.symbol.toLowerCase()}`,
+          slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
         } as Token;
+
+        tokenBySlug[_token.slug] = _token;
 
         return [balance, _token];
       }
 
-      return [balance, null];
+      return [balance, existingToken];
     });
 };
 
@@ -76,39 +73,18 @@ export const getTokenPrice = (token: Token) => {
     },
   });
 };
+export const getTokensPrices = async (tokens: Token[]) => {
+  if (!tokens) return;
+  const tokensIds = new Set(tokens.map((token) => token.coinGeckoId));
 
-export const getTokensPrices = async (tokens) => {
-
-  if (!tokens || tokens.length === 0) return;
-
-  const { data: supportedCoins } = await axios.get(`${COINGECKO_API}/coins/list`);
-
-  const tokensIds = new Set(tokens
-    .filter((token) => supportedCoins.some((coin) => coin.id === token.coinGeckoId))
-    .map((token) => token.coinGeckoId)
-  );
-  const idsArray = Array.from(tokensIds);
-  const chunkSize = Math.ceil(idsArray.length / 30);
-  const requests = [];
-
-  for (let i = 0; i < idsArray.length; i += chunkSize) {
-    const chunkIds = idsArray.slice(i, i + chunkSize);
-    const request = axios.get(`${COINGECKO_API}/simple/price`, {
+  return axios
+    .get(`${COINGECKO_API}/simple/price`, {
       params: {
-        ids: chunkIds.join(","),
+        ids: Array.from(tokensIds).join(","),
         vs_currencies: "usd",
       },
-    }).then(response => response.data);
-    requests.push(request);
-  }
-
-  try {
-    const results = await Promise.all(requests);
-    return results.reduce((acc, data) => ({ ...acc, ...data }), {});
-  } catch (error) {
-    console.error('Error fetching token prices:', error);
-    throw error;
-  }
+    })
+    .then((data) => data.data);
 };
 
 export const updateTokenPrices = async (tokens: Token[]) => {
@@ -142,7 +118,7 @@ export const getTokens = async () => {
             symbol,
             decimals: scale,
             weiPerUnit: 10 ** scale,
-            icon: `/images/tokens/${cleanSymbol.toLowerCase()}.svg`,
+            icon: `/images/tokens/${encodeURI(cleanSymbol.toLowerCase())}.svg`,
             network,
             slug, //: `${network.slug}:${symbol.toLocaleLowerCase()}`,
             coinGeckoId,
@@ -267,11 +243,7 @@ export const getStrategies = async () => {
 
   const strategies = strategiesData
     .filter((strategy) => {
-      console.log("🚀 ~ file: api.ts:244 ~ .filter ~ strategy:", strategy);
       const { nativeNetwork, denomination } = strategy;
-
-      if (denomination === null) return false;
-
       const network = networkBySlug[nativeNetwork];
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

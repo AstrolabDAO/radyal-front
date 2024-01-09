@@ -29,6 +29,8 @@ export const tokensByNetworkId: { [networkId: number]: Token[] } = {};
 export const tokensByNetworkSlug: { [networkSlug: string]: Token[] } = {};
 export const coinGeckoIdBySymbol: { [symbol: string]: string } = {};
 
+export const tokensBySlugForPriceAPI: { [slug: string]: Token } = {};
+
 export const strategiesByChainId: { [networkId: number]: Strategy[] } = {};
 export const strategyBalanceBySlug: { [slug: string]: Balance } = {};
 
