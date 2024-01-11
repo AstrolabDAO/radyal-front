@@ -30,23 +30,19 @@ const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
   }, [mode, sortedBalances, tokens]);
 
   return (
-    <div className="p-4">
-      <div className="select-token block">
-        <div className="box w-full">
-          <SelectToken
-            tokens={tokensList}
-            onSelect={(token) => {
-              if (mode === SelectTokenModalMode.Deposit) {
-                selectFromToken(token);
-              } else {
-                selectToToken(token);
-              }
-              switchSelectMode();
-              closeModal();
-            }}
-          />
-        </div>
-      </div>
+    <div className="p-4 bg-dark max-h-screen">
+      <SelectToken
+        tokens={tokensList}
+        onSelect={(token) => {
+          if (mode === SelectTokenModalMode.Deposit) {
+            selectFromToken(token);
+          } else {
+            selectToToken(token);
+          }
+          switchSelectMode();
+          closeModal();
+        }}
+      />
     </div>
   );
 };

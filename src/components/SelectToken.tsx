@@ -21,7 +21,6 @@ const SelectToken = ({ tokens, onSelect }) => {
   const { tokenPrices } = useContext(TokensContext);
 
   const { networks } = useContext(Web3Context);
-
   const [search, setSearch] = useState("");
   const [networksFilter, setNetworksFilter] = useState([]);
 
@@ -80,19 +79,18 @@ const SelectToken = ({ tokens, onSelect }) => {
   }, [loadMoreRef, loadMoreTokens, loading]);
 
   return (
-    <ModalLayout title="Select token">
+    <ModalLayout title="Select token" className="max-h-screen min-h-96">
       <header>
-        <label>search by name...</label>
+        <label>Search by name...</label>
         <input
           type="text"
           placeholder="USDC..."
-          className="input input-bordered w-full"
+          className="input w-full border-0"
           onChange={({ target }) => {
             setSearch(target.value);
           }}
         />
-        <hr />
-        <div className="my-2">filter by network</div>
+        <div className="my-2">Filter by network</div>
         <NetworkSelect
           isSearchable
           networks={networks}
@@ -126,33 +124,32 @@ const SelectToken = ({ tokens, onSelect }) => {
 
           return (
             <div
-              key={index}
+              key={ `token-${index}` }
               className={clsx(
-                "flex items-center cursor-pointer py-4 border-white-800 border-b-solid overflow-scroll",
+                "flex flex-col cursor-pointer mb-2 pt-2.5 pb-1.5 px-2 rounded-xl",
                 index !== tokens.length - 1 && "border-b",
-                "hover:bg-base"
+                "hover:bg-primary hover:text-dark"
               )}
-              onClick={() => {
-                switchSelectMode();
-                onSelect(token);
-              }}
+              onClick={() => { switchSelectMode(); onSelect(token); }}
             >
-              <div className="flex w-full">
-                <IconGroup icons={icons} className="mr-6" />
-                <span className="text-xl mr-2">
-                  {token?.symbol} ({token.network.name})
-                </span>
-              </div>
-              <div>
-                <div className="text-right">
-                  <span className="whitespace-nowrap block">
-                    Balance: {lisibleAmount(convertedBalance, 4)}
-                    {token.symbol}
+              <div className="flex flex-row w-full items-center">
+                <IconGroup icons={icons} />
+                <div className="ms-4">
+                  <span className="text-xl font-bold"> {token?.symbol} </span>
+                  <span className="text-xs">
+                    ({token.network.name})
                   </span>
                 </div>
-                <div className="text-xs text-right">
-                  ~{lisibleAmount(convertedBalance * tokenPrice)}$
+                <div className="ms-auto">
+                  <span className="whitespace-nowrap block">
+                    <span className="font-bold">
+                      {lisibleAmount(convertedBalance, 4)} </span>
+                      {token.symbol}
+                  </span>
                 </div>
+              </div>
+              <div className="ms-auto -mt-2 text-xs">
+                ~{lisibleAmount(tokenPrice, 4)} $
               </div>
             </div>
           );
