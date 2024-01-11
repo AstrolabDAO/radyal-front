@@ -10,3 +10,19 @@
 .strategy-card-data-label {
   margin-top: -0.4rem;
 }
+
+.strategy-card-cta-one {
+  clip-path: polygon(0 0, 100% 0, 100% 40%, 0% 100%);
+}
+.strategy-card-cta-one {
+  clip-path: polygon(
+    0 0,
+    100% 0%,
+    100% 40%, /* End rounding top right */
+    0 100%    /* End rounding bottom left */
+  );
+}
+.strategy-card-cta-two {
+  clip-path: polygon(0 60%, 100% 0, 100% 100%, 0% 100%);
+}
+

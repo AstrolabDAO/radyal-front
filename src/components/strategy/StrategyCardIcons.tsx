@@ -3,12 +3,19 @@ import IconCard  from "../IconCard";
 
 type StrategyCardIconsProps = {
   strategyGroup: Strategy[];
+  hideLabel?: boolean;
+  size?: { height: number, width: number };
 }
 
-const StrategyCardIcons = ({ strategyGroup }: StrategyCardIconsProps) => {
+const StrategyCardIcons = ({
+  strategyGroup, size, hideLabel,
+}: StrategyCardIconsProps) => {
+  const { height, width } = size || { height: 20, width: 20 };
   return (
-    <div className="flex w-full justify-end items-center">
-      <span className="mr-2">ON</span>
+    <div className="flex justify-end items-center">
+      {!hideLabel && (
+        <span className="mr-2">ON</span>
+      )}
       <div
         className={"flex flex-row border border-solid border-gray-500 rounded-3xl px-0.5"}
       >
@@ -22,7 +29,7 @@ const StrategyCardIcons = ({ strategyGroup }: StrategyCardIconsProps) => {
                 icon={{
                   url: strategy.network.icon,
                   alt: strategy.network.name,
-                  size: { width: 20, height: 20 },
+                  size: { height, width },
                 }}
               />
             </div>
@@ -31,7 +38,7 @@ const StrategyCardIcons = ({ strategyGroup }: StrategyCardIconsProps) => {
         {
           strategyGroup.length > 2 &&
           <div
-            style={{ width: 20, height: 20 }}
+            style={{ width, height }}
             className="my-auto p-0.5 bg-white rounded-xl mx-0.5 text-xs"
           >
             +{strategyGroup.length - 2}

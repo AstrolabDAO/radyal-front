@@ -3,7 +3,7 @@ import { StrategyContext } from "~/context/strategy-context";
 import StrategyCard from "./StrategyCard";
 import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
 
-const StrategyList = () => {
+const StrategyGrid = () => {
   const { filteredStrategies, search, filterByNetworks, strategies } =
     useContext(StrategyContext);
 
@@ -13,24 +13,21 @@ const StrategyList = () => {
   );
 
   return (
-    <div className="w-full container px-2 md:mx-auto">
-      <h2 className="text-2xl text-center text-primary mb-8">
-        Select your strategy...
-      </h2>
-      <div className="flex flex-col md:flex-row w-full justify-end">
-        <div className="mr-4">
-          <span className="label-text block w-full mb-2">search anything</span>
+    <div className="w-full container px-2 sm:mx-auto">
+      <div className="flex flex-col md:flex-row w-full">
+        <div className="mr-4 w-full flex flex-col">
+          <span className="label-text block my-2">Search</span>
           <input
             type="text"
-            placeholder="type anything..."
-            className="input input-bordered max-w-xs w-64"
+            placeholder="“Stable”, “Arbitrum”, “Staking”..."
+            className="input input-bordered"
             onChange={({ target }) => {
               search(target.value);
             }}
           />
         </div>
-        <div>
-          <span className="label-text block w-full mb-2">
+        <div className="flex flex-col">
+          <span className="label-text my-2">
             filter by network...
           </span>
           <NetworkSelect
@@ -59,4 +56,4 @@ const StrategyList = () => {
   );
 };
 
-export default StrategyList;
+export default StrategyGrid;

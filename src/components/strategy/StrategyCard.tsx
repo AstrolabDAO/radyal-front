@@ -38,7 +38,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
 
   const [strategy] = strategyGroup;
   const { name } = strategy;
-  const [title, subtitle]  = name.replace("Astrolab ", "").split(" ");
+  const [title, ...subtitle]  = name.replace("Astrolab ", "").split(" ");
 
   const {
     selectStrategy,
@@ -59,7 +59,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   return (
     <div
       className={clsx(
-        "card bg-dark h-48 basis-1/3 relative rounded-3xl cursor-pointer",
+        "card bg-gray-800 h-48 basis-1/3 relative rounded-3xl cursor-pointer",
         "hover:bg-primary hover:text-dark hover:shadow hover:shadow-primary",
         { active: selectedStrategy?.slug === strategy.slug }
       )}
@@ -80,12 +80,16 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
         />
       </div>
       <div className="card-body py-3 px-4 z-10">
-        <div className="flex flex-row">
-          <div className="flex flex-col m-0 p-0 gilroy">
-            <div className="font-bold italic uppercase text-4xl -mb-1"> { title } </div>
-            <div className="font-light"> { subtitle } </div>
+        <div className="flex flex-row w-full">
+          <div className="flex flex-col m-0 p-0 gilroy w-full">
+            <div className="font-bold italic uppercase text-4xl -mb-1">
+              { title }
+            </div>
+            <div className="flex flex-row">
+              <div className="flex font-light me-auto my-auto"> { subtitle.join(' ') } </div>
+              <StrategyCardIcons strategyGroup={ strategyGroup } />
+            </div>
           </div>
-          <StrategyCardIcons strategyGroup={ strategyGroup } />
         </div>
         <div className="flex flex-row mt-auto">
           <StrategyCardAPY apy={ 23.3 }/>
