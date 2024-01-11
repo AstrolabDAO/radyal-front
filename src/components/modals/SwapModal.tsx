@@ -1,7 +1,6 @@
 import clsx from "clsx";
 
 import { useContext, useState } from "react";
-import { SwapMode } from "~/utils/constants";
 import { SwapContext } from "~/context/swap-context";
 
 import DepositTab from "~/components/swap/DepositTab";
@@ -24,7 +23,7 @@ const SwapModalContent = () => {
   const [animationEnter, setAnimationEnter] = useState<'left' | 'right'>(null)
   const [animationLeave, setAnimationLeave] = useState<'left' | 'right'>(null)
   const [selectedTab, setSelectedTab] = useState("deposit");
-  const { selectTokenMode, setSwapMode } = useContext(SwapContext);
+  const { selectTokenMode, setAction } = useContext(SwapContext);
 
   function handleTransition(selectedTab: string) {
     const animationKey = selectedTab === "deposit" ? "left" : "right";

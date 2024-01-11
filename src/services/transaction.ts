@@ -5,7 +5,6 @@ import { BaseError, ContractFunctionRevertedError } from "viem";
 import { prepareWriteContract } from "wagmi/actions";
 import { writeContract } from "@wagmi/core";
 export const executeTransaction = async (opts: PrepareSendTransactionArgs) => {
-  console.log("🚀 ~ file: transaction.ts:8 ~ executeTransaction ~ opts:", opts);
   try {
     const prepare = await prepareSendTransaction(opts);
     return await sendTransaction(prepare);
@@ -59,6 +58,7 @@ export interface BaseTxArgs {
   chainId: number;
   args: unknown[];
   abi?: any;
+  enabled?: boolean;
 }
 
 export interface TxArgs extends BaseTxArgs {

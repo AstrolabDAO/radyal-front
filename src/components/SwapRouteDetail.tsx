@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
-import { SwapContext } from "~/context/swap-context";
 import { amountToEth, lisibleAmount } from "~/utils/format";
 import { Protocol } from "~/utils/interfaces";
 import {
@@ -10,9 +9,13 @@ import {
   protocolByStrippedSlug,
 } from "~/utils/mappings";
 import IconCard from "./IconCard";
+import { EstimationContext } from "~/context/estimation-context";
+import { SwapStepsContext } from "~/context/swap-steps-context";
 
 const SwapRouteDetail = () => {
-  const { steps, estimationError } = useContext(SwapContext);
+  const { estimationError } = useContext(EstimationContext);
+
+  const { steps } = useContext(SwapStepsContext);
   const size = { width: 20, height: 20 };
 
   return (

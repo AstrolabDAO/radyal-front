@@ -2,7 +2,6 @@ import { useCallback, useContext, useMemo } from "react";
 import { Client } from "viem";
 import { useAccount, usePublicClient } from "wagmi";
 import { StrategyContext } from "~/context/strategy-context";
-import { MinimalSwapContext } from "~/context/swap-context";
 import { tokensIsEqual } from "~/utils";
 import { previewStrategyTokenMove } from "~/utils/flows/strategy";
 import { amountToEth, cacheHash } from "~/utils/format";
@@ -13,12 +12,13 @@ import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
 import { useQueryClient } from "react-query";
 import { aproveAndSwap, getSwapRoute } from "~/services/swap";
 import { useSwitchNetwork } from "./transaction";
-import { SwapMode } from "~/utils/constants";
+
 import toast from "react-hot-toast";
+import { SwapContext } from "~/context/swap-context";
+import { StrategyInteraction } from "~/utils/constants";
 
 export const useExecuteSwap = () => {
-  const { fromToken, toToken, fromValue, swapMode } =
-    useContext(MinimalSwapContext);
+  const { fromValue, fromToken, toToken, action } = useContext(SwapContext);
 
   const { address } = useAccount();
 
@@ -39,7 +39,7 @@ export const useExecuteSwap = () => {
     await switchNetwork();
 
     const estimationRequest = queryClient.getQueryData(
-      cacheHash("estimate", swapMode, fromToken, toToken, fromValue)
+      cacheHash("estimate", action, fromToken, toToken, fromValue)
     ) as any;
 
     let tr: ITransactionRequestWithEstimate = estimationRequest?.request;
@@ -66,14 +66,14 @@ export const useExecuteSwap = () => {
     getSwapRoute,
     publicClient,
     queryClient,
-    swapMode,
+    action,
     switchNetwork,
     toToken,
   ]);
 };
 
 export const useEstimateRoute = () => {
-  const { fromToken, toToken, swapMode } = useContext(MinimalSwapContext);
+  const { fromToken, toToken, action } = useContext(SwapContext);
 
   const getSwapRoute = useGetSwapRoute();
 
@@ -86,9 +86,9 @@ export const useEstimateRoute = () => {
     let result, interactionEstimation;
     if (
       fromToken.network.id === toToken.network.id ||
-      SwapMode.WITHDRAW === swapMode
+      StrategyInteraction.WITHDRAW === action
     ) {
-      if (swapMode === SwapMode.DEPOSIT) {
+      if (action === StrategyInteraction.DEPOSIT) {
         result = await getSwapRoute();
         interactionEstimation = await previewStrategyTokenMove(
           result[0].estimatedOutput
@@ -120,30 +120,35 @@ export const useEstimateRoute = () => {
 
     const computedSteps = !interactionEstimation
       ? steps
-      : swapMode === SwapMode.DEPOSIT
-      ? [
-          ...steps,
-          ...(tokensIsEqual(fromToken, toToken)
-            ? interactionEstimation.steps
-            : []),
-        ]
-      : [...interactionEstimation.steps, ...steps];
+      : action === StrategyInteraction.DEPOSIT
+        ? [
+            ...steps,
+            ...(tokensIsEqual(fromToken, toToken)
+              ? interactionEstimation.steps
+              : []),
+          ]
+        : [...interactionEstimation.steps, ...steps];
     return {
       estimation: receiveEstimation,
       steps: computedSteps,
       request: result[0],
     };
-  }, [fromToken, getSwapRoute, previewStrategyTokenMove, swapMode, toToken]);
+  }, [fromToken, getSwapRoute, previewStrategyTokenMove, action, toToken]);
 };
 
 export const useGetSwapRoute = () => {
   const { address } = useAccount();
-  const { fromToken, toToken, fromValue, swapMode } =
-    useContext(MinimalSwapContext);
+  const { fromValue, fromToken, toToken, action } = useContext(SwapContext);
 
   const { selectedStrategy } = useContext(StrategyContext);
   const amount = useMemo(() => {
     if (!fromToken) return 0n;
+    console.log(
+      "🚀 ~ useGetSwapRoute ~ fromValue:",
+      fromValue,
+      fromToken.decimals,
+      fromToken.weiPerUnit
+    );
     return BigInt(Math.round(fromValue * fromToken?.weiPerUnit));
   }, [fromToken, fromValue]);
 
@@ -159,16 +164,17 @@ export const useGetSwapRoute = () => {
           ? (toToken as Strategy).asset
           : toToken,
         strategy: selectedStrategy,
-        swapMode,
+        action,
       });
     },
-    [address, amount, fromToken, selectedStrategy, swapMode, toToken]
+    [address, amount, fromToken, selectedStrategy, action, toToken]
   );
 };
 
 export const usePreviewStrategyTokenMove = () => {
   const { selectedStrategy } = useContext(StrategyContext);
-  const { fromValue, swapMode } = useContext(MinimalSwapContext);
+  const { fromValue, action } = useContext(SwapContext);
+
   const publicClient = usePublicClient({
     chainId: selectedStrategy.network?.id,
   }) as Client;
@@ -178,12 +184,12 @@ export const usePreviewStrategyTokenMove = () => {
       return previewStrategyTokenMove(
         {
           strategy: selectedStrategy,
-          swapMode,
+          action,
           value: value ? value : fromValue,
         },
         publicClient
       );
     },
-    [fromValue, swapMode, publicClient, selectedStrategy]
+    [fromValue, action, publicClient, selectedStrategy]
   );
 };

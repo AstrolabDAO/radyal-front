@@ -1,5 +1,11 @@
 import { abi as AgentAbi } from "@astrolabs/registry/abis/StrategyV5Agent.json";
-import { createContext, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { useQuery } from "react-query";
 import { useAccount } from "wagmi";
 import { ONE_MINUTE } from "~/main";
@@ -51,9 +57,10 @@ export const StrategyProvider = ({ children }) => {
   const { tokensIsLoaded } = useContext(TokensContext);
 
   const Provider = StrategyContext.Provider;
-  const selectStrategy = (strategy: Strategy) => {
-    setSelectedStrategy(strategy);
-  };
+  const selectStrategy = useCallback(
+    (strategy: Strategy) => setSelectedStrategy(strategy),
+    []
+  );
 
   const selectGroup = (strategies: Strategy[]) => {
     setSelectedGroup(strategies);

@@ -11,6 +11,7 @@ import { getWalletClient } from "wagmi/actions";
 
 export const useSelectedStrategy = () => {
   const { selectedStrategy } = useContext(StrategyContext);
+
   return selectedStrategy;
 };
 export const useStrategyContractFunction = (functionName: string) => {
@@ -109,11 +110,14 @@ export const useApproveAndDeposit = () => {
   const { address } = useAccount();
   const { asset, network } = strategy;
 
-  const allowance = useAllowance({
+  /*const allowance = useAllowance({
     address: asset.address,
     chainId: asset.network.id,
     args: [address, strategy.address],
-  }) as any as bigint;
+    enabled: false,
+  }) as any as bigint;*/
+  const allowance = 0n;
+  //console.log("🚀 ~ useApproveAndDeposit ~ allowance:", allowance);
 
   const publicClient = usePublicClient({
     chainId: network.id,

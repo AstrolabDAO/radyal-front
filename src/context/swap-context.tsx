@@ -1,164 +1,84 @@
-import { ICommonStep } from "@astrolabs/swapper";
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
-import { useQuery } from "react-query";
-import { useEstimateRoute, useExecuteSwap } from "~/hooks/swap";
-import { SwapMode } from "~/utils/constants";
-import { cacheHash } from "~/utils/format";
+import { StrategyInteraction } from "~/utils/constants";
 import { Strategy, Token } from "~/utils/interfaces";
 import { tokenBySlug, tokensBySlugForPriceAPI } from "~/utils/mappings";
 import { StrategyContext } from "./strategy-context";
 import { TokensContext } from "./tokens-context";
+import { SwapStepsProvider } from "./swap-steps-context";
+import { EstimationProvider } from "./estimation-context";
+import { useAllowance } from "~/hooks/transaction";
+import { useAccount } from "wagmi";
+import { tokensIsEqual } from "~/utils";
+import { zeroAddress } from "viem";
 
-let debounceTimer;
-
-const baseValues = {
+const SwapContext = createContext<SwapContextType>({
   switchSelectMode: () => {},
   selectFromToken: () => {},
   selectToToken: () => {},
-  setFromValue: () => {},
-  setSwapMode: () => {},
+  setAction: () => {},
   setCanSwap: () => {},
-
+  setFromValue: () => {},
   fromToken: null,
   toToken: null,
   fromValue: null,
   canSwap: false,
-  swapMode: SwapMode.DEPOSIT,
+  allowance: null,
+  action: StrategyInteraction.DEPOSIT,
   selectTokenMode: false,
-};
-const MinimalSwapContext = createContext<MinimalSwapContextType>(baseValues);
-
-const SwapContext = createContext<SwapContext>({
-  ...baseValues,
-  swap: async () => {},
-  lockEstimate: () => {},
-  unlockEstimate: () => {},
-  toValue: null,
-  steps: [],
-  estimation: null,
-  estimationError: null,
+  actionNeedToSwap: false,
 });
 
-const CompleteProvider = ({ children }) => {
-  const baseContext = useContext(MinimalSwapContext);
-  const { fromToken, toToken, fromValue, swapMode, canSwap, setCanSwap } =
-    baseContext;
-
-  const [toValue, setToValue] = useState<number>(null);
-  const [steps, setSteps] = useState<ICommonStep[]>([]);
-
-  const [writeOnProgress, setWriteOnprogress] = useState<boolean>(true);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [estimationOnProgress, setEstimationOnProgress] =
-    useState<boolean>(false);
-
-  const [estimationError, setEstimationError] = useState<string>(null);
-
-  const [updateEstimation, setUpdateEstimation] = useState(true);
-
-  const executeSwap = useExecuteSwap();
-
-  const estimateRoute = useEstimateRoute();
-
-  const { data: estimation } = useQuery(
-    cacheHash("estimate", swapMode, fromToken, toToken, fromValue),
-    async () => {
-      if (estimationOnProgress) return;
-      setEstimationOnProgress(true);
-      setEstimationError(null);
-      const estimate = await estimateRoute();
-
-      setEstimationOnProgress(false);
-      return estimate;
-    },
-    {
-      staleTime: 1000 * 15,
-      cacheTime: 1000 * 15,
-      retry: true,
-      refetchInterval: 1000 * 15,
-      enabled: !!(
-        fromToken &&
-        fromValue > 0 &&
-        !writeOnProgress &&
-        !estimationOnProgress &&
-        updateEstimation
-      ),
-    }
-  );
-
-  useEffect(() => {
-    if (!estimation || estimation?.error) {
-      setToValue(estimationOnProgress ? null : 0);
-      setSteps([]);
-      setCanSwap(false);
-
-      if (estimation?.error) setEstimationError(estimation.error);
-      return;
-    }
-
-    setToValue(estimation.estimation);
-    setSteps(estimation.steps);
-    setCanSwap(true);
-  }, [estimation, estimationOnProgress, setCanSwap]);
-
-  useEffect(() => {
-    if (!fromValue) return;
-    setWriteOnprogress(true);
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      setWriteOnprogress(false);
-    }, 1000);
-  }, [fromValue]);
-
-  const swap = async () => {
-    if (!fromToken || !toToken || !canSwap) return;
-    setUpdateEstimation(false);
-    const tr = await executeSwap();
-
-    setSteps(tr.steps);
-  };
-
-  return (
-    <SwapContext.Provider
-      value={{
-        ...baseContext,
-        swap,
-        toValue,
-        steps,
-        estimation,
-        estimationError,
-        unlockEstimate: () => setUpdateEstimation(true),
-        lockEstimate: () => setUpdateEstimation(false),
-      }}
-    >
-      {children}
-    </SwapContext.Provider>
-  );
-};
-
 const SwapProvider = ({ children }) => {
+  const { address } = useAccount();
   const { sortedBalances } = useContext(TokensContext);
   const { selectedStrategy } = useContext(StrategyContext);
 
-  const [swapMode, setSwapMode] = useState<SwapMode>(SwapMode.DEPOSIT);
+  const [action, setAction] = useState<StrategyInteraction>(
+    StrategyInteraction.DEPOSIT
+  );
 
   const [selectTokenMode, setSelectTokenMode] = useState(false);
-
-  const [fromValue, setFromValue] = useState<number>(null);
 
   const [fromToken, setFromToken] = useState<Token | Strategy>(null);
   const [toToken, setToToken] = useState<Token | Strategy>(null);
 
   const [canSwap, setCanSwap] = useState(false);
 
-  const selectFromToken = (from: Token | Strategy) => setFromToken(from);
-  const selectToToken = (to: Token | Strategy) => setToToken(to);
+  const [fromValue, setFromValue] = useState<number>(null);
+
+  const selectFromToken = useCallback(
+    (from: Token | Strategy) => setFromToken(from),
+    []
+  );
+  const selectToToken = useCallback(
+    (to: Token | Strategy) => setToToken(to),
+    []
+  );
+
+  const [allowanceToken, toAllowanceAddress] = useMemo(() => {
+    if (!fromToken) return [null, null];
+    const _token = fromToken as Strategy;
+    const allowanceToken = _token?.asset ? _token.asset : _token;
+
+    return [allowanceToken, allowanceToken.address];
+  }, [fromToken]);
+
+  const allowance = useAllowance({
+    address: allowanceToken?.address,
+    chainId: allowanceToken?.network?.id,
+    args: [address, toAllowanceAddress],
+    enabled:
+      !!allowanceToken &&
+      !!toAllowanceAddress &&
+      allowanceToken?.address !== zeroAddress,
+  }) as any as bigint;
 
   useEffect(() => {
     if (fromToken) tokensBySlugForPriceAPI[fromToken?.slug] = fromToken;
@@ -166,19 +86,19 @@ const SwapProvider = ({ children }) => {
   }, [fromToken, toToken]);
 
   useEffect(() => {
-    switch (swapMode) {
-      case SwapMode.DEPOSIT:
+    switch (action) {
+      case StrategyInteraction.DEPOSIT:
         setFromToken(null);
         setToToken(selectedStrategy);
         break;
-      case SwapMode.WITHDRAW:
+      case StrategyInteraction.WITHDRAW:
         setFromToken(selectedStrategy);
         setToToken(selectedStrategy?.asset);
         break;
       default:
         break;
     }
-  }, [swapMode, selectedStrategy]);
+  }, [action, selectedStrategy]);
 
   const switchSelectMode = useCallback(() => {
     setSelectTokenMode(!selectTokenMode);
@@ -189,55 +109,66 @@ const SwapProvider = ({ children }) => {
       const token = tokenBySlug[sortedBalances?.[0]?.slug] ?? null;
       selectFromToken(token);
     }
-  }, [fromToken, selectedStrategy, sortedBalances, swapMode, toToken]);
+  }, [
+    fromToken,
+    selectedStrategy,
+    sortedBalances,
+    action,
+    toToken,
+    selectFromToken,
+  ]);
+
+  const actionNeedToSwap = useMemo(() => {
+    if (!fromToken || !toToken) return false;
+    return !tokensIsEqual(fromToken, toToken);
+  }, [fromToken, toToken]);
 
   return (
-    <MinimalSwapContext.Provider
+    <SwapContext.Provider
       value={{
         switchSelectMode,
         selectFromToken,
         selectToToken,
-        setFromValue: (value: number) => setFromValue(value ?? 0),
-        setCanSwap: (value: boolean) => setCanSwap(value),
-        setSwapMode: (mode: SwapMode) => {
-          setSwapMode(mode);
-        },
+        setCanSwap: useCallback((value: boolean) => setCanSwap(value), []),
+        setAction: useCallback((mode: StrategyInteraction) => {
+          setAction(mode);
+        }, []),
+        setFromValue: useCallback(
+          (value: number) => setFromValue(value ?? 0),
+          []
+        ),
         fromToken,
         toToken,
         fromValue,
-        swapMode,
+        action,
         canSwap,
+        allowance,
         selectTokenMode,
+        actionNeedToSwap,
       }}
     >
-      <CompleteProvider>{children}</CompleteProvider>
-    </MinimalSwapContext.Provider>
+      <SwapStepsProvider>
+        <EstimationProvider>{children}</EstimationProvider>
+      </SwapStepsProvider>
+    </SwapContext.Provider>
   );
 };
 
-interface MinimalSwapContextType {
+interface SwapContextType {
   switchSelectMode: () => void;
   selectFromToken: (token: Token | Strategy) => void;
   selectToToken: (token: Token | Strategy) => void;
-  setFromValue: (value: number) => void;
-  setSwapMode: (mode: SwapMode) => void;
+  setAction: (mode: StrategyInteraction) => void;
   setCanSwap: (value: boolean) => void;
+  setFromValue: (value: number) => void;
   fromToken: Token | Strategy;
   toToken: Token | Strategy;
   fromValue: number;
-  swapMode: SwapMode;
+  action: StrategyInteraction;
   canSwap: boolean;
+  allowance: bigint;
   selectTokenMode: boolean;
+  actionNeedToSwap: boolean;
 }
 
-interface SwapContext extends MinimalSwapContextType {
-  swap: () => Promise<void>;
-  lockEstimate: () => void;
-  unlockEstimate: () => void;
-  steps: ICommonStep[];
-  estimation: any; // todo: change it;
-  estimationError: string;
-  toValue: number;
-}
-
-export { SwapContext, MinimalSwapContext, SwapProvider };
+export { SwapContext, SwapProvider };

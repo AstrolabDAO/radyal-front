@@ -11,25 +11,26 @@ import SelectTokenModal from "./modals/SelectTokenModal";
 import SwapStepsModal from "./modals/SwapStepsModal";
 
 import { useApproveAndDeposit } from "~/hooks/strategy";
-import { tokensIsEqual } from "~/utils";
 import toast from "react-hot-toast";
-import { StrategyContext } from "~/context/strategy-context";
+
+import { EstimationContext } from "~/context/estimation-context";
 
 const Deposit = () => {
   const {
     selectTokenMode,
     fromToken,
     toToken,
-    estimation,
+    canSwap,
+    actionNeedToSwap,
     fromValue,
     selectFromToken,
     switchSelectMode,
+    setFromValue,
   } = useContext(SwapContext);
 
-  const { setFromValue, swap, canSwap, unlockEstimate } =
-    useContext(SwapContext);
+  const { estimation, swap, unlockEstimate, needApprove } =
+    useContext(EstimationContext);
 
-  const { selectedStrategy } = useContext(StrategyContext);
   const [locked, setLocked] = useState(false);
 
   const { openModal } = useContext(SwapModalContext);
@@ -55,13 +56,17 @@ const Deposit = () => {
   const approveAndDeposit = useApproveAndDeposit();
   const modalActions: ModalAction[] = [
     {
-      label: "Deposit",
+      label: needApprove
+        ? "Approve & Deposit"
+        : actionNeedToSwap
+          ? "Swap & Deposit"
+          : "Deposit",
       disabled: !canSwap || locked,
       onClick: async () => {
         const close = openModal(<SwapStepsModal />);
         try {
           setLocked(true);
-          if (!tokensIsEqual(fromToken, selectedStrategy.asset)) {
+          if (actionNeedToSwap) {
             await swap();
           } else {
             await approveAndDeposit(fromValue);
@@ -76,7 +81,7 @@ const Deposit = () => {
     },
   ];
   useEffect(() => {
-    unlockEstimate();
+    //unlockEstimate();
   }, [unlockEstimate]);
 
   return (

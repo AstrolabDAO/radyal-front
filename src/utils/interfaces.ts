@@ -1,6 +1,6 @@
 import { ICommonStep } from "@astrolabs/swapper";
 
-import { SwapMode } from "./constants";
+import { StrategyInteraction } from "./constants";
 
 export interface Network {
   id: number;
@@ -129,7 +129,7 @@ export interface LifiRequest {
   strategy: Strategy;
   amount: bigint;
   address: `0x${string}`;
-  swapMode: SwapMode;
+  action: StrategyInteraction;
 }
 
 export interface SwapEstimation {
