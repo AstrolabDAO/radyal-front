@@ -16,9 +16,13 @@ const DepositWith = ({ token, onTokenClick } : DepositWithProps) => {
   const { setFromValue } = useContext(SwapContext);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = Number(event.target.value);
-    setDepositValue(Number(newValue));
-    setFromValue(newValue);
+    const replace = event.target.value
+      .replace(/[^0-9.,]/g, "")
+      .replace(",", ".")
+      .replace(/^[.]$/, "0.");
+
+    setDepositValue(replace);
+    setFromValue(Number(event.target.value));
   };
 
   const setWholeWallet = (walletBalance: number) => {
@@ -44,11 +48,11 @@ const DepositWith = ({ token, onTokenClick } : DepositWithProps) => {
       onTokenClick={ onTokenClick }
       onWalletClick={ setWholeWallet }
       children={
-        <div className="flex ms-auto ms-auto">
+        <div className="flex ms-auto">
           <input
-            type="number"
             className="input py-1 my-2 font-bold text-xl text-right ms-auto w-full basis-4/5"
-            value={ depositValue }
+            type="number"
+            value={ depositValue?.toString() ?? "" }
             onChange={ handleInputChange }
           />
         </div>
