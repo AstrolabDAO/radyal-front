@@ -1,15 +1,18 @@
-import Strategies from "~/components/strategy/StrategyGrid";
-import { StrategyProvider } from "~/context/strategy-context";
+
+
 import { SwapModalProvider } from "~/context/swap-modal-context";
+import { StrategyProvider } from "~/context/strategy-context";
+
+import StrategyGrid from "~/components/strategy/StrategyGrid";
+import StrategyHero from "~/components/strategy/StrategyHero";
 
 const StrategiesPage = () => {
+
   return (
     <StrategyProvider>
       <SwapModalProvider>
-        <h1 className="text-center text-4xl mb-6 md:text-6xl mb-10 title text-primary">
-          Welcome to Radyal
-        </h1>
-        <Strategies />
+        <StrategyHero />
+        <StrategyGrid />
       </SwapModalProvider>
     </StrategyProvider>
   );

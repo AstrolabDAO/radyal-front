@@ -11,7 +11,10 @@ const Header = () => {
   const web3Modal = useWeb3Modal();
 
   return (
-    <header className="sticky top-0 z-20">
+    <header
+      className="sticky top-0 z-20"
+      style={{ height: '90px' }}
+    >
       <div className="navbar container mx-auto">
         <div className="navbar-start">
           <Logo
@@ -20,9 +23,9 @@ const Header = () => {
           />
         </div>
         <div className="navbar flex flex-row justify-center gap-10">
-          <div className="flex font-extrabold text-white">FARM</div>
-          <div className="flex">STAKE</div>
-          <div className="flex">MINT</div>
+          <div className="text-xl flex font-extrabold text-white text-neon">FARM</div>
+          <div className="text-xl flex">STAKE</div>
+          <div className="text-xl flex">MINT</div>
         </div>
         <div className="navbar-end">
           { !isConnected && (
