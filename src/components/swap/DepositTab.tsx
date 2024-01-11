@@ -7,6 +7,7 @@ import DepositSelectNetwork from './deposit/DepositSelectNetwork';
 
 import SelectTokenModal from "../modals/SelectTokenModal";
 
+import SwapRouteDetail from "../SwapRouteDetail";
 
 import { SwapContext } from "~/context/swap-context";
 import { SwapModalContext } from "~/context/swap-modal-context";
@@ -36,6 +37,8 @@ const DepositTab = () => {
       <DepositFor
         strategy={ toToken as Strategy }
       />
+
+      <SwapRouteDetail />
       <div className="sticky top-0">
         <button className="btn btn-primary mt-5 w-full button-primary-gradient button-primary-gradient-inverse border-0">Bridge and Deposit</button>
       </div>
