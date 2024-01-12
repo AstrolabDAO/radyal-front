@@ -17,7 +17,7 @@ const SwapRouteDetail = () => {
 
   return (
     <div>
-      <h2 className="mt-8">Route details: </h2>
+      <h2 className="">VIA </h2>
       <div className="card bg-base-100 flex flex-col mt-4 p-4">
         {estimationError && estimationError}
         {!estimationError && (

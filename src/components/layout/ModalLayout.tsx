@@ -1,6 +1,8 @@
-const ModalLayout = ({ children, title, actions }: ModalLayoutProps) => {
+import clsx from "clsx"
+
+const ModalLayout = ({ children, title, actions, className }: ModalLayoutProps) => {
   return (
-    <div className="block">
+    <div className={clsx("block", className) }>
       {title && <h1 className="text-center mb-8">{title} </h1>}
 
       <div className="box w-full">{children}</div>
@@ -30,6 +32,7 @@ export interface ModalAction {
   onClick: () => void;
 }
 interface ModalLayoutProps {
+  className?: string;
   children: React.ReactNode;
   title?: string;
   actions?: ModalAction[];

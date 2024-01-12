@@ -5,6 +5,7 @@ import { SwapProvider } from "./swap-context";
 
 export const SwapModalContext = createContext<ModalContextType>({
   visible: false,
+  render: false,
   selectedModal: null,
   openModal: () => () => {},
   closeModal: () => {},
@@ -24,7 +25,7 @@ const SwapModalContextProxy = ({ children }) => {
 
   return (
     <SwapModalContext.Provider
-      value={{ openModal, closeModal, visible, selectedModal }}
+      value={{ openModal, closeModal, visible, selectedModal, render: true }}
     >
       {visible && (
         <SwapProvider>

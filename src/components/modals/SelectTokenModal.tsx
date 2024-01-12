@@ -10,7 +10,6 @@ import { SelectTokenModalMode } from "~/utils/constants";
 interface SelectTokenModalProps extends BaseModalProps {
   mode: SelectTokenModalMode;
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
   const { sortedBalances } = useContext(TokensContext);
@@ -24,31 +23,26 @@ const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
       ? sortedBalances
           .filter((balance) => {
             const token = tokenBySlug[balance.slug];
-            if (!token) return false;
-            return true;
+            return !!token;
           })
           .map((balance) => tokenBySlug[balance.slug])
       : tokens;
   }, [mode, sortedBalances, tokens]);
 
   return (
-    <div className="p-4">
-      <div className="select-token block">
-        <div className="box w-full">
-          <SelectToken
-            tokens={tokensList}
-            onSelect={(token) => {
-              if (mode === SelectTokenModalMode.Deposit) {
-                selectFromToken(token);
-              } else {
-                selectToToken(token);
-              }
-              switchSelectMode();
-              closeModal();
-            }}
-          />
-        </div>
-      </div>
+    <div className="p-4 bg-dark max-h-screen">
+      <SelectToken
+        tokens={tokensList}
+        onSelect={(token) => {
+          if (mode === SelectTokenModalMode.Deposit) {
+            selectFromToken(token);
+          } else {
+            selectToToken(token);
+          }
+          switchSelectMode();
+          closeModal();
+        }}
+      />
     </div>
   );
 };
