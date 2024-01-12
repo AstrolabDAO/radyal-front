@@ -124,32 +124,34 @@ const SelectToken = ({ tokens, onSelect }) => {
 
           return (
             <div
-              key={ `token-${index}` }
+              key={`token-${index}`}
               className={clsx(
                 "flex flex-col cursor-pointer mb-2 pt-2.5 pb-1.5 px-2 rounded-xl",
                 index !== tokens.length - 1 && "border-b",
                 "hover:bg-primary hover:text-dark"
               )}
-              onClick={() => { switchSelectMode(); onSelect(token); }}
+              onClick={() => {
+                switchSelectMode();
+                onSelect(token);
+              }}
             >
               <div className="flex flex-row w-full items-center">
                 <IconGroup icons={icons} />
                 <div className="ms-4">
                   <span className="text-xl font-bold"> {token?.symbol} </span>
-                  <span className="text-xs">
-                    ({token.network.name})
-                  </span>
+                  <span className="text-xs">({token.network.name})</span>
                 </div>
                 <div className="ms-auto">
                   <span className="whitespace-nowrap block">
                     <span className="font-bold">
-                      {lisibleAmount(convertedBalance, 4)} </span>
-                      {token.symbol}
+                      {lisibleAmount(convertedBalance, 4)}{" "}
+                    </span>
+                    {token.symbol}
                   </span>
                 </div>
               </div>
               <div className="ms-auto -mt-2 text-xs">
-                ~{lisibleAmount(tokenPrice, 4)} $
+                ~{lisibleAmount(convertedBalance * tokenPrice, 4)} $
               </div>
             </div>
           );

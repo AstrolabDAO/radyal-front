@@ -25,7 +25,7 @@ import { TokensContext } from "./tokens-context";
 import { zeroAddress } from "viem";
 interface StrategyContextType {
   strategies: Strategy[];
-  selectedGroup: Strategy[],
+  selectedGroup: Strategy[];
   selectedStrategy: Strategy;
   filteredStrategies: { [slug: string]: Strategy[] };
   balances: Balance[];
@@ -42,7 +42,7 @@ export const StrategyContext = createContext<StrategyContextType>({
   filteredStrategies: {},
   balances: [],
   selectStrategy: () => {},
-  selectGroup : () => {},
+  selectGroup: () => {},
   search: () => {},
   filterByNetworks: () => {},
 });
@@ -64,7 +64,7 @@ export const StrategyProvider = ({ children }) => {
 
   const selectGroup = (strategies: Strategy[]) => {
     setSelectedGroup(strategies);
-  }
+  };
 
   const { data: strategiesData, isLoading: strategiesIsLoading } = useQuery<
     Strategy[]
@@ -104,8 +104,8 @@ export const StrategyProvider = ({ children }) => {
           const result = await getBalances(network, calls, address);
 
           balances.push(result.map(([balance]) => balance));
-          return balances.flat(1);
         }
+        return balances.flat(1);
       } catch (e) {
         console.error(e);
       }
@@ -162,7 +162,6 @@ export const StrategyProvider = ({ children }) => {
         selectedGroup,
         search: (value) => setSearch(value),
         filterByNetworks: (value) => setNetworksFilter(value),
-
       }}
     >
       {children}

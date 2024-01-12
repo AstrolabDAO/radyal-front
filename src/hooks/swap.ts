@@ -143,12 +143,6 @@ export const useGetSwapRoute = () => {
   const { selectedStrategy } = useContext(StrategyContext);
   const amount = useMemo(() => {
     if (!fromToken) return 0n;
-    console.log(
-      "🚀 ~ useGetSwapRoute ~ fromValue:",
-      fromValue,
-      fromToken.decimals,
-      fromToken.weiPerUnit
-    );
     return BigInt(Math.round(fromValue * fromToken?.weiPerUnit));
   }, [fromToken, fromValue]);
 

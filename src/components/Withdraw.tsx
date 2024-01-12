@@ -6,7 +6,7 @@ import SwapRouteDetail from "./SwapRouteDetail";
 import ModalLayout, { ModalAction } from "./layout/ModalLayout";
 
 import { tokensIsEqual } from "~/utils";
-import { useWithdraw } from "~/hooks/strategy";
+import { useMaxRedeem, useWithdraw } from "~/hooks/strategy";
 import toast from "react-hot-toast";
 import SwapStepsModal from "./modals/SwapStepsModal";
 import { SwapModalContext } from "~/context/swap-modal-context";
@@ -40,6 +40,9 @@ const Withdraw = () => {
 
   const withdraw = useWithdraw();
 
+  const maxRedeem = useMaxRedeem();
+  console.log("🚀 ~ Withdraw ~ maxRedeem:", maxRedeem);
+  
   useEffect(() => {
     unlockEstimate();
   }, [unlockEstimate]);

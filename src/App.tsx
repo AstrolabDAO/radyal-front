@@ -1,9 +1,9 @@
 import { TokensProvider } from "./context/tokens-context";
-import { Web3Provider } from "./context/web3-context.tsx";
+import { Web3Provider } from "./context/web3-context";
 
-import { DisclaimerProvider } from "./context/disclaimer-context.tsx";
+import { DisclaimerProvider } from "./context/disclaimer-context";
 
-import Layout from "./components/layout/Layout.tsx";
+import Layout from "./components/layout/Layout";
 
 function App() {
   return (

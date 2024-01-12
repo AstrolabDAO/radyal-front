@@ -1,12 +1,12 @@
 import { useContext } from "react";
 
 import { Strategy } from "~/utils/interfaces";
-import { SwapContext } from "~/context/swap-context";
 
 import SwapBlock from "../helpers/SwapBlock";
+import { EstimationContext } from "~/context/estimation-context";
 
 const DepositFor = ({ strategy }: { strategy: Strategy }) => {
-  const { toValue: depositToValue } = useContext(SwapContext);
+  const { toValue: depositToValue } = useContext(EstimationContext);
   const icons = {
     background: `/images/${strategy?.icon}`,
     foreground: strategy?.network?.icon,

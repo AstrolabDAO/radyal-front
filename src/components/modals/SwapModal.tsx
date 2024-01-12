@@ -5,6 +5,7 @@ import { SwapContext } from "~/context/swap-context";
 
 import DepositTab from "~/components/swap/DepositTab";
 import Withdraw from "../Withdraw";
+import { StrategyInteraction } from "~/utils/constants";
 
 const SwapModal = () => {
   return <SwapModalContent />;
@@ -27,13 +28,13 @@ const SwapModalContent = () => {
 
   function handleTransition(selectedTab: string) {
     const animationKey = selectedTab === "deposit" ? "left" : "right";
-    const swapMode = selectedTab === "deposit" ? SwapMode.DEPOSIT : SwapMode.WITHDRAW;
+    const action = selectedTab === "deposit" ? StrategyInteraction.DEPOSIT : StrategyInteraction.WITHDRAW;
     setAnimationEnter(null);
     setAnimationLeave(animationKey);
     setTimeout(() => {
       setAnimationEnter(animationKey);
       setSelectedTab(selectedTab);
-      setSwapMode(swapMode);
+      setAction(action);
       setAnimationLeave(null);
     }, 500);
   }
