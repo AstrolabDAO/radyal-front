@@ -1,5 +1,11 @@
 import { abi as AgentAbi } from "@astrolabs/registry/abis/StrategyV5Agent.json";
-import { createContext, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { useQuery } from "react-query";
 import { useAccount } from "wagmi";
 import { ONE_MINUTE } from "~/main";
@@ -19,7 +25,7 @@ import { TokensContext } from "./tokens-context";
 import { zeroAddress } from "viem";
 interface StrategyContextType {
   strategies: Strategy[];
-  selectedGroup: Strategy[],
+  selectedGroup: Strategy[];
   selectedStrategy: Strategy;
   filteredStrategies: { [slug: string]: Strategy[] };
   balances: Balance[];
@@ -36,7 +42,7 @@ export const StrategyContext = createContext<StrategyContextType>({
   filteredStrategies: {},
   balances: [],
   selectStrategy: () => {},
-  selectGroup : () => {},
+  selectGroup: () => {},
   search: () => {},
   filterByNetworks: () => {},
 });
@@ -51,13 +57,14 @@ export const StrategyProvider = ({ children }) => {
   const { tokensIsLoaded } = useContext(TokensContext);
 
   const Provider = StrategyContext.Provider;
-  const selectStrategy = (strategy: Strategy) => {
-    setSelectedStrategy(strategy);
-  };
+  const selectStrategy = useCallback(
+    (strategy: Strategy) => setSelectedStrategy(strategy),
+    []
+  );
 
   const selectGroup = (strategies: Strategy[]) => {
     setSelectedGroup(strategies);
-  }
+  };
 
   const { data: strategiesData, isLoading: strategiesIsLoading } = useQuery<
     Strategy[]
@@ -97,8 +104,8 @@ export const StrategyProvider = ({ children }) => {
           const result = await getBalances(network, calls, address);
 
           balances.push(result.map(([balance]) => balance));
-          return balances.flat(1);
         }
+        return balances.flat(1);
       } catch (e) {
         console.error(e);
       }
@@ -155,7 +162,6 @@ export const StrategyProvider = ({ children }) => {
         selectedGroup,
         search: (value) => setSearch(value),
         filterByNetworks: (value) => setNetworksFilter(value),
-
       }}
     >
       {children}

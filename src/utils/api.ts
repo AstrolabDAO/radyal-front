@@ -165,6 +165,7 @@ export const loadBalancesByAddress = async (address: `0x${string}`) => {
       requests.push(promise);
     }
   }
+
   await Promise.all(requests).then((data) => {
     const flatData = data.flat(1);
 
@@ -186,6 +187,7 @@ export const getStrategies = async () => {
   // Generate strategies mapping by Network with api Data
   for (let i = 0; i < strategiesData.length; i++) {
     const strategy = strategiesData[i];
+
     const { nativeNetwork } = strategy;
     const network = networkBySlug[nativeNetwork];
     if (!network) continue;
@@ -243,11 +245,8 @@ export const getStrategies = async () => {
 
   const strategies = strategiesData
     .filter((strategy) => {
-      const { nativeNetwork, denomination } = strategy;
+      const { nativeNetwork } = strategy;
       const network = networkBySlug[nativeNetwork];
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [_, symbol] = denomination.split(":");
 
       const token = tokenBySlug[strategy.denomination];
       return !!network && !!token ? true : false;
@@ -257,19 +256,15 @@ export const getStrategies = async () => {
         name,
         nativeNetwork,
         nativeAddress,
-        denomination,
         symbol,
         decimals,
         sharePrice,
         slug,
       } = strategy;
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [_, _symbol] = denomination.split(":");
       const network = networkBySlug[nativeNetwork];
 
       const token = tokenBySlug[strategy.denomination];
-
       const _strat = {
         name,
         symbol,

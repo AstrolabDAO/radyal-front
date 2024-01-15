@@ -2,11 +2,11 @@ import StratV5Abi from "@astrolabs/registry/abis/StrategyV5Agent.json";
 
 import { ICommonStep } from "@astrolabs/swapper";
 import { Client, getContract } from "viem";
-import { SwapMode } from "../constants";
 import { Strategy } from "../interfaces";
+import { StrategyInteraction } from "../constants";
 
 export const previewStrategyTokenMove = async (
-  { strategy, swapMode, value }: PreviewStrategyMoveProps,
+  { strategy, action, value }: PreviewStrategyMoveProps,
   publicClient: Client
 ) => {
   const contract = getContract({
@@ -15,28 +15,32 @@ export const previewStrategyTokenMove = async (
     publicClient,
   });
 
-  if (![SwapMode.DEPOSIT, SwapMode.WITHDRAW].includes(swapMode))
+  if (
+    ![StrategyInteraction.DEPOSIT, StrategyInteraction.WITHDRAW].includes(
+      action
+    )
+  )
     throw new Error("Invalid mode");
 
   const weiPerUnit =
-    swapMode === SwapMode.DEPOSIT
+    action === StrategyInteraction.DEPOSIT
       ? strategy.asset.weiPerUnit
       : strategy.weiPerUnit;
   const amount = BigInt(value * weiPerUnit);
 
   const previewAmount = (
-    swapMode === SwapMode.DEPOSIT
+    action === StrategyInteraction.DEPOSIT
       ? await contract.read.previewDeposit([amount])
       : await contract.read.previewRedeem([amount])
   ) as bigint;
 
   const fromToken: any =
-    swapMode === SwapMode.DEPOSIT ? strategy.asset : strategy;
+    action === StrategyInteraction.DEPOSIT ? strategy.asset : strategy;
   const toToken: any =
-    swapMode === SwapMode.DEPOSIT ? strategy : strategy.asset;
+    action === StrategyInteraction.DEPOSIT ? strategy : strategy.asset;
 
   const step: ICommonStep = {
-    type: swapMode,
+    type: action,
     tool: "radyal",
     fromChain: strategy.network.id,
     toChain: strategy.network.id,
@@ -50,7 +54,7 @@ export const previewStrategyTokenMove = async (
 
   const estimation =
     Number(previewAmount) /
-    (swapMode === SwapMode.DEPOSIT
+    (action === StrategyInteraction.DEPOSIT
       ? strategy.weiPerUnit
       : strategy.asset.weiPerUnit);
 
@@ -63,6 +67,6 @@ export const previewStrategyTokenMove = async (
 
 interface PreviewStrategyMoveProps {
   strategy: Strategy;
-  swapMode: SwapMode;
+  action: StrategyInteraction;
   value: number;
 }

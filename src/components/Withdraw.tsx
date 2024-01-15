@@ -6,27 +6,29 @@ import SwapRouteDetail from "./SwapRouteDetail";
 import ModalLayout, { ModalAction } from "./layout/ModalLayout";
 
 import { tokensIsEqual } from "~/utils";
-import { useWithdraw } from "~/hooks/strategy";
+import { useMaxRedeem, useWithdraw } from "~/hooks/strategy";
 import toast from "react-hot-toast";
 import SwapStepsModal from "./modals/SwapStepsModal";
 import { SwapModalContext } from "~/context/swap-modal-context";
 import { SelectTokenModalMode } from "~/utils/constants";
 import SelectTokenModal from "./modals/SelectTokenModal";
+import { EstimationContext } from "~/context/estimation-context";
 const Withdraw = () => {
   const { selectedStrategy } = useContext(StrategyContext);
   const {
     selectTokenMode,
     fromToken,
     toToken,
-    toValue,
+    canSwap,
+    actionNeedToSwap,
     switchSelectMode,
     selectFromToken,
     setFromValue,
-    unlockEstimate,
-    canSwap,
-    estimationError,
-    swap,
   } = useContext(SwapContext);
+  const { needApprove } = useContext(EstimationContext);
+
+  const { toValue, unlockEstimate, estimationError, swap } =
+    useContext(EstimationContext);
 
   const [locked, setLocked] = useState(false);
 
@@ -38,6 +40,9 @@ const Withdraw = () => {
 
   const withdraw = useWithdraw();
 
+  const maxRedeem = useMaxRedeem();
+  console.log("🚀 ~ Withdraw ~ maxRedeem:", maxRedeem);
+  
   useEffect(() => {
     unlockEstimate();
   }, [unlockEstimate]);
@@ -54,7 +59,11 @@ const Withdraw = () => {
 
   const modalActions: ModalAction[] = [
     {
-      label: "Withdraw",
+      label: needApprove
+        ? "Approve & Withdraw"
+        : actionNeedToSwap
+          ? "Swap & Withdraw"
+          : "Withdraw",
       disabled: !canSwap || locked,
       onClick: async () => {
         const close = openModal(<SwapStepsModal />);

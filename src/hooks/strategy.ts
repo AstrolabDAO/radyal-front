@@ -1,18 +1,34 @@
 import { abi } from "@astrolabs/registry/abis/StrategyV5Agent.json";
 import { useCallback, useContext } from "react";
-import { useAccount, usePublicClient } from "wagmi";
+import { useAccount, useContractRead, usePublicClient } from "wagmi";
 import { StrategyContext } from "~/context/strategy-context";
-import { useAllowance, useApprove, useSwitchNetwork } from "./transaction";
+import { useApprove, useSwitchNetwork } from "./transaction";
 
 import toast from "react-hot-toast";
 import { executeContract } from "~/services/transaction";
 
-import { getWalletClient } from "wagmi/actions";
+import { getWalletClient } from "@wagmi/core";
 
 export const useSelectedStrategy = () => {
   const { selectedStrategy } = useContext(StrategyContext);
+
   return selectedStrategy;
 };
+
+export const useMaxRedeem = () => {
+  const strategy = useSelectedStrategy();
+  const { network } = strategy;
+  const { address } = useAccount();
+
+  return useContractRead({
+    abi: abi,
+    address: strategy.address,
+    chainId: network.id,
+    functionName: "maxRedeem",
+    args: [address],
+  })?.data;
+};
+
 export const useStrategyContractFunction = (functionName: string) => {
   if (abi.find((f) => f.name === functionName) === undefined)
     throw new Error(
@@ -71,7 +87,7 @@ export const useWithdraw = () => {
   const strategy = useSelectedStrategy();
 
   const { network, asset } = strategy;
-  const withdraw = useStrategyContractFunction("safeWithdraw");
+  const withdraw = useStrategyContractFunction("safeRedeem");
   const switchNetwork = useSwitchNetwork(network.id);
   const publicClient = usePublicClient({
     chainId: strategy?.network?.id,
@@ -109,11 +125,7 @@ export const useApproveAndDeposit = () => {
   const { address } = useAccount();
   const { asset, network } = strategy;
 
-  const allowance = useAllowance({
-    address: asset.address,
-    chainId: asset.network.id,
-    args: [address, strategy.address],
-  }) as any as bigint;
+  const allowance = 0n;
 
   const publicClient = usePublicClient({
     chainId: network.id,

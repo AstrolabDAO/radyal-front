@@ -18,6 +18,7 @@ export const useReadTx = ({
   args,
   chainId,
   abi = erc20Abi,
+  enabled = true,
 }: TxArgs) => {
   return useContractRead({
     address,
@@ -25,6 +26,7 @@ export const useReadTx = ({
     abi,
     args: args as any,
     functionName,
+    enabled: enabled,
   }).data;
 };
 

@@ -1,9 +1,9 @@
 import { useContext, useEffect } from "react";
 import SwapRouteDetail from "../SwapRouteDetail";
-import { SwapContext } from "~/context/swap-context";
+import { EstimationContext } from "~/context/estimation-context";
 
 const SwapStepsModal = () => {
-  const { lockEstimate } = useContext(SwapContext);
+  const { lockEstimate } = useContext(EstimationContext);
   useEffect(() => lockEstimate(), [lockEstimate]);
   return (
     <div className="p-4">

@@ -6,7 +6,7 @@ import {
 import { erc20Abi } from "abitype/abis";
 import { encodeFunctionData, getContract, parseGwei } from "viem";
 import { tokensIsEqual } from "~/utils";
-import { SwapMode } from "~/utils/constants";
+import { StrategyInteraction } from "~/utils/constants";
 import { overrideZeroAddress } from "~/utils/format";
 import { LifiRequest } from "~/utils/interfaces";
 import { PrepareSendTransactionArgs } from "@wagmi/core";
@@ -37,7 +37,7 @@ export const generateCallData = ({
 };
 
 export const getSwapRoute = async (params: LifiRequest) => {
-  const { fromToken, toToken, address, amount, swapMode, strategy } = params;
+  const { fromToken, toToken, address, amount, action, strategy } = params;
 
   if (tokensIsEqual(fromToken, toToken)) {
     return [
@@ -53,10 +53,11 @@ export const getSwapRoute = async (params: LifiRequest) => {
   const customContractCalls = [];
 
   if (
-    swapMode === SwapMode.DEPOSIT
+    action === StrategyInteraction.DEPOSIT
     //&&fromToken.network.id !== toToken.network.id
   ) {
     const callData = depositCallData(address, amount.toString());
+
     customContractCalls.push({
       toAddress: strategy.address,
       callData,
@@ -123,7 +124,6 @@ export const aproveAndSwap = async (
     abi: erc20Abi,
     publicClient: publicClient as any,
   }) as any;
-  console.log("🚀 ~ file: swap.ts:123 ~ fromToken:", fromToken);
 
   const allowance: bigint = (await contract.read.allowance([
     clientAddress,
@@ -131,7 +131,7 @@ export const aproveAndSwap = async (
   ])) as bigint;
 
   const approvalAmount = amount + amount / 500n; // 5%
-  console.log("allowance", routerAddress, allowance, approvalAmount, amount);
+
   if (allowance !== null && approvalAmount > allowance) {
     try {
       const { hash: approveHash } = await approve({

@@ -2,10 +2,11 @@ import { useContext, useMemo, useState } from "react";
 import { TokensContext } from "~/context/tokens-context";
 import { amountToEth, lisibleAmount } from "~/utils/format";
 import clsx from "clsx";
-import { SwapContext } from "~/context/swap-context";
 import Loader from "./Loader";
 import { balanceBySlug } from "~/utils/mappings";
 import CrossChainTokenSelect from "./CrossChainTokenSelect";
+import { EstimationContext } from "~/context/estimation-context";
+import { SwapContext } from "~/context/swap-context";
 
 const SwapInput = ({
   selected,
@@ -15,7 +16,8 @@ const SwapInput = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onChange = (value: number) => {},
 }) => {
-  const { toValue, fromValue } = useContext(SwapContext);
+  const { fromValue } = useContext(SwapContext);
+  const { toValue } = useContext(EstimationContext);
 
   const [depositValue, setDepositValue] = useState<string>(
     isDestination ? null : fromValue?.toString() ?? null
