@@ -2,8 +2,9 @@ import { useMemo } from "react";
 
 import clsx from "clsx";
 
-import { amountToEth } from "~/utils/format";
-import { Strategy, Token } from "~/utils/interfaces";
+import { Strategy, Token } from '~/utils/interfaces';
+import { balanceBySlug } from "~/utils/mappings";
+import { amountToEth, lisibleAmount } from "~/utils/format";
 
 import { WalletIcon } from "@heroicons/react/24/solid";
 import IconGroup from "~/components/IconGroup";
@@ -95,8 +96,10 @@ const SwapBlock = ({
             <WalletIcon className="flex me-1 my-auto h-4 w-4" />
             <span className="flex my-auto"> {balance} </span>
           </div>
-          <div className="flex ms-auto ms-auto">{children}</div>
-          <div className="text-sm text-gray font-bold">~{tokenPrice} $</div>
+          <div className="flex ms-auto ms-auto">
+            { children }
+          </div>
+          <div className="text-sm text-gray font-bold">~{ lisibleAmount(tokenPrice, 4) } $</div>
         </div>
       </div>
     </div>

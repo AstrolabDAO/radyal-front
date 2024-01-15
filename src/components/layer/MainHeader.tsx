@@ -1,4 +1,6 @@
 import { useAccount } from "wagmi";
+import { useState, useEffect } from "react";
+
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 import { shortenAddress } from "~/utils/format";
@@ -10,10 +12,35 @@ const Header = () => {
   const { address, isConnected } = useAccount();
   const web3Modal = useWeb3Modal();
 
+  const [scrolling, setScrolling] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolling(true);
+      } else {
+        setScrolling(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const headerStyle = {
+    height: '90px',
+    backgroundColor: scrolling ? 'oklch(0.222129 0 0)' : 'transparent',
+    transition: 'background-color 0.3s ease-in-out',
+    // Add other styles for your header here
+  };
+
   return (
     <header
       className="sticky top-0 z-20"
-      style={{ height: '90px' }}
+      style={ headerStyle }
     >
       <div className="navbar container mx-auto">
         <div className="navbar-start">

@@ -4,7 +4,7 @@ type StrategyCardTVLProps = {
 
 const StrategyCardTVL = ({ tvl }: StrategyCardTVLProps) => {
   return (
-    <div className="flex flex-col w-1/2">
+    <div className="flex flex-col mx-auto">
       <div className="-mb-1 text-sm text-gray-500 font-light">
         WITH
       </div>

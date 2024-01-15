@@ -113,10 +113,15 @@ const SelectToken = ({ tokens, onSelect }) => {
           );
 
           const icons = [
-            { url: token?.icon, alt: token?.symbol },
+            {
+              url: token?.icon,
+              alt: token?.symbol,
+              size: { width: 30, height: 30 },
+            },
             {
               url: token?.network?.icon,
               alt: token?.network?.name,
+              size: { width: 15, height: 15 },
               small: true,
             },
           ];
