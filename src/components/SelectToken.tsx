@@ -122,6 +122,7 @@ const SelectToken = ({ tokens, onSelect }) => {
               url: token?.network?.icon,
               alt: token?.network?.name,
               size: { width: 15, height: 15 },
+              classes: "-ms-2",
               small: true,
             },
           ];
