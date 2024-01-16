@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import {
   useCallback,
   useContext,
@@ -7,14 +6,14 @@ import {
   useRef,
   useState,
 } from "react";
+
 import { SwapContext } from "~/context/swap-context";
-import { amountToEth, lisibleAmount } from "~/utils/format";
-import IconGroup from "./IconGroup";
 
 import { Web3Context } from "~/context/web3-context";
-import { useBalanceByTokenSlug, usePrices } from "~/hooks/store/tokens";
+import { usePrices } from "~/hooks/store/tokens";
 import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
 import ModalLayout from "./layout/ModalLayout";
+import SelectTokenLine from "./select-token/SelectTokenLine";
 
 const SelectToken = ({ tokens, onSelect }) => {
   const { networks } = useContext(Web3Context);
@@ -76,7 +75,6 @@ const SelectToken = ({ tokens, onSelect }) => {
     };
   }, [loadMoreRef, loadMoreTokens, loading]);
 
-  const balanceBySlug = useBalanceByTokenSlug();
   return (
     <ModalLayout title="Select token" className="max-h-screen min-h-96">
       <header>
@@ -100,66 +98,21 @@ const SelectToken = ({ tokens, onSelect }) => {
           }}
         />
       </header>
-      <div>
-        {displayedTokens.map((token, index) => {
-          const convertedPrice = Number(tokenPrices[token.coinGeckoId]?.usd);
-          const tokenPrice = isNaN(convertedPrice) ? 0 : convertedPrice;
-
-          const balance = balanceBySlug[token.slug]?.amountWei ?? 0;
-
-          const convertedBalance = amountToEth(
-            !balance ? BigInt(0) : BigInt(balance),
-            token.decimals
-          );
-
-          const icons = [
-            {
-              url: token?.icon,
-              alt: token?.symbol,
-              size: { width: 30, height: 30 },
-            },
-            {
-              url: token?.network?.icon,
-              alt: token?.network?.name,
-              size: { width: 15, height: 15 },
-              classes: "-ms-2",
-              small: true,
-            },
-          ];
-
+      <div
+        className="overflow-y-scroll"
+        style={{ maxHeight: "calc(100vh - 450px)" } }
+      >
+        { displayedTokens.map((token, index) => {
           return (
-            <div
-              key={`token-${index}`}
-              className={clsx(
-                "flex flex-col cursor-pointer mb-2 pt-2.5 pb-1.5 px-2 rounded-xl",
-                index !== tokens.length - 1 && "border-b",
-                "hover:bg-primary hover:text-dark"
-              )}
-              onClick={() => {
-                switchSelectMode();
-                onSelect(token);
-              }}
-            >
-              <div className="flex flex-row w-full items-center">
-                <IconGroup icons={icons} />
-                <div className="ms-4">
-                  <span className="text-xl font-bold"> {token?.symbol} </span>
-                  <span className="text-xs">({token.network.name})</span>
-                </div>
-                <div className="ms-auto">
-                  <span className="whitespace-nowrap block">
-                    <span className="font-bold">
-                      {lisibleAmount(convertedBalance, 4)}{" "}
-                    </span>
-                    {token.symbol}
-                  </span>
-                </div>
-              </div>
-              <div className="ms-auto -mt-2 text-xs">
-                ~{lisibleAmount(convertedBalance * tokenPrice, 4)} $
-              </div>
-            </div>
-          );
+            <SelectTokenLine
+              key={ `token-line-${index}` }
+              token={ token }
+              tokenPrices={ tokenPrices }
+              onSelect={ onSelect }
+              switchSelectMode={ switchSelectMode }
+              haveBorder={ index !== tokens.length - 1 }
+            />
+          )
         })}
         <div ref={loadMoreRef} />
       </div>
