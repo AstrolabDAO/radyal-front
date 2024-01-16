@@ -44,22 +44,22 @@ const SwapModalContent = () => {
 
   return (
     <div className="bg-dark pb-4 pt-6 px-3 max-h-screen">
-      <div className="flex flex-row justify-between px-3 ">
+      <div className="flex flex-row justify-between px-3">
         <div
           className={
-            clsx("text-3xl cursor-pointer mx-auto",
+            clsx("text-4xl cursor-pointer",
             { "font-bold border-white text-primary": selectedTab === "deposit" })
           }
           onClick={() => { handleTransition('deposit') }}
         >
           DEPOSIT
         </div>
-        <div className="my-auto">
-          |
+        <div className="my-auto text-gray-500">
+          OR
         </div>
         <div
           className={
-            clsx("text-2xl cursor-pointer mx-auto",
+            clsx("text-3xl cursor-pointer",
             { "font-bold border-white text-primary": selectedTab === "withdraw" })
           }
           onClick={() => { handleTransition('withdraw') }}

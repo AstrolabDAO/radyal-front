@@ -59,38 +59,68 @@ const SwapBlock = ({
   }, [tokenPrices, token, value]);
 
   const iconGroup = [
-    { url: icons.background, alt: symbol },
-    { url: icons.foreground, alt: network, small: true },
+    {
+      alt: symbol,
+      url: icons.background,
+      size: {
+        width: 32,
+        height: 32,
+      }
+    },
+    {
+      url: icons.foreground,
+      alt: network,
+      classes: "-ms-2",
+      size: {
+        width: 15,
+        height: 15,
+      },
+      small: true,
+    },
   ];
 
   return (
     <div className="flex flex-col my-3">
-      <div className="mb-1">{label}</div>
-      <div className="flex flex-col md:flex-row p-3 border border-solid border-gray-500 rounded-xl bg-dark-600">
-        <div
-          className={clsx(
-            "flex flex-row rounded-xl bg-gray-500 px-3 cursor-pointer my-auto py-2",
-            { "hover:bg-primary hover:text-dark": !disabled }
-          )}
-          onClick={onTokenClick}
+      <div className="mb-1">{ label }</div>
+      <div className="flex flex-col md:flex-row px-3 py-2 rounded-xl bg-dark-600">
+        <div className={
+          clsx("flex flex-row rounded-xl my-auto py-0 ps-2 pe-0",
+          {
+            "cursor-pointer hover:bg-primary hover:text-dark bg-gray-500" : !disabled,
+            'border-2 border-solid border-gray-500': disabled
+          },
+        )}
+          onClick={ onTokenClick }
         >
-          <div className="my-auto">
-            <IconGroup icons={iconGroup} />
-          </div>
-          <div className="flex flex-col ps-3 py-3 bg-medium my-auto">
-            <div className="text-2xl font-bold">{symbol}</div>
-            <div className="-mt-2 w-32">on {network}</div>
-          </div>
+          { symbol && network &&
+            <>
+              <div className="my-auto">
+                <IconGroup icons={ iconGroup }/>
+              </div>
+              <div className="flex flex-col ps-3 py-2 bg-medium my-auto">
+                <div className="text-2xl font-bold">{ symbol }</div>
+                <div className="-mt-2 w-32">on { network }</div>
+              </div>
+            </>
+          }
+          { (!symbol || !network) &&
+            <div
+              className="py-6 text-center font-bold text-2xl"
+              style={{ minWidth: "calc(240px - 1.5rem)" }}
+            >
+              SELECT A TOKEN
+            </div>
+          }
         </div>
         <div className="flex flex-col ms-auto my-auto text-right">
           <div
-            className={clsx(
-              "text-sm flex flex-row align-middle ms-auto bg-gray-200 rounded px-1",
-              {
-                "cursor-pointer hover:bg-primary hover:text-dark": !disabled,
-              }
-            )}
-            onClick={() => onWalletClick(balance)}
+            className={
+              clsx("text-sm flex rounded-xl flex-row align-middle ms-auto rounded px-1", {
+              "cursor-pointer hover:bg-primary hover:text-dark" : !disabled,
+              "bg-dark-600" : disabled,
+              "bg-dark-800" : !disabled,
+            })}
+            onClick={ () => onWalletClick(balance) }
           >
             <WalletIcon className="flex me-1 my-auto h-4 w-4" />
             <span className="flex my-auto"> {balance} </span>
@@ -98,7 +128,7 @@ const SwapBlock = ({
           <div className="flex ms-auto ms-auto">
             { children }
           </div>
-          <div className="text-sm text-gray font-bold">~{ lisibleAmount(tokenPrice, 4) } $</div>
+          <div className="text-sm text-gray font-light">~{ lisibleAmount(tokenPrice, 4) } $</div>
         </div>
       </div>
     </div>
