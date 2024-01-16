@@ -3,7 +3,6 @@ import { useMemo } from "react";
 import clsx from "clsx";
 
 import { Strategy, Token } from '~/utils/interfaces';
-import { balanceBySlug } from "~/utils/mappings";
 import { amountToEth, lisibleAmount } from "~/utils/format";
 
 import { WalletIcon } from "@heroicons/react/24/solid";

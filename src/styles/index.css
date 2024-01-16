@@ -37,8 +37,8 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
   font-family: "Inter", sans-serif;
+  min-width: 100vw;
 }
 #root {
   min-height: 100vh;

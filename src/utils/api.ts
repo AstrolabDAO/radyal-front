@@ -6,6 +6,7 @@ import { COINGECKO_API, TOKEN_BASENAME_REGEX } from "./constants";
 import { Strategy, Token } from "./interfaces";
 import { networkBySlug } from "./mappings";
 import { multicall } from "./multicall";
+import { ApiResponseStrategy } from "~/interfaces/astrolab-api";
 
 export const getTokenPrice = (token: Token) => {
   return axios.get(`${COINGECKO_API}/simple/price`, {
@@ -75,9 +76,9 @@ export const loadBalancesByAddress = async (address: `0x${string}`) => {
 export const getStrategies = async () => {
   const strategiesData = await axios
     .get(`${process.env.ASTROLAB_API}/strategies`)
-    .then((res) => res.data.data);
+    .then((res) => res.data.data as ApiResponseStrategy[]);
 
-  const strategiesByNetwork = {};
+  const strategiesByNetwork: { [key: number]: ApiResponseStrategy[] } = {};
 
   // Generate strategies mapping by Network with api Data
   for (let i = 0; i < strategiesData.length; i++) {
@@ -88,7 +89,7 @@ export const getStrategies = async () => {
     if (!network) continue;
     if (!strategiesByNetwork[network.id]) strategiesByNetwork[network.id] = [];
     // Add index on strategy to retrieve it after
-    strategy.index = i;
+    Object.assign(strategy, { index: i });
     strategiesByNetwork[network.id].push(strategy);
   }
 
@@ -101,21 +102,11 @@ export const getStrategies = async () => {
           abi: AgentABI,
           address: strategy.nativeAddress,
         };
-        return [
-          {
+        return ["symbol", "decimals", "sharePrice", "name"]
+          .map((functionName) => ({
             ...call,
-            functionName: "symbol",
-          },
-          {
-            ...call,
-            functionName: "decimals",
-          },
-          {
-            ...call,
-            functionName: "sharePrice",
-          },
-          { ...call, functionName: "name" },
-        ];
+            functionName,
+          }));
       })
       .flat(1);
 
@@ -128,13 +119,12 @@ export const getStrategies = async () => {
 
       if (!symbol?.result || !decimals?.result || !name?.result) continue;
       const strategy = networkStrategies[i / 4];
-      strategiesData[strategy.index] = {
-        ...strategiesData[strategy.index],
+      Object.assign(strategiesData[strategy.index], {
         symbol: symbol?.result,
         decimals: decimals?.result,
         sharePrice: Number(sharePrice?.result),
         name: name?.result,
-      };
+      });
     }
   }
 
@@ -155,7 +145,7 @@ export const getStrategies = async () => {
         decimals,
         sharePrice,
         slug,
-      } = strategy;
+      } = strategy as ApiResponseStrategy & { decimals: number, sharePrice: number };
 
       const network = networkBySlug[nativeNetwork];
 

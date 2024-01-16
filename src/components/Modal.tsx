@@ -49,8 +49,8 @@ const Modal = () => {
           />
         </Transition.Child>
 
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center text-center sm:items-center sm:p-0">
+        <div className="fixed flex inset-0 z-10 w-screen overflow-y-auto">
+          <div className="flex m-auto">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-600"
@@ -60,15 +60,15 @@ const Modal = () => {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="transform overflow-y-auto overflow-x-hidden rounded-lg shadow-xl transition-all backdrop-blur-medium bg-base-dark-transparent">
-                <div className="relative text-left z-50 max-h-screen w-screen lg:max-w-xl max-h-90">
+              <Dialog.Panel className="overflow-x-hidden overflow-y-scroll backdrop-blur-medium bg-base-dark-transparent rounded-xl">
+                <div className="relative text-left z-50 max-h-screen w-screen sm:max-w-xl">
                   <button
                     className="right-0 top-0 absolute p-2 z-50"
-                    onClick={onClose}
+                    onClick={ onClose }
                   >
                     <FaTimes />
                   </button>
-                  {selectedModal}
+                  { selectedModal }
                 </div>
               </Dialog.Panel>
             </Transition.Child>

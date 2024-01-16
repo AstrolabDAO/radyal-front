@@ -2,7 +2,6 @@ import { useAccount } from "wagmi";
 import { useState, useEffect } from "react";
 
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-
 import { shortenAddress } from "~/utils/format";
 
 import Button from "../Button";
@@ -50,9 +49,21 @@ const Header = () => {
           />
         </div>
         <div className="navbar flex flex-row justify-center gap-10">
-          <div className="text-xl flex font-extrabold text-white text-neon">FARM</div>
-          <div className="text-xl flex">STAKE</div>
-          <div className="text-xl flex">MINT</div>
+          <div className="text-xl flex font-extrabold text-white text-neon">
+            FARM
+          </div>
+          <div className="text-xl flex">
+            STAKE
+            <div className="badge badge-outline badge-primary border-2 badge-xs px-1 mb-auto text-2xs">
+              Soon™
+            </div>
+          </div>
+          <div className="text-xl flex">
+            MINT
+            <div className="badge badge-outline badge-primary border-2 badge-xs px-1 mb-auto text-2xs">
+              Soon™
+            </div>
+          </div>
         </div>
         <div className="navbar-end">
           { !isConnected && (

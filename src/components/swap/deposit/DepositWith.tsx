@@ -34,7 +34,6 @@ const DepositWith = ({ token, onTokenClick } : DepositWithProps) => {
     background: token?.network.icon
   }
 
-
   // TODO: add a guidance when no token is selected
   return (
     <SwapBlock
