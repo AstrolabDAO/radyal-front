@@ -50,17 +50,17 @@ const Modal = () => {
         </Transition.Child>
 
         <div className="fixed flex inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex m-auto">
+          <div className="flex m-auto overflow-y-scroll ">
             <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-600"
+              as={ Fragment }
+              enter="ease-out duration-1000"
               enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               enterTo="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-200"
+              leave="ease-in duration-1000"
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="overflow-x-hidden overflow-y-scroll backdrop-blur-medium bg-base-dark-transparent rounded-xl">
+              <Dialog.Panel className="overflow-x-hidden backdrop-blur-medium bg-dark rounded-xl">
                 <div className="relative text-left z-50 max-h-screen w-screen sm:max-w-lg">
                   <button
                     className="right-0 top-0 absolute p-2 z-50"
