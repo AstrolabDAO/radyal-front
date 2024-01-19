@@ -74,7 +74,7 @@ const SelectTokenLine = ({
         </div>
       </div>
       <div className="ms-auto -mt-2 text-xs">
-        ~{lisibleAmount(tokenPrice, 4)} $
+        ~{lisibleAmount(convertedBalance * tokenPrice, 4)} $
       </div>
     </div>
   )
