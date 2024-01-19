@@ -32,10 +32,9 @@ const SwapBlock = ({
   disabled,
   value,
   onTokenClick,
-  onWalletClick,
+  onWalletClick = () => {},
 }: SwapBlockProps) => {
   const tokenPrices = usePrices();
-
   const balanceBySlug = useBalanceByTokenSlug();
   const balance = useMemo(() => {
     if (!token) return 0;
@@ -125,10 +124,10 @@ const SwapBlock = ({
             <WalletIcon className="flex me-1 my-auto h-4 w-4" />
             <span className="flex my-auto"> {balance} </span>
           </div>
-          <div className="flex ms-auto ms-auto">
+          <div className="flex ms-auto">
             { children }
           </div>
-          <div className="text-sm text-gray font-light">~{ lisibleAmount(tokenPrice, 4) } $</div>
+          <div className="text-xs text-gray font-light -mt-2.5">~{ lisibleAmount(tokenPrice, 4) } $</div>
         </div>
       </div>
     </div>

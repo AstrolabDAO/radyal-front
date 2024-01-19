@@ -13,7 +13,7 @@ const StrategyHero = () => {
     >
       <StrategyCardCTAOne strategyGroup={grouppedStrategies[1]} />
       <div
-        className="flex flex-col w-full relative"
+        className="flex flex-col w-screen relative"
         style={{ transform: 'rotate(-11deg)', height: 60 }}
       >
         <div

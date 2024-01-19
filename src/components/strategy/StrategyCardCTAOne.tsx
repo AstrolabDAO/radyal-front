@@ -51,6 +51,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
   const selectGroup = useSelectStrategyGroup();
 
   const openModalStrategy = () => {
+    if (strategy === null) return;
     selectStrategy(strategy as Strategy);
     selectGroup(strategyGroup);
     if (!isConnected) {

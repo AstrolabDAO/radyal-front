@@ -7,32 +7,30 @@ import IconCard from "~/components/IconCard";
 type SwapRouteDetailLineProps = {
   step: {
     fromNetwork: Network;
-    fromAmount: string;
     toNetwork: Network;
-    toAmount: string;
     protocolName: string;
     protocolIcon: Icon;
     type: string;
     swapRouteStepType: string;
+    fromAmountWithNetworkAndSymbol: string;
+    toAmountWithNetworkAndSymbol: string;
   }
 };
 
 const SwapRouteDetailLine = ({
   step: {
     fromNetwork,
-    fromAmount,
     toNetwork,
-    toAmount,
     protocolName,
     protocolIcon,
     type,
     swapRouteStepType,
+    fromAmountWithNetworkAndSymbol,
+    toAmountWithNetworkAndSymbol,
   }
 }: SwapRouteDetailLineProps) => {
   const size = { width: 15, height: 15 };
   const classes = "ms-2";
-  const [fromNetworkName] = fromNetwork.name.split(' ');
-  const [toNetworkName] = toNetwork.name.split(' ');
   return (
     <li className="step step-primary pb-4">
       <div className="w-full flex flex-col text-start">
@@ -51,10 +49,10 @@ const SwapRouteDetailLine = ({
           }
         </div>
         <span className="flex items-center">
-          { fromAmount }:{ fromNetworkName }
+          { fromAmountWithNetworkAndSymbol }
           <IconCard icon={{ url: fromNetwork.icon, size, classes }} />
           <FaLongArrowAltRight className="mx-2" />
-          { toAmount }:{ toNetworkName }
+          { toAmountWithNetworkAndSymbol}
           <IconCard icon={{ url: toNetwork.icon, size, classes }} />
         </span>
       </div>

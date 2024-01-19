@@ -32,7 +32,7 @@ const StrategyList = () => {
         </div>
         <div>
           <span className="label-text block w-full mb-2">
-            filter by network...
+            Chain
           </span>
           <NetworkSelect
             isSearchable

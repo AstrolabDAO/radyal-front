@@ -36,7 +36,9 @@ const StrategyGrid = () => {
           />
         </div>
         <div className="flex flex-col">
-          <span className="label-text my-2">filter by network...</span>
+          <span className="label-text my-2">
+            Chain
+          </span>
           <NetworkSelect
             isSearchable
             className="basic-multi-select w-64 h-12"
