@@ -1,32 +1,29 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
-import DepositWith from "./deposit/DepositWith";
 import DepositFor from "./deposit/DepositFor";
 import DepositInto from "./deposit/DepositInto";
 import DepositSelectNetwork from "./deposit/DepositSelectNetwork";
+import DepositWith from "./deposit/DepositWith";
 
 import SelectTokenModal from "../modals/SelectTokenModal";
 
 import SwapRouteDetail from "../SwapRouteDetail";
 
+import { StrategyContext } from "~/context/strategy-context";
 import { SwapContext } from "~/context/swap-context";
 import { SwapModalContext } from "~/context/swap-modal-context";
-import { StrategyContext } from "~/context/strategy-context";
 
+import { EstimationContext } from "~/context/estimation-context";
+import { useApproveAndDeposit } from "~/hooks/strategy";
+import { tokensIsEqual } from "~/utils";
 import { SelectTokenModalMode } from "~/utils/constants";
 import { Strategy, Token } from "~/utils/interfaces";
-import SwapStepsModal from "../modals/SwapStepsModal";
-import { tokensIsEqual } from "~/utils";
-import toast from "react-hot-toast";
-import { useApproveAndDeposit } from "~/hooks/strategy";
-import { EstimationContext } from "~/context/estimation-context";
 
 const DepositTab = () => {
   const { selectedStrategy } = useContext(StrategyContext);
   const { fromToken, toToken, fromValue, canSwap, actionNeedToSwap } =
     useContext(SwapContext);
-  const { swap, needApprove } = useContext(EstimationContext);
-  const [locked, setLocked] = useState(false);
+  const { swap, needApprove, estimation } = useContext(EstimationContext);
 
   const approveAndDeposit = useApproveAndDeposit();
 
@@ -47,25 +44,15 @@ const DepositTab = () => {
       />
       <DepositFor strategy={toToken as Strategy} />
 
-      <SwapRouteDetail />
+      <SwapRouteDetail steps={estimation?.steps ?? []} />
       <div className="sticky top-0">
         <button
-          disabled={!canSwap || locked}
+          disabled={!canSwap}
           onClick={async () => {
-            const close = openModal(<SwapStepsModal />);
-            try {
-              console.log("ok");
-              setLocked(true);
-              if (!tokensIsEqual(fromToken, selectedStrategy.asset)) {
-                await swap();
-              } else {
-                await approveAndDeposit(fromValue);
-              }
-              setLocked(false);
-            } catch (e) {
-              close();
-              toast.error(e.message);
-              setLocked(false);
+            if (!tokensIsEqual(fromToken, selectedStrategy.asset)) {
+              await swap();
+            } else {
+              await approveAndDeposit(fromValue);
             }
           }}
           className="btn btn-primary mt-5 w-full button-primary-gradient button-primary-gradient-inverse border-0"

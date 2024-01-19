@@ -10,14 +10,14 @@ import {
 } from "~/utils/mappings";
 import IconCard from "./IconCard";
 import { EstimationContext } from "~/context/estimation-context";
-import { SwapStepsContext } from "~/context/swap-steps-context";
+import { OperationStep } from "~/store/interfaces/operations";
 
-const SwapRouteDetail = () => {
+const SwapRouteDetail = ({ steps }: { steps: OperationStep[] }) => {
   const { estimationError } = useContext(EstimationContext);
 
-  const { steps } = useContext(SwapStepsContext);
   const size = { width: 20, height: 20 };
 
+  if (!steps) return null;
   return (
     <div>
       <h2 className="">VIA </h2>
@@ -85,8 +85,12 @@ const SwapRouteDetail = () => {
                       </div>
                       <span className="block w-full flex justify-center">
                         {fromAmount}
-                        <FaLongArrowAltRight className="mx-2" />
-                        {toAmount}
+                        {type !== "Approve" && (
+                          <>
+                            <FaLongArrowAltRight className="mx-2" />
+                            {toAmount}
+                          </>
+                        )}
                       </span>
                     </div>
                   </div>

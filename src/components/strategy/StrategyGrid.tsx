@@ -2,6 +2,12 @@ import { useContext, useMemo } from "react";
 import { StrategyContext } from "~/context/strategy-context";
 import StrategyCard from "./StrategyCard";
 import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
+import { useSelector } from "react-redux";
+import { useSelectOperation } from "~/hooks/operation";
+import { operationsSelector } from "~/store/selectors/operations";
+import { SwapModalContext } from "~/context/swap-modal-context";
+import SwapStepsModal from "../modals/SwapStepsModal";
+import { OperationStatus } from "~/model/operation";
 
 const StrategyGrid = () => {
   const { filteredStrategies, search, filterByNetworks, strategies } =
@@ -11,7 +17,10 @@ const StrategyGrid = () => {
     () => Object.values(filteredStrategies),
     [filteredStrategies]
   );
+  const operations = useSelector(operationsSelector);
 
+  const selectOperation = useSelectOperation();
+  const { openModal } = useContext(SwapModalContext);
   return (
     <div className="w-full container px-2 sm:mx-auto">
       <div className="flex flex-col md:flex-row w-full">
@@ -27,9 +36,7 @@ const StrategyGrid = () => {
           />
         </div>
         <div className="flex flex-col">
-          <span className="label-text my-2">
-            filter by network...
-          </span>
+          <span className="label-text my-2">filter by network...</span>
           <NetworkSelect
             isSearchable
             className="basic-multi-select w-64 h-12"
@@ -52,6 +59,22 @@ const StrategyGrid = () => {
           />
         ))}
       </div>
+      <ul className="transactionList">
+        {operations
+          .filter(({ status }) => status === OperationStatus.PENDING)
+          .map((operation) => (
+            <li key={operation.id}>
+              <button
+                onClick={() => {
+                  selectOperation(operation.id);
+                  openModal(<SwapStepsModal />);
+                }}
+              >
+                {operation.id}
+              </button>
+            </li>
+          ))}
+      </ul>
     </div>
   );
 };

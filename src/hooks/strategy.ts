@@ -5,9 +5,13 @@ import { StrategyContext } from "~/context/strategy-context";
 import { useApprove, useSwitchNetwork } from "./transaction";
 
 import toast from "react-hot-toast";
-import { executeContract } from "~/services/transaction";
 
+import { ICommonStep } from "@astrolabs/swapper";
 import { getWalletClient } from "@wagmi/core";
+import { EstimationContext } from "~/context/estimation-context";
+import { Operation, OperationStatus } from "~/model/operation";
+import { OperationStep } from "~/store/interfaces/operations";
+import { useCurrentStep, useEmmitStep } from "./operation";
 
 export const useSelectedStrategy = () => {
   const { selectedStrategy } = useContext(StrategyContext);
@@ -37,29 +41,19 @@ export const useStrategyContractFunction = (functionName: string) => {
   const strategy = useSelectedStrategy();
   const { network } = strategy;
 
-  const { address } = useAccount();
-
   return useCallback(
     async (args?: any) => {
       const walletClient = await getWalletClient({
         chainId: network.id,
       });
-      console.log("🚀 ~ file: strategy.ts:35 ~ walletClient:", walletClient);
       return walletClient.writeContract({
         address: strategy.address,
         abi,
         functionName,
         args,
       } as any);
-      return await executeContract({
-        abi: abi as any,
-        address,
-        chainId: network.id,
-        functionName,
-        args,
-      });
     },
-    [address, functionName, network.id, strategy.address]
+    [functionName, network.id, strategy.address]
   );
 };
 
@@ -122,10 +116,7 @@ export const useWithdraw = () => {
 
 export const useApproveAndDeposit = () => {
   const strategy = useSelectedStrategy();
-  const { address } = useAccount();
   const { asset, network } = strategy;
-
-  const allowance = 0n;
 
   const publicClient = usePublicClient({
     chainId: network.id,
@@ -135,13 +126,28 @@ export const useApproveAndDeposit = () => {
 
   const approve = useApprove(asset);
   const switchNetwork = useSwitchNetwork(network.id);
+  const emmitStep = useEmmitStep();
+  const currentStep = useCurrentStep();
+  const { needApprove, estimation } = useContext(EstimationContext);
+
   return useCallback(
     async (value: number) => {
       await switchNetwork();
       const amount = BigInt(value * asset.weiPerUnit);
 
+      const _tx = new Operation({
+        id: window.crypto.randomUUID(),
+        steps: estimation.steps.map((step: ICommonStep) => {
+          return {
+            ...step,
+            status: OperationStatus.PENDING,
+          } as OperationStep;
+        }),
+        estimation,
+      });
+
       try {
-        if (!allowance || allowance < amount) {
+        if (needApprove) {
           const { hash: approveHash } = await approve({
             spender: strategy.address,
             amount,
@@ -155,6 +161,12 @@ export const useApproveAndDeposit = () => {
             success: "Approve transaction successful",
             error: "approve reverted rejected 🤯",
           });
+
+          if (currentStep.type === "Approve")
+            emmitStep({
+              txId: _tx.id,
+              promise: approvePending,
+            });
           await approvePending;
         }
         const depositHash = (await deposit(amount)) as `0x${string}`;
@@ -174,10 +186,13 @@ export const useApproveAndDeposit = () => {
       }
     },
     [
-      allowance,
       approve,
       asset.weiPerUnit,
+      currentStep,
       deposit,
+      emmitStep,
+      estimation,
+      needApprove,
       publicClient,
       strategy.address,
       switchNetwork,
