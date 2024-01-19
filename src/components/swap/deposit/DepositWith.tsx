@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import { Token } from "~/utils/interfaces";
 import SwapBlock from "../helpers/SwapBlock";
@@ -7,13 +7,14 @@ import { SwapContext } from "~/context/swap-context";
 
 type DepositWithProps = {
   token: Token;
+  locked: boolean;
   onTokenClick: () => void;
 }
 
-const DepositWith = ({ token, onTokenClick } : DepositWithProps) => {
+const DepositWith = ({ token, locked, onTokenClick } : DepositWithProps) => {
 
   const [depositValue, setDepositValue] = useState<string | number>('');
-  const { fromValue ,setFromValue } = useContext(SwapContext);
+  const { fromValue, setFromValue } = useContext(SwapContext);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const replace = event.target.value
@@ -34,6 +35,12 @@ const DepositWith = ({ token, onTokenClick } : DepositWithProps) => {
     foreground: token?.icon,
     background: token?.network.icon
   }
+
+  const networkName = useMemo(() => {
+    if (token?.network.name === 'Gnosis Chain-Mainnet') return 'Gnosis';
+    return token?.network.name;
+  }, [token]);
+
   useEffect(() => {
     setDepositValue(fromValue);
   }, [fromValue]);
@@ -42,11 +49,11 @@ const DepositWith = ({ token, onTokenClick } : DepositWithProps) => {
   return (
     <SwapBlock
       token={ token }
-      disabled={ false }
+      disabled={ locked }
       label="WITH"
       icons={ icons }
       symbol={ token?.symbol }
-      network={ token?.network.name }
+      network={ networkName }
       value={ depositValue as number }
       onTokenClick={ onTokenClick }
       onWalletClick={ setWholeWallet }
@@ -55,6 +62,7 @@ const DepositWith = ({ token, onTokenClick } : DepositWithProps) => {
           <input
             className="input input-ghost max-h-9 py-1 my-2 font-bold text-xl text-right ms-auto w-full basis-4/5"
             type="number"
+            min="0"
             placeholder="10.0"
             value={ depositValue?.toString() ?? "" }
             onChange={ handleInputChange }

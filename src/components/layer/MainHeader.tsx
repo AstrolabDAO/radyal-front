@@ -54,13 +54,13 @@ const Header = () => {
           </div>
           <div className="text-xl flex">
             STAKE
-            <div className="badge badge-outline badge-primary border-2 badge-xs px-1 mb-auto text-2xs">
+            <div className="badge badge-outline border-2 badge-xs px-1 mb-auto text-2xs">
               Soon™
             </div>
           </div>
           <div className="text-xl flex">
             MINT
-            <div className="badge badge-outline badge-primary border-2 badge-xs px-1 mb-auto text-2xs">
+            <div className="badge badge-outline border-2 badge-xs px-1 mb-auto text-2xs">
               Soon™
             </div>
           </div>

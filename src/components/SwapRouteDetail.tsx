@@ -12,6 +12,8 @@ import {
 import { EstimationContext } from "~/context/estimation-context";
 import { OperationStep } from "~/store/interfaces/operations";
 import SwapRouteDetailLine from "./swap/helpers/SwapRouteDetailLine";
+import { IToken as LiFiToken } from "@astrolabs/swapper/dist/src/LiFi";
+import { IToken as SquidToken} from "@astrolabs/swapper/dist/src/Squid";
 
 const SwapRouteDetail = ({ steps }: { steps: OperationStep[] }) => {
   const { estimationError } = useContext(EstimationContext);
@@ -28,18 +30,18 @@ const SwapRouteDetail = ({ steps }: { steps: OperationStep[] }) => {
       fromChain,
     } = step;
 
+    function amountWithNetworkAndSymbol(chain: number, amount: string, token: LiFiToken | SquidToken) {
+      const network = networkByChainId[chain];
+      const amountFormatted = lisibleAmount(amountToEth(estimate[amount], token?.decimals), 4);
+      const symbol = token?.symbol ?? "";
+      return `${amountFormatted} ${network?.name.toLowerCase()}:${symbol}`;
+    }
+
     const fromNetwork = networkByChainId[fromChain];
-    const fromAmount = `${lisibleAmount(
-      amountToEth(estimate.fromAmount, fromToken?.decimals),
-      4
-    )} ${fromToken?.symbol}`;
+    const fromAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(fromChain, "fromAmount", fromToken);
 
     const toNetwork = networkByChainId[toChain];
-    const toAmount = `${lisibleAmount(
-      amountToEth(estimate.toAmount, toToken?.decimals),
-      4
-    )} ${toToken?.symbol}`;
-
+    const toAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(toChain, "toAmount", toToken);
 
     const swapRouteStepType = SwapRouteStepTypeTraduction[type] ?? type;
 
@@ -54,20 +56,28 @@ const SwapRouteDetail = ({ steps }: { steps: OperationStep[] }) => {
     return {
       id,
       fromNetwork,
-      fromAmount,
       toNetwork,
-      toAmount,
       protocolName,
       protocolIcon,
       type,
       swapRouteStepType,
+      fromAmountWithNetworkAndSymbol,
+      toAmountWithNetworkAndSymbol,
     };
   })
   return (
     <div>
-      <h2 className="">VIA </h2>
+      { (steps.length > 0 || estimationError) && (
+        <h2>VIA</h2>
+      )}
       {!estimationError && (
-        <ul className="steps steps-vertical">
+        <ul
+          className="steps steps-vertical"
+          style={{
+            maxHeight: steps.length > 0 ? "500px" : "0px",
+            transition: "max-height 2s ease-out"
+          }}
+        >
           { displayedSteps.map((step) =>
               <SwapRouteDetailLine
                 key={`swap-route-detail-${step.id}`}
