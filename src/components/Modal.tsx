@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useCallback, useContext, useRef } from "react";
+import { Fragment, useCallback, useContext } from "react";
 import { FaTimes } from "react-icons/fa";
 import { ModalContext } from "~/context/modal-context";
 
@@ -13,7 +13,7 @@ export interface BaseModalProps {
 }
 
 const Modal = () => {
-  const { render, closeModal, selectedModal } = useContext(ModalContext);
+  const { render: isOpen, closeModal, selectedModal } = useContext(ModalContext);
 
   const onClose = useCallback(() => {
     if (selectedModal) {
@@ -24,58 +24,30 @@ const Modal = () => {
     closeModal();
   }, [selectedModal, closeModal]);
 
-  const cancelButtonRef = useRef(null);
   return (
-    <Transition.Root show={render} as={Fragment}>
-      <Dialog
-        open={render}
-        as="div"
-        className="relative z-20"
-        initialFocus={cancelButtonRef}
-        onClose={onClose}
-      >
+    <Transition show={ isOpen } as={ Dialog } onClose={ onClose }>
+      <div className="flex items-center justify-center min-h-screen fixed inset-0 z-20 backdrop-blur-medium">
         <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-500"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-500"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+          enter="transition ease-out duration-300"
+          enterFrom="opacity-0 scale-95"
+          enterTo="opacity-100 scale-100"
+          leave="transition ease-in duration-200"
+          leaveFrom="opacity-100 scale-100"
+          leaveTo="opacity-0 scale-95"
+          as={ Fragment }
         >
-          <div
-            className="fixed inset-0 bg-base-half-transparent bg-opacity-75 transition-opacity backdrop-blur-medium"
-            onClick={onClose}
-          />
-        </Transition.Child>
-
-        <div className="fixed flex inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex m-auto overflow-y-scroll ">
-            <Transition.Child
-              as={ Fragment }
-              enter="ease-out duration-1000"
-              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-1000"
-              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          <Dialog.Panel className="overflow-x-hidden bg-dark rounded-xl max-h-screen w-screen sm:max-w-lg overflow-y-auto transition-all duration-300">
+            <button
+              className="right-0 top-0 absolute p-2 z-50 rounded-tr-xl"
+              onClick={ onClose }
             >
-              <Dialog.Panel className="overflow-x-hidden backdrop-blur-medium bg-dark rounded-xl">
-                <div className="relative text-left z-50 max-h-screen w-screen sm:max-w-lg">
-                  <button
-                    className="right-0 top-0 absolute p-2 z-50"
-                    onClick={ onClose }
-                  >
-                    <FaTimes />
-                  </button>
-                  { selectedModal }
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
-        </div>
-      </Dialog>
-    </Transition.Root>
+              <FaTimes />
+            </button>
+            { selectedModal }
+          </Dialog.Panel>
+        </Transition.Child>
+      </div>
+    </Transition>
   );
 };
 
