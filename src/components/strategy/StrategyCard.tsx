@@ -22,7 +22,6 @@ import "./StrategyCard.css";
 interface StrategyProps {
   strategyGroup: Strategy[];
 }
-
 const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   const web3Modal = useWeb3Modal();
   const [shouldOpenModal, setShouldOpenModal] = useState<boolean>(false);
@@ -59,8 +58,9 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   return (
     <div
       className={clsx(
-        "card bg-gray-800 h-48 basis-1/3 relative rounded-3xl cursor-pointer",
-        "hover:bg-primary hover:text-dark hover:shadow hover:shadow-primary",
+        "card group bg-tertiary-600 h-48 basis-1/3 relative rounded-3xl cursor-pointer",
+        "hover:text-white hover:shadow hover:shadow-secondary hover:bg-tertiary-700",
+        "transition-all duration-700",
         { active: selectedStrategy?.slug === strategy.slug }
       )}
       onClick={openModalStrategy}

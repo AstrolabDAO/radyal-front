@@ -21,8 +21,8 @@ export const BACKGROUNDS = {
 
 export const COLORS = {
   primary: "#FFB800",
-  secondary: "#F6F6F6",
-  tertiary: "#FFFFFF",
+  secondary: "#CACADA",
+  tertiary: "#131829",
   active: "#ffd61e",
   neutral: BACKGROUNDS.base,
   base: BACKGROUNDS.base,

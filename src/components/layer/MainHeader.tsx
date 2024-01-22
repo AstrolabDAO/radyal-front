@@ -31,7 +31,7 @@ const Header = () => {
 
   const headerStyle = {
     height: '90px',
-    backgroundColor: scrolling ? 'oklch(0.222129 0 0)' : 'transparent',
+    backgroundColor: scrolling ? 'rgb(19 24 41)' : 'transparent',
     transition: 'background-color 0.3s ease-in-out',
     // Add other styles for your header here
   };
@@ -43,12 +43,9 @@ const Header = () => {
     >
       <div className="navbar container mx-auto">
         <div className="navbar-start">
-          <Logo
-            className="flex w-32 md:w-64 fill-white"
-            onClick={() => window.location.replace("/disclaimer")}
-          />
+          <Logo className="flex w-32 md:w-56 fill-white" />
         </div>
-        <div className="navbar flex flex-row justify-center gap-10">
+        <div className="navbar flex-row justify-center gap-10 hidden sm:flex">
           <div className="text-xl flex font-extrabold text-white text-neon">
             FARM
           </div>

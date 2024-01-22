@@ -64,8 +64,8 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
       className={clsx(
         "rounded-xl flex w-full h-full lg:w-2/3",
         "strategy-card-cta-one cursor-pointer bg-gray-800",
-        "hover:bg-primary text-white hover:text-dark hover:shadow hover:shadow-primary",
-        { shine: strategy === null }
+        "hover:shadow hover:shadow-primary",
+        { "shine": strategy === null }
       )}
       onClick={openModalStrategy}
     >

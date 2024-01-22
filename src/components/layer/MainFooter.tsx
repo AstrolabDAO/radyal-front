@@ -1,6 +1,6 @@
 const MainFooter = () =>
   <footer
-    className="footer p-10 bg-neutral text-neutral-content"
+    className="footer p-10 bg-tertiary text-neutral-content"
   >
     <div className="footer container mx-auto">
       <nav>

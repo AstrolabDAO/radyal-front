@@ -64,8 +64,8 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
       className={clsx(
         "ms-auto rounded-xl flex w-full h-full lg:w-2/3",
         "strategy-card-cta-two cursor-pointer bg-gray-800",
-        "hover:bg-primary hover:text-dark hover:shadow hover:shadow-primary",
-        { shine: strategy === null }
+        "hover:shadow hover:shadow-tertiary",
+        { "shine": strategy === null }
       )}
       onClick={openModalStrategy}
     >

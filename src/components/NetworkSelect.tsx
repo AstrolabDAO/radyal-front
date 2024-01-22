@@ -32,9 +32,9 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
       borderRadius: "0.375rem",
       height: "3rem",
     }},
-    option: (baseStyles: any, {  isFocused }) => ({
+    option: (baseStyles: any, { isFocused }) => ({
       ...baseStyles,
-      backgroundColor: isFocused ? BACKGROUNDS.base : BACKGROUNDS.dark,
+      backgroundColor: isFocused ? 'rgb(255 184 0 / var(--tw-bg-opacity));' : BACKGROUNDS.dark,
     })
   }
   return (
