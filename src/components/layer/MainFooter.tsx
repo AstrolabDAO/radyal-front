@@ -1,8 +1,8 @@
 const MainFooter = () =>
   <footer
-    className="footer p-10 bg-tertiary text-neutral-content"
+    className="footer p-10"
   >
-    <div className="footer container mx-auto">
+    <div className="footer container mx-auto relative">
       <nav>
         <header className="footer-title">SOCIALS</header>
         <a className="link link-hover">Twitter</a>

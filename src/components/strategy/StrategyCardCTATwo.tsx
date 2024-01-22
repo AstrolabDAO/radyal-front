@@ -63,7 +63,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
     <div
       className={clsx(
         "ms-auto rounded-xl flex w-full h-full lg:w-2/3",
-        "strategy-card-cta-two cursor-pointer bg-gray-800",
+        "strategy-card-cta-two cursor-pointer bg-dark-800",
         "hover:shadow hover:shadow-tertiary",
         { "shine": strategy === null }
       )}

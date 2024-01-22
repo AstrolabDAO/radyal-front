@@ -5,7 +5,6 @@ import ReactSelect, {
   StylesConfig,
 
 } from "react-select";
-import { BACKGROUNDS } from "~/styles/constants";
 import { Network } from "~/utils/interfaces";
 
 const Option = ({ ...props }: OptionProps) => {
@@ -28,13 +27,12 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
     control: (baseStyles: any) => {
       return {
         ...baseStyles,
-      backgroundColor: BACKGROUNDS.base,
       borderRadius: "0.375rem",
       height: "3rem",
     }},
     option: (baseStyles: any, { isFocused }) => ({
       ...baseStyles,
-      backgroundColor: isFocused ? 'rgb(255 184 0 / var(--tw-bg-opacity));' : BACKGROUNDS.dark,
+      backgroundColor: isFocused ? 'rgb(255 184 0 / var(--tw-bg-opacity))' : 'gray',
     })
   }
   return (

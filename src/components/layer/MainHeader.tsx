@@ -31,7 +31,7 @@ const Header = () => {
 
   const headerStyle = {
     height: '90px',
-    backgroundColor: scrolling ? 'rgb(19 24 41)' : 'transparent',
+    backgroundColor: scrolling ? '#1c1c1c' : 'transparent',
     transition: 'background-color 0.3s ease-in-out',
     // Add other styles for your header here
   };

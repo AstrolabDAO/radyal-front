@@ -4,10 +4,12 @@ import { DisclaimerProvider } from "./context/disclaimer-context";
 
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+
 import Layout from "./components/layout/Layout";
 import { useReduxStoreDataInit } from "./hooks/store/store";
 import { checkInterval } from "./services/operation";
 import { updateIntervalId } from "./store/operations";
+import HypnoticRing from "./components/HypnoticRing.tsx";
 
 function App() {
   useReduxStoreDataInit();
@@ -20,6 +22,7 @@ function App() {
     <>
       <Web3Provider>
         <DisclaimerProvider>
+          <HypnoticRing />
           <Layout />
         </DisclaimerProvider>
       </Web3Provider>

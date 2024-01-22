@@ -15,13 +15,24 @@ const lightOffsets = Array.from({ length: 9 }, (_, i) => (i + 1) * 50 + 500);
 
 Object.entries(COLORS).forEach((value) => {
   const [key, color] = value;
-
   PALETTE[key] = [
-    ...darkOffsets.map((offset) => [offset, pSBC(offset / 2000, color, "#000000")]),
-    ...lightOffsets.map((offset) => [offset, pSBC(-offset / 3500, color, "#ffffff")]),
-  ].reduce((acc, [offset, color]) => { acc[offset] = color; return acc; }, { DEFAULT: color });
-
+    ...lightOffsets.map((offset) => [offset, pSBC((offset - 500) / 500, color, "#fff")]),
+    ...darkOffsets.map((offset) => [offset, pSBC((500 - offset) / 500, color, "#000")]),
+  ].reduce((acc, [offset, color]) => { acc[offset] = color; return acc; }, { 500: color, DEFAULT: color });
 });
+
+PALETTE["dark"] = {
+  DEFAULT: "#0C0C0C",
+  900: "#0C0C0C",
+  800: "#1C1C1C",
+  700: "#2A2A2A",
+  600: "#323232",
+  500: "#505050",
+  400: "#C8C8C8",
+  300: "#ECECEC",
+  200: "#FBF8F4",
+  100: "#FDFDFD",
+};
 
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -38,9 +49,20 @@ export default {
     themes: [
       {
         dark: {
-          background: COLORS.tertiary,
           ...themes.default.dark,
           ...COLORS,
+          background: "#1C1C1C",
+          dark: {
+            900: "#0C0C0C",
+            800: "#1C1C1C",
+            700: "#2A2A2A",
+            600: "#323232",
+            500: "#505050",
+            400: "#C8C8C8",
+            300: "#ECECEC",
+            200: "#FBF8F4",
+            100: "#FDFDFD",
+          }
         },
       },
     ],

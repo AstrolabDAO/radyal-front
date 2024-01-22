@@ -7,7 +7,7 @@ const StrategyCardAPY = ({ apy, hideLabel }: StrategyCardAPYProps) => {
   return (
     <div className="flex flex-col w-1/2">
       { !hideLabel && (
-      <div className="-mb-1 text-sm text-gray-500">
+      <div className="-mb-1 text-sm group-hover:text-dark-700 text-gray-500">
         FOR
       </div>
       )}

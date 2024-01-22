@@ -58,8 +58,9 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   return (
     <div
       className={clsx(
-        "card group bg-tertiary-600 h-48 basis-1/3 relative rounded-3xl cursor-pointer",
-        "hover:text-white hover:shadow hover:shadow-secondary hover:bg-tertiary-700",
+        "card group bg-dark-600 h-48 basis-1/3 relative rounded-3xl cursor-pointer border-2 border-dark-500",
+        "border-2 border-dark-500 border-solid",
+        "hover:text-white hover:shadow-sm hover:shadow-secondary hover:bg-tertiary-700 hover:border-tertiary-800",
         "transition-all duration-700",
         { active: selectedStrategy?.slug === strategy.slug }
       )}
@@ -74,7 +75,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
           className="h-52 w-52 -mr-16 opacity-25"
         />
       </div>
-      <div className="card-body py-3 px-4 z-10">
+      <div className="card-body py-3 px-4 z-10 group-hover:text-dark-600">
         <div className="flex flex-row w-full">
           <div className="flex flex-col m-0 p-0 gilroy w-full">
             <div className="font-bold italic uppercase text-4xl -mb-1">

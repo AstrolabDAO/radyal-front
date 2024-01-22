@@ -1,22 +1,7 @@
-import { hexToRgba } from "../utils/format";
-
 export const SENTIMENT_COLORS = {
-  positive: "#00cc7a",
-  negative: "#f8b024",
+  positive: "#52E052",
+  negative: "#FF4242",
   warning: "#f8b024",
-};
-const BASE_BACKGROUNDS = {
-  primary: "#131829",
-  dark: "#1B1B1B",
-  home: "#1C1C1C",
-};
-
-export const BACKGROUNDS = {
-  base: BASE_BACKGROUNDS.home,
-  dark: BASE_BACKGROUNDS.dark,
-  "base-100": BASE_BACKGROUNDS.primary,
-  "base-half-transparent": hexToRgba(BASE_BACKGROUNDS.primary, 0.55),
-  "base-dark-transparent": hexToRgba(BASE_BACKGROUNDS.primary, 0.75),
 };
 
 export const COLORS = {
@@ -24,11 +9,8 @@ export const COLORS = {
   secondary: "#CACADA",
   tertiary: "#131829",
   active: "#ffd61e",
-  neutral: BACKGROUNDS.base,
-  base: BACKGROUNDS.base,
-  dark: BASE_BACKGROUNDS.dark,
+  base: "#1c1c1c",
   success: SENTIMENT_COLORS.positive,
-  failure: SENTIMENT_COLORS.negative,
   error: SENTIMENT_COLORS.negative,
   ...SENTIMENT_COLORS,
 };
