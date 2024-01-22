@@ -18,6 +18,15 @@ import { IToken as SquidToken} from "@astrolabs/swapper/dist/src/Squid";
 const SwapRouteDetail = ({ steps }: { steps: OperationStep[] }) => {
   const { estimationError } = useContext(EstimationContext);
 
+  function amountWithNetworkAndSymbol(chain: number, amount: string, token: LiFiToken | SquidToken) {
+    const network = networkByChainId[chain];
+    const amountFormatted = lisibleAmount(amountToEth(amount, token?.decimals), 4);
+    const symbol = token?.symbol ?? "";
+    const networkName = network?.name ?? "";
+    if (networkName === "Gnosis Chain-Mainnet") return `${amountFormatted} gnosis:${symbol}`;
+    return `${amountFormatted} ${network?.name.toLowerCase()}:${symbol}`;
+  }
+
   const displayedSteps = steps.map((step) => {
     const {
       id,
@@ -30,18 +39,12 @@ const SwapRouteDetail = ({ steps }: { steps: OperationStep[] }) => {
       fromChain,
     } = step;
 
-    function amountWithNetworkAndSymbol(chain: number, amount: string, token: LiFiToken | SquidToken) {
-      const network = networkByChainId[chain];
-      const amountFormatted = lisibleAmount(amountToEth(estimate[amount], token?.decimals), 4);
-      const symbol = token?.symbol ?? "";
-      return `${amountFormatted} ${network?.name.toLowerCase()}:${symbol}`;
-    }
 
     const fromNetwork = networkByChainId[fromChain];
-    const fromAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(fromChain, "fromAmount", fromToken);
+    const fromAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(fromChain, estimate.fromAmount, fromToken);
 
     const toNetwork = networkByChainId[toChain];
-    const toAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(toChain, "toAmount", toToken);
+    const toAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(toChain, estimate.toAmount, toToken);
 
     const swapRouteStepType = SwapRouteStepTypeTraduction[type] ?? type;
 
@@ -90,7 +93,7 @@ const SwapRouteDetail = ({ steps }: { steps: OperationStep[] }) => {
       { estimationError && (
         <div className="border-2 border-solid border-primary w-full py-6 rounded-xl bg-primary/10">
           <div className="text-center text-primary font-bold">
-            { estimationError }
+              No route found, please select another deposit token
           </div>
         </div>
       )}

@@ -5,15 +5,16 @@ import { Strategy } from "~/utils/interfaces";
 import SwapBlock from "../helpers/SwapBlock";
 import { EstimationContext } from "~/context/estimation-context";
 
-const DepositFor = ({ strategy }: { strategy: Strategy }) => {
+const DepositFor = ({ strategy }: { strategy: Strategy  & { protocols: [] }}) => {
   const { toValue: depositToValue } = useContext(EstimationContext);
+
   const networkName = useMemo(() => {
     if (strategy?.network.name === 'Gnosis Chain-Mainnet') return 'Gnosis';
     return strategy?.network.name;
   }, [strategy]);
 
   const icons = {
-    background: `/images/${strategy?.icon}`,
+    background: strategy?.icon,
     foreground: strategy?.network?.icon,
   };
 

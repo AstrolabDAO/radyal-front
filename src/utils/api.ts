@@ -73,12 +73,14 @@ export const loadBalancesByAddress = async (address: `0x${string}`) => {
   return result?.data?.data;
 };
 
+type ApiResponseStrategyWithIndex = ApiResponseStrategy & { index: number };
+
 export const getStrategies = async () => {
   const strategiesData = await axios
     .get(`${process.env.ASTROLAB_API}/strategies`)
     .then((res) => res.data.data as ApiResponseStrategy[]);
 
-  const strategiesByNetwork: { [key: number]: ApiResponseStrategy[] } = {};
+  const strategiesByNetwork: { [key: number]: ApiResponseStrategyWithIndex[] } = {};
 
   // Generate strategies mapping by Network with api Data
   for (let i = 0; i < strategiesData.length; i++) {
@@ -90,12 +92,12 @@ export const getStrategies = async () => {
     if (!strategiesByNetwork[network.id]) strategiesByNetwork[network.id] = [];
     // Add index on strategy to retrieve it after
     Object.assign(strategy, { index: i });
-    strategiesByNetwork[network.id].push(strategy);
+    strategiesByNetwork[network.id].push(strategy as ApiResponseStrategyWithIndex);
   }
 
   // Loop on Strategies by networks to multicall (getting strategy token details)
   for (const chainId of Object.keys(strategiesByNetwork)) {
-    const networkStrategies = strategiesByNetwork[chainId];
+    const networkStrategies: ApiResponseStrategyWithIndex[] = strategiesByNetwork[chainId];
     const contractsCalls = networkStrategies
       .map((strategy) => {
         const call = {
@@ -145,6 +147,7 @@ export const getStrategies = async () => {
         decimals,
         sharePrice,
         slug,
+        protocols,
       } = strategy as ApiResponseStrategy & { decimals: number, sharePrice: number };
 
       const network = networkBySlug[nativeNetwork];
@@ -159,6 +162,7 @@ export const getStrategies = async () => {
         asset: token,
         icon: `/tokens/${symbol?.toLowerCase()}.svg`,
         slug,
+        protocols,
         weiPerUnit: 10 ** decimals,
         sharePrice,
       } as Strategy;

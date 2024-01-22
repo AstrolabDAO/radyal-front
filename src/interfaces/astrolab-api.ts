@@ -170,6 +170,7 @@ export interface ApiResponseStrategy {
   createdAt: string;
   updatedAt: string;
 }
+
 interface TokenInfo {
   decimalsAmount: string;
   amount: string;

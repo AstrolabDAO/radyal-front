@@ -32,8 +32,8 @@ const DepositWith = ({ token, locked, onTokenClick } : DepositWithProps) => {
   }
 
   const icons = {
-    foreground: token?.icon,
-    background: token?.network.icon
+    foreground: token?.network.icon,
+    background: token?.icon
   }
 
   const networkName = useMemo(() => {
