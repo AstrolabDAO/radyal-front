@@ -6,17 +6,14 @@ import {
   useMemo,
   useState,
 } from "react";
+import { tokensIsEqual } from "~/utils";
 import { StrategyInteraction } from "~/utils/constants";
 import { Strategy, Token } from "~/utils/interfaces";
 import { tokenBySlug, tokensBySlugForPriceAPI } from "~/utils/mappings";
-import { StrategyContext } from "./strategy-context";
-import { TokensContext } from "./tokens-context";
-import { SwapStepsProvider } from "./swap-steps-context";
 import { EstimationProvider } from "./estimation-context";
-import { useAllowance } from "~/hooks/transaction";
-import { useAccount } from "wagmi";
-import { tokensIsEqual } from "~/utils";
-import { zeroAddress } from "viem";
+import { StrategyContext } from "./strategy-context";
+
+import { TokensContext } from "./tokens-context";
 
 const SwapContext = createContext<SwapContextType>({
   switchSelectMode: () => {},
@@ -29,14 +26,13 @@ const SwapContext = createContext<SwapContextType>({
   toToken: null,
   fromValue: null,
   canSwap: false,
-  allowance: null,
+
   action: StrategyInteraction.DEPOSIT,
   selectTokenMode: false,
   actionNeedToSwap: false,
 });
 
 const SwapProvider = ({ children }) => {
-  const { address } = useAccount();
   const { sortedBalances } = useContext(TokensContext);
   const { selectedStrategy } = useContext(StrategyContext);
 
@@ -61,24 +57,6 @@ const SwapProvider = ({ children }) => {
     (to: Token | Strategy) => setToToken(to),
     []
   );
-
-  const [allowanceToken, toAllowanceAddress] = useMemo(() => {
-    if (!fromToken) return [null, null];
-    const _token = fromToken as Strategy;
-    const allowanceToken = _token?.asset ? _token.asset : _token;
-
-    return [allowanceToken, allowanceToken.address];
-  }, [fromToken]);
-
-  const allowance = useAllowance({
-    address: allowanceToken?.address,
-    chainId: allowanceToken?.network?.id,
-    args: [address, toAllowanceAddress],
-    enabled:
-      !!allowanceToken &&
-      !!toAllowanceAddress &&
-      allowanceToken?.address !== zeroAddress,
-  }) as any as bigint;
 
   useEffect(() => {
     if (fromToken) tokensBySlugForPriceAPI[fromToken?.slug] = fromToken;
@@ -142,14 +120,11 @@ const SwapProvider = ({ children }) => {
         fromValue,
         action,
         canSwap,
-        allowance,
         selectTokenMode,
         actionNeedToSwap,
       }}
     >
-      <SwapStepsProvider>
-        <EstimationProvider>{children}</EstimationProvider>
-      </SwapStepsProvider>
+      <EstimationProvider>{children}</EstimationProvider>
     </SwapContext.Provider>
   );
 };
@@ -166,7 +141,6 @@ interface SwapContextType {
   fromValue: number;
   action: StrategyInteraction;
   canSwap: boolean;
-  allowance: bigint;
   selectTokenMode: boolean;
   actionNeedToSwap: boolean;
 }

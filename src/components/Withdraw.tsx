@@ -42,7 +42,7 @@ const Withdraw = () => {
 
   const maxRedeem = useMaxRedeem();
   console.log("🚀 ~ Withdraw ~ maxRedeem:", maxRedeem);
-  
+
   useEffect(() => {
     unlockEstimate();
   }, [unlockEstimate]);
@@ -84,6 +84,7 @@ const Withdraw = () => {
     },
   ];
 
+  const { estimation } = useContext(EstimationContext);
   return (
     <ModalLayout actions={modalActions}>
       <div className="flex gap-5 relative w-full flex-col">
@@ -94,7 +95,9 @@ const Withdraw = () => {
         />
         <SwapInput selected={toToken} isDestination={true} />
       </div>
-      {(toValue !== 0 || estimationError) && <SwapRouteDetail />}
+      {(toValue !== 0 || estimationError) && (
+        <SwapRouteDetail steps={estimation.steps} />
+      )}
     </ModalLayout>
   );
 };

@@ -73,6 +73,7 @@ export const getTokenPrice = (token: Token) => {
     },
   });
 };
+
 export const getTokensPrices = async (tokens: Token[]) => {
   if (!tokens) return;
   const tokensIds = new Set(tokens.map((token) => token.coinGeckoId));

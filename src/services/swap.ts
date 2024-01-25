@@ -3,18 +3,17 @@ import {
   ITransactionRequestWithEstimate,
   getAllTransactionRequests,
 } from "@astrolabs/swapper";
+import { PrepareSendTransactionArgs } from "@wagmi/core";
 import { erc20Abi } from "abitype/abis";
-import { encodeFunctionData, getContract, parseGwei } from "viem";
+import { encodeFunctionData, parseGwei } from "viem";
 import { tokensIsEqual } from "~/utils";
 import { StrategyInteraction } from "~/utils/constants";
 import { overrideZeroAddress } from "~/utils/format";
-import { LifiRequest } from "~/utils/interfaces";
-import { PrepareSendTransactionArgs } from "@wagmi/core";
-import { approve, executeTransaction } from "./transaction";
-import { Token } from "~/utils/interfaces";
+import { LifiRequest, Token } from "~/utils/interfaces";
+import { executeTransaction } from "./transaction";
 
-import { PublicClient } from "wagmi";
 import toast from "react-hot-toast";
+import { PublicClient } from "wagmi";
 
 export const depositCallData = (address: string, toAmount: string) => {
   return generateCallData({
@@ -65,7 +64,7 @@ export const getSwapRoute = async (params: LifiRequest) => {
   }
 
   const quoteOpts: any = {
-    aggregatorId: ["LIFI", "SQUID"],
+    aggregatorId: ["LIFI" /*, "SQUID"*/],
     inputChainId: fromToken.network.id,
     input: overrideZeroAddress(fromToken.address),
     amountWei: Math.round(Number(amount) - Number(amount) * 0.02), // because if not 2%, the fromAmount is lower. Why ? I don't know.
@@ -73,6 +72,7 @@ export const getSwapRoute = async (params: LifiRequest) => {
     output: overrideZeroAddress(toToken.address),
     maxSlippage: 50,
     payer: address,
+    //denyBridges: ["amarok"],
     customContractCalls: customContractCalls.length
       ? customContractCalls
       : undefined,
@@ -81,6 +81,7 @@ export const getSwapRoute = async (params: LifiRequest) => {
   if (customContractCalls.length) {
     quoteOpts.postHook = [
       {
+        toAddress: strategy.address,
         callData: customContractCalls[0].callData,
       },
     ];
@@ -117,58 +118,17 @@ export const aproveAndSwap = async (
   { route, fromToken, amount, clientAddress }: ExecuteSwapProps,
   publicClient: PublicClient
 ) => {
-  const routerAddress = route ? route?.to : null;
-
-  const contract = getContract({
-    address: fromToken.address,
-    abi: erc20Abi,
-    publicClient: publicClient as any,
-  }) as any;
-
-  const allowance: bigint = (await contract.read.allowance([
-    clientAddress,
-    routerAddress,
-  ])) as bigint;
-
-  const approvalAmount = amount + amount / 500n; // 5%
-
-  if (allowance !== null && approvalAmount > allowance) {
-    try {
-      const { hash: approveHash } = await approve({
-        spender: routerAddress as `0x${string}`,
-        amount: approvalAmount,
-        address: fromToken.address,
-        chainId: fromToken.network.id,
-      });
-
-      const approvePending = publicClient.waitForTransactionReceipt({
-        hash: approveHash,
-      });
-      toast.promise(approvePending, {
-        loading: "Approve is pending...",
-        success: "Approve transaction successful",
-        error: "approve reverted rejected 🤯",
-      });
-      await approvePending;
-    } catch (err) {
-      console.log("🚀 ~ file: swap.ts:130 ~ err:", err);
-      toast.error(`An error has occured`);
-    }
-
-    const { hash: swapHash } = await executeSwap(route);
-    const swapPending = publicClient.waitForTransactionReceipt({
-      hash: swapHash,
-    });
-    toast.promise(swapPending, {
-      loading: "Swap transaction is pending...",
-      success: "Swap transaction successful",
-      error: "Swap reverted rejected 🤯",
-    });
-    await swapPending;
-    return route;
-  }
-  await executeSwap(route);
-  return route;
+  const { hash: swapHash } = await executeSwap(route);
+  const swapPending = publicClient.waitForTransactionReceipt({
+    hash: swapHash,
+  });
+  toast.promise(swapPending, {
+    loading: "Swap transaction is pending...",
+    success: "Swap transaction successful",
+    error: "Swap reverted rejected 🤯",
+  });
+  await swapPending;
+  return { hash: swapHash, route };
 };
 
 interface ExecuteSwapProps {

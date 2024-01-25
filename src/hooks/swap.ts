@@ -129,6 +129,7 @@ export const useEstimateRoute = () => {
           ]
         : [...interactionEstimation.steps, ...steps];
     return {
+      id: window.crypto.randomUUID(),
       estimation: receiveEstimation,
       steps: computedSteps,
       request: result[0],
@@ -170,7 +171,7 @@ export const usePreviewStrategyTokenMove = () => {
   const { fromValue, action } = useContext(SwapContext);
 
   const publicClient = usePublicClient({
-    chainId: selectedStrategy.network?.id,
+    chainId: selectedStrategy?.network?.id ?? 1,
   }) as Client;
 
   return useCallback(

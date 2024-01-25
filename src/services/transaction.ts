@@ -4,6 +4,7 @@ import { erc20Abi } from "abitype/abis";
 import { BaseError, ContractFunctionRevertedError } from "viem";
 import { prepareWriteContract } from "wagmi/actions";
 import { writeContract } from "@wagmi/core";
+
 export const executeTransaction = async (opts: PrepareSendTransactionArgs) => {
   try {
     const prepare = await prepareSendTransaction(opts);

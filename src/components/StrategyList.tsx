@@ -1,8 +1,8 @@
 import { useContext, useMemo } from "react";
 import { StrategyContext } from "~/context/strategy-context";
-import StrategyCard from "./StrategyCard";
-import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
 import { networkByChainId } from "~/utils/mappings";
+import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
+import StrategyCard from "./StrategyCard";
 
 const StrategyList = () => {
   const { filteredStrategies, search, filterByNetworks, strategies } =
@@ -22,6 +22,7 @@ const StrategyList = () => {
       <h2 className="text-2xl text-center text-primary mb-8">
         Select your strategy...
       </h2>
+
       <div className="flex w-full justify-end">
         <div className="mr-4">
           <span className="label-text block w-full mb-2">search anything</span>

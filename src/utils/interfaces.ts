@@ -121,8 +121,6 @@ export interface BalanceBySlugMapping {
   [slug: string]: Balance;
 }
 
-// requests
-
 export interface LifiRequest {
   fromToken: Token;
   toToken: Token;
