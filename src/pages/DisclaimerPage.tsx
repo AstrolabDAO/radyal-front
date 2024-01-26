@@ -16,12 +16,12 @@ const DisclaimerPage = () => {
   };
 
   return (
-    <div id="home" className="container flex mx-auto h-screen">
+    <div id="disclaimer-page" className="relative container flex mx-auto h-screen">
       <div className="flex flex-col m-auto text-center">
         <h1 className="text-8xl font-bold"> RADYAL </h1>
         <div>ALGORITHMIC YIELD PRIMITIVES</div>
         <div className="w-2/3 xl:w-5/12 mx-auto mt-6 mb-3">
-          <div className="border-solid border-2 border-sky-500 rounded-xl p-4 h-64 overflow-scroll">
+          <div className="border-solid border-2 border-sky-500 rounded-xl p-4 h-64 overflow-scroll text-white">
             <RiskDisclaimerMd />
           </div>
         </div>
