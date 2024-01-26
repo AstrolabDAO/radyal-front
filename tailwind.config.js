@@ -38,9 +38,28 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      borderWidth: {
+        1: "1px",
+      },
       colors: PALETTE,
+      container: {
+        center: true,
+        screens: {
+          DEFAULT: "100%", // set the default screen width to 100% of the container
+          sm: '640px', // set the small screen size
+          md: '768px', // set the medium screen size
+          lg: '1024px', // set the large screen size
+          xl: '1150px', // set the extra-large screen size
+        },
+      },
+      contrast: {
+        63: '.63',
+      },
       fontSize: {
         "2xs": ".55rem",
+      },
+      maxWidth: {
+        "xl": "1150px",
       },
     },
   },
@@ -50,7 +69,7 @@ export default {
       {
         dark: {
           ...themes.default.dark,
-          ...COLORS,
+          ...Object.entries(COLORS).map(([key, color]) => [`--${key}`, color]).reduce((acc, [key, color]) => { acc[key] = color; return acc; }, {}),
           background: "#1C1C1C",
           dark: {
             900: "#0C0C0C",
