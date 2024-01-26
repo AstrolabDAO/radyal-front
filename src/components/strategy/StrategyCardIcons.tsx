@@ -14,10 +14,10 @@ const StrategyCardIcons = ({
   return (
     <div className="flex justify-end items-center">
       {!hideLabel && (
-        <span className="mr-2">ON</span>
+        <span className="mr-2 font-medium text-secondary-300">ON</span>
       )}
       <div
-        className={"flex flex-row border border-solid border-gray-500 rounded-3xl px-0.5"}
+        className={"flex flex-row border border-solid border-gray-500 rounded-full px-0.5"}
       >
         { strategyGroup.slice(0,2).map((strategy, index) => {
           return (
@@ -39,7 +39,7 @@ const StrategyCardIcons = ({
           strategyGroup.length > 2 &&
           <div
             style={{ width, height }}
-            className="my-auto p-0.5 bg-white rounded-xl mx-0.5 text-xs"
+            className="my-auto p-0.5 rounded-full mx-0.5 text-xs text-secondary-400 border-1 border-solid border-secondary-300"
           >
             +{strategyGroup.length - 2}
           </div>

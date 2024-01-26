@@ -50,11 +50,18 @@ const StrategyGrid = () => {
           />
         </div>
       </div>
-      <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-5">
-        {grouppedStrategies.length === 0 && (
-          <div className="flex w-full justify-center">No strategies...</div>
+      <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 my-5 max-w-screen">
+        { grouppedStrategies.length === 0 && (
+          <>
+            <div className="card shimmer h-36" />
+            <div className="card shimmer h-36" />
+            <div className="card shimmer h-36" />
+            <div className="card shimmer h-36" />
+            <div className="card shimmer h-36" />
+            <div className="card shimmer h-36" />
+          </>
         )}
-        {grouppedStrategies.map((strategyGroup, index) => (
+        { grouppedStrategies.map((strategyGroup, index) => (
           <StrategyCard
             strategyGroup={strategyGroup}
             key={`strategy-group-${index}`}

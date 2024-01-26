@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 
 import { Strategy } from "~/utils/interfaces";
@@ -40,7 +40,8 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
 
   const [strategy] = strategyGroup;
   const { name } = strategy;
-  const [title, ...subtitle] = name.replace("Astrolab ", "").split(" ");
+  const [title, ...subtitle] = name
+    .replace(/\b(Astrolab |v2|v3)\b/g, "").split(" ");
 
   const selectedStrategy = useSelectedStrategy();
   const selectGroup = useSelectStrategyGroup();
@@ -52,42 +53,60 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
     if (!isConnected) {
       web3Modal.open();
       setShouldOpenModal(true);
-    } else openModal(<SwapModal />);
-  };
-
+    }
+    else openModal(<SwapModal />);
+  }
+  const protocolIconPath = useMemo(() => {
+    const protocolsIcons = [
+      "aura-finance-mono",
+      "balancer-mono",
+      "benqi-mono",
+      "compound-mono",
+      "dolomite-mono",
+      "flux-finance-mono",
+      "gamma-strategies-mono",
+      "lodestar-finance-mono",
+      "moonwell-mono",
+      "spark-mono",
+    ]
+    const name = protocolsIcons[Math.floor(Math.random() * protocolsIcons.length)]
+    return `/images/protocols/${name}.svg`;
+  }, []);
+  const assetIconPath = useMemo(() => {
+    return strategy.asset.icon.substring(0, strategy.asset.icon.length - 4) + "-mono.svg";
+  }, [strategy]);
   return (
     <div
       className={clsx(
-        "card group bg-dark-600 h-48 basis-1/3 relative rounded-3xl cursor-pointer border-2 border-dark-500",
-        "border-2 border-dark-500 border-solid",
-        "hover:text-white hover:shadow-sm hover:shadow-secondary hover:bg-tertiary-700 hover:border-tertiary-800",
-        "transition-all duration-700",
+        "card group strategy-card text-secondary-900",
         { active: selectedStrategy?.slug === strategy.slug }
       )}
       onClick={openModalStrategy}
     >
-      <div className="absolute inset-0 flex items-center ms-4 z-0 background-icon-blender">
-        <img src={strategy.asset.icon} className="h-32 w-32" />
-      </div>
-      <div className="absolute rounded-3xl inset-0 flex items-center justify-end z-0 background-icon-blender overflow-hidden">
+      <div className="absolute inset-0 flex top-7 left-5 z-0 contrast-63 group-hover:contrast-100">
         <img
-          src={strategy.network.icon}
-          className="h-52 w-52 -mr-16 opacity-25"
+          src={ assetIconPath }
+          className="h-20 w-20 strategy-icon-filter"
         />
       </div>
-      <div className="card-body py-3 px-4 z-10 group-hover:text-dark-600">
+      <div
+        className="absolute rounded-3xl inset-0 flex items-center justify-end z-0 overflow-hidden contrast-63 group-hover:contrast-100"
+      >
+        <img
+          src={ protocolIconPath }
+          className="h-52 w-52 -mr-16 strategy-icon-filter"
+        />
+      </div>
+      <div className="card-body py-4 px-5 z-10">
         <div className="flex flex-row w-full">
           <div className="flex flex-col m-0 p-0 gilroy w-full">
-            <div className="font-bold italic uppercase text-4xl -mb-1">
-              {title}
-            </div>
             <div className="flex flex-row">
-              <div className="flex font-light me-auto my-auto">
-                {" "}
-                {subtitle.join(" ")}{" "}
+              <div className="font-extrabold italic uppercase text-4xl -mb-1 group-hover:text-primary me-auto">
+                { title }
               </div>
-              <StrategyCardIcons strategyGroup={strategyGroup} />
+              <StrategyCardIcons strategyGroup={ strategyGroup } />
             </div>
+            <div className="flex font-light text-secondary-400 my-auto text-2xl"> { subtitle.join(' ') } </div>
           </div>
         </div>
         <div className="flex flex-row mt-auto">

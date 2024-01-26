@@ -4,8 +4,8 @@ type StrategyCardTVLProps = {
 
 const StrategyCardTVL = ({ tvl }: StrategyCardTVLProps) => {
   return (
-    <div className="flex flex-col mx-auto">
-      <div className="-mb-1 text-sm text-gray-500 group-hover:text-dark-700 font-light">
+    <div className="flex flex-col ms-auto pe-2">
+      <div className="-mb-1 text-sm text-secondary-300 font-medium">
         WITH
       </div>
       <div className="flex flex-row font-extralight">
@@ -14,7 +14,7 @@ const StrategyCardTVL = ({ tvl }: StrategyCardTVLProps) => {
           <span className="text-1xl strategy-card-data-unit">
             M
           </span>
-          <span className="text-2xs strategy-card-data-label">
+          <span className="strategy-card-data-label">
             TVL
           </span>
         </div>

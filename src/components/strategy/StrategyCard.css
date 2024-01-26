@@ -3,12 +3,22 @@
   mix-blend-mode: overlay;
 }
 
+.group:hover .strategy-icon-filter {
+  filter: invert(0.5) sepia(100%);
+  opacity: .25;
+}
+
+.strategy-card {
+  @apply bg-dark-700/50 h-48 cursor-pointer border-1 border-dark-500 border-1 border-dark-500 border-solid hover:shadow-sm hover:border-primary/50 transition-all duration-500
+}
+
 .strategy-card-data-unit {
   transform: scale(1.35,1);
   margin-top: 0.1rem;
 }
 .strategy-card-data-label {
   margin-top: -0.4rem;
+  @apply text-2xs
 }
 
 .strategy-card-cta-one {
@@ -25,4 +35,26 @@
 .strategy-card-cta-two {
   clip-path: polygon(0 60%, 100% 0, 100% 100%, 0% 100%);
 }
+.strategy-card-shadow {
+  position: relative;
+  z-index: 0;
+}
 
+.strategy-card-shadow:hover::before {
+    content: "";
+    position: absolute;
+    inset: 0px; /* control the spread */
+    z-index: -1; /* place the element behind */
+    background: linear-gradient(180deg, var(--secondary) 0%, var(--secondary) 100%);
+    filter: blur(10px); /* control the blur */
+}
+
+.strategy-banner-wrapper {
+  position: absolute;
+  transform: rotate(-17deg);
+  left: -100px;
+  top: -110px;
+  width: calc(100vw + 200px);
+  right: 100px;
+  height: 0;
+}
