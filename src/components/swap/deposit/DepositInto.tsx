@@ -16,7 +16,7 @@ const DepositInto = ({ strategy }: DepositIntoProps) => {
       <div className="flex flex-col m-0 p-3 border border-solid border-gray-500 rounded-3xl gilroy">
         <div className="font-bold italic text-3xl -mb-1 uppercase"> { title } </div>
         <div className="font-light text-xl"> { subtitle } </div>
-        <div className="text-2xs">
+        <div className="text-xs">
           { description }<br />
           Claiming of reward tokens, rebalancing  and compounding is automated.
         </div>

@@ -81,12 +81,18 @@ const SwapBlock = ({
   return (
     <div className="flex flex-col my-3">
       <div className="mb-1">{ label }</div>
-      <div className="flex flex-col md:flex-row px-3 py-2 rounded-xl bg-dark-600">
+      <div
+        className={clsx(
+          "flex flex-col md:flex-row px-3 py-2 rounded-xl",
+          {
+            "bg-dark-600": !disabled,
+            "border-dark-500 border-1 border-solid": disabled,
+          }
+      )}>
         <div className={
           clsx("flex flex-row rounded-xl my-auto py-0 ps-2 pe-0",
           {
             "cursor-pointer hover:bg-primary hover:text-dark bg-gray-500" : !disabled,
-            'border-2 border-solid border-gray-500': disabled
           },
         )}
           onClick={ onTokenClick }
@@ -114,10 +120,10 @@ const SwapBlock = ({
         <div className="flex flex-col ms-auto my-auto text-right">
           <div
             className={
-              clsx("text-sm flex rounded-xl flex-row align-middle ms-auto rounded px-1", {
+              clsx("text-sm flex rounded-xl flex-row align-middle ms-auto rounded px-1.5", {
               "cursor-pointer hover:bg-primary hover:text-dark" : !disabled,
-              "bg-dark-600" : disabled,
-              "bg-dark-800" : !disabled,
+              "bg-dark-800" : disabled,
+              "bg-dark-500" : !disabled,
             })}
             onClick={ () => onWalletClick(balance) }
           >
