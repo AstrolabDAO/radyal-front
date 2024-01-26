@@ -36,7 +36,7 @@ const Modal = () => {
           leaveTo="opacity-0 scale-95"
           as={ Fragment }
         >
-          <Dialog.Panel className="overflow-x-hidden bg-dark rounded-xl max-h-screen w-screen sm:max-w-lg overflow-y-auto transition-all duration-300">
+          <Dialog.Panel className="overflow-x-hidden bg-dark rounded-xl max-h-screen w-screen sm:max-w-md overflow-y-auto transition-all duration-300">
             <button
               className="right-0 top-0 absolute p-2 z-50 rounded-tr-xl"
               onClick={ onClose }

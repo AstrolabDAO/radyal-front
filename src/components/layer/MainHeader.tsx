@@ -30,8 +30,9 @@ const Header = () => {
   }, []);
 
   const headerStyle = {
-    height: '90px',
-    backgroundColor: scrolling ? '#1c1c1c' : 'transparent',
+    height: '80px',
+    backgroundColor: scrolling ? 'rgba(28, 28, 28, 0.6)' : 'transparent',
+    backdropFilter: 'blur(10px)',
     transition: 'background-color 0.3s ease-in-out',
     // Add other styles for your header here
   };
@@ -41,25 +42,23 @@ const Header = () => {
       className="sticky top-0 z-20"
       style={ headerStyle }
     >
-      <div className="navbar container mx-auto">
+      <div className="navbar">
         <div className="navbar-start">
-          <Logo className="flex w-32 md:w-56 fill-white" />
+          <Logo
+            className="flex w-32 md:w-52 fill-white"
+          />
         </div>
-        <div className="navbar flex-row justify-center gap-10 hidden sm:flex">
-          <div className="text-xl flex font-extrabold text-white text-neon">
+        <div className="navbar-center flex-row justify-center gap-10 hidden sm:flex">
+          <a
+            href="/"
+            className="text-xl flex font-extrabold text-white text-neon cursor-pointer hover:text-primary">
             FARM
-          </div>
-          <div className="text-xl flex">
+          </a>
+          <div className="text-xl flex text-gray-500">
             STAKE
-            <div className="badge badge-outline border-2 badge-xs px-1 mb-auto text-2xs">
-              Soon™
-            </div>
           </div>
-          <div className="text-xl flex">
+          <div className="text-xl flex text-gray-500">
             MINT
-            <div className="badge badge-outline border-2 badge-xs px-1 mb-auto text-2xs">
-              Soon™
-            </div>
           </div>
         </div>
         <div className="navbar-end">

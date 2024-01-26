@@ -43,7 +43,7 @@ const SwapModalContent = () => {
   }
 
   return (
-    <div className="bg-gray-800 pb-4 pt-6 px-3 max-h-screen sm-max-h-90vh">
+    <div className="bg-dark-800 pb-4 pt-6 px-3 max-h-screen sm-max-h-95vh">
       <div className="flex flex-row justify-between px-3">
         <div
           className={
