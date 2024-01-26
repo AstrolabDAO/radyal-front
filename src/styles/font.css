@@ -1,3 +1,6 @@
 .text-neon {
-  text-shadow: 0px 0px 12px rgb(255 255 255 / var(--tw-text-opacity)), 0px 0px 12px rgb(255 255 255 / var(--tw-text-opacity));
+  --color: currentColor;
+  text-shadow:
+    0px 0px 2px var(--color),
+    0px 0px 11px var(--color);
 }

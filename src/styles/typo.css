@@ -66,16 +66,40 @@
   src: url("/fonts/gilroy/Gilroy-SemiBold.woff2");
   font-weight: 600;
 }
+
 @font-face {
   font-family: "Gilroy";
   src: url("/fonts/gilroy/Gilroy-Bold.woff2");
   font-weight: 700;
 }
+
 @font-face {
   font-family: "Gilroy";
   font-style: italic;
+  font-weight: 500;
+  src: url("/fonts/gilroy/Gilroy-MediumItalic.woff2");
+}
+
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 700;
   src: url("/fonts/gilroy/Gilroy-BoldItalic.woff2");
 }
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 800;
+  src: url("/fonts/gilroy/Gilroy-ExtraboldItalic.woff2");
+}
+
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 900;
+  src: url("/fonts/gilroy/Gilroy-BlackItalic.woff2");
+}
+
 @font-face {
   font-family: "Gilroy";
   src: url("/fonts/gilroy/Gilroy-Black.woff2");

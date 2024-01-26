@@ -6,6 +6,7 @@
 @import "stepper.css";
 @import "animation.css";
 @import "button.css";
+@import "markdown.css";
 
 @tailwind base;
 @tailwind components;
@@ -22,6 +23,14 @@
     /* For rgba(255, 115, 179, <alpha-value>) */
     --color-primary: 65 89 243 1;
   }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+  }
+  h1 { @apply text-5xl; }
+  h2 { @apply text-4xl; }
+  h3 { @apply text-3xl; }
+  h4 { @apply text-2xl; }
+  h5 { @apply text-xl; }
 }
 
 a {
