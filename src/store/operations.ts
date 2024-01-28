@@ -116,4 +116,4 @@ const operationSlice = createSlice({
 export const { add, update, emmitStep, selectOperation, updateIntervalId } =
   operationSlice.actions;
 
-export default operationSlice.reducer;
+export const OperationReducer = operationSlice.reducer;

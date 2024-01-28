@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import {
   useCallback,
   useContext,
@@ -6,20 +7,16 @@ import {
   useRef,
   useState,
 } from "react";
-import { TokensContext } from "~/context/tokens-context";
+import { SwapContext } from "~/context/swap-context";
 import { amountToEth, lisibleAmount } from "~/utils/format";
 import IconGroup from "./IconGroup";
-import clsx from "clsx";
-import { SwapContext } from "~/context/swap-context";
-import { balanceBySlug } from "~/utils/mappings";
 
 import { Web3Context } from "~/context/web3-context";
+import { useBalanceByTokenSlug, usePrices } from "~/hooks/tokens";
 import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
 import ModalLayout from "./layout/ModalLayout";
 
 const SelectToken = ({ tokens, onSelect }) => {
-  const { tokenPrices } = useContext(TokensContext);
-
   const { networks } = useContext(Web3Context);
   const [search, setSearch] = useState("");
   const [networksFilter, setNetworksFilter] = useState([]);
@@ -30,6 +27,7 @@ const SelectToken = ({ tokens, onSelect }) => {
   const [loading, setLoading] = useState(false);
   const loadMoreRef = useRef(null);
 
+  const tokenPrices = usePrices();
   const filteredTokens = useMemo(() => {
     return tokens
       .filter(({ network }) => {
@@ -78,6 +76,7 @@ const SelectToken = ({ tokens, onSelect }) => {
     };
   }, [loadMoreRef, loadMoreTokens, loading]);
 
+  const balanceBySlug = useBalanceByTokenSlug();
   return (
     <ModalLayout title="Select token" className="max-h-screen min-h-96">
       <header>
@@ -106,7 +105,7 @@ const SelectToken = ({ tokens, onSelect }) => {
           const convertedPrice = Number(tokenPrices[token.coinGeckoId]?.usd);
           const tokenPrice = isNaN(convertedPrice) ? 0 : convertedPrice;
 
-          const balance = balanceBySlug[token.slug]?.amount ?? 0;
+          const balance = balanceBySlug[token.slug]?.amountWei ?? 0;
 
           const convertedBalance = amountToEth(
             !balance ? BigInt(0) : BigInt(balance),

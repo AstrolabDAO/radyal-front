@@ -9,11 +9,12 @@ import {
 import { tokensIsEqual } from "~/utils";
 import { StrategyInteraction } from "~/utils/constants";
 import { Strategy, Token } from "~/utils/interfaces";
-import { tokenBySlug, tokensBySlugForPriceAPI } from "~/utils/mappings";
 import { EstimationProvider } from "./estimation-context";
 import { StrategyContext } from "./strategy-context";
 
-import { TokensContext } from "./tokens-context";
+import { useDispatch } from "react-redux";
+import { useBalances, useTokenBySlug } from "~/hooks/tokens";
+import { addRequestedPriceCoingeckoId } from "~/store/tokens";
 
 const SwapContext = createContext<SwapContextType>({
   switchSelectMode: () => {},
@@ -33,9 +34,9 @@ const SwapContext = createContext<SwapContextType>({
 });
 
 const SwapProvider = ({ children }) => {
-  const { sortedBalances } = useContext(TokensContext);
   const { selectedStrategy } = useContext(StrategyContext);
-
+  const balances = useBalances();
+  const tokenBySlug = useTokenBySlug();
   const [action, setAction] = useState<StrategyInteraction>(
     StrategyInteraction.DEPOSIT
   );
@@ -58,10 +59,17 @@ const SwapProvider = ({ children }) => {
     []
   );
 
+  const dispatch = useDispatch();
   useEffect(() => {
-    if (fromToken) tokensBySlugForPriceAPI[fromToken?.slug] = fromToken;
-    if (toToken) tokensBySlugForPriceAPI[toToken?.slug] = toToken;
-  }, [fromToken, toToken]);
+    if (fromToken)
+      dispatch(
+        addRequestedPriceCoingeckoId({ coingeckoId: fromToken.coinGeckoId })
+      );
+    if (toToken)
+      dispatch(
+        addRequestedPriceCoingeckoId({ coingeckoId: toToken.coinGeckoId })
+      );
+  }, [dispatch, fromToken, toToken]);
 
   useEffect(() => {
     switch (action) {
@@ -84,16 +92,17 @@ const SwapProvider = ({ children }) => {
 
   useEffect(() => {
     if (!fromToken) {
-      const token = tokenBySlug[sortedBalances?.[0]?.slug] ?? null;
+      const token = tokenBySlug[balances?.[0]?.token] ?? null;
       selectFromToken(token);
     }
   }, [
     fromToken,
     selectedStrategy,
-    sortedBalances,
     action,
     toToken,
     selectFromToken,
+    balances,
+    tokenBySlug,
   ]);
 
   const actionNeedToSwap = useMemo(() => {

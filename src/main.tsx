@@ -8,6 +8,7 @@ import { Store } from "./store";
 import App from "./App.tsx";
 
 import "./styles/index.css";
+import { Web3Provider } from "./context/web3-context.tsx";
 
 export const ONE_MINUTE = 1000 * 60;
 
@@ -40,10 +41,12 @@ persistQueryClient({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ReduxProvider store={Store}>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </ReduxProvider>
+    <QueryClientProvider client={queryClient}>
+      <Web3Provider>
+        <ReduxProvider store={Store}>
+          <App />
+        </ReduxProvider>
+      </Web3Provider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

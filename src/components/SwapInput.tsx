@@ -1,12 +1,11 @@
-import { useContext, useMemo, useState } from "react";
-import { TokensContext } from "~/context/tokens-context";
-import { amountToEth, lisibleAmount } from "~/utils/format";
 import clsx from "clsx";
-import Loader from "./Loader";
-import { balanceBySlug } from "~/utils/mappings";
-import CrossChainTokenSelect from "./CrossChainTokenSelect";
+import { useContext, useMemo, useState } from "react";
 import { EstimationContext } from "~/context/estimation-context";
 import { SwapContext } from "~/context/swap-context";
+import { useBalanceByTokenSlug, usePrices } from "~/hooks/tokens";
+import { amountToEth, lisibleAmount } from "~/utils/format";
+import CrossChainTokenSelect from "./CrossChainTokenSelect";
+import Loader from "./Loader";
 
 const SwapInput = ({
   selected,
@@ -23,14 +22,14 @@ const SwapInput = ({
     isDestination ? null : fromValue?.toString() ?? null
   );
 
-  const { tokenPrices } = useContext(TokensContext);
-
+  const tokenPrices = usePrices();
+  const balanceBySlug = useBalanceByTokenSlug();
   const selectedBalance = useMemo(() => {
     if (!selected) return 0;
     const balance = balanceBySlug[selected.slug];
 
-    return amountToEth(BigInt(balance?.amount ?? 0), selected.decimals);
-  }, [selected]);
+    return amountToEth(BigInt(balance?.amountWei ?? 0), selected.decimals);
+  }, [balanceBySlug, selected]);
 
   const tokenPrice = useMemo(() => {
     if (!selected || !tokenPrices) return 0;
@@ -118,22 +117,6 @@ const SwapInput = ({
               </button>
             </div>
           )}
-          {/** 
-            <span className="w-full">
-              {selected && (
-                <>
-                  {selected.name} ({selected.network.name})
-                </>
-              )}
-            </span>
-            <i>~ </i>
-            <span>
-              {lisibleAmount(
-                Number(isDestination ? toValue : depositValue) * tokenPrice
-              )}
-              $
-            </span>
-            */}
         </footer>
       </div>
     </div>

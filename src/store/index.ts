@@ -1,13 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
-import OperationReducer from "~/store/operations";
 
 import { promiseAwaitingMiddleware } from "./middlewares";
 import operationMiddlewares from "./middlewares/operations";
-export type IRootState = ReturnType<typeof OperationReducer>;
-
+import tokensMiddlewares from "./middlewares/tokens";
+import { TokenReducer } from "./tokens";
+import { OperationReducer } from "./operations";
+export type IRootState = {
+  tokens: ReturnType<typeof TokenReducer>;
+  operations: ReturnType<typeof OperationReducer>;
+};
 export const Store = configureStore({
   reducer: {
     operations: OperationReducer,
+    tokens: TokenReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -19,7 +24,11 @@ export const Store = configureStore({
         // Ignore these paths in the state
         ignoredPaths: [],
       },
-    }).concat(promiseAwaitingMiddleware, ...operationMiddlewares),
+    }).concat(
+      promiseAwaitingMiddleware,
+      ...operationMiddlewares,
+      ...tokensMiddlewares
+    ),
 });
 
 export const getStore = () => {

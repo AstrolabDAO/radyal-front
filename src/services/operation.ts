@@ -11,6 +11,9 @@ import axios from "axios";
 import { LiFITransactionStatusResponse } from "~/store/interfaces/operations";
 import { OperationsState, update } from "~/store/operations";
 
+export const getOperationsStore = () => {
+  return getStoreState().operations;
+};
 export const getOperations = () => {
   return operationsSelector(getStoreState());
 };
