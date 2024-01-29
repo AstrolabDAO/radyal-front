@@ -1,7 +1,6 @@
 import { useCallback, useContext, useMemo } from "react";
 import { Client } from "viem";
 import { useAccount, usePublicClient } from "wagmi";
-import { StrategyContext } from "~/context/strategy-context";
 import { tokensIsEqual } from "~/utils";
 import { previewStrategyTokenMove } from "~/utils/flows/strategy";
 import { amountToEth, cacheHash } from "~/utils/format";
@@ -16,6 +15,7 @@ import { useSwitchNetwork } from "./transaction";
 import toast from "react-hot-toast";
 import { SwapContext } from "~/context/swap-context";
 import { StrategyInteraction } from "~/utils/constants";
+import { useSelectedStrategy } from "./store/strategies";
 
 export const useExecuteSwap = () => {
   const { fromValue, fromToken, toToken, action } = useContext(SwapContext);
@@ -141,7 +141,8 @@ export const useGetSwapRoute = () => {
   const { address } = useAccount();
   const { fromValue, fromToken, toToken, action } = useContext(SwapContext);
 
-  const { selectedStrategy } = useContext(StrategyContext);
+  const selectedStrategy = useSelectedStrategy();
+
   const amount = useMemo(() => {
     if (!fromToken) return 0n;
     return BigInt(Math.round(fromValue * fromToken?.weiPerUnit));
@@ -167,7 +168,7 @@ export const useGetSwapRoute = () => {
 };
 
 export const usePreviewStrategyTokenMove = () => {
-  const { selectedStrategy } = useContext(StrategyContext);
+  const selectedStrategy = useSelectedStrategy();
   const { fromValue, action } = useContext(SwapContext);
 
   const publicClient = usePublicClient({

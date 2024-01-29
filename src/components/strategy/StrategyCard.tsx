@@ -3,16 +3,20 @@ import { useContext, useState } from "react";
 import { useAccount } from "wagmi";
 
 import { Strategy } from "~/utils/interfaces";
-import { StrategyContext } from "~/context/strategy-context";
 
 import StrategyCardAPY from "./StrategyCardAPY";
-import StrategyCardTVL from "./StrategyCardTVL";
 import StrategyCardIcons from "./StrategyCardIcons";
+import StrategyCardTVL from "./StrategyCardTVL";
 
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { SwapModalContext } from "~/context/swap-modal-context";
 import SwapModal from "../modals/SwapModal";
 
+import {
+  useSelectStrategy,
+  useSelectStrategyGroup,
+  useSelectedStrategy,
+} from "~/hooks/store/strategies";
 import "./StrategyCard.css";
 
 interface StrategyProps {
@@ -20,7 +24,6 @@ interface StrategyProps {
 }
 
 const StrategyCard = ({ strategyGroup }: StrategyProps) => {
-
   const web3Modal = useWeb3Modal();
   const [shouldOpenModal, setShouldOpenModal] = useState<boolean>(false);
 
@@ -30,21 +33,19 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   // isReconnected is true if the user was already connected
   const handleConnect = ({ isReconnected }) => {
     if (!isReconnected && isConnected && shouldOpenModal) {
-      openModal(<SwapModal />)
+      openModal(<SwapModal />);
     }
-  }
+  };
 
   const { isConnected } = useAccount({ onConnect: handleConnect });
 
   const [strategy] = strategyGroup;
   const { name } = strategy;
-  const [title, ...subtitle]  = name.replace("Astrolab ", "").split(" ");
+  const [title, ...subtitle] = name.replace("Astrolab ", "").split(" ");
 
-  const {
-    selectStrategy,
-    selectedStrategy,
-    selectGroup,
-  } = useContext(StrategyContext);
+  const selectedStrategy = useSelectedStrategy();
+  const selectGroup = useSelectStrategyGroup();
+  const selectStrategy = useSelectStrategy();
 
   const openModalStrategy = () => {
     selectStrategy(strategy);
@@ -52,9 +53,8 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
     if (!isConnected) {
       web3Modal.open();
       setShouldOpenModal(true);
-    }
-    else openModal(<SwapModal />);
-  }
+    } else openModal(<SwapModal />);
+  };
 
   return (
     <div
@@ -63,19 +63,14 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
         "hover:bg-primary hover:text-dark hover:shadow hover:shadow-primary",
         { active: selectedStrategy?.slug === strategy.slug }
       )}
-      onClick={ openModalStrategy }
+      onClick={openModalStrategy}
     >
       <div className="absolute inset-0 flex items-center ms-4 z-0 background-icon-blender">
-        <img
-          src={ strategy.asset.icon }
-          className="h-32 w-32"
-        />
+        <img src={strategy.asset.icon} className="h-32 w-32" />
       </div>
-      <div
-        className="absolute rounded-3xl inset-0 flex items-center justify-end z-0 background-icon-blender overflow-hidden"
-      >
+      <div className="absolute rounded-3xl inset-0 flex items-center justify-end z-0 background-icon-blender overflow-hidden">
         <img
-          src={ strategy.network.icon }
+          src={strategy.network.icon}
           className="h-52 w-52 -mr-16 opacity-25"
         />
       </div>
@@ -83,17 +78,20 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
         <div className="flex flex-row w-full">
           <div className="flex flex-col m-0 p-0 gilroy w-full">
             <div className="font-bold italic uppercase text-4xl -mb-1">
-              { title }
+              {title}
             </div>
             <div className="flex flex-row">
-              <div className="flex font-light me-auto my-auto"> { subtitle.join(' ') } </div>
-              <StrategyCardIcons strategyGroup={ strategyGroup } />
+              <div className="flex font-light me-auto my-auto">
+                {" "}
+                {subtitle.join(" ")}{" "}
+              </div>
+              <StrategyCardIcons strategyGroup={strategyGroup} />
             </div>
           </div>
         </div>
         <div className="flex flex-row mt-auto">
-          <StrategyCardAPY apy={ 23.3 }/>
-          <StrategyCardTVL tvl={ 22.3 }/>
+          <StrategyCardAPY apy={23.3} />
+          <StrategyCardTVL tvl={22.3} />
         </div>
       </div>
     </div>

@@ -1,20 +1,20 @@
 import { useContext, useEffect, useState } from "react";
-import { StrategyContext } from "~/context/strategy-context";
 import { SwapContext } from "~/context/swap-context";
 import SwapInput from "./SwapInput";
 import SwapRouteDetail from "./SwapRouteDetail";
 import ModalLayout, { ModalAction } from "./layout/ModalLayout";
 
-import { tokensIsEqual } from "~/utils";
-import { useMaxRedeem, useWithdraw } from "~/hooks/strategy";
 import toast from "react-hot-toast";
-import SwapStepsModal from "./modals/SwapStepsModal";
+import { EstimationContext } from "~/context/estimation-context";
 import { SwapModalContext } from "~/context/swap-modal-context";
+import { useSelectedStrategy } from "~/hooks/store/strategies";
+import { useMaxRedeem, useWithdraw } from "~/hooks/strategy";
+import { tokensIsEqual } from "~/utils";
 import { SelectTokenModalMode } from "~/utils/constants";
 import SelectTokenModal from "./modals/SelectTokenModal";
-import { EstimationContext } from "~/context/estimation-context";
+import SwapStepsModal from "./modals/SwapStepsModal";
 const Withdraw = () => {
-  const { selectedStrategy } = useContext(StrategyContext);
+  const selectedStrategy = useSelectedStrategy();
   const {
     selectTokenMode,
     fromToken,

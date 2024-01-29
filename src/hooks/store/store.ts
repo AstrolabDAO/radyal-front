@@ -3,9 +3,16 @@ import { useQuery } from "react-query";
 import { useDispatch } from "react-redux";
 import { useAccount } from "wagmi";
 import { ONE_MINUTE } from "~/main";
-import { init, setBalances, setTokenPrices } from "~/store/tokens";
+import {
+  init,
+  setBalances,
+  setRequestedPriceCoingeckoIds,
+  setTokenPrices,
+} from "~/store/tokens";
 import { getTokens, getTokensPrices, loadBalancesByAddress } from "~/utils/api";
+import { cacheHash } from "~/utils/format";
 import { Balance, Token } from "~/utils/interfaces";
+import { useRequestedPriceCoingeckoIds } from "./tokens";
 
 let STORE_IS_INIT = false;
 let STORE_IS_PARTIAL_INIT = false;
@@ -31,21 +38,25 @@ export const useReduxStoreDataInit = () => {
     } else if (!tokens || !balances || !prices) return;
     STORE_IS_INIT = true;
     dispatch(init({ tokens, balances, prices }));
-  });
+  }, [tokens, balances, prices, dispatch, isConnected]);
 
   useEffect(() => {
-    if (!STORE_IS_INIT) return;
+    if (STORE_IS_INIT || !balances) return;
     dispatch(setBalances(balances));
   }, [balances, dispatch]);
   useEffect(() => {
-    if (!STORE_IS_INIT) return;
+    if (STORE_IS_INIT || !prices) return;
     dispatch(setTokenPrices(prices));
   }, [dispatch, prices]);
 };
 export const useLoadTokens = () => {
-  const { data: tokens, isLoading } = useQuery<Token[]>("tokens", getTokens, {
-    staleTime: ONE_MINUTE * 15,
-  });
+  const { data: tokens, isLoading } = useQuery<Token[]>(
+    cacheHash("tokens"),
+    getTokens,
+    {
+      staleTime: ONE_MINUTE * 15,
+    }
+  );
 
   return !isLoading ? tokens : null;
 };
@@ -54,7 +65,7 @@ export const useLoadBalances = () => {
   const { address, isConnected } = useAccount();
 
   const { data: balances, isLoading } = useQuery<Balance[]>(
-    `balances-${address}`,
+    cacheHash(`balances`, address),
     () => loadBalancesByAddress(address),
     {
       enabled: !!address && isConnected,
@@ -66,26 +77,32 @@ export const useLoadBalances = () => {
   return !isConnected || isLoading ? null : balances;
 };
 export const useLoadPrices = (tokens: Token[], balances: Balance[]) => {
+  const storedCoingeckoIds = useRequestedPriceCoingeckoIds();
+  const dispatch = useDispatch();
   const [coingeckoIds, enable] = useMemo(() => {
     if (!tokens || !balances) return [[], false];
-    const coingeckoIds = new Set<string>(
-      balances
-        .filter((balance) => {
-          const token = tokens.find((token) => token.slug === balance.token);
-          return !!token;
-        })
-        .map((balance) => {
-          const token = tokens.find((token) => token.slug === balance.token);
-          return token?.coinGeckoId;
-        })
-    );
-    return [Array.from(coingeckoIds), true];
+    const coingeckoIds = balances
+      .filter((balance) => {
+        const token = tokens.find((token) => token.slug === balance.token);
+        return !!token;
+      })
+      .map((balance) => {
+        const token = tokens.find((token) => token.slug === balance.token);
+        return token?.coinGeckoId;
+      });
+
+    return [coingeckoIds, true];
   }, [tokens, balances]);
 
   const { data: prices, isLoading } = useQuery(
-    "prices",
+    cacheHash("prices"),
     () => {
-      return getTokensPrices(coingeckoIds);
+      const uniqueIds = new Set<string>([
+        ...storedCoingeckoIds,
+        ...coingeckoIds,
+      ]);
+
+      return getTokensPrices(Array.from(uniqueIds));
     },
     {
       enabled: enable,
@@ -93,6 +110,9 @@ export const useLoadPrices = (tokens: Token[], balances: Balance[]) => {
       refetchInterval: ONE_MINUTE,
     }
   );
+  useEffect(() => {
+    dispatch(setRequestedPriceCoingeckoIds(coingeckoIds));
+  }, [coingeckoIds, dispatch]);
 
   return !isLoading ? prices : null;
 };

@@ -5,7 +5,7 @@ import { DisclaimerProvider } from "./context/disclaimer-context";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Layout from "./components/layout/Layout";
-import { useReduxStoreDataInit } from "./hooks/store";
+import { useReduxStoreDataInit } from "./hooks/store/store";
 import { checkInterval } from "./services/operation";
 import { updateIntervalId } from "./store/operations";
 

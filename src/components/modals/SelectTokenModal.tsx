@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { SwapContext } from "~/context/swap-context";
 import { SwapModalContext } from "~/context/swap-modal-context";
-import { useBalances, useTokenBySlug, useTokens } from "~/hooks/tokens";
+import { useBalances, useTokenBySlug, useTokens } from "~/hooks/store/tokens";
 import { SelectTokenModalMode } from "~/utils/constants";
 import { BaseModalProps } from "../Modal";
 import SelectToken from "../SelectToken";

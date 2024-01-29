@@ -1,166 +1,64 @@
-import { abi as AgentAbi } from "@astrolabs/registry/abis/StrategyV5Agent.json";
-import { createContext, useCallback, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo } from "react";
 import { useQuery } from "react-query";
 import { useAccount } from "wagmi";
 import { ONE_MINUTE } from "~/main";
 import { getStrategies } from "~/utils/api";
-import { Balance, GrouppedStrategies, Strategy } from "~/utils/interfaces";
-
-import {
-  networkByChainId,
-  strategiesByChainId,
-  updateStrategyMapping,
-} from "~/utils/mappings";
-
-import getBalances from "~/utils/multicall";
+import { Balance, Strategy } from "~/utils/interfaces";
 
 import { useDispatch } from "react-redux";
-import { zeroAddress } from "viem";
-import { addRequestedPriceCoingeckoId } from "~/store/tokens";
-import { useTokensStore } from "~/hooks/tokens";
-interface StrategyContextType {
-  strategies: Strategy[];
-  selectedGroup: Strategy[];
-  selectedStrategy: Strategy;
-  filteredStrategies: { [slug: string]: Strategy[] };
-  balances: Balance[];
-  selectStrategy: (strategy: Strategy) => void;
-  search: (searchString: string) => void;
-  selectGroup: (strategies: Strategy[]) => void;
-  filterByNetworks: (networks: string[]) => void;
-}
+import { useTokensStore } from "~/hooks/store/tokens";
+import { getStrategiesBalances } from "~/services/strategy";
 
-export const StrategyContext = createContext<StrategyContextType>({
-  strategies: [],
-  selectedGroup: [],
-  selectedStrategy: null,
-  filteredStrategies: {},
-  balances: [],
-  selectStrategy: () => {},
-  selectGroup: () => {},
-  search: () => {},
-  filterByNetworks: () => {},
-});
+import { init } from "~/store/strategies";
+import { addBalances, addTokens } from "~/store/tokens";
+import { cacheHash } from "~/utils/format";
+
+export const StrategyContext = createContext({});
 
 export const StrategyProvider = ({ children }) => {
   const { address, isConnected } = useAccount();
-  const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(null);
-  const [selectedGroup, setSelectedGroup] = useState<Strategy[]>([]);
 
-  const [search, setSearch] = useState<string>("");
-  const [networksFilter, setNetworksFilter] = useState<string[]>([]);
+  const dispatch = useDispatch();
 
   const Provider = StrategyContext.Provider;
-  const selectStrategy = useCallback(
-    (strategy: Strategy) => setSelectedStrategy(strategy),
-    []
-  );
-
-  const selectGroup = (strategies: Strategy[]) => {
-    setSelectedGroup(strategies);
-  };
 
   const tokensStore = useTokensStore();
 
-  const { data: strategiesData, isLoading: strategiesIsLoading } = useQuery<
+  const { data: strategies, isLoading: strategiesIsLoading } = useQuery<
     Strategy[]
   >("strategies", getStrategies, {
     enabled: tokensStore.tokenLoaded,
     staleTime: ONE_MINUTE * 5,
   });
 
-  const dispatch = useDispatch();
-  const strategies = useMemo<Strategy[]>(() => {
-    if (!strategiesData) return [];
-    return strategiesData.map((strategy) => {
-      const { asset } = strategy;
-      dispatch(
-        addRequestedPriceCoingeckoId({ coingeckoId: asset.coinGeckoId })
-      );
-      updateStrategyMapping(strategy);
-      return strategy;
-    }) as Strategy[];
-  }, [dispatch, strategiesData]);
+  const enabled = useMemo(() => {
+    return strategies?.length > 0 && isConnected;
+  }, [isConnected, strategies]);
 
-  const { data: strategiesBalancesData } = useQuery<Balance[]>(
-    `strategiesBalances-${address}`,
-    async () => {
-      const balances = [];
-
-      try {
-        for (const key of Object.keys(strategiesByChainId)) {
-          const strategies = strategiesByChainId[key];
-
-          const calls = strategies.map((strategy) => ({
-            address: strategy.address,
-            abi: AgentAbi,
-            symbol: strategy.symbol,
-            slug: strategy.slug,
-          }));
-
-          const network = networkByChainId[key];
-
-          const result = await getBalances(network, calls, address);
-
-          balances.push(result.map(([balance]) => balance));
-        }
-        return balances.flat(1);
-      } catch (e) {
-        console.error(e);
-      }
-    },
+  const { data: balances, isLoading: balancesIsLoading } = useQuery<Balance[]>(
+    cacheHash("strategiesBalances", address),
+    async () => getStrategiesBalances(address, strategies),
     {
-      enabled: isConnected && !strategiesIsLoading && tokensStore.tokenLoaded,
+      enabled,
       staleTime: ONE_MINUTE,
       refetchInterval: ONE_MINUTE,
     }
   );
 
-  const balances = useMemo(() => {
-    if (!strategiesBalancesData) return [];
-
-    return strategiesBalancesData;
-  }, [strategiesBalancesData]);
-
-  const filteredStrategies = useMemo<GrouppedStrategies>(() => {
-    const grouppedStrategies: GrouppedStrategies = {};
-
-    strategies
-      .filter(({ network }) => {
-        if (!networksFilter.length) return true;
-        return networksFilter.includes(network.slug);
-      })
-      .filter(({ address }) => address !== zeroAddress)
-      .filter((item) =>
-        Object.values(item).some((value) =>
-          value.toString().toLowerCase().includes(search.toLowerCase())
-        )
-      )
-      .map((strategy) => {
-        const splittedSlug = strategy.slug.split(":")[1];
-
-        if (!grouppedStrategies[splittedSlug])
-          grouppedStrategies[splittedSlug] = [];
-        grouppedStrategies[splittedSlug].push(strategy);
-      });
-    return grouppedStrategies;
-  }, [search, strategies, networksFilter]);
-
-  return (
-    <Provider
-      value={{
-        selectedStrategy,
+  useEffect(() => {
+    if (strategiesIsLoading || !strategies) return;
+    dispatch(
+      init({
         strategies,
-        filteredStrategies,
-        selectStrategy,
-        selectGroup,
-        balances,
-        selectedGroup,
-        search: (value) => setSearch(value),
-        filterByNetworks: (value) => setNetworksFilter(value),
-      }}
-    >
-      {children}
-    </Provider>
-  );
+      })
+    );
+    dispatch(addTokens(strategies));
+  }, [strategies, dispatch, strategiesIsLoading]);
+
+  useEffect(() => {
+    if (balancesIsLoading || !balances) return;
+    dispatch(addBalances(balances));
+  }, [balancesIsLoading, balances, dispatch]);
+
+  return <Provider value={{}}>{children}</Provider>;
 };

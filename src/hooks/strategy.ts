@@ -1,7 +1,6 @@
 import { abi } from "@astrolabs/registry/abis/StrategyV5Agent.json";
 import { useCallback, useContext } from "react";
 import { useAccount, useContractRead, usePublicClient } from "wagmi";
-import { StrategyContext } from "~/context/strategy-context";
 import { useApprove, useSwitchNetwork } from "./transaction";
 
 import toast from "react-hot-toast";
@@ -11,13 +10,8 @@ import { getWalletClient } from "@wagmi/core";
 import { EstimationContext } from "~/context/estimation-context";
 import { Operation, OperationStatus } from "~/model/operation";
 import { OperationStep } from "~/store/interfaces/operations";
-import { useCurrentStep, useEmmitStep } from "./operation";
-
-export const useSelectedStrategy = () => {
-  const { selectedStrategy } = useContext(StrategyContext);
-
-  return selectedStrategy;
-};
+import { useCurrentStep, useEmmitStep } from "./store/operation";
+import { useSelectedStrategy } from "./store/strategies";
 
 export const useMaxRedeem = () => {
   const strategy = useSelectedStrategy();

@@ -27,25 +27,17 @@ export interface TokensState {
   };
 }
 
-const updateMappings = (state: TokensState) => {
-  state.mappings.tokenBySlug = {};
-  state.mappings.tokenBySymbol = {};
-  state.mappings.tokensByNetworkId = {};
-  state.mappings.tokensByNetworkSlug = {};
-  state.mappings.coinGeckoIdBySymbol = {};
+const updateMappings = (state: TokensState, token: Token) => {
+  state.mappings.tokenBySlug[token.slug] = token;
+  state.mappings.tokenBySymbol[token.symbol] = token;
+  state.mappings.coinGeckoIdBySymbol[token.symbol] = token.coinGeckoId;
+  if (!state.mappings.tokensByNetworkId[token.network.id])
+    state.mappings.tokensByNetworkId[token.network.id] = [];
+  if (!state.mappings.tokensByNetworkSlug[token.network.slug])
+    state.mappings.tokensByNetworkSlug[token.network.slug] = [];
 
-  state.list.forEach((token) => {
-    state.mappings.tokenBySlug[token.slug] = token;
-    state.mappings.tokenBySymbol[token.symbol] = token;
-    state.mappings.coinGeckoIdBySymbol[token.symbol] = token.coinGeckoId;
-    if (!state.mappings.tokensByNetworkId[token.network.id])
-      state.mappings.tokensByNetworkId[token.network.id] = [];
-    if (!state.mappings.tokensByNetworkSlug[token.network.slug])
-      state.mappings.tokensByNetworkSlug[token.network.slug] = [];
-
-    state.mappings.tokensByNetworkSlug[token.network.slug].push(token);
-    state.mappings.tokensByNetworkId[token.network.id].push(token);
-  });
+  state.mappings.tokensByNetworkSlug[token.network.slug].push(token);
+  state.mappings.tokensByNetworkId[token.network.id].push(token);
 };
 
 const initialState: TokensState = {
@@ -78,11 +70,13 @@ const tokensSlice = createSlice({
       if (!state.tokenLoaded) {
         state.list = action.payload.tokens;
         state.tokenLoaded = true;
-        updateMappings(state);
+        state.list.map((token) => {
+          updateMappings(state, token);
+        });
       }
 
       if (action.payload.balances) {
-        state.balances = Object.values(action.payload.balances);
+        state.balances = action.payload.balances;
         state.balances.forEach((balance) => {
           state.mappings.balanceByTokenSlug[balance.token] = balance;
         });
@@ -92,7 +86,7 @@ const tokensSlice = createSlice({
       }
     },
     setBalances: (state, action: PayloadAction<Balance[]>) => {
-      state.balances = Object.values(action.payload);
+      state.balances = action.payload;
       state.balances.forEach((balance) => {
         state.mappings.balanceByTokenSlug[balance.token] = balance;
       });
@@ -101,23 +95,47 @@ const tokensSlice = createSlice({
       state.prices = action.payload;
     },
     addToken: (state, action: PayloadAction<Token>) => {
+      if (state.mappings.tokenBySlug[action.payload.slug]) return;
       state.list.push(action.payload);
+      updateMappings(state, action.payload);
+    },
+    addTokens: (state, action: PayloadAction<Token[]>) => {
+      const tokens = action.payload.filter(
+        (token) => !state.mappings.tokenBySlug[token.slug]
+      );
+      state.list.push(...tokens);
+      tokens.forEach((token) => {
+        updateMappings(state, token);
+      });
     },
     addBalance: (state, action: PayloadAction<Balance>) => {
       if (!state.mappings.balanceByTokenSlug[action.payload.token])
         state.balances.push(action.payload);
+      else
+        state.balances = state.balances.map((balance) =>
+          balance.token === action.payload.token ? action.payload : balance
+        );
+    },
+    addBalances: (state, action: PayloadAction<Balance[]>) => {
+      const balances = action.payload.filter(
+        (balance) => !state.mappings.balanceByTokenSlug[balance.token]
+      );
+      state.balances.push(...balances);
+      balances.forEach((balance) => {
+        state.mappings.balanceByTokenSlug[balance.token] = balance;
+      });
     },
     setRequestedPriceCoingeckoIds: (state, action: PayloadAction<string[]>) => {
-      state.requestedPriceCoingeckoIds = Object.values(action.payload);
+      state.requestedPriceCoingeckoIds = action.payload;
     },
-    addRequestedPriceCoingeckoId: (
-      state,
-      action: PayloadAction<{ coingeckoId: string }>
-    ) => {
-      const set = new Set(state.requestedPriceCoingeckoIds).add(
-        action.payload.coingeckoId
-      );
+    addRequestedPriceCoingeckoId: (state, action: PayloadAction<string>) => {
+      const set = new Set(state.requestedPriceCoingeckoIds).add(action.payload);
       state.requestedPriceCoingeckoIds = Array.from(set);
+    },
+    addRequestedPriceCoingeckoIds: (state, action: PayloadAction<string[]>) => {
+      const ids = [...state.requestedPriceCoingeckoIds];
+      ids.push(...action.payload);
+      state.requestedPriceCoingeckoIds = Array.from(new Set(ids));
     },
     tokensIsLoaded: (state) => {
       state.tokenLoaded = true;
@@ -127,9 +145,6 @@ const tokensSlice = createSlice({
     },
     updatePrices: (state, action: PayloadAction<CoingeckoPrices>) => {
       state.prices = action.payload;
-    },
-    updateMappings: (state) => {
-      updateMappings(state);
     },
   },
 });
@@ -141,9 +156,11 @@ export const {
   setRequestedPriceCoingeckoIds,
   addRequestedPriceCoingeckoId,
   addToken,
+  addTokens,
   tokensIsLoaded,
   canLoadPrices,
   addBalance,
+  addBalances,
   updatePrices,
 } = tokensSlice.actions;
 

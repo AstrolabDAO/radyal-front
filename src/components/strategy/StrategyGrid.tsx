@@ -1,26 +1,26 @@
-import { useContext, useMemo } from "react";
-import { useSelector } from "react-redux";
-import { StrategyContext } from "~/context/strategy-context";
+import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { SwapModalContext } from "~/context/swap-modal-context";
-import { useSelectOperation } from "~/hooks/operation";
+import { useSelectOperation } from "~/hooks/store/operation";
+import {
+  useGrouppedStrategies,
+  useStrategiesNetworks,
+} from "~/hooks/store/strategies";
 import { OperationStatus } from "~/model/operation";
 import { operationsSelector } from "~/store/selectors/operations";
+import { filterByNetworks, search } from "~/store/strategies";
 import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
 import SwapStepsModal from "../modals/SwapStepsModal";
 import StrategyCard from "./StrategyCard";
 
 const StrategyGrid = () => {
-  const { filteredStrategies, search, filterByNetworks, strategies } =
-    useContext(StrategyContext);
-
-  const grouppedStrategies = useMemo(
-    () => Object.values(filteredStrategies),
-    [filteredStrategies]
-  );
+  const grouppedStrategies = useGrouppedStrategies();
   const operations = useSelector(operationsSelector);
-
+  const dispatch = useDispatch();
   const selectOperation = useSelectOperation();
+  const strategiesNetworks = useStrategiesNetworks();
   const { openModal } = useContext(SwapModalContext);
+
   return (
     <div className="w-full container px-2 sm:mx-auto">
       <div className="flex flex-col md:flex-row w-full">
@@ -31,7 +31,7 @@ const StrategyGrid = () => {
             placeholder="“Stable”, “Arbitrum”, “Staking”..."
             className="input input-bordered"
             onChange={({ target }) => {
-              search(target.value);
+              dispatch(search(target.value));
             }}
           />
         </div>
@@ -41,9 +41,9 @@ const StrategyGrid = () => {
             isSearchable
             className="basic-multi-select w-64 h-12"
             classNamePrefix="select"
-            networks={strategies.map(({ network }) => network)}
+            networks={strategiesNetworks}
             onChange={(value: Array<NetworkSelectData>) => {
-              filterByNetworks(value.map((v) => v.network?.slug));
+              dispatch(filterByNetworks(value.map((v) => v.network?.slug)));
             }}
           />
         </div>

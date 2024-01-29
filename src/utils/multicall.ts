@@ -1,7 +1,6 @@
 import { MulticallContracts, Narrow } from "viem";
 import { multicall as wagmiMulticalll } from "wagmi/actions";
-import { getTokenBySlug } from "~/services/tokens";
-import { Balance, Network } from "./interfaces";
+import { Balance, Network, Token } from "./interfaces";
 
 export const multicall = (
   chainId: number,
@@ -15,14 +14,14 @@ export const multicall = (
 
 export const getBalances = async (
   network: Network,
-  contracts: any,
-  address: string
+  contracts: { abi: any; address: `0x${string}`; token: Token }[] = [],
+  address: `0x${string}`
 ) => {
   const result = await wagmiMulticalll({
     chainId: network.id,
     contracts: contracts
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .map(({ slug, ...contract }) => [
+      .map(({ token, ...contract }) => [
         {
           ...contract,
           functionName: "balanceOf",
@@ -32,7 +31,8 @@ export const getBalances = async (
       .flat(1),
   });
 
-  const filteredResults = result.map((res) => res.result);
+  const filteredResults: any = result.map((res) => res.result);
+
   const balances = [];
 
   for (let i = 0; i < filteredResults.length; i++) {
@@ -43,15 +43,16 @@ export const getBalances = async (
     const result = balanceResult as bigint;
 
     const contract = contracts[i];
-    const _token = getTokenBySlug(contract.slug);
+
+    const _token = contract.token;
     const balance: Balance = {
       token: _token?.slug
         ? _token.slug
-        : `${network.slug}:${contract.symbol.toLowerCase()}`,
+        : `${network.slug}:${_token.symbol.toLowerCase()}`,
       amountWei: result?.toString() ?? "0",
       amount: Number(result) / _token.weiPerUnit,
     };
-    balances.push([balance, _token]);
+    balances.push(balance);
   }
 
   return balances;
