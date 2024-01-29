@@ -9,18 +9,18 @@ import SelectTokenModal from "../modals/SelectTokenModal";
 
 import SwapRouteDetail from "../SwapRouteDetail";
 
-import { StrategyContext } from "~/context/strategy-context";
 import { SwapContext } from "~/context/swap-context";
 import { SwapModalContext } from "~/context/swap-modal-context";
 
 import { EstimationContext } from "~/context/estimation-context";
+import { useSelectedStrategy } from "~/hooks/store/strategies";
 import { useApproveAndDeposit } from "~/hooks/strategy";
 import { tokensIsEqual } from "~/utils";
 import { SelectTokenModalMode } from "~/utils/constants";
 import { Strategy, Token } from "~/utils/interfaces";
 
 const DepositTab = () => {
-  const { selectedStrategy } = useContext(StrategyContext);
+  const selectedStrategy = useSelectedStrategy();
   const { fromToken, toToken, fromValue, canSwap, actionNeedToSwap } =
     useContext(SwapContext);
   const { swap, needApprove, estimation } = useContext(EstimationContext);

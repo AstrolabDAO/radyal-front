@@ -1,21 +1,16 @@
-import { useContext, useMemo } from "react";
-import { StrategyContext } from "~/context/strategy-context";
-import { networkByChainId } from "~/utils/mappings";
+import { useDispatch } from "react-redux";
+import {
+  useGrouppedStrategies,
+  useStrategiesNetworks,
+} from "~/hooks/store/strategies";
 import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
 import StrategyCard from "./StrategyCard";
+import { filterByNetworks, search } from "~/store/strategies";
 
 const StrategyList = () => {
-  const { filteredStrategies, search, filterByNetworks, strategies } =
-    useContext(StrategyContext);
-
-  const grouppedStrategies = useMemo(
-    () => Object.values(filteredStrategies),
-    [filteredStrategies]
-  );
-
-  const networkIds = Array.from(
-    new Set(strategies.map(({ network }) => network.id))
-  );
+  const grouppedStrategies = useGrouppedStrategies();
+  const strategyNetworks = useStrategiesNetworks();
+  const dispatch = useDispatch();
 
   return (
     <div className="strategies w-full small-container mx-auto p-2">
@@ -31,7 +26,7 @@ const StrategyList = () => {
             placeholder="type anything..."
             className="input input-bordered max-w-xs w-64"
             onChange={({ target }) => {
-              search(target.value);
+              dispatch(search(target.value));
             }}
           />
         </div>
@@ -43,11 +38,9 @@ const StrategyList = () => {
             isSearchable
             className="basic-multi-select w-64 h-12"
             classNamePrefix="select"
-            networks={networkIds.map((id) => {
-              return networkByChainId[id];
-            })}
+            networks={strategyNetworks}
             onChange={(value: Array<NetworkSelectData>) => {
-              filterByNetworks(value.map((v) => v.network?.slug));
+              dispatch(filterByNetworks(value.map((v) => v.network?.slug)));
             }}
           />
         </div>

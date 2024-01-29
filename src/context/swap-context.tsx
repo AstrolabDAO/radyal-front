@@ -1,7 +1,6 @@
 import {
   createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -10,10 +9,10 @@ import { tokensIsEqual } from "~/utils";
 import { StrategyInteraction } from "~/utils/constants";
 import { Strategy, Token } from "~/utils/interfaces";
 import { EstimationProvider } from "./estimation-context";
-import { StrategyContext } from "./strategy-context";
 
 import { useDispatch } from "react-redux";
-import { useBalances, useTokenBySlug } from "~/hooks/tokens";
+import { useSelectedStrategy } from "~/hooks/store/strategies";
+import { useBalances, useTokenBySlug } from "~/hooks/store/tokens";
 import { addRequestedPriceCoingeckoId } from "~/store/tokens";
 
 const SwapContext = createContext<SwapContextType>({
@@ -34,7 +33,8 @@ const SwapContext = createContext<SwapContextType>({
 });
 
 const SwapProvider = ({ children }) => {
-  const { selectedStrategy } = useContext(StrategyContext);
+  const selectedStrategy = useSelectedStrategy();
+
   const balances = useBalances();
   const tokenBySlug = useTokenBySlug();
   const [action, setAction] = useState<StrategyInteraction>(
@@ -62,13 +62,8 @@ const SwapProvider = ({ children }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     if (fromToken)
-      dispatch(
-        addRequestedPriceCoingeckoId({ coingeckoId: fromToken.coinGeckoId })
-      );
-    if (toToken)
-      dispatch(
-        addRequestedPriceCoingeckoId({ coingeckoId: toToken.coinGeckoId })
-      );
+      dispatch(addRequestedPriceCoingeckoId(fromToken.coinGeckoId));
+    if (toToken) dispatch(addRequestedPriceCoingeckoId(toToken.coinGeckoId));
   }, [dispatch, fromToken, toToken]);
 
   useEffect(() => {

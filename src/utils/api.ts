@@ -1,11 +1,10 @@
 import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5Agent.json";
 import axios from "axios";
+import { zeroAddress } from "viem";
 import { getTokenBySlug } from "~/services/tokens";
-import { getStore } from "~/store";
-import { addToken } from "~/store/tokens";
 import { COINGECKO_API, TOKEN_BASENAME_REGEX } from "./constants";
 import { Strategy, Token } from "./interfaces";
-import { networkBySlug, updateStrategyMapping } from "./mappings";
+import { networkBySlug } from "./mappings";
 import { multicall } from "./multicall";
 
 export const getTokenPrice = (token: Token) => {
@@ -139,13 +138,13 @@ export const getStrategies = async () => {
     }
   }
 
-  const strategies = strategiesData
+  return strategiesData
     .filter((strategy) => {
-      const { nativeNetwork } = strategy;
+      const { nativeNetwork, nativeAddress } = strategy;
       const network = networkBySlug[nativeNetwork];
 
       const token = getTokenBySlug(strategy.denomination);
-      return !!network && !!token ? true : false;
+      return !!network && !!token && nativeAddress !== zeroAddress;
     })
     .map((strategy) => {
       const {
@@ -173,13 +172,8 @@ export const getStrategies = async () => {
         weiPerUnit: 10 ** decimals,
         sharePrice,
       } as Strategy;
-
-      getStore().dispatch(addToken(_strat));
-      updateStrategyMapping(_strat);
       return _strat;
     });
-
-  return strategies;
 };
 
 export const getProtocols = async () => {

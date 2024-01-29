@@ -3,16 +3,20 @@ import { configureStore } from "@reduxjs/toolkit";
 import { promiseAwaitingMiddleware } from "./middlewares";
 import operationMiddlewares from "./middlewares/operations";
 import tokensMiddlewares from "./middlewares/tokens";
+import strategiesMiddlewares from "./middlewares/strategies";
 import { TokenReducer } from "./tokens";
 import { OperationReducer } from "./operations";
+import { StrategiesReducer } from "./strategies";
 export type IRootState = {
   tokens: ReturnType<typeof TokenReducer>;
   operations: ReturnType<typeof OperationReducer>;
+  strategies: ReturnType<typeof StrategiesReducer>;
 };
 export const Store = configureStore({
   reducer: {
     operations: OperationReducer,
     tokens: TokenReducer,
+    strategies: StrategiesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -27,7 +31,8 @@ export const Store = configureStore({
     }).concat(
       promiseAwaitingMiddleware,
       ...operationMiddlewares,
-      ...tokensMiddlewares
+      ...tokensMiddlewares,
+      ...strategiesMiddlewares
     ),
 });
 

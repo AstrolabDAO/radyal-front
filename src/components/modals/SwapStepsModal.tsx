@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import SwapRouteDetail from "../SwapRouteDetail";
 import { EstimationContext } from "~/context/estimation-context";
-import { useCurrentSteps, useOperations } from "~/hooks/operation";
+import { useCurrentSteps, useOperations } from "~/hooks/store/operation";
 
 const SwapStepsModal = () => {
   const { lockEstimate } = useContext(EstimationContext);

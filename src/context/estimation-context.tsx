@@ -16,13 +16,13 @@ import { useAllowance, useSwitchNetwork } from "~/hooks/transaction";
 import { approve } from "~/services/transaction";
 import { cacheHash } from "~/utils/format";
 import { Strategy } from "~/utils/interfaces";
-import { StrategyContext } from "./strategy-context";
 import { SwapContext } from "./swap-context";
 
 import { ICommonStep } from "@astrolabs/swapper";
 import { Operation, OperationStatus } from "~/model/operation";
 
 import SwapStepsModal from "~/components/modals/SwapStepsModal";
+import { useSelectedStrategy } from "~/hooks/store/strategies";
 import { getCurrentStep } from "~/services/operation";
 import { OperationStep } from "~/store/interfaces/operations";
 import { SwapModalContext } from "./swap-modal-context";
@@ -50,8 +50,8 @@ const EstimationProvider = ({ children }) => {
     actionNeedToSwap,
   } = useContext(SwapContext);
   const { openModal } = useContext(SwapModalContext);
-  //const { pushTransaction, updateTransaction } = useContext(TransactionContext);
-  const { selectedStrategy } = useContext(StrategyContext);
+
+  const selectedStrategy = useSelectedStrategy();
   const [writeOnProgress, setWriteOnprogress] = useState<boolean>(true);
   const [estimationOnProgress, setEstimationOnProgress] =
     useState<boolean>(false);
@@ -96,7 +96,7 @@ const EstimationProvider = ({ children }) => {
       ),
     }
   );
-  console.log("🚀 ~ EstimationProvider ~ estimationData:", estimationData);
+
   const [allowanceToken, toAllowanceAddress] = useMemo(() => {
     if (!fromToken) return [null, null];
     const _token = fromToken as Strategy;

@@ -7,7 +7,7 @@ import { Strategy, Token } from "~/utils/interfaces";
 
 import { WalletIcon } from "@heroicons/react/24/solid";
 import IconGroup from "~/components/IconGroup";
-import { useBalanceByTokenSlug, usePrices } from "~/hooks/tokens";
+import { useBalanceByTokenSlug, usePrices } from "~/hooks/store/tokens";
 
 type SwapBlockProps = {
   disabled?: boolean;

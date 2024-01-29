@@ -1,12 +1,15 @@
 import clsx from "clsx";
 import { useContext, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { StrategyContext } from "~/context/strategy-context";
 import { Strategy } from "~/utils/interfaces";
 import StrategyData from "./StrategyData";
 
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { SwapModalContext } from "~/context/swap-modal-context";
+import {
+  useSelectStrategy,
+  useSelectedStrategy,
+} from "~/hooks/store/strategies";
 import IconCard from "./IconCard";
 import SwapModal from "./modals/SwapModal";
 
@@ -17,7 +20,9 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   const strategy = strategyGroup[0];
 
   const { name } = strategy;
-  const { selectStrategy, selectedStrategy, selectGroup} = useContext(StrategyContext);
+  const selectStrategy = useSelectStrategy();
+  const selectedStrategy = useSelectedStrategy();
+
   const { openModal } = useContext(SwapModalContext);
 
   const [connectionAsked, setConnectionAsked] = useState(false);

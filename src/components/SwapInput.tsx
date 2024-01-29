@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { useContext, useMemo, useState } from "react";
 import { EstimationContext } from "~/context/estimation-context";
 import { SwapContext } from "~/context/swap-context";
-import { useBalanceByTokenSlug, usePrices } from "~/hooks/tokens";
+import { useBalanceByTokenSlug, usePrices } from "~/hooks/store/tokens";
 import { amountToEth, lisibleAmount } from "~/utils/format";
 import CrossChainTokenSelect from "./CrossChainTokenSelect";
 import Loader from "./Loader";

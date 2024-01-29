@@ -63,7 +63,7 @@ export const useEmmitStep = () => {
 export const useSelectOperation = () => {
   const dispatch = useDispatch();
   return useCallback(
-    (operationId: string) => dispatch(selectOperation({ operationId })),
+    (operationId: string) => dispatch(selectOperation(operationId)),
     [dispatch]
   );
 };

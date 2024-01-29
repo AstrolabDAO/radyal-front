@@ -1,10 +1,12 @@
 import { Middleware, PayloadAction } from "@reduxjs/toolkit";
 import LocalStorageService from "~/services/localStorage";
 import { CACHE_KEY } from "../operations";
+import { Operation } from "~/model/operation";
 
 const convertClassToObjectMiddleware: Middleware =
   () => (next) => (action: PayloadAction) => {
-    action.payload = Object.assign({}, action.payload);
+    if ((action.payload as any) instanceof Operation)
+      action.payload = Object.assign({}, action.payload);
     next(action);
   };
 

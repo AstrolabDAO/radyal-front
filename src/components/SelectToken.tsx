@@ -12,7 +12,7 @@ import { amountToEth, lisibleAmount } from "~/utils/format";
 import IconGroup from "./IconGroup";
 
 import { Web3Context } from "~/context/web3-context";
-import { useBalanceByTokenSlug, usePrices } from "~/hooks/tokens";
+import { useBalanceByTokenSlug, usePrices } from "~/hooks/store/tokens";
 import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
 import ModalLayout from "./layout/ModalLayout";
 
