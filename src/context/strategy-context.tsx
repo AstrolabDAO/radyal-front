@@ -1,11 +1,5 @@
 import { abi as AgentAbi } from "@astrolabs/registry/abis/StrategyV5Agent.json";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useAccount } from "wagmi";
 import { ONE_MINUTE } from "~/main";
@@ -15,14 +9,15 @@ import { Balance, GrouppedStrategies, Strategy } from "~/utils/interfaces";
 import {
   networkByChainId,
   strategiesByChainId,
-  tokensBySlugForPriceAPI,
-  updateBalanceMapping,
   updateStrategyMapping,
 } from "~/utils/mappings";
 
 import getBalances from "~/utils/multicall";
-import { TokensContext } from "./tokens-context";
+
+import { useDispatch } from "react-redux";
 import { zeroAddress } from "viem";
+import { addRequestedPriceCoingeckoId } from "~/store/tokens";
+import { useTokensStore } from "~/hooks/tokens";
 interface StrategyContextType {
   strategies: Strategy[];
   selectedGroup: Strategy[];
@@ -54,7 +49,6 @@ export const StrategyProvider = ({ children }) => {
 
   const [search, setSearch] = useState<string>("");
   const [networksFilter, setNetworksFilter] = useState<string[]>([]);
-  const { tokensIsLoaded } = useContext(TokensContext);
 
   const Provider = StrategyContext.Provider;
   const selectStrategy = useCallback(
@@ -66,22 +60,27 @@ export const StrategyProvider = ({ children }) => {
     setSelectedGroup(strategies);
   };
 
+  const tokensStore = useTokensStore();
+
   const { data: strategiesData, isLoading: strategiesIsLoading } = useQuery<
     Strategy[]
   >("strategies", getStrategies, {
-    enabled: tokensIsLoaded,
+    enabled: tokensStore.tokenLoaded,
     staleTime: ONE_MINUTE * 5,
   });
 
+  const dispatch = useDispatch();
   const strategies = useMemo<Strategy[]>(() => {
     if (!strategiesData) return [];
     return strategiesData.map((strategy) => {
       const { asset } = strategy;
-      tokensBySlugForPriceAPI[asset.slug] = asset;
+      dispatch(
+        addRequestedPriceCoingeckoId({ coingeckoId: asset.coinGeckoId })
+      );
       updateStrategyMapping(strategy);
       return strategy;
     }) as Strategy[];
-  }, [strategiesData]);
+  }, [dispatch, strategiesData]);
 
   const { data: strategiesBalancesData } = useQuery<Balance[]>(
     `strategiesBalances-${address}`,
@@ -111,7 +110,7 @@ export const StrategyProvider = ({ children }) => {
       }
     },
     {
-      enabled: isConnected && !strategiesIsLoading && tokensIsLoaded,
+      enabled: isConnected && !strategiesIsLoading && tokensStore.tokenLoaded,
       staleTime: ONE_MINUTE,
       refetchInterval: ONE_MINUTE,
     }
@@ -120,9 +119,6 @@ export const StrategyProvider = ({ children }) => {
   const balances = useMemo(() => {
     if (!strategiesBalancesData) return [];
 
-    strategiesBalancesData.forEach((balance: Balance) => {
-      updateBalanceMapping(balance);
-    });
     return strategiesBalancesData;
   }, [strategiesBalancesData]);
 

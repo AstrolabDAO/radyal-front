@@ -1,15 +1,6 @@
 import { Chain } from "viem";
-import {
-  Balance,
-  BalanceBySlugMapping,
-  CoingeckoPrices,
-  Network,
-  Protocol,
-  Strategy,
-  Token,
-  TokenBySlugMapping,
-} from "./interfaces";
 import * as wagmiChains from "wagmi/chains";
+import { Balance, Network, Protocol, Strategy } from "./interfaces";
 
 export const networkBySlug: { [slug: string]: Network } = {};
 export const networkByChainId: { [chainId: number]: Network } = {};
@@ -21,36 +12,11 @@ export const protocolByStrippedSlug: { [slug: string]: Protocol } = {};
 
 export const chainImages: { [id: number]: string } = {};
 
-export const balanceBySlug: BalanceBySlugMapping = {};
-export const tokenBySlug: TokenBySlugMapping = {};
-export const tokenPriceBycoinGeckoId: CoingeckoPrices = {};
-export const tokenBySymbol: { [symbol: string]: Token } = {};
-export const tokensByNetworkId: { [networkId: number]: Token[] } = {};
-export const tokensByNetworkSlug: { [networkSlug: string]: Token[] } = {};
-export const coinGeckoIdBySymbol: { [symbol: string]: string } = {};
-
-export const tokensBySlugForPriceAPI: { [slug: string]: Token } = {};
-
 export const strategiesByChainId: { [networkId: number]: Strategy[] } = {};
 export const strategyBalanceBySlug: { [slug: string]: Balance } = {};
 
 export const wagmiChainById: { [id: number]: Chain } = {};
 Object.values(wagmiChains).map((chain) => (wagmiChainById[chain.id] = chain));
-
-export const updateTokenMapping = (token: Token) => {
-  tokenBySlug[token.slug] = token;
-  tokenBySymbol[token.symbol] = token;
-  coinGeckoIdBySymbol[token.symbol] = token.coinGeckoId;
-  if (!tokensByNetworkId[token.network.id]) {
-    tokensByNetworkId[token.network.id] = [];
-  }
-  if (!tokensByNetworkSlug[token.network.slug]) {
-    tokensByNetworkSlug[token.network.slug] = [];
-  }
-
-  tokensByNetworkSlug[token.network.slug].push(token);
-  tokensByNetworkId[token.network.id].push(token);
-};
 
 export const updateStrategyMapping = (strategy: Strategy) => {
   if (!strategiesByChainId[strategy.network.id]) {
@@ -58,9 +24,6 @@ export const updateStrategyMapping = (strategy: Strategy) => {
   }
   if (!strategiesByChainId[strategy.network.id].includes(strategy))
     strategiesByChainId[strategy.network.id].push(strategy);
-};
-export const updateBalanceMapping = (balance: Balance) => {
-  balanceBySlug[balance.slug] = balance;
 };
 
 export const unwraps: { [symbol: string]: string } = {

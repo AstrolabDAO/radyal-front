@@ -1,13 +1,13 @@
 import { useContext, useMemo } from "react";
-import { StrategyContext } from "~/context/strategy-context";
-import StrategyCard from "./StrategyCard";
-import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
 import { useSelector } from "react-redux";
-import { useSelectOperation } from "~/hooks/operation";
-import { operationsSelector } from "~/store/selectors/operations";
+import { StrategyContext } from "~/context/strategy-context";
 import { SwapModalContext } from "~/context/swap-modal-context";
-import SwapStepsModal from "../modals/SwapStepsModal";
+import { useSelectOperation } from "~/hooks/operation";
 import { OperationStatus } from "~/model/operation";
+import { operationsSelector } from "~/store/selectors/operations";
+import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
+import SwapStepsModal from "../modals/SwapStepsModal";
+import StrategyCard from "./StrategyCard";
 
 const StrategyGrid = () => {
   const { filteredStrategies, search, filterByNetworks, strategies } =

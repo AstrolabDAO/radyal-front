@@ -1,69 +1,12 @@
-import { erc20Abi } from "abitype/abis";
-import axios from "axios";
-import { COINGECKO_API, DeFI_API, TOKEN_BASENAME_REGEX } from "./constants";
-import { Balance, DeFiBalance, Network, Strategy, Token } from "./interfaces";
-import {
-  deFiIdByChainId,
-  networkBySlug,
-  tokenBySlug,
-  tokenPriceBycoinGeckoId,
-  tokensByNetworkSlug,
-  updateStrategyMapping,
-  updateTokenMapping,
-} from "./mappings";
-import getBalances, { multicall } from "./multicall";
-import { NETWORKS } from "./web3-constants";
 import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5Agent.json";
-
-export const getBalancesFromDeFI = async (
-  address: `0x${string}`,
-  network: Network
-) => {
-  const balances = await axios
-    .get(
-      `${DeFI_API}/balances?addresses[]=${address}&chains[]=${
-        deFiIdByChainId[network.id]
-      }`
-    )
-    .then((res) => res.data);
-
-  const tokens = balances[address].tokens;
-
-  return tokens
-    .filter(({ amount }) => {
-      const convertedAmount = BigInt(amount);
-      return convertedAmount > 0;
-    })
-    .map((result: DeFiBalance) => {
-      const { amount, token: apiToken } = result;
-      const balance: Balance = {
-        slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
-        amount,
-      };
-
-      const existingToken = tokenBySlug[balance.slug];
-
-      if (!existingToken) {
-        const _token = {
-          address: apiToken.address,
-          name: apiToken.name,
-          decimals: apiToken.decimals,
-          coinGeckoId: apiToken.coingeckoId,
-          weiPerUnit: 10 ** apiToken.decimals,
-          icon: apiToken.icon,
-          network,
-          symbol: apiToken.symbol,
-          slug: `${network.slug}:${apiToken.symbol.toLowerCase()}`,
-        } as Token;
-
-        tokenBySlug[_token.slug] = _token;
-
-        return [balance, _token];
-      }
-
-      return [balance, existingToken];
-    });
-};
+import axios from "axios";
+import { getTokenBySlug } from "~/services/tokens";
+import { getStore } from "~/store";
+import { addToken } from "~/store/tokens";
+import { COINGECKO_API, TOKEN_BASENAME_REGEX } from "./constants";
+import { Strategy, Token } from "./interfaces";
+import { networkBySlug, updateStrategyMapping } from "./mappings";
+import { multicall } from "./multicall";
 
 export const getTokenPrice = (token: Token) => {
   return axios.get(`${COINGECKO_API}/simple/price`, {
@@ -74,29 +17,15 @@ export const getTokenPrice = (token: Token) => {
   });
 };
 
-export const getTokensPrices = async (tokens: Token[]) => {
-  if (!tokens) return;
-  const tokensIds = new Set(tokens.map((token) => token.coinGeckoId));
-
-  return axios
-    .get(`${COINGECKO_API}/simple/price`, {
-      params: {
-        ids: Array.from(tokensIds).join(","),
-        vs_currencies: "usd",
-      },
-    })
-    .then((data) => data.data);
-};
-
-export const updateTokenPrices = async (tokens: Token[]) => {
-  const prices = await getTokensPrices(tokens);
-  const keys = Object.keys(prices);
-
-  Object.values(prices).map((price, index) => {
-    const key = keys[index];
-    tokenPriceBycoinGeckoId[key] = price as any;
+export const getTokensPrices = async (coingeckoIds: string[]) => {
+  if (!coingeckoIds.length) return [];
+  const result = await axios.get(`${COINGECKO_API}/simple/price`, {
+    params: {
+      ids: Array.from(coingeckoIds).join(","),
+      vs_currencies: "usd",
+    },
   });
-  return tokenPriceBycoinGeckoId;
+  return result.data;
 };
 
 export const getTokens = async () => {
@@ -108,9 +37,8 @@ export const getTokens = async () => {
         .filter((token) => {
           const { nativeNetwork } = token;
           const network = networkBySlug[nativeNetwork];
-          if (!network) return false;
           token.network = network;
-          return true;
+          return !!token.network;
         })
         .map(({ nativeAddress, symbol, network, scale, coinGeckoId, slug }) => {
           const cleanSymbol = symbol.replace(TOKEN_BASENAME_REGEX, "$1");
@@ -121,11 +49,10 @@ export const getTokens = async () => {
             weiPerUnit: 10 ** scale,
             icon: `/images/tokens/${encodeURI(cleanSymbol.toLowerCase())}.svg`,
             network,
-            slug, //: `${network.slug}:${symbol.toLocaleLowerCase()}`,
+            slug,
             coinGeckoId,
           } as Token;
 
-          updateTokenMapping(token);
           return token;
         });
 
@@ -140,42 +67,10 @@ export const getNetworks = async () => {
 };
 
 export const loadBalancesByAddress = async (address: `0x${string}`) => {
-  let _balances = [];
-
-  const filteredNetworks = NETWORKS.map((slug) => networkBySlug[slug]);
-
-  const requests = [];
-
-  for (const network of filteredNetworks) {
-    const chain = deFiIdByChainId[network.id];
-
-    if (chain) {
-      requests.push(getBalancesFromDeFI(address, network));
-    } else {
-      const tokens = tokensByNetworkSlug[network.slug] ?? [];
-
-      const contracts: any = tokens.map((token: any) => ({
-        address: token.nativeAddress,
-        coinGeckoId: token.coinGeckoId,
-        abi: erc20Abi,
-        slug: token.slug,
-      }));
-
-      const promise = getBalances(network, contracts, address);
-
-      requests.push(promise);
-    }
-  }
-
-  await Promise.all(requests).then((data) => {
-    const flatData = data.flat(1);
-
-    _balances = flatData;
-
-    return flatData;
-  });
-
-  return _balances;
+  const result = await axios.get(
+    `${process.env.ASTROLAB_API}/users/balance/${address}`
+  );
+  return result?.data?.data;
 };
 
 export const getStrategies = async () => {
@@ -249,7 +144,7 @@ export const getStrategies = async () => {
       const { nativeNetwork } = strategy;
       const network = networkBySlug[nativeNetwork];
 
-      const token = tokenBySlug[strategy.denomination];
+      const token = getTokenBySlug(strategy.denomination);
       return !!network && !!token ? true : false;
     })
     .map((strategy) => {
@@ -265,7 +160,7 @@ export const getStrategies = async () => {
 
       const network = networkBySlug[nativeNetwork];
 
-      const token = tokenBySlug[strategy.denomination];
+      const token = getTokenBySlug(strategy.denomination);
       const _strat = {
         name,
         symbol,
@@ -279,7 +174,7 @@ export const getStrategies = async () => {
         sharePrice,
       } as Strategy;
 
-      updateTokenMapping(_strat);
+      getStore().dispatch(addToken(_strat));
       updateStrategyMapping(_strat);
       return _strat;
     });

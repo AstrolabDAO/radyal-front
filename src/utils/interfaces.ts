@@ -35,8 +35,11 @@ export interface Token {
 }
 
 export interface Balance {
-  amount: string;
-  slug: string;
+  amount: number;
+  token: string;
+  amountWei: string;
+  price?: number;
+  logo_url?: string;
 }
 
 export interface GetRouteResult {
@@ -81,17 +84,6 @@ export interface DeFIToken {
   price: number;
   displayName: string;
   coingeckoId: string;
-}
-
-export interface DeFiBalance {
-  address: `0x${string}`;
-  amount: string;
-  decimalsAmount: string;
-  price: number;
-  tokenPriceUSD: number;
-  totalPriceUSD: number;
-  totalValue: number;
-  token: DeFIToken;
 }
 
 export interface ChainRpcUrls {

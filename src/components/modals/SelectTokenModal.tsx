@@ -1,33 +1,34 @@
 import { useContext, useMemo } from "react";
-import { TokensContext } from "~/context/tokens-context";
-import SelectToken from "../SelectToken";
-import { tokenBySlug } from "~/utils/mappings";
 import { SwapContext } from "~/context/swap-context";
 import { SwapModalContext } from "~/context/swap-modal-context";
-import { BaseModalProps } from "../Modal";
+import { useBalances, useTokenBySlug, useTokens } from "~/hooks/tokens";
 import { SelectTokenModalMode } from "~/utils/constants";
+import { BaseModalProps } from "../Modal";
+import SelectToken from "../SelectToken";
 
 interface SelectTokenModalProps extends BaseModalProps {
   mode: SelectTokenModalMode;
 }
 
 const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
-  const { sortedBalances } = useContext(TokensContext);
   const { selectFromToken, switchSelectMode, selectToToken } =
     useContext(SwapContext);
-  const { tokens } = useContext(TokensContext);
+  const tokens = useTokens();
   const { closeModal } = useContext(SwapModalContext);
 
+  const balances = useBalances();
+
+  const tokenBySlug = useTokenBySlug();
   const tokensList = useMemo(() => {
     return mode === SelectTokenModalMode.Deposit
-      ? sortedBalances
+      ? balances
           .filter((balance) => {
-            const token = tokenBySlug[balance.slug];
+            const token = tokenBySlug[balance.token];
             return !!token;
           })
-          .map((balance) => tokenBySlug[balance.slug])
+          .map((balance) => tokenBySlug[balance.token])
       : tokens;
-  }, [mode, sortedBalances, tokens]);
+  }, [balances, mode, tokenBySlug, tokens]);
 
   return (
     <div className="p-4 bg-dark max-h-screen">
