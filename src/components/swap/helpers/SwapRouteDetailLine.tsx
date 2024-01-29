@@ -3,8 +3,10 @@ import { Network, Icon } from "~/utils/interfaces";
 import { FaLongArrowAltRight } from "react-icons/fa";
 
 import IconCard from "~/components/IconCard";
+import clsx from "clsx";
 
 type SwapRouteDetailLineProps = {
+  status?: "neutral" | "success" | "error" | "loading",
   step: {
     fromNetwork: Network;
     toNetwork: Network;
@@ -18,6 +20,7 @@ type SwapRouteDetailLineProps = {
 };
 
 const SwapRouteDetailLine = ({
+  status = "neutral",
   step: {
     fromNetwork,
     toNetwork,
@@ -32,9 +35,24 @@ const SwapRouteDetailLine = ({
   const size = { width: 15, height: 15 };
   const classes = "ms-2";
   return (
-    <li className="step step-primary pb-4">
+    <li
+      className={ clsx(
+        "step pb-4",
+        status === "neutral" && "step-transparent",
+        status === "loading" && "step-transparent step-loading",
+        status === "success" && "step-success validated",
+        status === "error" && "step-error failed",
+      )}
+    >
       <div className="w-full flex flex-col text-start">
-        <div className="text-primary font-bold flex flex-row">
+        <div
+          className={ clsx(
+          "font-bold flex flex-row",
+          status === "neutral" && "text-primary",
+          status === "success" && "text-success",
+          status === "error" && "text-error",
+        )}
+        >
           <div className="flex items-center">
             { swapRouteStepType }
           </div>
@@ -48,7 +66,7 @@ const SwapRouteDetailLine = ({
             )
           }
         </div>
-        <span className="flex items-center">
+        <span className="flex items-center text-xs">
           { fromAmountWithNetworkAndSymbol }
           <IconCard icon={{ url: fromNetwork.icon, size, classes }} />
           <FaLongArrowAltRight className="mx-2" />
