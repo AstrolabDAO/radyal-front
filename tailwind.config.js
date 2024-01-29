@@ -27,6 +27,7 @@ PALETTE["dark"] = {
   800: "#1C1C1C",
   700: "#2A2A2A",
   600: "#323232",
+  550: "#3F3F3F",
   500: "#505050",
   400: "#C8C8C8",
   300: "#ECECEC",
@@ -71,6 +72,8 @@ export default {
           ...themes.default.dark,
           ...Object.entries(COLORS).map(([key, color]) => [`--${key}`, color]).reduce((acc, [key, color]) => { acc[key] = color; return acc; }, {}),
           background: "#1C1C1C",
+          primary: COLORS.primary,
+          success: COLORS.success,
           dark: {
             900: "#0C0C0C",
             800: "#1C1C1C",

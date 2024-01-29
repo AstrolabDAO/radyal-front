@@ -171,10 +171,11 @@ export interface ApiResponseStrategy {
   updatedAt: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface TokenInfo {
   decimalsAmount: string;
   amount: string;
-  address: string;
+  address: `0x${string}`;
   price: number;
   totalValue: number;
   token: {
@@ -189,12 +190,13 @@ interface TokenInfo {
   };
   tokenPriceUSD: number;
   totalPriceUSD: number;
+  aggregationLevel: number;
 }
 
 export interface ApiResponseBalance {
   [address: string]: {
-    address: string;
-    tokens: TokenInfo[];
+    address: `0x${string}`;
+    tokens: any[];
     totalValue: number;
     errors: any[]; // You can replace 'any[]' with a specific type if needed
     totalUsd: number;

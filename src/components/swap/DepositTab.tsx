@@ -1,5 +1,4 @@
-import { useContext, useState } from "react";
-import toast from "react-hot-toast";
+import { useContext } from "react";
 
 import DepositFor from "./deposit/DepositFor";
 import DepositInto from "./deposit/DepositInto";

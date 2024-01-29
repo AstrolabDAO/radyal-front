@@ -15,7 +15,7 @@ const DepositWith = ({ token, locked, onTokenClick } : DepositWithProps) => {
 
   const [depositValue, setDepositValue] = useState<string | number>('');
   const { fromValue, setFromValue } = useContext(SwapContext);
-
+  const [isFocused, setIsFocused] = useState(false);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const replace = event.target.value
       .replace(/[^0-9.,]/g, "")
@@ -49,6 +49,7 @@ const DepositWith = ({ token, locked, onTokenClick } : DepositWithProps) => {
   return (
     <SwapBlock
       token={ token }
+      isFocused={ isFocused }
       disabled={ locked }
       label="WITH"
       icons={ icons }
@@ -60,12 +61,14 @@ const DepositWith = ({ token, locked, onTokenClick } : DepositWithProps) => {
       children={
         <div className="flex ms-auto">
           <input
-            className="input input-ghost max-h-9 py-1 my-2 font-bold text-xl text-right ms-auto w-full basis-4/5"
+            className="focus:outline-none bg-dark-700 placeholder:text-dark-500 my-1 max-h-9 pe-0 font-medium text-2xl text-right ms-auto w-full basis-4/5 rounded-none"
             type="number"
             min="0"
             placeholder="10.0"
             value={ depositValue?.toString() ?? "" }
             onChange={ handleInputChange }
+            onFocus={ () => setIsFocused(true) }
+            onBlur={ () => setIsFocused(false) }
           />
         </div>
       }

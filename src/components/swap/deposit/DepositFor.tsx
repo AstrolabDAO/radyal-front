@@ -28,7 +28,7 @@ const DepositFor = ({ strategy }: { strategy: Strategy  & { protocols?: [] }}) =
       symbol={ strategy?.symbol }
       network={ networkName }
       value={ depositToValue }
-      children={ <div className="text-xl font-bold my-auto py-2"> { depositToValue } </div> }
+      children={ <div className="text-xl font-medium text-secondary caret-primary"> { depositToValue ?? 0 } </div> }
     />
   )
 }

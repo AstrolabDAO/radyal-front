@@ -29,7 +29,7 @@ const StrategyGrid = () => {
           <input
             type="text"
             placeholder="“Stable”, “Arbitrum”, “Staking”..."
-            className="input input-bordered"
+            className="input input-bordered bg-dark-800"
             onChange={({ target }) => {
               dispatch(search(target.value));
             }}

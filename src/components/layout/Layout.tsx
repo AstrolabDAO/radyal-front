@@ -16,7 +16,7 @@ const Layout = () => {
   if (!accepted) return <DisclaimerPage />;
   return (
     <>
-      <main className="min-h-screen container">
+      <main className="min-h-screen">
         <Header />
         <div id="page-content" className="h-full relative">
           <RouterProvider router={router} />

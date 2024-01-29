@@ -15,6 +15,7 @@ import {
   useSelectStrategyGroup,
 } from "~/hooks/store/strategies";
 import "./StrategyCard.css";
+import clsx from "clsx";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -117,21 +118,24 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
             }
         </svg>
         { strategy !== null &&
-        <div className="absolute flex flex-col w-full pointer-events-none	">
-          <div className="flex flex-row justify-between px-3 pt-3">
-            <div className="text-6xl gilroy font-extrabold italic text-white">
+        <div className="absolute flex flex-col w-full pointer-events-none">
+          <div className="flex flex-row justify-between px-5 pt-5">
+            <div className={ clsx(
+              "me-auto text-6xl gilroy font-extrabold italic",
+              `${isHovered ? "text-primary" : "text-white"}`,
+            )}>
               { title.toUpperCase() }
             </div>
             <StrategyCardIcons
               strategyGroup={ strategyGroup }
               hideLabel={ true }
-              size={{ height: 50, width: 50 }}
+              size={{ height: 45, width: 45 }}
             />
           </div>
-          <div className="text-5xl gilroy italic me-auto text-gray-300 px-3 mb-3">
+          <div className="text-5xl gilroy italic me-auto text-gray-300 px-5 mb-3">
             { subtitle }
           </div>
-          <div className="flex flex-row justify-between px-3">
+          <div className="flex flex-row justify-between px-5">
             <div className="flex flex-row text-sm btn-primary text-dark rounded-xl my-auto px-10 pb-1 pt-1.5 font-bold italic gilroy">
               <StrategyCardAPY
                 hideLabel={ true }

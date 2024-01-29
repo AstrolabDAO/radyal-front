@@ -36,26 +36,28 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
         <div className="scrolling-text-rtl">
           <span>
             FARM<span className="text-sky-600"> ALL OF { titleOne }&nbsp;
-            <IconCard
+            { strategyOne?.network.icon && <IconCard
               icon={{
                 url: strategyOne?.network.icon,
                 alt: strategyOne?.network.name,
                 size,
               }}
-            />
+            />}
             </span>&nbsp;STABLE DEFI, IN<span className="text-primary"> ONE VAULT </span>-&nbsp;
           </span>
         </div>
         <div className="scrolling-text-rtl scrolling-text-shadow">
           <span>
             FARM<span className="text-sky-600"> ALL OF { titleOne }&nbsp;
-            <IconCard
-              icon={{
-                url: strategyOne?.network.icon,
-                alt: strategyOne?.network.name,
-                size,
-              }}
-            />
+            { strategyTwo?.network.icon &&
+              <IconCard
+                icon={{
+                  url: strategyTwo?.network.icon,
+                  alt: strategyTwo?.network.name,
+                  size,
+                }}
+              />
+            }
             </span>&nbsp;STABLE DEFI, IN<span className="text-primary"> ONE VAULT </span>-&nbsp;
           </span>
         </div>

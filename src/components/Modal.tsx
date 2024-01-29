@@ -26,22 +26,27 @@ const Modal = () => {
 
   return (
     <Transition show={ isOpen } as={ Dialog } onClose={ onClose }>
-      <div className="flex items-center justify-center min-h-screen fixed inset-0 z-20 backdrop-blur-medium">
+      <div className="transition-wrapper">
         <Transition.Child
           enter="transition ease-out duration-300"
           enterFrom="opacity-0 scale-95"
           enterTo="opacity-100 scale-100"
-          leave="transition ease-in duration-200"
+          leave="transition ease-in duration-300"
           leaveFrom="opacity-100 scale-100"
           leaveTo="opacity-0 scale-95"
           as={ Fragment }
         >
-          <Dialog.Panel className="overflow-x-hidden bg-dark rounded-xl max-h-screen w-screen sm:max-w-md overflow-y-auto transition-all duration-300">
+          <Dialog.Panel className="dialog">
             <button
-              className="right-0 top-0 absolute p-2 z-50 rounded-tr-xl"
+              className="right-0 top-0 absolute p-2 z-50 rounded-tr-xl w-8 h-8 sm:hidden"
               onClick={ onClose }
             >
-              <FaTimes />
+              <svg fill="#C1C1C1" viewBox="0 0 16 16">
+                <path
+                fill="#C1C1C1"
+                fill-rule="evenodd"
+                d="M2.54 2.54a1 1 0 0 1 1.42 0L8 6.6l4.04-4.05a1 1 0 1 1 1.42 1.42L9.4 8l4.05 4.04a1 1 0 0 1-1.42 1.42L8 9.4l-4.04 4.05a1 1 0 0 1-1.42-1.42L6.6 8 2.54 3.96a1 1 0 0 1 0-1.42Z" clip-rule="evenodd"/>
+              </svg>
             </button>
             { selectedModal }
           </Dialog.Panel>

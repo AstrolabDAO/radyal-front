@@ -105,8 +105,11 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
         </svg>
         { strategy !== null &&
         <div className="absolute bottom-0 right-0 flex flex-col w-full pointer-events-none">
-          <div className="flex flex-col px-3 pb-3">
-            <div className="ms-auto text-6xl gilroy font-extrabold text-white italic">
+          <div className="flex flex-col px-5 pb-3">
+            <div className={ clsx(
+              "ms-auto text-6xl gilroy font-extrabold italic",
+              `${isHovered ? "text-primary" : "text-white"}`,
+            )}>
               { title.toUpperCase() }
             </div>
             <div className="text-5xl italic gilroy font-medium ms-auto text-gray-300 mb-2">

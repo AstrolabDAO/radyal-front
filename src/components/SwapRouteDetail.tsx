@@ -71,7 +71,7 @@ const SwapRouteDetail = ({ steps }: { steps: OperationStep[] }) => {
   return (
     <div>
       { (steps.length > 0 || estimationError) && (
-        <h2>VIA</h2>
+        <div className="mb-1">VIA</div>
       )}
       {!estimationError && (
         <ul

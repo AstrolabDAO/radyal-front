@@ -32,49 +32,51 @@ const Header = () => {
   const headerStyle = {
     height: '80px',
     backgroundColor: scrolling ? 'rgba(28, 28, 28, 0.6)' : 'transparent',
-    backdropFilter: 'blur(10px)',
+    backdropFilter: scrolling ? 'blur(10px)' : 'none',
     transition: 'background-color 0.3s ease-in-out',
     // Add other styles for your header here
   };
 
   return (
     <header
-      className="sticky top-0 z-20"
+      className="sticky top-0 z-20 w-full"
       style={ headerStyle }
     >
-      <div className="navbar">
-        <div className="navbar-start">
-          <Logo
-            className="flex w-32 md:w-52 fill-white"
-          />
-        </div>
-        <div className="navbar-center flex-row justify-center gap-10 hidden sm:flex">
-          <a
-            href="/"
-            className="text-xl flex font-extrabold text-white text-neon cursor-pointer hover:text-primary">
-            FARM
-          </a>
-          <div className="text-xl flex text-gray-500">
-            STAKE
+      <div className="container">
+        <div className="navbar overflow-hidden">
+          <div className="navbar-start">
+            <Logo
+              className="flex w-32 md:w-52 fill-white"
+            />
           </div>
-          <div className="text-xl flex text-gray-500">
-            MINT
+          <div className="navbar-center flex-row justify-center gap-10 hidden sm:flex">
+            <a
+              href="/"
+              className="text-xl flex font-extrabold text-white text-neon cursor-pointer hover:text-primary">
+              FARM
+            </a>
+            <div className="text-xl flex text-gray-500">
+              STAKE
+            </div>
+            <div className="text-xl flex text-gray-500">
+              MINT
+            </div>
           </div>
-        </div>
-        <div className="navbar-end">
-          { !isConnected && (
-            <Button onClick={() => web3Modal.open()}>Connect wallet</Button>
-          )}
-          { isConnected && (
-            <>
-              <Button
-                className="transition-ease hover:text-primary h-4 btn-small"
-                onClick={() => web3Modal.open()}
-              >
-                { shortenAddress(address.toLowerCase()) }
-              </Button>
-            </>
-          )}
+          <div className="navbar-end">
+            { !isConnected && (
+              <Button onClick={() => web3Modal.open()}>Connect wallet</Button>
+            )}
+            { isConnected && (
+              <>
+                <Button
+                  className="transition-ease hover:text-primary h-4 btn-small"
+                  onClick={() => web3Modal.open()}
+                >
+                  { shortenAddress(address.toLowerCase()) }
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </header>

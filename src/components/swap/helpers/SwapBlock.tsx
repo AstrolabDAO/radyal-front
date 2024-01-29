@@ -11,6 +11,7 @@ import { useBalanceByTokenSlug, usePrices } from "~/hooks/store/tokens";
 
 type SwapBlockProps = {
   disabled?: boolean;
+  isFocused?: boolean;
   label: string;
   symbol: string;
   network: string;
@@ -31,6 +32,7 @@ const SwapBlock = ({
   children,
   disabled,
   value,
+  isFocused = false,
   onTokenClick,
   onWalletClick = () => {},
 }: SwapBlockProps) => {
@@ -69,10 +71,10 @@ const SwapBlock = ({
     {
       url: icons.foreground,
       alt: network,
-      classes: "-ms-2",
+      classes: "-ms-3 -mb-1",
       size: {
-        width: 15,
-        height: 15,
+        width: 18,
+        height: 18,
       },
       small: true,
     },
@@ -83,16 +85,18 @@ const SwapBlock = ({
       <div className="mb-1">{ label }</div>
       <div
         className={clsx(
-          "flex flex-col md:flex-row px-3 py-2 rounded-xl",
+          "flex flex-col md:flex-row p-2 rounded-xl border-1 border-solid",
           {
-            "bg-dark-600": !disabled,
-            "border-dark-500 border-1 border-solid": disabled,
+            "bg-dark-700": !disabled,
+            "border-dark-500": disabled,
+            "border-primary/50": isFocused,
+            "border-transparent": !isFocused && !disabled,
           }
       )}>
         <div className={
-          clsx("flex flex-row rounded-xl my-auto py-0 ps-2 pe-0",
+          clsx("flex flex-row rounded-xl my-auto py-0 ps-2",
           {
-            "cursor-pointer hover:bg-primary hover:text-dark bg-gray-500" : !disabled,
+            "group cursor-pointer bg-dark-550 hover:bg-primary/5 hover:ring-1 hover:ring-primary/25" : !disabled,
           },
         )}
           onClick={ onTokenClick }
@@ -102,17 +106,14 @@ const SwapBlock = ({
               <div className="my-auto">
                 <IconGroup icons={ iconGroup }/>
               </div>
-              <div className="flex flex-col ps-3 py-2 bg-medium my-auto">
-                <div className="text-2xl font-bold">{ symbol }</div>
-                <div className="-mt-2 w-32">on { network }</div>
+              <div className="flex flex-col ps-1.5 pe-3 py-3 bg-medium my-auto">
+                <div className="text-xl font-bold text-secondary-900 group-hover:text-primary">{ symbol }</div>
+                <div className="-mt-2 pt-1 text-nowrap text-xs">on { network }</div>
               </div>
             </>
           }
           { (!symbol || !network) &&
-            <div
-              className="py-6 text-center font-bold text-2xl"
-              style={{ minWidth: "calc(240px - 1.5rem)" }}
-            >
+            <div className="py-6 text-center font-bold text-xl">
               SELECT A TOKEN
             </div>
           }
@@ -120,20 +121,20 @@ const SwapBlock = ({
         <div className="flex flex-col ms-auto my-auto text-right">
           <div
             className={
-              clsx("text-sm flex rounded-xl flex-row align-middle ms-auto rounded px-1.5", {
-              "cursor-pointer hover:bg-primary hover:text-dark" : !disabled,
-              "bg-dark-800" : disabled,
-              "bg-dark-500" : !disabled,
+              clsx("text-xs flex rounded-md flex-row align-middle ms-auto rounded", {
+              "cursor-pointer hover:bg-primary hover:text-dark px-1" : !disabled,
+              "bg-transparent text-dark-500" : disabled,
+              "bg-dark-550" : !disabled,
             })}
             onClick={ () => onWalletClick(balance) }
           >
-            <WalletIcon className="flex me-1 my-auto h-4 w-4" />
-            <span className="flex my-auto"> {balance} </span>
+            <WalletIcon className="flex me-1 my-auto h-3 w-3"/>
+            <span className="flex my-auto"> { balance } </span>
           </div>
           <div className="flex ms-auto">
             { children }
           </div>
-          <div className="text-xs text-gray font-light -mt-2.5">~{ lisibleAmount(tokenPrice, 4) } $</div>
+          <div className="text-xs text-dark-500 font-light">~{ lisibleAmount(tokenPrice, 4) } $</div>
         </div>
       </div>
     </div>

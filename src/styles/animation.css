@@ -121,3 +121,12 @@
 .transition-height {
   transition: height 0.5s ease-in-out;
 }
+
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -23,6 +23,12 @@ export const setupWeb3modal = (chains) => {
     projectId: WAGMI_PROJECT_ID,
     featuredWalletIds: Object.values(FEATURED_WALLETS),
     themeMode: "dark",
+    themeVariables: {
+      "--w3m-border-radius-master": "2px",
+      "--w3m-font-family": "Inter",
+      "--w3m-accent": "var(--primary)",
+      "--w3m-color-mix"	: "#C1C1C1",
+    }
   });
   return { web3Modal, config: wagmiConfig };
 };
