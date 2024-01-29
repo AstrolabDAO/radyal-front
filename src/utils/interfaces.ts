@@ -54,6 +54,8 @@ export interface Strategy extends Token {
   rewardsTokens?: string[];
   asset: Token;
   sharePrice: number;
+  protocols?: any[];
+  aggregationLevel?: number;
 }
 
 export interface GrouppedStrategies {

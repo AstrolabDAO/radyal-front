@@ -148,7 +148,8 @@ export const getStrategies = async () => {
         sharePrice,
         slug,
         protocols,
-      } = strategy as ApiResponseStrategy & { decimals: number, sharePrice: number };
+        aggregationLevel,
+      } = strategy as ApiResponseStrategy & { decimals: number, sharePrice: number, aggregationLevel: number };
 
       const network = networkBySlug[nativeNetwork];
 
@@ -162,9 +163,10 @@ export const getStrategies = async () => {
         asset: token,
         icon: `/tokens/${symbol?.toLowerCase()}.svg`,
         slug,
-        protocols,
         weiPerUnit: 10 ** decimals,
         sharePrice,
+        protocols,
+        aggregationLevel,
       } as Strategy;
       return _strat;
     });

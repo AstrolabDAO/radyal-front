@@ -13,3 +13,13 @@ export const tokensIsEqual = (
     A?.network.id === B?.network.id
   );
 };
+
+export const getIconFromStrategy = (
+  strategy: Strategy,
+) => {
+  switch (strategy.aggregationLevel) {
+    case 0: return strategy.protocols[0];
+    case 1: return strategy.network.icon;
+    case 2: return strategy.asset.icon;
+  }
+};
