@@ -20,8 +20,11 @@ import SelectTokenModal from "../modals/SelectTokenModal";
 
 import SwapRouteDetail from "../SwapRouteDetail";
 import clsx from "clsx";
+import { useStore } from "react-redux";
 
 const DepositTab = () => {
+  const state = useStore().getState();
+  console.log(state);
   const selectedStrategy = useSelectedStrategy();
   const { fromToken, toToken, fromValue, canSwap, actionNeedToSwap } =
     useContext(SwapContext);

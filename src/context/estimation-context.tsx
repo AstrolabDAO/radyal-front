@@ -134,20 +134,21 @@ const EstimationProvider = ({ children }) => {
     if (!estimationData) return null;
     const txSteps = estimationData?.steps;
 
-    if (needApprove && txSteps && txSteps[0].type !== "Approve")
+    if (needApprove && txSteps && txSteps[0].type !== "Approve"){
       txSteps.unshift({
         id: window.crypto.randomUUID(),
         type: "Approve",
         tool: "radyal",
         fromChain: fromToken?.network?.id,
         toChain: fromToken?.network?.id,
-        fromAmount: fromValue,
+        fromAmount: fromValue * fromToken.weiPerUnit,
         fromToken,
         estimate: {
           tool: "custom",
           fromAmount: fromValue * fromToken.weiPerUnit,
         },
       });
+    }
     return {
       ...estimationData,
       steps: txSteps,
@@ -290,6 +291,8 @@ const EstimationProvider = ({ children }) => {
       }
     } catch (error) {
       close();
+      setUpdateEstimation(true)
+      setCanSwap(true);
       toast.error(error.message);
       store.dispatch({
         type: "operations/update",

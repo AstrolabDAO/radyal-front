@@ -69,9 +69,13 @@ const SwapRouteDetailLine = ({
         <span className="flex items-center text-xs">
           { fromAmountWithNetworkAndSymbol }
           <IconCard icon={{ url: fromNetwork.icon, size, classes }} />
-          <FaLongArrowAltRight className="mx-2" />
-          { toAmountWithNetworkAndSymbol}
-          <IconCard icon={{ url: toNetwork.icon, size, classes }} />
+          { (type !== "Approve" && type !== "custom")  &&
+            <>
+              <FaLongArrowAltRight className="mx-2" />
+              { toAmountWithNetworkAndSymbol}
+              <IconCard icon={{ url: toNetwork.icon, size, classes }} />
+            </>
+          }
         </span>
       </div>
     </li>
