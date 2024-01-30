@@ -22,7 +22,7 @@ const StrategyGrid = () => {
   const { openModal } = useContext(SwapModalContext);
 
   return (
-    <div className="w-full container px-2 sm:mx-auto">
+    <div className="w-full container px-2 sm:mx-auto mt-5">
       <div className="flex flex-col md:flex-row w-full">
         <div className="mr-4 w-full flex flex-col">
           <span className="label-text block my-2">Search</span>

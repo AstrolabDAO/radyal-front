@@ -19,6 +19,7 @@ import { Strategy, Token } from "~/utils/interfaces";
 import SelectTokenModal from "../modals/SelectTokenModal";
 
 import SwapRouteDetail from "../SwapRouteDetail";
+import clsx from "clsx";
 
 const DepositTab = () => {
   const selectedStrategy = useSelectedStrategy();
@@ -58,13 +59,16 @@ const DepositTab = () => {
             await approveAndDeposit(fromValue);
           }
         }}
-        className="btn btn-primary mt-5 w-full button-primary-gradient button-primary-gradient-inverse border-0"
+        className={ clsx(
+          "btn btn-primary mt-5 w-full border-0 uppercase",
+        )}
       >
-        {needApprove
+        { needApprove
           ? "Approve & Deposit"
           : actionNeedToSwap
             ? "Swap & Deposit"
-            : "Deposit"}
+            : "Deposit"
+        }
       </button>
     </div>
     </>

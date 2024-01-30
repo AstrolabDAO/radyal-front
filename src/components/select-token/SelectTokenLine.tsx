@@ -1,9 +1,8 @@
 import clsx from "clsx";
 
-import { balanceBySlug } from "~/utils/mappings";
 import { CoingeckoPrices, Token } from "~/utils/interfaces";
 import { amountToEth, lisibleAmount } from "~/utils/format";
-
+import { useBalanceByTokenSlug } from "~/hooks/store/tokens";
 import IconGroup from "../IconGroup";
 
 type SelectTokenLineProps = {
@@ -26,9 +25,10 @@ const SelectTokenLine = ({
     onSelect(token);
   }
   const convertedPrice = Number(tokenPrices[token.coinGeckoId]?.usd);
-  const tokenPrice = isNaN(convertedPrice) ? 0 : convertedPrice;
 
-  const balance = balanceBySlug[token.slug]?.amount ?? 0;
+  const tokenPrice = isNaN(convertedPrice) ? 0 : convertedPrice;
+  const balanceByTokenSlug = useBalanceByTokenSlug();
+  const balance = balanceByTokenSlug[token.slug]?.amountWei ?? 0;
 
   const convertedBalance = amountToEth(
     !balance ? BigInt(0) : BigInt(balance),

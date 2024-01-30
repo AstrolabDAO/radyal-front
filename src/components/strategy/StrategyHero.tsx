@@ -6,27 +6,26 @@ import StrategyBanner from "./StrategyBanner";
 
 const StrategyHero = () => {
   const grouppedStrategies = useGrouppedStrategies();
-  const [strategyOne, strategyTwo] = useMemo(
+  const [strategyOne, strategyTwo, groupOne, groupTwo] = useMemo(
     () => {
-      if (grouppedStrategies.length === 0) return [null, null];
+      if (grouppedStrategies.length === 0) return [null, null, null, null];
       const [groupOne, groupTwo] = grouppedStrategies;
       const [strategyOne] = groupOne;
       const [strategyTwo] = groupTwo;
-      return [strategyOne, strategyTwo];
+      return [strategyOne, strategyTwo, groupOne, groupTwo];
     }, [grouppedStrategies]
   );
 
-  if (!grouppedStrategies.length) return;
   return (
     <div
-      className="flex flex-col container mx-auto overflow-hidden"
+      className="flex flex-col container px-2 overflow-hidden"
     >
-      <StrategyCardCTAOne strategyGroup={ grouppedStrategies[0] } />
+      <StrategyCardCTAOne strategyGroup={ groupOne } />
       <StrategyBanner
         strategyOne={ strategyOne }
         strategyTwo={ strategyTwo }
       />
-      <StrategyCardCTATwo strategyGroup={ grouppedStrategies[1] }/>
+      <StrategyCardCTATwo strategyGroup={ groupTwo }/>
     </div>
   );
 };

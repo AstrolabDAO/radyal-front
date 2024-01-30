@@ -12,6 +12,7 @@ import { SwapModalContext } from "~/context/swap-modal-context";
 
 import { SelectTokenModalMode } from "~/utils/constants";
 import { Strategy, Token } from "~/utils/interfaces";
+import { EstimationContext } from "~/context/estimation-context";
 
 const WithdrawTab = () => {
   const { fromToken, toToken } = useContext(SwapContext);
@@ -19,6 +20,7 @@ const WithdrawTab = () => {
   function openChangeTokenModal() {
     openModal(<SelectTokenModal mode={ SelectTokenModalMode.Withdraw } />);
   }
+  const { estimation } = useContext(EstimationContext);
 
   return (
     <div className="flex flex-col px-3 pt-3 relative">
@@ -30,7 +32,9 @@ const WithdrawTab = () => {
         onTokenClick={ openChangeTokenModal }
       />
 
-      <SwapRouteDetail />
+      { estimation && estimation.steps &&
+        <SwapRouteDetail steps={ estimation.steps }/>
+      }
       <div className="sticky top-0">
         <button className="btn btn-primary mt-5 w-full button-primary-gradient button-primary-gradient-inverse border-0">
           Withdraw and Bridge

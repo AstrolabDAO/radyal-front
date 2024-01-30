@@ -1,6 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useCallback, useContext } from "react";
-import { FaTimes } from "react-icons/fa";
 import { ModalContext } from "~/context/modal-context";
 
 export interface BaseModal extends React.ReactElement {
@@ -45,7 +44,7 @@ const Modal = () => {
                 <path
                 fill="#C1C1C1"
                 fill-rule="evenodd"
-                d="M2.54 2.54a1 1 0 0 1 1.42 0L8 6.6l4.04-4.05a1 1 0 1 1 1.42 1.42L9.4 8l4.05 4.04a1 1 0 0 1-1.42 1.42L8 9.4l-4.04 4.05a1 1 0 0 1-1.42-1.42L6.6 8 2.54 3.96a1 1 0 0 1 0-1.42Z" clip-rule="evenodd"/>
+                d="M2.54 2.54a1 1 0 0 1 1.42 0L8 6.6l4.04-4.05a1 1 0 1 1 1.42 1.42L9.4 8l4.05 4.04a1 1 0 0 1-1.42 1.42L8 9.4l-4.04 4.05a1 1 0 0 1-1.42-1.42L6.6 8 2.54 3.96a1 1 0 0 1 0-1.42Z" clipRule="evenodd"/>
               </svg>
             </button>
             { selectedModal }

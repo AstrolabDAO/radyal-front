@@ -5,7 +5,7 @@ import { Strategy } from "~/utils/interfaces";
 import SwapBlock from "../helpers/SwapBlock";
 import { EstimationContext } from "~/context/estimation-context";
 
-const DepositFor = ({ strategy }: { strategy: Strategy  & { protocols?: [] }}) => {
+const DepositFor = ({ strategy }: { strategy: Strategy  & { protocols?: any[] }}) => {
   const { toValue: depositToValue } = useContext(EstimationContext);
 
   const networkName = useMemo(() => {

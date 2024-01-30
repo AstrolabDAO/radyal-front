@@ -1,15 +1,15 @@
-import clsx from "clsx"
+import clsx from "clsx";
 
 const ModalLayout = ({ children, title, actions, className }: ModalLayoutProps) => {
   return (
     <div className={clsx("block", className) }>
-      {title && <h1 className="text-center mb-8">{title} </h1>}
+      { title && <div className="mb-8">{title} </div> }
 
       <div className="box w-full">{children}</div>
-      {actions && (
+      { actions && (
         <div className="py-3 sm:flex sm:flex-row-reverse">
           <div className="flex w-full justify-center">
-            {actions.map(({ label, onClick, disabled }, index) => (
+            { actions.map(({ label, onClick, disabled }, index) => (
               <button
                 disabled={disabled}
                 key={label + index}

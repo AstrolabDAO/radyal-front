@@ -15,7 +15,17 @@ import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
 import ModalLayout from "./layout/ModalLayout";
 import SelectTokenLine from "./select-token/SelectTokenLine";
 
-const SelectToken = ({ tokens, onSelect }) => {
+import { FaChevronLeft } from "react-icons/fa";
+import { Token } from "~/utils/interfaces";
+import { useStore } from "react-redux";
+type SelectTokenProps = {
+  tokens: Array<Token>;
+  onSelect: (token: Token) => void;
+  onBackClick: () => void;
+};
+const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
+  const store = useStore();
+  console.log(store.getState())
   const { networks } = useContext(Web3Context);
   const [search, setSearch] = useState("");
   const [networksFilter, setNetworksFilter] = useState([]);
@@ -76,27 +86,40 @@ const SelectToken = ({ tokens, onSelect }) => {
   }, [loadMoreRef, loadMoreTokens, loading]);
 
   return (
-    <ModalLayout title="Select token" className="max-h-screen min-h-96">
+    <ModalLayout className="max-h-screen min-h-96">
       <header>
-        <label>Search by name...</label>
-        <input
-          type="text"
-          placeholder="USDC..."
-          className="input w-full border-0"
-          onChange={({ target }) => {
-            setSearch(target.value);
-          }}
-        />
-        <div className="my-2">Filter by network</div>
-        <NetworkSelect
-          isSearchable
-          networks={networks}
-          className="basic-multi-select w-full mb-8"
-          classNamePrefix="select"
-          onChange={(value: Array<NetworkSelectData>) => {
-            setNetworksFilter(value.map((v) => v.network?.slug));
-          }}
-        />
+        <div className="flex flex-row mb-3">
+          <FaChevronLeft
+            className="cursor-pointer my-auto hover:text-primary"
+            onClick={ onBackClick }
+          />
+          <div className="flex-grow text-center text-2xl">Select a token</div>
+        </div>
+        <div className="flex flex-row">
+          <div className="basis-2/3 pe-2">
+            <label className="flex mb-1">Search by name...</label>
+            <input
+              type="text"
+              placeholder="USDC..."
+              className="input w-full border-0 focus:none bg-dark-700"
+              onChange={({ target }) => {
+                setSearch(target.value);
+              }}
+            />
+          </div>
+          <div className="basis-1/3">
+            <div className="flex mb-1">Filter by network</div>
+              <NetworkSelect
+                isSearchable
+                networks={networks}
+                className="basic-multi-select w-full mb-8"
+                classNamePrefix="select"
+                onChange={(value: Array<NetworkSelectData>) => {
+                  setNetworksFilter(value.map((v) => v.network?.slug));
+                }}
+              />
+          </div>
+        </div>
       </header>
       <div
         className="overflow-y-scroll"

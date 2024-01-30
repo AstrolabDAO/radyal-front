@@ -45,7 +45,7 @@ const SwapBlock = ({
     return amountToEth(BigInt(balance?.amountWei ?? 0), token.decimals);
   }, [balanceBySlug, token]);
 
-  const tokenPrice = useMemo(() => {
+  const balanceEquivalent = useMemo(() => {
     if (!token || !tokenPrices) return 0;
 
     let price = Number(tokenPrices[token.coinGeckoId]?.usd);
@@ -129,12 +129,12 @@ const SwapBlock = ({
             onClick={ () => onWalletClick(balance) }
           >
             <WalletIcon className="flex me-1 my-auto h-3 w-3"/>
-            <span className="flex my-auto"> { balance } </span>
+            <span className="flex my-auto"> { lisibleAmount(balance, 4) } </span>
           </div>
           <div className="flex ms-auto">
             { children }
           </div>
-          <div className="text-xs text-dark-500 font-light">~{ lisibleAmount(tokenPrice, 4) } $</div>
+          <div className="text-xs text-dark-500 font-light">~{ lisibleAmount(balanceEquivalent, 4) } $</div>
         </div>
       </div>
     </div>

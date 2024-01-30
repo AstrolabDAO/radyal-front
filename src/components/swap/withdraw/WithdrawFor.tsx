@@ -1,9 +1,10 @@
 import { useContext } from "react";
 
-import { Token } from "~/utils/interfaces";
-import { SwapContext } from "~/context/swap-context";
+import { EstimationContext } from "~/context/estimation-context";
 
+import { Token } from "~/utils/interfaces";
 import SwapBlock from "../helpers/SwapBlock";
+import { SwapContext } from "~/context/swap-context";
 
 type WForProps = {
   token: Token;
@@ -11,7 +12,8 @@ type WForProps = {
 }
 
 const WithdrawFor = ({ token, onTokenClick }: WForProps) => {
-  const { toValue: depositToValue } = useContext(SwapContext);
+  const { toValue: depositToValue } = useContext(EstimationContext);
+  const { canSwap } = useContext(SwapContext);
   const icons = {
     background: `/images/${token?.icon}`,
     foreground: token?.network?.icon,
@@ -20,7 +22,7 @@ const WithdrawFor = ({ token, onTokenClick }: WForProps) => {
   return (
     <SwapBlock
       token={ token }
-      disabled={ false }
+      disabled={ !canSwap }
       label="FOR"
       icons={ icons }
       onTokenClick={ onTokenClick }

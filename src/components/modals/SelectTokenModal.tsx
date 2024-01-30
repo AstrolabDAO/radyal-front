@@ -32,8 +32,9 @@ const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
   }, [balances, mode, tokenBySlug, tokens]);
 
   return (
-    <div className="p-4 bg-gray-600 max-h-screen">
+    <div className="p-4 bg-dark-800 max-h-screen">
       <SelectToken
+        onBackClick={ () => closeModal() }
         tokens={tokensList}
         onSelect={(token: Token) => {
           if (mode === SelectTokenModalMode.Deposit) {

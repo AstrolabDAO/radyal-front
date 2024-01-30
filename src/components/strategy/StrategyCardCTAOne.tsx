@@ -38,7 +38,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
   const { isConnected } = useAccount({ onConnect: handleConnect });
 
   const [strategy, title, subtitle] = useMemo(() => {
-    if (strategyGroup === undefined || strategyGroup.length === 0)
+    if (!strategyGroup || strategyGroup.length === 0)
       return [null, null, null];
     const [strategy] = strategyGroup;
     const { name } = strategy;
@@ -59,12 +59,18 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
     }
     else openModal(<SwapModal />);
   }
+
+  const assetIconMono = useMemo(() => {
+    if (strategy === null) return null;
+    return strategy.asset.icon.replace(".svg", "-mono.svg");
+  }, [strategy])
+
   const [isHovered, setIsHovered] = useState<boolean>(false);
   return (
     <div
       onClick={ openModalStrategy }
     >
-      <div className="relative flex flex-col w-full" style={{ width: '45rem', maxWidth: '100%' }}>
+      <div className="relative flex flex-col w-full strategy-cta-size max-w-full">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5044 2243" fill="none">
           <defs>
             <path
@@ -107,13 +113,17 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
             />
             { strategy !== null &&
               <image
-                className="grayscale pointer-events-none transition-all duration-500 ease-in-out"
+                className={clsx(
+                  "pointer-events-none",
+                  { "strategy-cta-icon-filter" :isHovered,
+                    "contrast-63": !isHovered,
+                  },
+                )}
                 width={ '100%' }
                 height={ '100%' }
                 y={ '-15%' }
-                opacity={ 0.2 }
                 clipPath="url(#clip)"
-                href={ strategy.asset.icon }
+                href={ assetIconMono }
               />
             }
         </svg>
@@ -121,7 +131,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
         <div className="absolute flex flex-col w-full pointer-events-none">
           <div className="flex flex-row justify-between px-5 pt-5">
             <div className={ clsx(
-              "me-auto text-6xl gilroy font-extrabold italic",
+              "me-auto text-3xl md:text-6xl gilroy font-extrabold italic",
               `${isHovered ? "text-primary" : "text-white"}`,
             )}>
               { title.toUpperCase() }
@@ -132,7 +142,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
               size={{ height: 45, width: 45 }}
             />
           </div>
-          <div className="text-5xl gilroy italic me-auto text-gray-300 px-5 mb-3">
+          <div className="text-2xl md:text-5xl gilroy italic me-auto text-gray-300 px-5 mb-3">
             { subtitle }
           </div>
           <div className="flex flex-row justify-between px-5">

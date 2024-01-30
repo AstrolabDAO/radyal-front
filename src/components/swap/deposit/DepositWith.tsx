@@ -7,11 +7,10 @@ import { SwapContext } from "~/context/swap-context";
 
 type DepositWithProps = {
   token: Token;
-  locked: boolean;
   onTokenClick: () => void;
 }
 
-const DepositWith = ({ token, locked, onTokenClick } : DepositWithProps) => {
+const DepositWith = ({ token, onTokenClick } : DepositWithProps) => {
 
   const [depositValue, setDepositValue] = useState<string | number>('');
   const { fromValue, setFromValue } = useContext(SwapContext);
@@ -50,7 +49,7 @@ const DepositWith = ({ token, locked, onTokenClick } : DepositWithProps) => {
     <SwapBlock
       token={ token }
       isFocused={ isFocused }
-      disabled={ locked }
+      disabled={ false }
       label="WITH"
       icons={ icons }
       symbol={ token?.symbol }

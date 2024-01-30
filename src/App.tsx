@@ -9,6 +9,7 @@ import Layout from "./components/layout/Layout";
 import { useReduxStoreDataInit } from "./hooks/store/store";
 import { checkInterval } from "./services/operation";
 import { updateIntervalId } from "./store/operations";
+// import Julia from "./components/extra/Julia.tsx";
 import HypnoticRing from "./components/HypnoticRing.tsx";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <HypnoticRing />
           <Layout />
         </DisclaimerProvider>
+        {/* <Julia /> */}
       </Web3Provider>
     </>
   );

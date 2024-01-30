@@ -39,7 +39,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
   const { isConnected } = useAccount({ onConnect: handleConnect });
 
   const [strategy, title, subtitle] = useMemo(() => {
-    if (strategyGroup === undefined || strategyGroup.length === 0)
+    if (!strategyGroup || strategyGroup.length === 0)
       return [null, null, null];
     const [strategy] = strategyGroup;
     const { name } = strategy;
@@ -61,12 +61,18 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
     else openModal(<SwapModal />);
   }
   const [isHovered, setIsHovered] = useState<boolean>(false);
+
+  const assetIconMono = useMemo(() => {
+    if (strategy === null) return null;
+    return strategy.asset.icon.replace(".svg", "-mono.svg");
+  }, [strategy])
+
   return (
     <div
-      className={clsx("overflow-x-hidden -mt-24")}
+      className={clsx("overflow-x-hidden md:-mt-24")}
       onClick={ openModalStrategy }
     >
-      <div className="relative flex flex-col ms-auto pointers-event-none" style={{ width: '45rem', maxWidth: '100%' }}>
+      <div className="relative flex flex-col ms-auto pointers-event-none strategy-cta-size max-w-full">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5044 2243" fill="none">
           <defs>
             <path
@@ -93,13 +99,17 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
             />
             { strategy !== null &&
               <image
-                className="grayscale pointer-events-none"
+              className={clsx(
+                "pointer-events-none",
+                { "strategy-cta-icon-filter" :isHovered,
+                  "contrast-63": !isHovered,
+                },
+              )}
                 width={ '100%' }
                 height={ '100%' }
                 y={ '15%' }
-                opacity={ 0.2 }
                 clipPath="url(#clip-two)"
-                href={ strategy.asset.icon }
+                href={ assetIconMono }
               />
             }
         </svg>
@@ -107,12 +117,12 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
         <div className="absolute bottom-0 right-0 flex flex-col w-full pointer-events-none">
           <div className="flex flex-col px-5 pb-3">
             <div className={ clsx(
-              "ms-auto text-6xl gilroy font-extrabold italic",
+              "ms-auto text-3xl md:text-6xl gilroy font-extrabold italic",
               `${isHovered ? "text-primary" : "text-white"}`,
             )}>
               { title.toUpperCase() }
             </div>
-            <div className="text-5xl italic gilroy font-medium ms-auto text-gray-300 mb-2">
+            <div className="text-2xl md:text-5xl italic gilroy font-medium ms-auto text-gray-300 mb-2">
               { subtitle }
             </div>
             <div className="flex flex-row justify-between">

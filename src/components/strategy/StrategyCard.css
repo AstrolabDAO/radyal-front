@@ -3,6 +3,7 @@
   mix-blend-mode: overlay;
 }
 
+.strategy-cta-icon-filter,
 .group:hover .strategy-icon-filter {
   filter: invert(0.5) sepia(100%);
   opacity: .25;
@@ -10,6 +11,15 @@
 
 .strategy-card {
   @apply bg-dark-700/50 h-48 cursor-pointer border-1 border-dark-500 border-1 border-dark-500 border-solid hover:shadow-sm hover:border-primary/50 transition-all duration-500
+}
+
+div.strategy-cta-size {
+  max-width: 45rem;
+}
+@media screen and (max-width: 1024px) {
+  div.strategy-cta-size {
+    max-width: 35rem;
+  }
 }
 
 .strategy-card-data-unit {

@@ -49,11 +49,11 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
         <div className="scrolling-text-rtl scrolling-text-shadow">
           <span>
             FARM<span className="text-sky-600"> ALL OF { titleOne }&nbsp;
-            { strategyTwo?.network.icon &&
+            { strategyOne?.network.icon &&
               <IconCard
                 icon={{
-                  url: strategyTwo?.network.icon,
-                  alt: strategyTwo?.network.name,
+                  url: strategyOne?.network.icon,
+                  alt: strategyOne?.network.name,
                   size,
                 }}
               />
@@ -68,25 +68,27 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
       >
         <div className="scrolling-text-ltr">
           <span>&nbsp;- PROVIDE LIQUIDITY TO THE BEST<span className="text-white"> { titleTwo } POOLS&nbsp;
-            <IconCard
+            { strategyTwo?.network.icon && <IconCard
                 icon={{
                   url: strategyTwo?.network.icon,
                   alt: strategyTwo?.network.name,
                   size,
                 }}
               />
+            }
             </span>
           </span>
         </div>
         <div className="scrolling-text-ltr scrolling-text-shadow">
           <span>&nbsp;- PROVIDE LIQUIDITY TO THE BEST<span className="text-white"> { titleTwo } POOLS&nbsp;
-            <IconCard
+            { strategyTwo?.network.icon && <IconCard
                 icon={{
                   url: strategyTwo?.network.icon,
                   alt: strategyTwo?.network.name,
                   size,
                 }}
               />
+            }
             </span>
           </span>
         </div>
