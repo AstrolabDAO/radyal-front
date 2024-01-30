@@ -112,11 +112,6 @@ const SwapBlock = ({
               </div>
             </>
           }
-          { (!symbol || !network) &&
-            <div className="py-6 text-center font-bold text-xl">
-              SELECT A TOKEN
-            </div>
-          }
         </div>
         <div className="flex flex-col ms-auto my-auto text-right">
           <div

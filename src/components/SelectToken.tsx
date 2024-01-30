@@ -17,15 +17,13 @@ import SelectTokenLine from "./select-token/SelectTokenLine";
 
 import { FaChevronLeft } from "react-icons/fa";
 import { Token } from "~/utils/interfaces";
-import { useStore } from "react-redux";
+
 type SelectTokenProps = {
   tokens: Array<Token>;
   onSelect: (token: Token) => void;
   onBackClick: () => void;
 };
 const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
-  const store = useStore();
-  console.log(store.getState())
   const { networks } = useContext(Web3Context);
   const [search, setSearch] = useState("");
   const [networksFilter, setNetworksFilter] = useState([]);

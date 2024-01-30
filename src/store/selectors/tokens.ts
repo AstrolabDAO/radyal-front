@@ -30,7 +30,6 @@ export const sortedBalancesSelector = createSelector(
           return false;
         }
         const value = Number(balance.amountWei) / 10 ** token?.decimals;
-
         return value * price > 1;
       })
       .sort((a, b) => {
