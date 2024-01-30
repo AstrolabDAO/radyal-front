@@ -34,7 +34,7 @@ export const ModalProvider = ({ children }: ModalContextProps) => {
       if (modalList.length === 1) {
         setSelectedModal(null);
         setRender(false);
-        setVisible(false);
+        setTimeout(() => setVisible(false), 600);
       } else {
         setSelectedModal(modalList.length - 2);
       }

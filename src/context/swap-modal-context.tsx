@@ -27,7 +27,7 @@ const SwapModalContextProxy = ({ children }) => {
     <SwapModalContext.Provider
       value={{ openModal, closeModal, visible, selectedModal, render: true }}
     >
-      {visible && (
+      { visible && (
         <SwapProvider>
           <Modal />
         </SwapProvider>

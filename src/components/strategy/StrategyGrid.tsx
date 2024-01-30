@@ -22,21 +22,23 @@ const StrategyGrid = () => {
   const { openModal } = useContext(SwapModalContext);
 
   return (
-    <div className="w-full container px-2 sm:mx-auto">
+    <div className="w-full container px-2 sm:mx-auto mt-5">
       <div className="flex flex-col md:flex-row w-full">
         <div className="mr-4 w-full flex flex-col">
           <span className="label-text block my-2">Search</span>
           <input
             type="text"
             placeholder="“Stable”, “Arbitrum”, “Staking”..."
-            className="input input-bordered"
+            className="input input-bordered bg-dark-800"
             onChange={({ target }) => {
               dispatch(search(target.value));
             }}
           />
         </div>
         <div className="flex flex-col">
-          <span className="label-text my-2">filter by network...</span>
+          <span className="label-text my-2">
+            Chain
+          </span>
           <NetworkSelect
             isSearchable
             className="basic-multi-select w-64 h-12"
@@ -48,11 +50,18 @@ const StrategyGrid = () => {
           />
         </div>
       </div>
-      <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-5">
-        {grouppedStrategies.length === 0 && (
-          <div className="flex w-full justify-center">No strategies...</div>
+      <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 my-5 max-w-screen">
+        { grouppedStrategies.length === 0 && (
+          <>
+            <div className="card shimmer h-36" />
+            <div className="card shimmer h-36" />
+            <div className="card shimmer h-36" />
+            <div className="card shimmer h-36" />
+            <div className="card shimmer h-36" />
+            <div className="card shimmer h-36" />
+          </>
         )}
-        {grouppedStrategies.map((strategyGroup, index) => (
+        { grouppedStrategies.map((strategyGroup, index) => (
           <StrategyCard
             strategyGroup={strategyGroup}
             key={`strategy-group-${index}`}

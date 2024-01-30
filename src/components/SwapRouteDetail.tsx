@@ -1,105 +1,102 @@
 import { useContext } from "react";
-import { FaLongArrowAltRight } from "react-icons/fa";
 import { amountToEth, lisibleAmount } from "~/utils/format";
-import { Protocol } from "~/utils/interfaces";
+import { Icon, Protocol } from "~/utils/interfaces";
+
 import {
   SwapRouteStepTypeTraduction,
   SwaptoolTraduction,
   networkByChainId,
   protocolByStrippedSlug,
 } from "~/utils/mappings";
-import IconCard from "./IconCard";
+
 import { EstimationContext } from "~/context/estimation-context";
 import { OperationStep } from "~/store/interfaces/operations";
+import SwapRouteDetailLine from "./swap/helpers/SwapRouteDetailLine";
+import { IToken as LiFiToken } from "@astrolabs/swapper/dist/src/LiFi";
+import { IToken as SquidToken} from "@astrolabs/swapper/dist/src/Squid";
 
 const SwapRouteDetail = ({ steps }: { steps: OperationStep[] }) => {
   const { estimationError } = useContext(EstimationContext);
 
-  const size = { width: 20, height: 20 };
+  function amountWithNetworkAndSymbol(chain: number, amount: string, token: LiFiToken | SquidToken) {
+    const network = networkByChainId[chain];
+    const amountFormatted = lisibleAmount(amountToEth(amount, token?.decimals), 4);
+    const symbol = token?.symbol ?? "";
+    const networkName = network?.name ?? "";
+    if (networkName === "Gnosis Chain-Mainnet") return `${amountFormatted} gnosis:${symbol}`;
+    return `${amountFormatted} ${network?.name.toLowerCase()}:${symbol}`;
+  }
 
-  if (!steps) return null;
+  const displayedSteps = steps.map((step) => {
+    const {
+      id,
+      type,
+      tool,
+      estimate,
+      toChain,
+      fromToken,
+      toToken,
+      fromChain,
+    } = step;
+
+
+    const fromNetwork = networkByChainId[fromChain];
+    const fromAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(fromChain, estimate.fromAmount, fromToken);
+
+    const toNetwork = networkByChainId[toChain];
+    const toAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(toChain, estimate.toAmount, toToken);
+
+    const swapRouteStepType = SwapRouteStepTypeTraduction[type] ?? type;
+
+    const convertedTool = SwaptoolTraduction[tool] ?? tool;
+    const protocol: Protocol = protocolByStrippedSlug[convertedTool];
+    const protocolIcon: Icon = {
+      url: protocol?.icon,
+      classes: "ms-2",
+      size: { width: 20, height: 20 },
+    };
+    const protocolName = protocol?.name ?? convertedTool;
+    return {
+      id,
+      fromNetwork,
+      toNetwork,
+      protocolName,
+      protocolIcon,
+      type,
+      swapRouteStepType,
+      fromAmountWithNetworkAndSymbol,
+      toAmountWithNetworkAndSymbol,
+    };
+  })
   return (
     <div>
-      <h2 className="">VIA </h2>
-      <div className="card bg-base-100 flex flex-col mt-4 p-4">
-        {estimationError && estimationError}
-        {!estimationError && (
-          <ul className="icon-steps icon-steps-vertical">
-            {steps.map((step) => {
-              const {
-                id,
-                type,
-                tool,
-                estimate,
-                toChain,
-                fromToken,
-                toToken,
-                fromChain,
-              } = step;
-
-              const fromNetwork = networkByChainId[fromChain];
-              const toNetwork = networkByChainId[toChain];
-
-              const fromAmount = `${lisibleAmount(
-                amountToEth(estimate.fromAmount, fromToken?.decimals),
-                4
-              )} ${fromToken?.symbol}`;
-
-              const toAmount = `${lisibleAmount(
-                amountToEth(estimate.toAmount, toToken?.decimals),
-                4
-              )} ${toToken?.symbol}`;
-
-              const convertedTool = SwaptoolTraduction[tool] ?? tool;
-              const protocol: Protocol = protocolByStrippedSlug[convertedTool];
-              return (
-                <li className="icon-step" key={`stepper-${id}`}>
-                  <div className="icon w-50">
-                    <IconCard
-                      icon={{
-                        url: protocol?.icon,
-                        size: { width: 30, height: 30 },
-                      }}
-                    />
-                  </div>
-                  <div className="content w-full p-2">
-                    <div className="block w-full" key={id}>
-                      <div className="flex">
-                        {SwapRouteStepTypeTraduction[type] ?? type}
-                        <span className="mx-2">from</span>
-                        <IconCard icon={{ url: fromNetwork.icon, size }} />
-                        {fromNetwork.name}
-                        {type === "cross" && (
-                          <>
-                            <span className="mx-2">to</span>
-                            <IconCard icon={{ url: toNetwork.icon, size }} />
-                            {toNetwork.name}
-                          </>
-                        )}
-                        <span className="mx-2">on</span>
-                        <a href={protocol?.app} target="_blank">
-                          {protocol?.name ??
-                            SwaptoolTraduction[tool] ??
-                            convertedTool}
-                        </a>
-                      </div>
-                      <span className="block w-full flex justify-center">
-                        {fromAmount}
-                        {type !== "Approve" && (
-                          <>
-                            <FaLongArrowAltRight className="mx-2" />
-                            {toAmount}
-                          </>
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
+      { (steps.length > 0 || estimationError) && (
+        <div className="mb-1">VIA</div>
+      )}
+      {!estimationError && (
+        <ul
+          className="steps steps-vertical"
+          style={{
+            maxHeight: steps.length > 0 ? "500px" : "0px",
+            transition: "max-height 2s ease-out"
+          }}
+        >
+          { displayedSteps.map((step) =>
+              <SwapRouteDetailLine
+                key={`swap-route-detail-${step.id}`}
+                step={ step }
+              />
+            )
+          }
+        </ul>
+      )}
+      { estimationError && (
+        <div className="border-2 border-solid border-primary w-full py-6 rounded-xl bg-primary/10">
+          <div className="text-center text-primary font-bold">
+              No route found, please select another deposit token
+          </div>
+        </div>
+      )}
     </div>
   );
 };

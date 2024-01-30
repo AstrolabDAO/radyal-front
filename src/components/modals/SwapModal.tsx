@@ -3,28 +3,31 @@ import clsx from "clsx";
 import { useContext, useState } from "react";
 import { SwapContext } from "~/context/swap-context";
 
-import DepositTab from "~/components/swap/DepositTab";
-import Withdraw from "../Withdraw";
 import { StrategyInteraction } from "~/utils/constants";
+
+import DepositTab from "~/components/swap/DepositTab";
+import WithdrawTab from "~/components/swap/WithdrawTab";
 
 const SwapModal = () => {
   return <SwapModalContent />;
 };
 
 const SwapModalContent = () => {
+
+  const { setAction } = useContext(SwapContext);
+
   const tabs = {
     deposit: {
       component: <DepositTab />,
     },
     withdraw: {
-      component: <Withdraw />,
+      component: <WithdrawTab />,
     },
   };
 
   const [animationEnter, setAnimationEnter] = useState<'left' | 'right'>(null)
   const [animationLeave, setAnimationLeave] = useState<'left' | 'right'>(null)
   const [selectedTab, setSelectedTab] = useState("deposit");
-  const { selectTokenMode, setAction } = useContext(SwapContext);
 
   function handleTransition(selectedTab: string) {
     const animationKey = selectedTab === "deposit" ? "left" : "right";
@@ -40,32 +43,30 @@ const SwapModalContent = () => {
   }
 
   return (
-    <div className="bg-dark pb-4 pt-6 px-3">
-      {!selectTokenMode && (
-        <div className="flex flex-row justify-between px-3 ">
-          <div
-            className={
-              clsx("text-3xl cursor-pointer",
-              { "font-bold border-white text-primary": selectedTab === "deposit" })
-            }
-            onClick={() => { handleTransition('deposit') }}
-          >
-            DEPOSIT
-          </div>
-          <div className="my-auto">
-            or
-          </div>
-          <div
-            className={
-              clsx("text-2xl cursor-pointer",
-              { "font-bold border-white text-primary": selectedTab === "withdraw" })
-            }
-            onClick={() => { handleTransition('withdraw') }}
-          >
-            WITHDRAW
-          </div>
+    <div className="bg-dark-800 pb-4 pt-6 px-3 max-h-screen sm-max-h-95vh">
+      <div className="flex flex-row justify-between px-3">
+        <div
+          className={
+            clsx("text-2xl cursor-pointer",
+            { "font-bold border-white text-primary text-3xl": selectedTab === "deposit" })
+          }
+          onClick={() => { handleTransition('deposit') }}
+        >
+          DEPOSIT
         </div>
-      )}
+        <div className="my-auto text-gray-500">
+          OR
+        </div>
+        <div
+          className={
+            clsx("cursor-pointer text-2xl",
+            { "font-bold border-white text-primary text-3xl": selectedTab === "withdraw" })
+          }
+          onClick={() => { handleTransition('withdraw') }}
+        >
+          WITHDRAW
+        </div>
+      </div>
       <div
         key={ selectedTab }
         className={

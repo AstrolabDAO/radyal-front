@@ -26,3 +26,26 @@
     -webkit-filter: blur(0.33rem);
   }
 }
+@media screen and (min-width: 768px) {
+  div.sm-max-h-95vh {
+    max-height: 95vh;
+  }
+  .dialog {
+    max-height: 95vh;
+  }
+}
+.max-h-95vh {
+  max-height: 90vh;
+}
+
+.transition-wrapper {
+  @apply flex items-center justify-center min-h-screen fixed inset-0 z-20 backdrop-blur-medium;
+}
+
+.dialog {
+  @apply overflow-x-hidden rounded-2xl max-h-screen w-screen sm:max-w-md overflow-y-auto transition-all duration-500 bg-dark-800
+}
+
+w3m-modal {
+  @apply backdrop-blur-medium;
+}

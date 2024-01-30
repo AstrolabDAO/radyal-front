@@ -1,5 +1,5 @@
 
-.btn-primary {
+.btn-primary:not(:disabled) {
   background: linear-gradient(
     180deg,
     #FFD25F 0%,

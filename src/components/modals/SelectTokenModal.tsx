@@ -5,6 +5,7 @@ import { useBalances, useTokenBySlug, useTokens } from "~/hooks/store/tokens";
 import { SelectTokenModalMode } from "~/utils/constants";
 import { BaseModalProps } from "../Modal";
 import SelectToken from "../SelectToken";
+import { Token } from "~/utils/interfaces";
 
 interface SelectTokenModalProps extends BaseModalProps {
   mode: SelectTokenModalMode;
@@ -31,10 +32,11 @@ const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
   }, [balances, mode, tokenBySlug, tokens]);
 
   return (
-    <div className="p-4 bg-dark max-h-screen">
+    <div className="p-4 bg-dark-800 max-h-screen">
       <SelectToken
+        onBackClick={ () => closeModal() }
         tokens={tokensList}
-        onSelect={(token) => {
+        onSelect={(token: Token) => {
           if (mode === SelectTokenModalMode.Deposit) {
             selectFromToken(token);
           } else {

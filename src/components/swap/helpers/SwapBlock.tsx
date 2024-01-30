@@ -2,8 +2,8 @@ import { useMemo } from "react";
 
 import clsx from "clsx";
 
-import { amountToEth } from "~/utils/format";
-import { Strategy, Token } from "~/utils/interfaces";
+import { Strategy, Token } from '~/utils/interfaces';
+import { amountToEth, lisibleAmount } from "~/utils/format";
 
 import { WalletIcon } from "@heroicons/react/24/solid";
 import IconGroup from "~/components/IconGroup";
@@ -11,6 +11,7 @@ import { useBalanceByTokenSlug, usePrices } from "~/hooks/store/tokens";
 
 type SwapBlockProps = {
   disabled?: boolean;
+  isFocused?: boolean;
   label: string;
   symbol: string;
   network: string;
@@ -31,11 +32,11 @@ const SwapBlock = ({
   children,
   disabled,
   value,
+  isFocused = false,
   onTokenClick,
-  onWalletClick,
+  onWalletClick = () => {},
 }: SwapBlockProps) => {
   const tokenPrices = usePrices();
-
   const balanceBySlug = useBalanceByTokenSlug();
   const balance = useMemo(() => {
     if (!token) return 0;
@@ -44,7 +45,7 @@ const SwapBlock = ({
     return amountToEth(BigInt(balance?.amountWei ?? 0), token.decimals);
   }, [balanceBySlug, token]);
 
-  const tokenPrice = useMemo(() => {
+  const balanceEquivalent = useMemo(() => {
     if (!token || !tokenPrices) return 0;
 
     let price = Number(tokenPrices[token.coinGeckoId]?.usd);
@@ -59,44 +60,81 @@ const SwapBlock = ({
   }, [tokenPrices, token, value]);
 
   const iconGroup = [
-    { url: icons.background, alt: symbol },
-    { url: icons.foreground, alt: network, small: true },
+    {
+      alt: symbol,
+      url: icons.background,
+      size: {
+        width: 32,
+        height: 32,
+      }
+    },
+    {
+      url: icons.foreground,
+      alt: network,
+      classes: "-ms-3 -mb-1",
+      size: {
+        width: 18,
+        height: 18,
+      },
+      small: true,
+    },
   ];
 
   return (
     <div className="flex flex-col my-3">
-      <div className="mb-1">{label}</div>
-      <div className="flex flex-col md:flex-row p-3 border border-solid border-gray-500 rounded-xl bg-dark-600">
-        <div
-          className={clsx(
-            "flex flex-row rounded-xl bg-gray-500 px-3 cursor-pointer my-auto py-2",
-            { "hover:bg-primary hover:text-dark": !disabled }
-          )}
-          onClick={onTokenClick}
+      <div className="mb-1">{ label }</div>
+      <div
+        className={clsx(
+          "flex flex-col md:flex-row p-2 rounded-xl border-1 border-solid",
+          {
+            "bg-dark-700": !disabled,
+            "border-dark-500": disabled,
+            "border-primary/50": isFocused,
+            "border-transparent": !isFocused && !disabled,
+          }
+      )}>
+        <div className={
+          clsx("flex flex-row rounded-xl my-auto py-0 ps-2",
+          {
+            "group cursor-pointer bg-dark-550 hover:bg-primary/5 hover:ring-1 hover:ring-primary/25" : !disabled,
+          },
+        )}
+          onClick={ onTokenClick }
         >
-          <div className="my-auto">
-            <IconGroup icons={iconGroup} />
-          </div>
-          <div className="flex flex-col ps-3 py-3 bg-medium my-auto">
-            <div className="text-2xl font-bold">{symbol}</div>
-            <div className="-mt-2 w-32">on {network}</div>
-          </div>
+          { symbol && network &&
+            <>
+              <div className="my-auto">
+                <IconGroup icons={ iconGroup }/>
+              </div>
+              <div className="flex flex-col ps-1.5 pe-3 py-3 bg-medium my-auto">
+                <div className="text-xl font-bold text-secondary-900 group-hover:text-primary">{ symbol }</div>
+                <div className="-mt-2 pt-1 text-nowrap text-xs">on { network }</div>
+              </div>
+            </>
+          }
+          { (!symbol || !network) &&
+            <div className="py-6 text-center font-bold text-xl">
+              SELECT A TOKEN
+            </div>
+          }
         </div>
         <div className="flex flex-col ms-auto my-auto text-right">
           <div
-            className={clsx(
-              "text-sm flex flex-row align-middle ms-auto bg-gray-200 rounded px-1",
-              {
-                "cursor-pointer hover:bg-primary hover:text-dark": !disabled,
-              }
-            )}
-            onClick={() => onWalletClick(balance)}
+            className={
+              clsx("text-xs flex rounded-md flex-row align-middle ms-auto rounded", {
+              "cursor-pointer hover:bg-primary hover:text-dark px-1" : !disabled,
+              "bg-transparent text-dark-500" : disabled,
+              "bg-dark-550" : !disabled,
+            })}
+            onClick={ () => onWalletClick(balance) }
           >
-            <WalletIcon className="flex me-1 my-auto h-4 w-4" />
-            <span className="flex my-auto"> {balance} </span>
+            <WalletIcon className="flex me-1 my-auto h-3 w-3"/>
+            <span className="flex my-auto"> { lisibleAmount(balance, 4) } </span>
           </div>
-          <div className="flex ms-auto ms-auto">{children}</div>
-          <div className="text-sm text-gray font-bold">~{tokenPrice} $</div>
+          <div className="flex ms-auto">
+            { children }
+          </div>
+          <div className="text-xs text-dark-500 font-light">~{ lisibleAmount(balanceEquivalent, 4) } $</div>
         </div>
       </div>
     </div>

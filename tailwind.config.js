@@ -2,7 +2,7 @@
 
 import * as daisyui from "daisyui";
 import * as themes from "daisyui/src/theming/themes";
-import { COLORS, BACKGROUNDS } from "./src/styles/constants";
+import { COLORS } from "./src/styles/constants";
 
 import pSBCLib from "shade-blend-color";
 
@@ -15,25 +15,52 @@ const lightOffsets = Array.from({ length: 9 }, (_, i) => (i + 1) * 50 + 500);
 
 Object.entries(COLORS).forEach((value) => {
   const [key, color] = value;
-
-  PALETTE[key] = color;
-  PALETTE[`${key}-500`] = color;
-
-  darkOffsets.forEach((offset) => {
-    PALETTE[`${key}-${offset}`] = pSBC(offset / 2000, color, "#000000");
-  });
-
-  lightOffsets.forEach((offset) => {
-    PALETTE[`${key}-${offset}`] = pSBC(-offset / 3500, color, "#ffffff");
-  });
+  PALETTE[key] = [
+    ...lightOffsets.map((offset) => [offset, pSBC((offset - 500) / 500, color, "#fff")]),
+    ...darkOffsets.map((offset) => [offset, pSBC((500 - offset) / 500, color, "#000")]),
+  ].reduce((acc, [offset, color]) => { acc[offset] = color; return acc; }, { 500: color, DEFAULT: color });
 });
+
+PALETTE["dark"] = {
+  DEFAULT: "#0C0C0C",
+  900: "#0C0C0C",
+  800: "#1C1C1C",
+  700: "#2A2A2A",
+  600: "#323232",
+  550: "#3F3F3F",
+  500: "#505050",
+  400: "#C8C8C8",
+  300: "#ECECEC",
+  200: "#FBF8F4",
+  100: "#FDFDFD",
+};
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      borderWidth: {
+        1: "1px",
+      },
       colors: PALETTE,
+      container: {
+        center: true,
+        screens: {
+          DEFAULT: "100%", // set the default screen width to 100% of the container
+          sm: '640px', // set the small screen size
+          md: '768px', // set the medium screen size
+          lg: '1024px', // set the large screen size
+          xl: '1150px', // set the extra-large screen size
+        },
+      },
+      contrast: {
+        63: '.63',
+      },
       fontSize: {
         "2xs": ".55rem",
+      },
+      maxWidth: {
+        "xl": "1150px",
       },
     },
   },
@@ -43,10 +70,21 @@ export default {
       {
         dark: {
           ...themes.default.dark,
-          primary: PALETTE["primary"],
-          "primary-content": BACKGROUNDS["base"],
-          "base-100": PALETTE["base-100"],
-          "neutral": PALETTE["neutral"]
+          ...Object.entries(COLORS).map(([key, color]) => [`--${key}`, color]).reduce((acc, [key, color]) => { acc[key] = color; return acc; }, {}),
+          background: "#1C1C1C",
+          primary: COLORS.primary,
+          success: COLORS.success,
+          dark: {
+            900: "#0C0C0C",
+            800: "#1C1C1C",
+            700: "#2A2A2A",
+            600: "#323232",
+            500: "#505050",
+            400: "#C8C8C8",
+            300: "#ECECEC",
+            200: "#FBF8F4",
+            100: "#FDFDFD",
+          }
         },
       },
     ],

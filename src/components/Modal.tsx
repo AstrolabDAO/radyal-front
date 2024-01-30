@@ -1,6 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useCallback, useContext, useRef } from "react";
-import { FaTimes } from "react-icons/fa";
+import { Fragment, useCallback, useContext } from "react";
 import { ModalContext } from "~/context/modal-context";
 
 export interface BaseModal extends React.ReactElement {
@@ -13,7 +12,7 @@ export interface BaseModalProps {
 }
 
 const Modal = () => {
-  const { render, closeModal, selectedModal } = useContext(ModalContext);
+  const { render: isOpen, closeModal, selectedModal } = useContext(ModalContext);
 
   const onClose = useCallback(() => {
     if (selectedModal) {
@@ -24,58 +23,35 @@ const Modal = () => {
     closeModal();
   }, [selectedModal, closeModal]);
 
-  const cancelButtonRef = useRef(null);
   return (
-    <Transition.Root show={render} as={Fragment}>
-      <Dialog
-        open={render}
-        as="div"
-        className="relative z-20"
-        initialFocus={cancelButtonRef}
-        onClose={onClose}
-      >
+    <Transition show={ isOpen } as={ Dialog } onClose={ onClose }>
+      <div className="transition-wrapper">
         <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-500"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-500"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+          enter="transition ease-out duration-300"
+          enterFrom="opacity-0 scale-95"
+          enterTo="opacity-100 scale-100"
+          leave="transition ease-in duration-300"
+          leaveFrom="opacity-100 scale-100"
+          leaveTo="opacity-0 scale-95"
+          as={ Fragment }
         >
-          <div
-            className="fixed inset-0 bg-base-half-transparent bg-opacity-75 transition-opacity backdrop-blur-medium"
-            onClick={onClose}
-          />
-        </Transition.Child>
-
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center text-center sm:items-center sm:p-0">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-600"
-              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          <Dialog.Panel className="dialog">
+            <button
+              className="right-0 top-0 absolute p-2 z-50 rounded-tr-xl w-8 h-8 sm:hidden"
+              onClick={ onClose }
             >
-              <Dialog.Panel className="transform overflow-y-auto overflow-x-hidden rounded-lg shadow-xl transition-all backdrop-blur-medium bg-base-dark-transparent">
-                <div className="relative text-left z-50 max-h-screen w-screen lg:max-w-xl max-h-90">
-                  <button
-                    className="right-0 top-0 absolute p-2 z-50"
-                    onClick={onClose}
-                  >
-                    <FaTimes />
-                  </button>
-                  {selectedModal}
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
-        </div>
-      </Dialog>
-    </Transition.Root>
+              <svg fill="#C1C1C1" viewBox="0 0 16 16">
+                <path
+                fill="#C1C1C1"
+                fill-rule="evenodd"
+                d="M2.54 2.54a1 1 0 0 1 1.42 0L8 6.6l4.04-4.05a1 1 0 1 1 1.42 1.42L9.4 8l4.05 4.04a1 1 0 0 1-1.42 1.42L8 9.4l-4.04 4.05a1 1 0 0 1-1.42-1.42L6.6 8 2.54 3.96a1 1 0 0 1 0-1.42Z" clipRule="evenodd"/>
+              </svg>
+            </button>
+            { selectedModal }
+          </Dialog.Panel>
+        </Transition.Child>
+      </div>
+    </Transition>
   );
 };
 

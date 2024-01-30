@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import {
   useCallback,
   useContext,
@@ -7,16 +6,26 @@ import {
   useRef,
   useState,
 } from "react";
+
 import { SwapContext } from "~/context/swap-context";
-import { amountToEth, lisibleAmount } from "~/utils/format";
-import IconGroup from "./IconGroup";
 
 import { Web3Context } from "~/context/web3-context";
-import { useBalanceByTokenSlug, usePrices } from "~/hooks/store/tokens";
+import { usePrices } from "~/hooks/store/tokens";
 import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
 import ModalLayout from "./layout/ModalLayout";
+import SelectTokenLine from "./select-token/SelectTokenLine";
 
-const SelectToken = ({ tokens, onSelect }) => {
+import { FaChevronLeft } from "react-icons/fa";
+import { Token } from "~/utils/interfaces";
+import { useStore } from "react-redux";
+type SelectTokenProps = {
+  tokens: Array<Token>;
+  onSelect: (token: Token) => void;
+  onBackClick: () => void;
+};
+const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
+  const store = useStore();
+  console.log(store.getState())
   const { networks } = useContext(Web3Context);
   const [search, setSearch] = useState("");
   const [networksFilter, setNetworksFilter] = useState([]);
@@ -76,84 +85,57 @@ const SelectToken = ({ tokens, onSelect }) => {
     };
   }, [loadMoreRef, loadMoreTokens, loading]);
 
-  const balanceBySlug = useBalanceByTokenSlug();
   return (
-    <ModalLayout title="Select token" className="max-h-screen min-h-96">
+    <ModalLayout className="max-h-screen min-h-96">
       <header>
-        <label>Search by name...</label>
-        <input
-          type="text"
-          placeholder="USDC..."
-          className="input w-full border-0"
-          onChange={({ target }) => {
-            setSearch(target.value);
-          }}
-        />
-        <div className="my-2">Filter by network</div>
-        <NetworkSelect
-          isSearchable
-          networks={networks}
-          className="basic-multi-select w-full mb-8"
-          classNamePrefix="select"
-          onChange={(value: Array<NetworkSelectData>) => {
-            setNetworksFilter(value.map((v) => v.network?.slug));
-          }}
-        />
-      </header>
-      <div>
-        {displayedTokens.map((token, index) => {
-          const convertedPrice = Number(tokenPrices[token.coinGeckoId]?.usd);
-          const tokenPrice = isNaN(convertedPrice) ? 0 : convertedPrice;
-
-          const balance = balanceBySlug[token.slug]?.amountWei ?? 0;
-
-          const convertedBalance = amountToEth(
-            !balance ? BigInt(0) : BigInt(balance),
-            token.decimals
-          );
-
-          const icons = [
-            { url: token?.icon, alt: token?.symbol },
-            {
-              url: token?.network?.icon,
-              alt: token?.network?.name,
-              small: true,
-            },
-          ];
-
-          return (
-            <div
-              key={`token-${index}`}
-              className={clsx(
-                "flex flex-col cursor-pointer mb-2 pt-2.5 pb-1.5 px-2 rounded-xl",
-                index !== tokens.length - 1 && "border-b",
-                "hover:bg-primary hover:text-dark"
-              )}
-              onClick={() => {
-                switchSelectMode();
-                onSelect(token);
+        <div className="flex flex-row mb-3">
+          <FaChevronLeft
+            className="cursor-pointer my-auto hover:text-primary"
+            onClick={ onBackClick }
+          />
+          <div className="flex-grow text-center text-2xl">Select a token</div>
+        </div>
+        <div className="flex flex-row">
+          <div className="basis-2/3 pe-2">
+            <label className="flex mb-1">Search by name...</label>
+            <input
+              type="text"
+              placeholder="USDC..."
+              className="input w-full border-0 focus:none bg-dark-700"
+              onChange={({ target }) => {
+                setSearch(target.value);
               }}
-            >
-              <div className="flex flex-row w-full items-center">
-                <IconGroup icons={icons} />
-                <div className="ms-4">
-                  <span className="text-xl font-bold"> {token?.symbol} </span>
-                  <span className="text-xs">({token.network.name})</span>
-                </div>
-                <div className="ms-auto">
-                  <span className="whitespace-nowrap block">
-                    <span className="font-bold">
-                      {lisibleAmount(convertedBalance, 4)}{" "}
-                    </span>
-                    {token.symbol}
-                  </span>
-                </div>
-              </div>
-              <div className="ms-auto -mt-2 text-xs">
-                ~{lisibleAmount(convertedBalance * tokenPrice, 4)} $
-              </div>
-            </div>
-          );
+            />
+          </div>
+          <div className="basis-1/3">
+            <div className="flex mb-1">Filter by network</div>
+              <NetworkSelect
+                isSearchable
+                networks={networks}
+                className="basic-multi-select w-full mb-8"
+                classNamePrefix="select"
+                onChange={(value: Array<NetworkSelectData>) => {
+                  setNetworksFilter(value.map((v) => v.network?.slug));
+                }}
+              />
+          </div>
+        </div>
+      </header>
+      <div
+        className="overflow-y-scroll"
+        style={{ maxHeight: "calc(100vh - 450px)" } }
+      >
+        { displayedTokens.map((token, index) => {
+          return (
+            <SelectTokenLine
+              key={ `token-line-${index}` }
+              token={ token }
+              tokenPrices={ tokenPrices }
+              onSelect={ onSelect }
+              switchSelectMode={ switchSelectMode }
+              haveBorder={ index !== tokens.length - 1 }
+            />
+          )
         })}
         <div ref={loadMoreRef} />
       </div>
