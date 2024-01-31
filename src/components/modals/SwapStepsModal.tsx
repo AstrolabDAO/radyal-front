@@ -12,8 +12,8 @@ const SwapStepsModal = () => {
   return (
     <div className="p-4">
       <div className="card">
-        <div className="text-2xl uppercase">
-          Transaction Details
+        <div className="text-3xl mb-3 uppercase">
+          Tx tracking
         </div>
         <SwapRouteDetail
           steps={ currentSteps }

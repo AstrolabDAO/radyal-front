@@ -91,7 +91,7 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
             className="cursor-pointer my-auto hover:text-primary"
             onClick={ onBackClick }
           />
-          <div className="flex-grow text-center text-2xl">Select a token</div>
+          <div className="flex-grow text-center font-bold text-3xl mb-3">Select a token</div>
         </div>
         <div className="flex flex-row">
           <div className="basis-2/3 pe-2">

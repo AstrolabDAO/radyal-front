@@ -135,7 +135,7 @@ const SwapRouteDetail = ({
           ))}
         </ul>
       )}
-      { estimationError || true && (
+      { estimationError && (
         <div className="border-1 border-solid border-warning w-full py-2 rounded-xl bg-warning/10 mb-3">
           <div className="text-center text-primary font-medium leading-5">
               No route found ! <br />
