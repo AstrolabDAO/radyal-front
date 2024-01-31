@@ -41,11 +41,12 @@ export const useReduxStoreDataInit = () => {
   }, [tokens, balances, prices, dispatch, isConnected]);
 
   useEffect(() => {
-    if (STORE_IS_INIT || !balances) return;
+    if (!STORE_IS_INIT || !balances) return;
     dispatch(setBalances(balances));
   }, [balances, dispatch]);
+
   useEffect(() => {
-    if (STORE_IS_INIT || !prices) return;
+    if (!STORE_IS_INIT || !prices) return;
     dispatch(setTokenPrices(prices));
   }, [dispatch, prices]);
 };

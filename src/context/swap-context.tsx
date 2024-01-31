@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { useSelectedStrategy } from "~/hooks/store/strategies";
 import { useBalances, useTokenBySlug } from "~/hooks/store/tokens";
 import { addRequestedPriceCoingeckoId } from "~/store/tokens";
+import { useAccount } from "wagmi";
 
 const SwapContext = createContext<SwapContextType>({
   switchSelectMode: () => {},
@@ -36,6 +37,10 @@ const SwapProvider = ({ children }) => {
   const selectedStrategy = useSelectedStrategy();
 
   const balances = useBalances();
+
+  const [balanceCache, setBalanceCache] = useState([]);
+  const [addressCache, setAddressCache] = useState(null);
+  const { address } = useAccount();
   const tokenBySlug = useTokenBySlug();
   const [action, setAction] = useState<StrategyInteraction>(
     StrategyInteraction.DEPOSIT
@@ -84,6 +89,26 @@ const SwapProvider = ({ children }) => {
   const switchSelectMode = useCallback(() => {
     setSelectTokenMode(!selectTokenMode);
   }, [selectTokenMode]);
+
+  useEffect(() => {
+    if (
+      JSON.stringify(balances) !== JSON.stringify(balanceCache) &&
+      address != addressCache
+    ) {
+      const token = tokenBySlug[balances?.[0]?.token] ?? null;
+      selectFromToken(token);
+      setBalanceCache(balances);
+      setAddressCache(address);
+    }
+  }, [
+    balances,
+    action,
+    tokenBySlug,
+    selectFromToken,
+    balanceCache,
+    address,
+    addressCache,
+  ]);
 
   useEffect(() => {
     if (!fromToken) {
