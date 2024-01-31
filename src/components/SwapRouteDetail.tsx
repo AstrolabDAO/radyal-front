@@ -112,6 +112,7 @@ const SwapRouteDetail = ({
       return displayedStep;
     });
   }, [steps, showStatus]);
+
   return (
     <div>
       {(steps.length > 0 || estimationError) && !showStatus && (

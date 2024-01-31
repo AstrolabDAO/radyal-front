@@ -234,11 +234,8 @@ const EstimationProvider = ({ children }) => {
             promise: approvePending,
           },
         });
-
         await approvePending;
-        const swapPromise = executeSwap(_tx);
-
-        const hash = await swapPromise;
+        const hash = await executeSwap(_tx);
 
         store.dispatch({
           type: "operations/update",
