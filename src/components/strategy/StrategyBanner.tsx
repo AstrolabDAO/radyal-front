@@ -43,7 +43,7 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
                 size,
               }}
             />}
-            </span>&nbsp;STABLE DEFI, IN<span className="text-primary"> ONE VAULT </span>-&nbsp;
+            </span>&nbsp;STABLE DEFI - IN<span className="text-primary"> ONE VAULT </span>-&nbsp;
           </span>
         </div>
         <div className="scrolling-text-rtl scrolling-text-shadow">
@@ -58,7 +58,7 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
                 }}
               />
             }
-            </span>&nbsp;STABLE DEFI, IN<span className="text-primary"> ONE VAULT </span>-&nbsp;
+            </span>&nbsp;STABLE DEFI - IN<span className="text-primary"> ONE VAULT </span>-&nbsp;
           </span>
         </div>
       </div>

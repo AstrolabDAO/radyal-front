@@ -114,26 +114,3 @@ export const executeSwap = async (route: ITransactionRequestWithEstimate) => {
   return { hash };
 };
 
-export const aproveAndSwap = async (
-  { route, fromToken, amount, clientAddress }: ExecuteSwapProps,
-  publicClient: PublicClient
-) => {
-  const { hash: swapHash } = await executeSwap(route);
-  const swapPending = publicClient.waitForTransactionReceipt({
-    hash: swapHash,
-  });
-  toast.promise(swapPending, {
-    loading: "Swap transaction is pending...",
-    success: "Swap transaction successful",
-    error: "Swap reverted rejected 🤯",
-  });
-  await swapPending;
-  return { hash: swapHash, route };
-};
-
-interface ExecuteSwapProps {
-  route: ITransactionRequestWithEstimate;
-  fromToken: Token;
-  amount: bigint;
-  clientAddress: `0x${string}`;
-}

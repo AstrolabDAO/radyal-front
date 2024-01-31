@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 import { CoingeckoPrices, Token } from "~/utils/interfaces";
-import { amountToEth, lisibleAmount } from "~/utils/format";
+import { weiToAmount, round } from "~/utils/format";
 import { useBalanceByTokenSlug } from "~/hooks/store/tokens";
 import IconGroup from "../IconGroup";
 
@@ -30,7 +30,7 @@ const SelectTokenLine = ({
   const balanceByTokenSlug = useBalanceByTokenSlug();
   const balance = balanceByTokenSlug[token.slug]?.amountWei ?? 0;
 
-  const convertedBalance = amountToEth(
+  const convertedBalance = weiToAmount(
     !balance ? BigInt(0) : BigInt(balance),
     token.decimals
   );
@@ -68,13 +68,13 @@ const SelectTokenLine = ({
         <div className="ms-auto">
           <span className="whitespace-nowrap block">
             <span className="font-bold">
-              {lisibleAmount(convertedBalance, 4)} </span>
+              {round(convertedBalance, 4)} </span>
               {token.symbol}
           </span>
         </div>
       </div>
       <div className="ms-auto -mt-2 text-xs">
-        ~{lisibleAmount(convertedBalance * tokenPrice, 4)} $
+        ~{round(convertedBalance * tokenPrice, 4)} $
       </div>
     </div>
   )

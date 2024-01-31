@@ -7,7 +7,7 @@ import { shortenAddress } from "~/utils/format";
 import Button from "../Button";
 import Logo from "~/assets/logo/logo.svg?react";
 
-const Header = () => {
+const Header = ({ emitMint }) => {
   const { address, isConnected } = useAccount();
   const web3Modal = useWeb3Modal();
 
@@ -30,7 +30,7 @@ const Header = () => {
   }, []);
 
   const headerStyle = {
-    height: '80px',
+    height: scrolling ? '3.61rem' : '5rem',
     backgroundColor: scrolling ? 'rgba(28, 28, 28, 0.6)' : 'transparent',
     backdropFilter: scrolling ? 'blur(10px)' : 'none',
     transition: 'background-color 0.3s ease-in-out',
@@ -46,7 +46,7 @@ const Header = () => {
         <div className="navbar overflow-hidden">
           <div className="navbar-start">
             <Logo
-              className="flex w-32 md:w-52 fill-white"
+              className="flex fill-white w-36"
             />
           </div>
           <div className="navbar-center flex-row justify-center gap-10 hidden sm:flex">
@@ -58,7 +58,9 @@ const Header = () => {
             <div className="text-xl flex text-gray-500">
               STAKE
             </div>
-            <div className="text-xl flex text-gray-500">
+            <div className="text-xl flex text-gray-500 hover:text-gray-600"
+              onClick={ () => emitMint() }
+            >
               MINT
             </div>
           </div>
@@ -69,7 +71,7 @@ const Header = () => {
             { isConnected && (
               <>
                 <Button
-                  className="transition-ease hover:text-primary h-4 btn-small"
+                  className="h-10 min-h-0"
                   onClick={() => web3Modal.open()}
                 >
                   { shortenAddress(address.toLowerCase()) }

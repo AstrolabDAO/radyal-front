@@ -60,7 +60,7 @@ const DepositWith = ({ token, onTokenClick } : DepositWithProps) => {
       children={
         <div className="flex ms-auto">
           <input
-            className="focus:outline-none bg-dark-700 placeholder:text-dark-500 my-1 max-h-9 pe-0 font-medium text-2xl text-right ms-auto w-full basis-4/5 rounded-none"
+            className="focus:outline-none bg-dark-700 placeholder:text-dark-500 my-1 max-h-9 pe-0 font-medium text-2xl text-right ms-auto w-full basis-4/5 rounded-none text-secondary"
             type="number"
             min="0"
             placeholder="10.0"

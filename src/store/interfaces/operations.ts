@@ -74,7 +74,7 @@ export interface OperationStep extends ICommonStep {
 
 export interface EmmitStepAction {
   txId: string;
-  promise: Promise<any>;
+  promise?: Promise<any>;
 }
 export interface UpdateAction {
   id: string;

@@ -52,7 +52,7 @@ const DepositTab = () => {
 
       <SwapRouteDetail steps={estimation?.steps ?? []} />
     </div>
-    <div className="mb-3 mt-5">
+    <div className="mb-3 px-4">
       <button
         disabled={!canSwap}
         onClick={async () => {
@@ -63,7 +63,7 @@ const DepositTab = () => {
           }
         }}
         className={ clsx(
-          "btn btn-primary mt-5 w-full border-0 uppercase",
+          "btn btn-primary w-full border-0 uppercase",
         )}
       >
         { needApprove

@@ -3,19 +3,21 @@ import { Client } from "viem";
 import { useAccount, usePublicClient } from "wagmi";
 import { tokensIsEqual } from "~/utils";
 import { previewStrategyTokenMove } from "~/utils/flows/strategy";
-import { amountToEth, cacheHash } from "~/utils/format";
+import { weiToAmount, cacheHash } from "~/utils/format";
 import { Strategy } from "~/utils/interfaces.ts";
 
 import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
 
 import { useQueryClient } from "react-query";
-import { aproveAndSwap, getSwapRoute } from "~/services/swap";
+import { aproveAndSwap, executeSwap, getSwapRoute } from "~/services/swap";
 import { useSwitchNetwork } from "./transaction";
 
 import toast from "react-hot-toast";
 import { SwapContext } from "~/context/swap-context";
 import { StrategyInteraction } from "~/utils/constants";
 import { useSelectedStrategy } from "./store/strategies";
+import { useStore } from "react-redux";
+import { Operation } from "~/model/operation";
 
 export const useExecuteSwap = () => {
   const { fromValue, fromToken, toToken, action } = useContext(SwapContext);
@@ -35,7 +37,9 @@ export const useExecuteSwap = () => {
   const getSwapRoute = useGetSwapRoute();
   const switchNetwork = useSwitchNetwork(fromToken?.network?.id);
 
-  return useCallback(async () => {
+  const store = useStore()
+
+  return useCallback(async (operation: Operation) => {
     await switchNetwork();
 
     const estimationRequest = queryClient.getQueryData(
@@ -48,19 +52,26 @@ export const useExecuteSwap = () => {
       const routes = await getSwapRoute();
       tr = routes[0];
     }
+    const { hash: swapHash } = await executeSwap(tr);
+    const swapPending = publicClient.waitForTransactionReceipt({
+      hash: swapHash,
+    });
+    toast.promise(swapPending, {
+      loading: "Swap transaction is pending...",
+      success: "Swap transaction successful",
+      error: "Swap reverted rejected 🤯",
+    });
 
-    return aproveAndSwap(
-      {
-        route: tr,
-        fromToken,
-        amount,
-        clientAddress: address,
+    store.dispatch({
+      type: "operations/emmitStep",
+      payload: {
+        txId: operation.id,
+        promise: swapPending,
       },
-      publicClient
-    );
+    });
+    return swapHash;
   }, [
-    address,
-    amount,
+    store,
     fromToken,
     fromValue,
     getSwapRoute,
@@ -113,7 +124,7 @@ export const useEstimateRoute = () => {
     const estimationStep =
       lastStep.type === "custom" ? steps[steps.length - 2] : lastStep;
 
-    const receiveEstimation = amountToEth(
+    const receiveEstimation = weiToAmount(
       estimationStep?.estimate?.toAmount,
       estimationStep?.toToken?.decimals
     );

@@ -5,13 +5,14 @@ export const promiseAwaitingMiddleware: Middleware =
     if (action.payload instanceof Promise) {
       action.payload.then((res) => {
         action.payload = res;
-        store.dispatch(action);
+        //next(action)
       });
     } else if (action.payload?.promise instanceof Promise) {
       action.payload.promise
         .then(() => {
           delete action.payload.promise;
-          store.dispatch(action);
+          next(action)
+          //next(action)
         })
         .catch((e) => console.error(e));
     } else {

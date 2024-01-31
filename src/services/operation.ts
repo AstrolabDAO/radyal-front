@@ -8,7 +8,10 @@ import {
   selectedOperationSelector,
 } from "~/store/selectors/operations";
 import axios from "axios";
-import { LiFITransactionStatusResponse } from "~/store/interfaces/operations";
+import {
+  LiFITransactionStatusResponse,
+  OperationStep,
+} from "~/store/interfaces/operations";
 import { OperationsState, update } from "~/store/operations";
 
 export const getOperationsStore = () => {
@@ -72,7 +75,7 @@ export const checkInterval = () => {
               `https://li.quest/v1/status?txHash=${operation.txHash}`
             )
           ).data;
-
+          console.log('LIFI_REQUEST',result);
           if (result?.status === OperationStatus.DONE) {
             getStore().dispatch(
               update({
@@ -82,6 +85,10 @@ export const checkInterval = () => {
                   receivingTx: result?.receiving.txLink,
                   sendingTx: result?.sending.txLink,
                   substatus: result?.substatus,
+                  steps: operation.steps.map((step: OperationStep) => {
+                    step.status = OperationStatus.DONE;
+                    return step;
+                  }),
                 },
               })
             );

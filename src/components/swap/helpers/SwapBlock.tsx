@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import clsx from "clsx";
 
 import { Strategy, Token } from '~/utils/interfaces';
-import { amountToEth, lisibleAmount } from "~/utils/format";
+import { weiToAmount, round } from "~/utils/format";
 
 import { WalletIcon } from "@heroicons/react/24/solid";
 import IconGroup from "~/components/IconGroup";
@@ -42,7 +42,7 @@ const SwapBlock = ({
     if (!token) return 0;
     const balance = balanceBySlug[token.slug];
 
-    return amountToEth(BigInt(balance?.amountWei ?? 0), token.decimals);
+    return weiToAmount(BigInt(balance?.amountWei ?? 0), token.decimals);
   }, [balanceBySlug, token]);
 
   const balanceEquivalent = useMemo(() => {
@@ -124,12 +124,12 @@ const SwapBlock = ({
             onClick={ () => onWalletClick(balance) }
           >
             <WalletIcon className="flex me-1 my-auto h-3 w-3"/>
-            <span className="flex my-auto"> { lisibleAmount(balance, 4) } </span>
+            <span className="flex my-auto"> { round(balance, 4) } </span>
           </div>
           <div className="flex ms-auto">
             { children }
           </div>
-          <div className="text-xs text-dark-500 font-light">~{ lisibleAmount(balanceEquivalent, 4) } $</div>
+          <div className="text-xs text-dark-500 font-light">~{ round(balanceEquivalent, 4) } $</div>
         </div>
       </div>
     </div>

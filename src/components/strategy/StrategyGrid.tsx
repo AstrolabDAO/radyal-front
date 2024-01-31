@@ -40,9 +40,9 @@ const StrategyGrid = () => {
             Chain
           </span>
           <NetworkSelect
-            isSearchable
-            className="basic-multi-select w-64 h-12"
-            classNamePrefix="select"
+            isSearchable={false}
+            className="w-64 h-12"
+
             networks={strategiesNetworks}
             onChange={(value: Array<NetworkSelectData>) => {
               dispatch(filterByNetworks(value.map((v) => v.network?.slug)));

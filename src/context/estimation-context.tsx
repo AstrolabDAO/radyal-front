@@ -229,6 +229,7 @@ const EstimationProvider = ({ children }) => {
         const currentStep = getCurrentStep();
 
         if (currentStep?.type === "Approve") {
+
           store.dispatch({
             type: "operations/emmitStep",
             payload: {
@@ -238,16 +239,9 @@ const EstimationProvider = ({ children }) => {
           });
 
           await approvePending;
-          const swapPromise = executeSwap();
-          store.dispatch({
-            type: "operations/emmitStep",
-            payload: {
-              txId: _tx.id,
-              promise: swapPromise,
-            },
-          });
-          const swapResult = await swapPromise;
-          const { hash, route } = swapResult;
+          const swapPromise = executeSwap(_tx);
+
+          const hash = await swapPromise;
 
           store.dispatch({
             type: "operations/update",
@@ -255,7 +249,6 @@ const EstimationProvider = ({ children }) => {
               id: _tx.id,
               payload: {
                 txHash: hash,
-                estimation: route,
                 status: OperationStatus.PENDING,
               },
             },
@@ -266,15 +259,13 @@ const EstimationProvider = ({ children }) => {
           type: "operations/add",
           payload: _tx,
         });
-        const { hash, route } = await executeSwap();
-        _tx.estimation = route;
+        const hash = await executeSwap(_tx);
         store.dispatch({
           type: "operations/update",
           payload: {
             id: _tx.id,
             payload: {
               txHash: hash,
-              estimation: route,
               status: OperationStatus.PENDING,
             },
           },

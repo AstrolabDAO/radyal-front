@@ -31,12 +31,11 @@ export const clearFrom = (s: string, regex: string): string =>
 export const clearNetworkTypeFromSlug = (slug: string): string =>
   clearFrom(slug, "-mainnet|-testnet");
 
-export const amountToEth = (bigInt: bigint | string, decimals) =>
+export const weiToAmount = (bigInt: bigint | string, decimals: number) =>
   Number(bigInt) / 10 ** decimals;
 
-export const lisibleAmount = (amount: string | number, decimals = 2) => {
-  return Math.round(Number(amount) * 10 ** decimals) / 10 ** decimals;
-};
+export const round = (value: string | number, decimals = 2) =>
+  Number(Number(value).toFixed(decimals));
 
 export const unwrapSymbol = (symbol: string): string => {
   return unwraps?.[symbol.toLowerCase()] ?? symbol.toLowerCase();

@@ -27,13 +27,26 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
     control: (baseStyles: any) => {
       return {
         ...baseStyles,
-      borderRadius: "0.375rem",
-      height: "3rem",
-    }},
-    option: (baseStyles: any, { isFocused }) => ({
+        backgroundColor: "#1C1C1C",
+        borderColor: "var(--fallback-bc,oklch(var(--bc)/0.2))",
+        borderRadius: "0.375rem",
+        height: "3rem",
+        "&:hover": {
+          boxShadow: "none",
+          borderColor: "var(--primary)"
+        }
+      }
+    },
+    option: (baseStyles: any) => ({
       ...baseStyles,
-      backgroundColor: isFocused ? 'rgb(255 184 0 / var(--tw-bg-opacity))' : 'gray',
-    })
+      backgroundColor: '#1C1C1C',
+    }),
+    menu: (baseStyles: any) => ({
+      ...baseStyles,
+      zIndex: 1000,
+      borderRadius: '0.375rem',
+      backgroundColor: '#1C1C1C',
+    }),
   }
   return (
     <ReactSelect
@@ -44,6 +57,8 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
         label: <img src={network.icon} width={20} height={20} />,
         network: network,
       }))}
+      className="bg-dark-800"
+      isSearchable={false}
       components={{ Option }}
       {...props}
     />

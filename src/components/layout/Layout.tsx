@@ -11,13 +11,15 @@ import { DisclaimerContext } from "~/context/disclaimer-context";
 import Header from "../layer/MainHeader";
 import Footer from "../layer/MainFooter";
 
-const Layout = () => {
+const Layout = ({ changeColor }) => {
   const { accepted } = useContext(DisclaimerContext);
   if (!accepted) return <DisclaimerPage />;
   return (
     <>
       <main className="min-h-screen">
-        <Header />
+        <Header
+          emitMint={ changeColor }
+        />
         <div id="page-content" className="h-full relative">
           <RouterProvider router={router} />
           <Toaster position="top-right" reverseOrder={false} />

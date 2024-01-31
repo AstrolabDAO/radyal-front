@@ -21,7 +21,7 @@ const DisclaimerPage = () => {
         <h1 className="text-8xl font-bold"> RADYAL </h1>
         <div>ALGORITHMIC YIELD PRIMITIVES</div>
         <div className="w-2/3 xl:w-5/12 mx-auto mt-6 mb-3">
-          <div className="border-solid border-2 border-sky-500 rounded-xl p-4 h-64 overflow-scroll text-white">
+          <div className="border-solid border-2 border-sky-500 rounded-xl p-4 h-64 overflow-scroll text-white text-left text-sm">
             <RiskDisclaimerMd />
           </div>
         </div>
