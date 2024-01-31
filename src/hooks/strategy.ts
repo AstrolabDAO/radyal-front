@@ -12,6 +12,7 @@ import { Operation, OperationStatus } from "~/model/operation";
 import { OperationStep } from "~/store/interfaces/operations";
 import { useCurrentStep, useEmmitStep } from "./store/operation";
 import { useSelectedStrategy } from "./store/strategies";
+import { useStore } from "react-redux";
 
 export const useMaxRedeem = () => {
   const strategy = useSelectedStrategy();
@@ -123,7 +124,7 @@ export const useApproveAndDeposit = () => {
   const emmitStep = useEmmitStep();
   const currentStep = useCurrentStep();
   const { needApprove, estimation } = useContext(EstimationContext);
-
+  const store = useStore();
   return useCallback(
     async (value: number) => {
       await switchNetwork();
@@ -131,6 +132,7 @@ export const useApproveAndDeposit = () => {
 
       const _tx = new Operation({
         id: window.crypto.randomUUID(),
+        status: OperationStatus.PENDING,
         steps: estimation.steps.map((step: ICommonStep) => {
           return {
             ...step,
@@ -149,6 +151,10 @@ export const useApproveAndDeposit = () => {
 
           const approvePending = publicClient.waitForTransactionReceipt({
             hash: approveHash,
+          });
+          store.dispatch({
+            type: "operations/add",
+            payload: _tx,
           });
           toast.promise(approvePending, {
             loading: "Approve is pending...",
@@ -174,6 +180,22 @@ export const useApproveAndDeposit = () => {
           error: "deposit reverted rejected 🤯",
         });
         await depositPending;
+        store.dispatch({
+          type: "operations/update",
+          payload: {
+            id: _tx.id,
+            payload: {
+              txHash: depositHash,
+              status: OperationStatus.DONE,
+              steps: _tx.steps.map((step) => {
+                return {
+                  ...step,
+                  status: OperationStatus.DONE,
+                };
+              }),
+            },
+          },
+        });
       } catch (e) {
         console.error(e);
         toast.error("An error has occured");
@@ -182,12 +204,13 @@ export const useApproveAndDeposit = () => {
     [
       approve,
       asset.weiPerUnit,
-      currentStep,
+      currentStep.type,
       deposit,
       emmitStep,
       estimation,
       needApprove,
       publicClient,
+      store,
       strategy.address,
       switchNetwork,
     ]

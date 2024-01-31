@@ -104,13 +104,13 @@ const EstimationProvider = ({ children }) => {
 
     const spender = !actionNeedToSwap
       ? selectedStrategy?.address
-      : estimationData?.request?.to;
+      : estimationData?.request?.approvalAddress;
 
     if (!spender) return [null, null];
     return [allowanceToken, spender];
   }, [
     actionNeedToSwap,
-    estimationData?.request?.to,
+    estimationData?.request?.approvalAddress,
     fromToken,
     selectedStrategy?.address,
   ]);
@@ -134,7 +134,7 @@ const EstimationProvider = ({ children }) => {
     if (!estimationData) return null;
     const txSteps = estimationData?.steps;
 
-    if (needApprove && txSteps && txSteps[0].type !== "Approve"){
+    if (needApprove && txSteps && txSteps[0].type !== "Approve") {
       txSteps.unshift({
         id: window.crypto.randomUUID(),
         type: "Approve",
@@ -291,7 +291,7 @@ const EstimationProvider = ({ children }) => {
       }
     } catch (error) {
       close();
-      setUpdateEstimation(true)
+      setUpdateEstimation(true);
       setCanSwap(true);
       toast.error(error.message);
       store.dispatch({
