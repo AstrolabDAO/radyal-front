@@ -147,7 +147,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
             <div className="flex flex-row text-sm btn-primary text-dark rounded-xl my-auto px-10 pb-1 pt-1.5 font-bold italic gilroy">
               <StrategyCardAPY
                 hideLabel={ true }
-                apy={ 23.3 }
+                apy={ 13.3 }
               />
             </div>
           </div>

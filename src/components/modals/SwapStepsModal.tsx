@@ -12,7 +12,7 @@ const SwapStepsModal = () => {
   return (
     <div className="p-4">
       <div className="card">
-        <div className="text-3xl mb-3 uppercase">
+        <div className="text-2xl text-white mb-3 uppercase">
           Tx tracking
         </div>
         <SwapRouteDetail

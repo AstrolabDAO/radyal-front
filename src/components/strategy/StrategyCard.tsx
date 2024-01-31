@@ -63,6 +63,9 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   const assetIconPath = useMemo(() => {
     return strategy.asset.icon.substring(0, strategy.asset.icon.length - 4) + "-mono.svg";
   }, [strategy]);
+  const randomBetween = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
   return (
     <div
       className={clsx(
@@ -98,8 +101,8 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
           </div>
         </div>
         <div className="flex flex-row mt-auto">
-          <StrategyCardAPY apy={23.3} />
-          <StrategyCardTVL tvl={22.3} />
+          <StrategyCardAPY apy={randomBetween(8, 15)} />
+          <StrategyCardTVL tvl={randomBetween(8, 15)} />
         </div>
       </div>
     </div>

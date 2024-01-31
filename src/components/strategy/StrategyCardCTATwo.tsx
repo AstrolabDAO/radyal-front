@@ -134,7 +134,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
               <div className="btn-primary text-sm  text-dark rounded-xl my-auto px-10 pb-1 pt-1.5 font-bold italic gilroy">
                 <StrategyCardAPY
                   hideLabel={ true }
-                  apy={ 23.3 }
+                  apy={ 9.3 }
                 />
               </div>
             </div>

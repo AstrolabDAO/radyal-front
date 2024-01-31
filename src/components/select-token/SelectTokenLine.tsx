@@ -60,16 +60,15 @@ const SelectTokenLine = ({
       <div className="flex flex-row w-full items-center">
         <IconGroup icons={icons} />
         <div className="ms-4">
-          <span className="text-xl font-bold"> {token?.symbol} </span>
+          <span className="text-xl font-bold text-white"> {token?.symbol} </span>
           <span className="text-xs">
             ({token.network.name})
           </span>
         </div>
         <div className="ms-auto">
           <span className="whitespace-nowrap block">
-            <span className="font-bold">
+            <span className="font-bold text-white">
               {round(convertedBalance, 4)} </span>
-              {token.symbol}
           </span>
         </div>
       </div>
