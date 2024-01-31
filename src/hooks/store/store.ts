@@ -55,7 +55,8 @@ export const useLoadTokens = () => {
     cacheHash("tokens"),
     getTokens,
     {
-      staleTime: ONE_MINUTE * 15,
+      staleTime: 0,
+      //staleTime: ONE_MINUTE * 15,
     }
   );
 

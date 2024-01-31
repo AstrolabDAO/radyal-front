@@ -1,4 +1,4 @@
-import { Strategy, Token } from "./interfaces";
+import { Protocol, Strategy, Token } from "./interfaces";
 
 export const tokensIsEqual = (
   tokenA: Token | Strategy,
@@ -15,11 +15,19 @@ export const tokensIsEqual = (
 };
 
 export const getIconFromStrategy = (
-  strategy: Strategy,
+  strategy: Strategy, protocols: Protocol[],
 ) => {
+  function getProtocolIcon() {
+    const protocolSlug: string = strategy.protocols[0] as string;
+    const protocol = protocols.find((p) => {
+      return p.slug === protocolSlug;
+    });
+    if (!protocol) return "";
+    return protocol.icon;
+  }
   switch (strategy.aggregationLevel) {
-    case 0: return strategy.protocols[0];
+    case 0: return getProtocolIcon();
     case 1: return strategy.network.icon;
-    case 2: return strategy.asset.icon;
+    default: return strategy.asset.icon;
   }
 };

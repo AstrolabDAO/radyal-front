@@ -4,6 +4,8 @@ import { Strategy } from "~/utils/interfaces";
 
 import SwapBlock from "../helpers/SwapBlock";
 import { EstimationContext } from "~/context/estimation-context";
+import { getIconFromStrategy } from "~/utils";
+import { Web3Context } from "~/context/web3-context";
 
 const DepositFor = ({ strategy }: { strategy: Strategy  & { protocols?: any[] }}) => {
   const { toValue: depositToValue } = useContext(EstimationContext);
@@ -13,8 +15,12 @@ const DepositFor = ({ strategy }: { strategy: Strategy  & { protocols?: any[] }}
     return strategy?.network.name;
   }, [strategy]);
 
+
+  const protocols = useContext(Web3Context)?.protocols;
+  const background = getIconFromStrategy(strategy, protocols);
+
   const icons = {
-    background: strategy?.icon,
+    background,
     foreground: strategy?.network?.icon,
   };
 

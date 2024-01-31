@@ -2,7 +2,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import { IRootState } from "..";
 
 import { TokensState } from "../tokens";
-import { amountToEth } from "~/utils/format";
+import { weiToAmount } from "~/utils/format";
 
 const selectTokensState = (state: IRootState) => state.tokens;
 const selectMappings = (state: IRootState) => state.tokens.mappings;
@@ -41,9 +41,9 @@ export const sortedBalancesSelector = createSelector(
         const priceB = state.prices[tokenB?.coinGeckoId]?.usd;
 
         const valueA =
-          amountToEth(BigInt(a.amountWei), tokenA?.decimals) * priceA;
+          weiToAmount(BigInt(a.amountWei), tokenA?.decimals) * priceA;
         const valueB =
-          amountToEth(BigInt(b.amountWei), tokenB?.decimals) * priceB;
+          weiToAmount(BigInt(b.amountWei), tokenB?.decimals) * priceB;
 
         return valueA > valueB ? -1 : 1;
       });

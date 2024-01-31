@@ -70,11 +70,12 @@ interface Metadata {
 
 export interface OperationStep extends ICommonStep {
   status: OperationStatus;
+  substatusMessage?: string;
 }
 
 export interface EmmitStepAction {
   txId: string;
-  promise: Promise<any>;
+  promise?: Promise<any>;
 }
 export interface UpdateAction {
   id: string;

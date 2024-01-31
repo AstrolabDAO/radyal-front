@@ -14,6 +14,7 @@ class Operation implements OperationInterface {
   receivingTx?: string;
   sendingTx?: string;
   substatus?: string;
+  substatusMessage?: string;
 
   constructor(tx: Partial<Operation>) {
     this.id = tx.id;
@@ -25,6 +26,7 @@ class Operation implements OperationInterface {
     this.receivingTx = tx.receivingTx ?? null;
     this.sendingTx = tx.sendingTx ?? null;
     this.substatus = tx.substatus ?? null;
+    this.substatusMessage = tx.substatusMessage ?? null;
   }
 
   toObject(): Partial<Operation> {

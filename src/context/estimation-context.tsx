@@ -23,7 +23,6 @@ import { Operation, OperationStatus } from "~/model/operation";
 
 import SwapStepsModal from "~/components/modals/SwapStepsModal";
 import { useSelectedStrategy } from "~/hooks/store/strategies";
-import { getCurrentStep } from "~/services/operation";
 import { OperationStep } from "~/store/interfaces/operations";
 import { SwapModalContext } from "./swap-modal-context";
 
@@ -226,66 +225,45 @@ const EstimationProvider = ({ children }) => {
           success: "Approve transaction successful",
           error: "approve reverted rejected 🤯",
         });
-        const currentStep = getCurrentStep();
 
-        if (currentStep?.type === "Approve") {
-          store.dispatch({
-            type: "operations/emmitStep",
-            payload: {
-              txId: _tx.id,
-              promise: approvePending,
-            },
-          });
-
-          await approvePending;
-          const swapPromise = executeSwap();
-          store.dispatch({
-            type: "operations/emmitStep",
-            payload: {
-              txId: _tx.id,
-              promise: swapPromise,
-            },
-          });
-          const swapResult = await swapPromise;
-          const { hash, route } = swapResult;
-
-          store.dispatch({
-            type: "operations/update",
-            payload: {
-              id: _tx.id,
-              payload: {
-                txHash: hash,
-                estimation: route,
-                status: OperationStatus.PENDING,
-              },
-            },
-          });
-        }
-      } else {
         store.dispatch({
-          type: "operations/add",
-          payload: _tx,
+          type: "operations/emmitStep",
+          payload: {
+            txId: _tx.id,
+            label: "approve-dispatch",
+            promise: approvePending,
+          },
         });
-        const { hash, route } = await executeSwap();
-        _tx.estimation = route;
+
+        await approvePending;
+        const swapPromise = executeSwap(_tx);
+
+        const hash = await swapPromise;
+
         store.dispatch({
           type: "operations/update",
           payload: {
             id: _tx.id,
             payload: {
               txHash: hash,
-              estimation: route,
               status: OperationStatus.PENDING,
             },
           },
         });
+      } else {
         store.dispatch({
-          type: "operations/emmitStep",
+          type: "operations/add",
+          payload: _tx,
+        });
+        const hash = await executeSwap(_tx);
+        store.dispatch({
+          type: "operations/update",
           payload: {
-            txId: _tx.id,
-            promise: publicClient.waitForTransactionReceipt({
-              hash,
-            }),
+            id: _tx.id,
+            payload: {
+              txHash: hash,
+              status: OperationStatus.PENDING,
+            },
           },
         });
       }

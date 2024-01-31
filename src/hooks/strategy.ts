@@ -13,6 +13,7 @@ import { OperationStep } from "~/store/interfaces/operations";
 import { useCurrentStep, useEmmitStep } from "./store/operation";
 import { useSelectedStrategy } from "./store/strategies";
 import { useStore } from "react-redux";
+import { getCurrentStep } from "~/services/operation";
 
 export const useMaxRedeem = () => {
   const strategy = useSelectedStrategy();
@@ -122,7 +123,6 @@ export const useApproveAndDeposit = () => {
   const approve = useApprove(asset);
   const switchNetwork = useSwitchNetwork(network.id);
   const emmitStep = useEmmitStep();
-  const currentStep = useCurrentStep();
   const { needApprove, estimation } = useContext(EstimationContext);
   const store = useStore();
   return useCallback(
@@ -162,12 +162,11 @@ export const useApproveAndDeposit = () => {
             error: "approve reverted rejected 🤯",
           });
 
-          if (currentStep.type === "Approve")
-            emmitStep({
-              txId: _tx.id,
-              promise: approvePending,
-            });
           await approvePending;
+
+          emmitStep({
+            txId: _tx.id,
+          });
         }
         const depositHash = (await deposit(amount)) as `0x${string}`;
 
@@ -204,7 +203,6 @@ export const useApproveAndDeposit = () => {
     [
       approve,
       asset.weiPerUnit,
-      currentStep.type,
       deposit,
       emmitStep,
       estimation,

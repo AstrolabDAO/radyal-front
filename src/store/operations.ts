@@ -105,11 +105,31 @@ const operationSlice = createSlice({
         1000 * 60 * 60 * 24 * 30 // 1 month
       );
     },
+    failCurrentStep: (state, action: PayloadAction<string>) => {
+      const operationIndex = state.indexById[action.payload];
+      const operation = state.list[operationIndex];
+
+      if (!operation) return;
+
+      const currentStep =
+        operation.steps.filter(
+          ({ status }) =>
+            status !== OperationStatus.DONE && status !== OperationStatus.FAILED
+        )[0] ?? null;
+      if (!currentStep) return;
+      currentStep.status = OperationStatus.FAILED;
+    },
     updateMappings,
   },
 });
 
-export const { add, update, emmitStep, selectOperation, updateIntervalId } =
-  operationSlice.actions;
+export const {
+  add,
+  update,
+  emmitStep,
+  failCurrentStep,
+  selectOperation,
+  updateIntervalId,
+} = operationSlice.actions;
 
 export const OperationReducer = operationSlice.reducer;

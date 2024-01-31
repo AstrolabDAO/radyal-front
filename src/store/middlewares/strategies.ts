@@ -22,7 +22,6 @@ const groupStrategies: Middleware =
         type: "strategies/groupStrategies",
       });
     }
-    return next(action);
   };
 
 export default [addCoingeckoIdMiddleware, groupStrategies] as Middleware[];
