@@ -3,84 +3,82 @@ import { Client } from "viem";
 import { useAccount, usePublicClient } from "wagmi";
 import { tokensIsEqual } from "~/utils";
 import { previewStrategyTokenMove } from "~/utils/flows/strategy";
-import { weiToAmount, cacheHash } from "~/utils/format";
+import { cacheHash, weiToAmount } from "~/utils/format";
 import { Strategy } from "~/utils/interfaces.ts";
 
 import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
 
 import { useQueryClient } from "react-query";
-import { aproveAndSwap, executeSwap, getSwapRoute } from "~/services/swap";
+import { executeSwap, getSwapRoute } from "~/services/swap";
 import { useSwitchNetwork } from "./transaction";
 
 import toast from "react-hot-toast";
+import { useStore } from "react-redux";
 import { SwapContext } from "~/context/swap-context";
+import { Operation } from "~/model/operation";
 import { StrategyInteraction } from "~/utils/constants";
 import { useSelectedStrategy } from "./store/strategies";
-import { useStore } from "react-redux";
-import { Operation } from "~/model/operation";
 
 export const useExecuteSwap = () => {
   const { fromValue, fromToken, toToken, action } = useContext(SwapContext);
-
-  const { address } = useAccount();
 
   const queryClient = useQueryClient();
   const publicClient = usePublicClient({
     chainId: fromToken?.network?.id,
   });
 
-  const amount = useMemo(() => {
-    if (!fromToken) return 0n;
-    return BigInt(Math.round(fromValue * fromToken.weiPerUnit));
-  }, [fromToken, fromValue]);
-
   const getSwapRoute = useGetSwapRoute();
   const switchNetwork = useSwitchNetwork(fromToken?.network?.id);
 
-  const store = useStore()
+  const store = useStore();
 
-  return useCallback(async (operation: Operation) => {
-    await switchNetwork();
+  return useCallback(
+    async (operation: Operation) => {
+      await switchNetwork();
 
-    const estimationRequest = queryClient.getQueryData(
-      cacheHash("estimate", action, fromToken, toToken, fromValue)
-    ) as any;
+      const estimationRequest = queryClient.getQueryData(
+        cacheHash("estimate", action, fromToken, toToken, fromValue)
+      ) as any;
 
-    let tr: ITransactionRequestWithEstimate = estimationRequest?.request;
+      let tr: ITransactionRequestWithEstimate = estimationRequest?.request;
 
-    if (!tr) {
-      const routes = await getSwapRoute();
-      tr = routes[0];
-    }
-    const { hash: swapHash } = await executeSwap(tr);
-    const swapPending = publicClient.waitForTransactionReceipt({
-      hash: swapHash,
-    });
-    toast.promise(swapPending, {
-      loading: "Swap transaction is pending...",
-      success: "Swap transaction successful",
-      error: "Swap reverted rejected 🤯",
-    });
+      if (!tr) {
+        const routes = await getSwapRoute();
+        tr = routes[0];
+      }
+      const { hash: swapHash } = await executeSwap(tr);
+      const swapPending = publicClient.waitForTransactionReceipt({
+        hash: swapHash,
+      });
+      toast.promise(swapPending, {
+        loading: "Swap transaction is pending...",
+        success: "Swap transaction successful",
+        error: "Swap reverted rejected 🤯",
+      });
 
-    store.dispatch({
-      type: "operations/emmitStep",
-      payload: {
-        txId: operation.id,
-        promise: swapPending,
-      },
-    });
-    return swapHash;
-  }, [
-    store,
-    fromToken,
-    fromValue,
-    getSwapRoute,
-    publicClient,
-    queryClient,
-    action,
-    switchNetwork,
-    toToken,
-  ]);
+      store.dispatch({
+        type: "operations/emmitStep",
+        payload: {
+          txId: operation.id,
+          label: "swap-pending",
+          promise: swapPending,
+        },
+      });
+      await swapPending;
+      return swapHash;
+    },
+    [
+      store,
+      fromToken,
+      fromValue,
+      getSwapRoute,
+      publicClient,
+      queryClient,
+      action,
+      switchNetwork,
+      toToken,
+    ]
+  );
 };
 
 export const useEstimateRoute = () => {

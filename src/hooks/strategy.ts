@@ -162,12 +162,11 @@ export const useApproveAndDeposit = () => {
             error: "approve reverted rejected 🤯",
           });
 
-          if (getCurrentStep().type === "Approve")
-            emmitStep({
-              txId: _tx.id,
-              promise: approvePending,
-            });
           await approvePending;
+
+          emmitStep({
+            txId: _tx.id,
+          });
         }
         const depositHash = (await deposit(amount)) as `0x${string}`;
 

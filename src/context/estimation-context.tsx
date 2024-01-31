@@ -23,7 +23,6 @@ import { Operation, OperationStatus } from "~/model/operation";
 
 import SwapStepsModal from "~/components/modals/SwapStepsModal";
 import { useSelectedStrategy } from "~/hooks/store/strategies";
-import { getCurrentStep } from "~/services/operation";
 import { OperationStep } from "~/store/interfaces/operations";
 import { SwapModalContext } from "./swap-modal-context";
 
@@ -226,34 +225,31 @@ const EstimationProvider = ({ children }) => {
           success: "Approve transaction successful",
           error: "approve reverted rejected 🤯",
         });
-        const currentStep = getCurrentStep();
 
-        if (currentStep?.type === "Approve") {
+        store.dispatch({
+          type: "operations/emmitStep",
+          payload: {
+            txId: _tx.id,
+            label: "approve-dispatch",
+            promise: approvePending,
+          },
+        });
 
-          store.dispatch({
-            type: "operations/emmitStep",
+        await approvePending;
+        const swapPromise = executeSwap(_tx);
+
+        const hash = await swapPromise;
+
+        store.dispatch({
+          type: "operations/update",
+          payload: {
+            id: _tx.id,
             payload: {
-              txId: _tx.id,
-              promise: approvePending,
+              txHash: hash,
+              status: OperationStatus.PENDING,
             },
-          });
-
-          await approvePending;
-          const swapPromise = executeSwap(_tx);
-
-          const hash = await swapPromise;
-
-          store.dispatch({
-            type: "operations/update",
-            payload: {
-              id: _tx.id,
-              payload: {
-                txHash: hash,
-                status: OperationStatus.PENDING,
-              },
-            },
-          });
-        }
+          },
+        });
       } else {
         store.dispatch({
           type: "operations/add",
@@ -268,15 +264,6 @@ const EstimationProvider = ({ children }) => {
               txHash: hash,
               status: OperationStatus.PENDING,
             },
-          },
-        });
-        store.dispatch({
-          type: "operations/emmitStep",
-          payload: {
-            txId: _tx.id,
-            promise: publicClient.waitForTransactionReceipt({
-              hash,
-            }),
           },
         });
       }

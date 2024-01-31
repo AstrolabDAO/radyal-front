@@ -70,6 +70,7 @@ interface Metadata {
 
 export interface OperationStep extends ICommonStep {
   status: OperationStatus;
+  substatusMessage?: string;
 }
 
 export interface EmmitStepAction {

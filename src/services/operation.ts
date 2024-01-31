@@ -12,7 +12,7 @@ import {
   LiFITransactionStatusResponse,
   OperationStep,
 } from "~/store/interfaces/operations";
-import { OperationsState, update } from "~/store/operations";
+import { OperationsState, failCurrentStep, update } from "~/store/operations";
 
 export const getOperationsStore = () => {
   return getStoreState().operations;
@@ -66,46 +66,77 @@ export const checkInterval = () => {
 
     if (listByStatus.length === 0) {
       clearInterval(intervalId);
+      getStore().dispatch({
+        type: "operations/updateIntervalId",
+        payload: {
+          intervalId: null,
+        },
+      });
     }
-    listByStatus.forEach(async (operation: Operation) => {
-      try {
-        if (operation.estimation.aggregatorId === "LIFI") {
-          const result: LiFITransactionStatusResponse = (
-            await axios.get(
-              `https://li.quest/v1/status?txHash=${operation.txHash}`
-            )
-          ).data;
-          console.log('LIFI_REQUEST',result);
-          if (result?.status === OperationStatus.DONE) {
+    listByStatus
+      .filter((operation) => !!operation.txHash)
+      .forEach(async (operation: Operation) => {
+        try {
+          if (operation.estimation.request.aggregatorId === "LIFI") {
+            const result: LiFITransactionStatusResponse = (
+              await axios.get(
+                `https://li.quest/v1/status?txHash=${operation.txHash}`
+              )
+            ).data;
+
+            if (result?.status === OperationStatus.DONE) {
+              getStore().dispatch(
+                update({
+                  id: operation.id,
+                  payload: {
+                    status: OperationStatus.DONE,
+                    receivingTx: result?.receiving.txLink,
+                    sendingTx: result?.sending.txLink,
+                    substatus: result?.substatus,
+                    substatusMessage: result?.substatusMessage,
+                    steps: operation.steps.map((step: OperationStep) => {
+                      const isFail =
+                        result?.substatus === "PARTIAL" &&
+                        step.type === "custom";
+
+                      return {
+                        ...step,
+                        failMessage: isFail
+                          ? result?.substatusMessage
+                          : undefined,
+                        status: isFail
+                          ? OperationStatus.FAILED
+                          : OperationStatus.DONE,
+                      };
+                    }),
+                  },
+                })
+              );
+            } else if (result.status === OperationStatus.FAILED) {
+              getStore().dispatch(
+                update({
+                  id: operation.id,
+                  payload: {
+                    status: OperationStatus.FAILED,
+                  },
+                })
+              );
+              getStore().dispatch(failCurrentStep(operation.id));
+            }
+          }
+        } catch (e) {
+          if (e?.response?.data?.code === 1011) {
             getStore().dispatch(
               update({
                 id: operation.id,
                 payload: {
-                  status: OperationStatus.DONE,
-                  receivingTx: result?.receiving.txLink,
-                  sendingTx: result?.sending.txLink,
-                  substatus: result?.substatus,
-                  steps: operation.steps.map((step: OperationStep) => {
-                    step.status = OperationStatus.DONE;
-                    return step;
-                  }),
+                  status: OperationStatus.FAILED,
                 },
               })
             );
+            getStore().dispatch(failCurrentStep(operation.id));
           }
         }
-      } catch (e) {
-        if (e?.response?.data?.code === 1011) {
-          getStore().dispatch(
-            update({
-              id: operation.id,
-              payload: {
-                status: OperationStatus.FAILED,
-              },
-            })
-          );
-        }
-      }
-    });
+      });
   }, 1000 * 10);
 };

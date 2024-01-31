@@ -85,7 +85,7 @@ const operationSlice = createSlice({
     },
     emmitStep: (state, action: PayloadAction<EmmitStepAction>) => {
       const { txId } = action.payload;
-      console.log('EMMIT_STEP',action)
+
       const operationIndex = state.indexById[txId];
       const operation = state.list[operationIndex];
 
@@ -97,7 +97,7 @@ const operationSlice = createSlice({
             status !== OperationStatus.DONE && status !== OperationStatus.FAILED
         )[0] ?? null;
       if (!currentStep) return;
-      console.log("CURRENT",currentStep)
+
       currentStep.status = OperationStatus.DONE;
       LocalStorageService.setItem(
         CACHE_KEY,
@@ -105,11 +105,31 @@ const operationSlice = createSlice({
         1000 * 60 * 60 * 24 * 30 // 1 month
       );
     },
+    failCurrentStep: (state, action: PayloadAction<string>) => {
+      const operationIndex = state.indexById[action.payload];
+      const operation = state.list[operationIndex];
+
+      if (!operation) return;
+
+      const currentStep =
+        operation.steps.filter(
+          ({ status }) =>
+            status !== OperationStatus.DONE && status !== OperationStatus.FAILED
+        )[0] ?? null;
+      if (!currentStep) return;
+      currentStep.status = OperationStatus.FAILED;
+    },
     updateMappings,
   },
 });
 
-export const { add, update, emmitStep, selectOperation, updateIntervalId } =
-  operationSlice.actions;
+export const {
+  add,
+  update,
+  emmitStep,
+  failCurrentStep,
+  selectOperation,
+  updateIntervalId,
+} = operationSlice.actions;
 
 export const OperationReducer = operationSlice.reducer;

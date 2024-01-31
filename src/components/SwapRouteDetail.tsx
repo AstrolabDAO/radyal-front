@@ -13,7 +13,7 @@ import { EstimationContext } from "~/context/estimation-context";
 import { OperationStatus, OperationStep } from "~/store/interfaces/operations";
 import SwapRouteDetailLine from "./swap/helpers/SwapRouteDetailLine";
 import { IToken as LiFiToken } from "@astrolabs/swapper/dist/src/LiFi";
-import { IToken as SquidToken} from "@astrolabs/swapper/dist/src/Squid";
+import { IToken as SquidToken } from "@astrolabs/swapper/dist/src/Squid";
 
 type SwapRouteDetailProps = {
   steps: OperationStep[];
@@ -21,23 +21,30 @@ type SwapRouteDetailProps = {
 };
 type SwapRouteDetailLineStatus = "neutral" | "success" | "error" | "loading";
 
-const SwapRouteDetail = ({ steps, showStatus = false }: SwapRouteDetailProps) => {
+const SwapRouteDetail = ({
+  steps,
+  showStatus = false,
+}: SwapRouteDetailProps) => {
   const { estimationError } = useContext(EstimationContext);
 
   function getStatus(status: OperationStatus): SwapRouteDetailLineStatus {
     switch (status) {
       case OperationStatus.PENDING:
-        return "loading"
+        return "loading";
       case OperationStatus.DONE:
-        return "success"
+        return "success";
       case OperationStatus.FAILED:
-        return "error"
+        return "error";
       default:
-        return "neutral"
+        return "neutral";
     }
   }
 
-  function amountWithNetworkAndSymbol(chain: number, amount: string, token: LiFiToken | SquidToken) {
+  function amountWithNetworkAndSymbol(
+    chain: number,
+    amount: string,
+    token: LiFiToken | SquidToken
+  ) {
     const network = networkByChainId[chain];
     const amountFormatted = round(weiToAmount(amount, token?.decimals), 4);
     const symbol = token?.symbol ?? "???";
@@ -46,7 +53,6 @@ const SwapRouteDetail = ({ steps, showStatus = false }: SwapRouteDetailProps) =>
     return `${amountFormatted} ${symbol}`;
   }
   const displayedSteps = useMemo(() => {
-    console.log(steps);
     let haveWaitingStepCreated = false;
     return steps.map((step) => {
       const {
@@ -62,10 +68,18 @@ const SwapRouteDetail = ({ steps, showStatus = false }: SwapRouteDetailProps) =>
       } = step;
 
       const fromNetwork = networkByChainId[fromChain];
-      const fromAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(fromChain, estimate.fromAmount, fromToken);
+      const fromAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
+        fromChain,
+        estimate.fromAmount,
+        fromToken
+      );
 
       const toNetwork = networkByChainId[toChain];
-      const toAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(toChain, estimate.toAmount, toToken);
+      const toAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
+        toChain,
+        estimate.toAmount,
+        toToken
+      );
 
       const swapRouteStepType = SwapRouteStepTypeTraduction[type] ?? type;
 
@@ -100,7 +114,7 @@ const SwapRouteDetail = ({ steps, showStatus = false }: SwapRouteDetailProps) =>
   }, [steps, showStatus]);
   return (
     <div>
-      { (steps.length > 0 || estimationError) && !showStatus && (
+      {(steps.length > 0 || estimationError) && !showStatus && (
         <div className="mb-1">VIA</div>
       )}
       {!estimationError && (
@@ -108,23 +122,22 @@ const SwapRouteDetail = ({ steps, showStatus = false }: SwapRouteDetailProps) =>
           className="steps steps-vertical"
           style={{
             maxHeight: steps.length > 0 ? "500px" : "0px",
-            transition: "max-height 2s ease-out"
+            transition: "max-height 2s ease-out",
           }}
         >
-          { displayedSteps.map((step) =>
-              <SwapRouteDetailLine
-                key={`swap-route-detail-${step.id}`}
-                step={ step }
-                status={ step.status }
-              />
-            )
-          }
+          {displayedSteps.map((step) => (
+            <SwapRouteDetailLine
+              key={`swap-route-detail-${step.id}`}
+              step={step}
+              status={step.status}
+            />
+          ))}
         </ul>
       )}
-      { estimationError && (
+      {estimationError && (
         <div className="border-2 border-solid border-primary w-full py-6 rounded-xl bg-primary/10">
           <div className="text-center text-primary font-bold">
-              No route found, please select another deposit token
+            No route found, please select another deposit token
           </div>
         </div>
       )}

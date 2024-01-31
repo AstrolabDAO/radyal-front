@@ -1,7 +1,8 @@
 import { Middleware, PayloadAction } from "@reduxjs/toolkit";
 import LocalStorageService from "~/services/localStorage";
-import { CACHE_KEY } from "../operations";
+import { CACHE_KEY, updateIntervalId } from "../operations";
 import { Operation } from "~/model/operation";
+import { checkInterval } from "~/services/operation";
 
 const convertClassToObjectMiddleware: Middleware =
   () => (next) => (action: PayloadAction) => {
@@ -22,7 +23,12 @@ const operationsChangeMiddleware: Middleware =
       );
       store.dispatch({ type: "operations/updateMappings" });
       if (!state.intervalId)
-        store.dispatch({ type: "operations/listenOperations" });
+        store.dispatch({
+          type: "operations/updateIntervalId",
+          payload: {
+            intervalId: checkInterval(),
+          },
+        });
     }
   };
 

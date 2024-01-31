@@ -5,9 +5,9 @@ import DepositInto from "./deposit/DepositInto";
 import DepositSelectNetwork from "./deposit/DepositSelectNetwork";
 import DepositWith from "./deposit/DepositWith";
 
+import { EstimationContext } from "~/context/estimation-context";
 import { SwapContext } from "~/context/swap-context";
 import { SwapModalContext } from "~/context/swap-modal-context";
-import { EstimationContext } from "~/context/estimation-context";
 
 import { useSelectedStrategy } from "~/hooks/store/strategies";
 import { useApproveAndDeposit } from "~/hooks/strategy";
@@ -18,13 +18,10 @@ import { Strategy, Token } from "~/utils/interfaces";
 
 import SelectTokenModal from "../modals/SelectTokenModal";
 
-import SwapRouteDetail from "../SwapRouteDetail";
 import clsx from "clsx";
-import { useStore } from "react-redux";
+import SwapRouteDetail from "../SwapRouteDetail";
 
 const DepositTab = () => {
-  const state = useStore().getState();
-  console.log(state);
   const selectedStrategy = useSelectedStrategy();
   const { fromToken, toToken, fromValue, canSwap, actionNeedToSwap } =
     useContext(SwapContext);
@@ -39,41 +36,38 @@ const DepositTab = () => {
 
   return (
     <>
-    <div className="flex flex-col px-3 pt-3 relative">
-      <div className="flex md:flex-row flex-col">
-        <DepositInto strategy={selectedStrategy} />
-        <DepositSelectNetwork />
-      </div>
-      <DepositWith
-        token={fromToken as Token}
-        onTokenClick={openChangeTokenModal}
-      />
-      <DepositFor strategy={toToken as Strategy} />
+      <div className="flex flex-col px-3 pt-3 relative">
+        <div className="flex md:flex-row flex-col">
+          <DepositInto strategy={selectedStrategy} />
+          <DepositSelectNetwork />
+        </div>
+        <DepositWith
+          token={fromToken as Token}
+          onTokenClick={openChangeTokenModal}
+        />
+        <DepositFor strategy={toToken as Strategy} />
 
-      <SwapRouteDetail steps={estimation?.steps ?? []} />
-    </div>
-    <div className="mb-3 px-4">
-      <button
-        disabled={!canSwap}
-        onClick={async () => {
-          if (!tokensIsEqual(fromToken, selectedStrategy.asset)) {
-            await swap();
-          } else {
-            await approveAndDeposit(fromValue);
-          }
-        }}
-        className={ clsx(
-          "btn btn-primary w-full border-0 uppercase",
-        )}
-      >
-        { needApprove
-          ? "Approve & Deposit"
-          : actionNeedToSwap
-            ? "Swap & Deposit"
-            : "Deposit"
-        }
-      </button>
-    </div>
+        <SwapRouteDetail steps={estimation?.steps ?? []} />
+      </div>
+      <div className="mb-3 px-4">
+        <button
+          disabled={!canSwap}
+          onClick={async () => {
+            if (!tokensIsEqual(fromToken, selectedStrategy.asset)) {
+              await swap();
+            } else {
+              await approveAndDeposit(fromValue);
+            }
+          }}
+          className={clsx("btn btn-primary w-full border-0 uppercase")}
+        >
+          {needApprove
+            ? "Approve & Deposit"
+            : actionNeedToSwap
+              ? "Swap & Deposit"
+              : "Deposit"}
+        </button>
+      </div>
     </>
   );
 };
