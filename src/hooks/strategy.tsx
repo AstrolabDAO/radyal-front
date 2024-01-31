@@ -7,12 +7,14 @@ import toast from "react-hot-toast";
 
 import { ICommonStep } from "@astrolabs/swapper";
 import { getWalletClient } from "@wagmi/core";
+import { useStore } from "react-redux";
 import { EstimationContext } from "~/context/estimation-context";
+import { SwapModalContext } from "~/context/swap-modal-context";
 import { Operation, OperationStatus } from "~/model/operation";
 import { OperationStep } from "~/store/interfaces/operations";
-import {  useEmmitStep } from "./store/operation";
+import { useEmmitStep } from "./store/operation";
 import { useSelectedStrategy } from "./store/strategies";
-import { useStore } from "react-redux";
+import SwapStepsModal from "~/components/modals/SwapStepsModal";
 
 export const useMaxRedeem = () => {
   const strategy = useSelectedStrategy();
@@ -122,6 +124,7 @@ export const useApproveAndDeposit = () => {
   const approve = useApprove(asset);
   const switchNetwork = useSwitchNetwork(network.id);
   const emmitStep = useEmmitStep();
+  const { openModal } = useContext(SwapModalContext);
   const { needApprove, estimation } = useContext(EstimationContext);
   const store = useStore();
   return useCallback(
@@ -141,6 +144,7 @@ export const useApproveAndDeposit = () => {
         estimation,
       });
 
+      const close = openModal(<SwapStepsModal />);
       try {
         if (needApprove) {
           const { hash: approveHash } = await approve({
@@ -195,6 +199,7 @@ export const useApproveAndDeposit = () => {
           },
         });
       } catch (e) {
+        close();
         console.error(e);
         toast.error("An error has occured");
       }
@@ -206,6 +211,7 @@ export const useApproveAndDeposit = () => {
       emmitStep,
       estimation,
       needApprove,
+      openModal,
       publicClient,
       store,
       strategy.address,

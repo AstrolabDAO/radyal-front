@@ -92,8 +92,8 @@ const SwapProvider = ({ children }) => {
 
   useEffect(() => {
     if (
-      JSON.stringify(balances) !== JSON.stringify(balanceCache) &&
-      address != addressCache
+      JSON.stringify(balances) !== JSON.stringify(balanceCache) ||
+      address !== addressCache
     ) {
       const token = tokenBySlug[balances?.[0]?.token] ?? null;
       selectFromToken(token);

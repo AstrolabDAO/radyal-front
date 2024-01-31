@@ -65,6 +65,7 @@ export const getSwapRoute = async (params: LifiRequest) => {
 
   const quoteOpts: any = {
     aggregatorId: ["LIFI" /*, "SQUID"*/],
+
     inputChainId: fromToken.network.id,
     input: overrideZeroAddress(fromToken.address),
     amountWei: Math.round(Number(amount) - Number(amount) * 0.02), // because if not 2%, the fromAmount is lower. Why ? I don't know.
@@ -72,7 +73,7 @@ export const getSwapRoute = async (params: LifiRequest) => {
     output: overrideZeroAddress(toToken.address),
     maxSlippage: 50,
     payer: address,
-    //denyBridges: ["amarok"],
+    denyBridges: ["amarok"],
     customContractCalls: customContractCalls.length
       ? customContractCalls
       : undefined,
@@ -113,4 +114,3 @@ export const executeSwap = async (route: ITransactionRequestWithEstimate) => {
   console.log("hash: ", hash);
   return { hash };
 };
-

@@ -85,7 +85,7 @@ const operationSlice = createSlice({
     },
     emmitStep: (state, action: PayloadAction<EmmitStepAction>) => {
       const { txId } = action.payload;
-      console.log('EMMIT_STEP',action)
+
       const operationIndex = state.indexById[txId];
       const operation = state.list[operationIndex];
 
@@ -97,7 +97,7 @@ const operationSlice = createSlice({
             status !== OperationStatus.DONE && status !== OperationStatus.FAILED
         )[0] ?? null;
       if (!currentStep) return;
-      console.log("CURRENT",currentStep)
+
       currentStep.status = OperationStatus.DONE;
       LocalStorageService.setItem(
         CACHE_KEY,
