@@ -39,6 +39,10 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      scale: {
+        200: "2",
+        240: "2.4",
+      },
       borderWidth: {
         1: "1px",
       },

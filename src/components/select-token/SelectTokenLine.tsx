@@ -51,9 +51,9 @@ const SelectTokenLine = ({
   return (
     <div
       className={clsx(
-        "flex flex-col cursor-pointer mb-2 pt-2.5 pb-1.5 px-2 rounded-xl",
+        "flex flex-col cursor-pointer mb-2 pt-2.5 pb-1.5 px-2 rounded-xl box-content border-solid border-1 border-transparent",
         haveBorder && "border-b",
-        "hover:bg-primary hover:text-dark"
+        "hover:bg-primary/5 hover:border-primary"
       )}
       onClick={ onTokenSelect }
     >

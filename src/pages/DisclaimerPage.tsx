@@ -3,6 +3,10 @@ import { FaTwitter, FaDiscord, FaGithub } from "react-icons/fa";
 import { DisclaimerContext } from "~/context/disclaimer-context";
 
 import RiskDisclaimerMd from "~/assets/docs/risk.mdx";
+import Lottie from "lottie-react";
+import Button from "~/components/Button";
+
+import radyalAnimation from "~/assets/animations/logo.json";
 
 const DisclaimerPage = () => {
   const { accept } = useContext(DisclaimerContext);
@@ -18,29 +22,35 @@ const DisclaimerPage = () => {
   return (
     <div id="disclaimer-page" className="relative container flex mx-auto h-screen">
       <div className="flex flex-col m-auto text-center">
-        <h1 className="text-8xl font-bold"> RADYAL </h1>
-        <div>ALGORITHMIC YIELD PRIMITIVES</div>
-        <div className="w-2/3 xl:w-5/12 mx-auto mt-6 mb-3">
-          <div className="border-solid border-2 border-sky-500 rounded-xl p-4 h-64 overflow-scroll text-white text-left text-sm">
+        <div className="w-52 h-52 mx-auto overflow-hidden mt-3">
+          <Lottie
+            animationData={radyalAnimation} loop={true}
+            className="scale-200"
+          />
+        </div>
+        <h1 className="text-8xl gilroy font-bold text-white leading-10 mt-5">RADYAL</h1>
+        <div className="text-2xl gilroy font-semibold mt-4">ALGORITHMIC YIELD PRIMITIVES</div>
+        <div className="w-2/3 xl:w-8/12 mx-auto mt-6 mb-3">
+          <div className="border-solid border-1 border-gray-600 rounded-xl p-4 h-64 overflow-scroll text-white text-left text-xs md disclaimer">
             <RiskDisclaimerMd />
           </div>
         </div>
-        <div className="flex flex-row mx-auto my-3">
+        <div className="flex flex-row mx-auto mb-3">
           <input
             id="saveDisclaimerStatus"
             type="checkbox"
-            className="checkbox me-2"
+            className="checkbox checkbox-xs me-2 rounded-md checkbox-primary"
             checked={saveDisclaimerStatus}
             onChange={handleCheckboxChange}
           />
-          <label htmlFor="saveDisclaimerStatus">Hide for 30 days</label>
+          <label htmlFor="saveDisclaimerStatus" className="text-xs">Hide for 30 days</label>
         </div>
-        <button
-          className="btn btn-primary mx-auto px-10 mb-6"
+        <Button
+          className="mb-10 mx-auto px-5 min-w-36"
           onClick={handleAgreeClick}
         >
           AGREE
-        </button>
+        </Button>
         <div className="flex flex-row mx-auto">
           <button>
             <FaTwitter className="h-8 w-8 mx-2" />

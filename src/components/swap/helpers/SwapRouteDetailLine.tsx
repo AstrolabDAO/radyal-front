@@ -60,6 +60,7 @@ const SwapRouteDetailLine = ({
             <div className="flex items-center text-white mx-1 font-normal">
               <div>
                 with <span className="capitalize"> { protocolName } </span>
+                <IconCard icon={ protocolIcon } />
               </div>
               { protocolIcon.url && ( <IconCard icon={ protocolIcon } /> ) }
             </div>

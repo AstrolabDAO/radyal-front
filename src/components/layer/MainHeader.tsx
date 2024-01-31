@@ -55,10 +55,10 @@ const Header = ({ emitMint }) => {
               className="text-xl flex font-extrabold text-white text-neon cursor-pointer hover:text-primary">
               FARM
             </a>
-            <div className="text-xl flex text-gray-500">
+            <div className="text-xl flex text-gray-500 cursor-default">
               STAKE
             </div>
-            <div className="text-xl flex text-gray-500 hover:text-gray-600"
+            <div className="text-xl flex text-gray-500 hover:text-gray-600 cursor-default"
               onClick={ () => emitMint() }
             >
               MINT
@@ -71,7 +71,7 @@ const Header = ({ emitMint }) => {
             { isConnected && (
               <>
                 <Button
-                  className="h-10 min-h-0"
+                  className="h-10 min-h-0 rounded-xl"
                   onClick={() => web3Modal.open()}
                 >
                   { shortenAddress(address.toLowerCase()) }

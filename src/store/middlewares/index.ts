@@ -1,7 +1,7 @@
 import { Middleware, PayloadAction } from "@reduxjs/toolkit";
 
 export const promiseAwaitingMiddleware: Middleware =
-  (store) => (next) => (action: PayloadAction<any>) => {
+  () => (next) => (action: PayloadAction<any>) => {
     if (action.payload instanceof Promise) {
       action.payload.then((res) => {
         action.payload = res;

@@ -16,6 +16,8 @@ import {
 } from "~/hooks/store/strategies";
 import "./StrategyCard.css";
 import clsx from "clsx";
+import { Web3Context } from "~/context/web3-context";
+import { getIconFromStrategy } from "~/utils";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -48,7 +50,8 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
 
   const selectStrategy = useSelectStrategy();
   const selectGroup = useSelectStrategyGroup();
-
+  const { protocols } = useContext(Web3Context);
+  const strategyIconPath = (getIconFromStrategy(strategy, protocols).replace('.svg', '-mono.svg'));
   const openModalStrategy = () => {
     if (strategy === null) return;
     selectStrategy(strategy as Strategy);
@@ -59,11 +62,6 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
     }
     else openModal(<SwapModal />);
   }
-
-  const assetIconMono = useMemo(() => {
-    if (strategy === null) return null;
-    return strategy.asset.icon.replace(".svg", "-mono.svg");
-  }, [strategy])
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
   return (
@@ -123,7 +121,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
                 height={ '100%' }
                 y={ '-15%' }
                 clipPath="url(#clip)"
-                href={ assetIconMono }
+                href={ strategyIconPath }
               />
             }
         </svg>
@@ -131,7 +129,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
         <div className="absolute flex flex-col w-full pointer-events-none">
           <div className="flex flex-row justify-between px-5 pt-5">
             <div className={ clsx(
-              "me-auto text-3xl md:text-6xl gilroy font-extrabold italic",
+              "me-auto text-2xl md:text-5xl gilroy font-extrabold italic mt-auto",
               `${isHovered ? "text-primary" : "text-white"}`,
             )}>
               { title.toUpperCase() }
@@ -142,7 +140,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
               size={{ height: 45, width: 45 }}
             />
           </div>
-          <div className="text-2xl md:text-5xl gilroy italic me-auto text-gray-300 px-5 mb-3">
+          <div className="text-2xl md:text-4xl gilroy italic me-auto text-gray-400 px-5 mb-3">
             { subtitle }
           </div>
           <div className="flex flex-row justify-between px-5">

@@ -17,6 +17,8 @@ import {
   useSelectStrategyGroup,
 } from "~/hooks/store/strategies";
 import "./StrategyCard.css";
+import { Web3Context } from "~/context/web3-context";
+import { getIconFromStrategy } from "~/utils";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -62,10 +64,8 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
   }
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
-  const assetIconMono = useMemo(() => {
-    if (strategy === null) return null;
-    return strategy.asset.icon.replace(".svg", "-mono.svg");
-  }, [strategy])
+  const { protocols } = useContext(Web3Context);
+  const strategyIconPath = (getIconFromStrategy(strategy, protocols).replace('.svg', '-mono.svg'));
 
   return (
     <div
@@ -109,7 +109,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
                 height={ '100%' }
                 y={ '15%' }
                 clipPath="url(#clip-two)"
-                href={ assetIconMono }
+                href={ strategyIconPath }
               />
             }
         </svg>
@@ -117,12 +117,12 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
         <div className="absolute bottom-0 right-0 flex flex-col w-full pointer-events-none">
           <div className="flex flex-col px-5 pb-3">
             <div className={ clsx(
-              "ms-auto text-3xl md:text-6xl gilroy font-extrabold italic",
+              "ms-auto text-2xl md:text-5xl gilroy font-extrabold italic",
               `${isHovered ? "text-primary" : "text-white"}`,
             )}>
               { title.toUpperCase() }
             </div>
-            <div className="text-2xl md:text-5xl italic gilroy font-medium ms-auto text-gray-300 mb-2">
+            <div className="text-2xl md:text-4xl gilroy italic ms-auto text-gray-400 mb-3">
               { subtitle }
             </div>
             <div className="flex flex-row justify-between">

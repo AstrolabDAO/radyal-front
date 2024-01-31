@@ -10,10 +10,9 @@ import { getWalletClient } from "@wagmi/core";
 import { EstimationContext } from "~/context/estimation-context";
 import { Operation, OperationStatus } from "~/model/operation";
 import { OperationStep } from "~/store/interfaces/operations";
-import { useCurrentStep, useEmmitStep } from "./store/operation";
+import {  useEmmitStep } from "./store/operation";
 import { useSelectedStrategy } from "./store/strategies";
 import { useStore } from "react-redux";
-import { getCurrentStep } from "~/services/operation";
 
 export const useMaxRedeem = () => {
   const strategy = useSelectedStrategy();

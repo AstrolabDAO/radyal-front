@@ -14,3 +14,15 @@
 .md ul {
   @apply list-disc ps-3;
 }
+
+.disclaimer.md h1 {
+  @apply mt-0;
+}
+.disclaimer.md h1,
+.disclaimer.md h2,
+.disclaimer.md h3,
+.disclaimer.md h4,
+.disclaimer.md h5,
+.disclaimer.md h6 {
+  @apply text-xl gilroy mb-1;
+}
