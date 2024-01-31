@@ -120,7 +120,7 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
         </div>
       </header>
       <div
-        className="overflow-y-scroll"
+        className="overflow-y-scroll pe-2"
         style={{ maxHeight: "calc(100vh - 450px)" } }
       >
         { displayedTokens.map((token, index) => {

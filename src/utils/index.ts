@@ -25,6 +25,7 @@ export const getIconFromStrategy = (
     if (!protocol) return "";
     return protocol.icon;
   }
+  if (!strategy) return "";
   switch (strategy.aggregationLevel) {
     case 0: return getProtocolIcon();
     case 1: return strategy.network.icon;

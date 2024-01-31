@@ -26,6 +26,10 @@
   min-height: 2.85rem;
 }
 
+.btn.btn-primary {
+  @apply h-10 min-h-0 rounded-xl;
+}
+
 .btn-primary,
 .btn.btn-secondary {
   border: 0;

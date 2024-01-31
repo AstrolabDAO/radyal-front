@@ -135,10 +135,11 @@ const SwapRouteDetail = ({
           ))}
         </ul>
       )}
-      {estimationError && (
-        <div className="border-2 border-solid border-primary w-full py-6 rounded-xl bg-primary/10">
-          <div className="text-center text-primary font-bold">
-            No route found, please select another deposit token
+      { estimationError || true && (
+        <div className="border-1 border-solid border-warning w-full py-2 rounded-xl bg-warning/10 mb-3">
+          <div className="text-center text-primary font-medium leading-5">
+              No route found ! <br />
+              Please select another deposit token
           </div>
         </div>
       )}

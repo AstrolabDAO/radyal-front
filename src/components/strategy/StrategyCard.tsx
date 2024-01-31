@@ -18,6 +18,8 @@ import {
   useSelectedStrategy,
 } from "~/hooks/store/strategies";
 import "./StrategyCard.css";
+import { getIconFromStrategy } from "~/utils";
+import { Web3Context } from "~/context/web3-context";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -56,22 +58,8 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
     }
     else openModal(<SwapModal />);
   }
-  const protocolIconPath = useMemo(() => {
-    const protocolsIcons = [
-      "aura-finance-mono",
-      "balancer-mono",
-      "benqi-mono",
-      "compound-mono",
-      "dolomite-mono",
-      "flux-finance-mono",
-      "gamma-strategies-mono",
-      "lodestar-finance-mono",
-      "moonwell-mono",
-      "spark-mono",
-    ]
-    const name = protocolsIcons[Math.floor(Math.random() * protocolsIcons.length)]
-    return `/images/protocols/${name}.svg`;
-  }, []);
+  const protocols = useContext(Web3Context).protocols;
+  const strategyIconPath = (getIconFromStrategy(strategy, protocols).replace('.svg', '-mono.svg'));
   const assetIconPath = useMemo(() => {
     return strategy.asset.icon.substring(0, strategy.asset.icon.length - 4) + "-mono.svg";
   }, [strategy]);
@@ -93,7 +81,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
         className="absolute rounded-3xl inset-0 flex items-center justify-end z-0 overflow-hidden contrast-63 group-hover:contrast-100"
       >
         <img
-          src={ protocolIconPath }
+          src={ strategyIconPath }
           className="h-52 w-52 -mr-16 strategy-icon-filter"
         />
       </div>

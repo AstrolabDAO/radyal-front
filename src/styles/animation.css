@@ -71,14 +71,14 @@
   padding-left: 100%;
 }
 .scrolling-text-ltr > span {
-  animation: scrolling-text-ltr 20s linear infinite;
+  animation: scrolling-text-ltr 25s linear infinite;
 }
 .scrolling-text-rtl > span {
-  animation: scrolling-text-rtl 20s linear infinite;
+  animation: scrolling-text-rtl 25s linear infinite;
 }
 
 .scrolling-text-shadow > span {
-  animation-delay: 10s;
+  animation-delay: 12.5s;
 }
 
 @keyframes scrolling-text-rtl {
