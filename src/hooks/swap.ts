@@ -6,7 +6,7 @@ import { previewStrategyTokenMove } from "~/utils/flows/strategy";
 import { weiToAmount } from "~/utils/format";
 import { Strategy } from "~/utils/interfaces.ts";
 
-import { ITransactionRequestWithEstimate } from "@astrolabs/swapper";
+import { ICommonStep, ITransactionRequestWithEstimate } from "@astrolabs/swapper";
 
 import { useQueryClient } from "react-query";
 import { executeSwap, getSwapRoute } from "~/services/swap";
@@ -17,6 +17,7 @@ import { useStore } from "react-redux";
 import { Operation } from "~/model/operation";
 import { StrategyInteraction } from "~/utils/constants";
 import { useSelectedStrategy } from "./store/strategies";
+
 import {
   useEstimationHash,
   useEstimationOnProgress,
@@ -26,6 +27,8 @@ import {
   useSetEstimationOnprogress,
   useToToken,
 } from "./store/swapper";
+
+import { OperationStep } from "~/store/interfaces/operations";
 
 export const useExecuteSwap = () => {
   const fromToken = useFromToken();
@@ -124,7 +127,10 @@ export const useEstimateRoute = () => {
         error: "route not found from Swapper 🤯",
       };
     }
-    const { steps } = result[0];
+    const steps: OperationStep[] = result[0].steps.map((step: ICommonStep) => ({
+      ...step,
+      via: result[0].aggregatorId
+    }));
     const lastStep = steps[steps.length - 1];
 
     const estimationStep =

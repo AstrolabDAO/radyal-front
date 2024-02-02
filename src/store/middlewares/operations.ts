@@ -1,6 +1,6 @@
 import { Middleware, PayloadAction } from "@reduxjs/toolkit";
 import LocalStorageService from "~/services/localStorage";
-import { CACHE_KEY, updateIntervalId } from "../operations";
+import { CACHE_KEY } from "../operations";
 import { Operation } from "~/model/operation";
 import { checkInterval } from "~/services/operation";
 

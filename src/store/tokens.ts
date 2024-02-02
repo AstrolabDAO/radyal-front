@@ -3,7 +3,7 @@ import { cacheHash } from "~/utils/format";
 
 import {
   Balance,
-  CoingeckoPrices,
+  CoinGeckoPrices,
   Token,
   TokenBySlugMapping,
 } from "~/utils/interfaces";
@@ -13,7 +13,7 @@ export const CACHE_KEY = cacheHash("tokens");
 export interface TokensState {
   list: Token[];
   balances: Balance[];
-  prices: CoingeckoPrices;
+  prices: CoinGeckoPrices;
   requestedPriceCoingeckoIds: string[];
   tokenLoaded: boolean;
   canLoadPrices: boolean;
@@ -60,7 +60,7 @@ const initialState: TokensState = {
 interface InitPayload {
   tokens: Token[];
   balances?: Balance[];
-  prices?: CoingeckoPrices;
+  prices?: CoinGeckoPrices;
 }
 const tokensSlice = createSlice({
   name: "tokens",
@@ -91,7 +91,7 @@ const tokensSlice = createSlice({
         state.mappings.balanceByTokenSlug[balance.token] = balance;
       });
     },
-    setTokenPrices: (state, action: PayloadAction<CoingeckoPrices>) => {
+    setTokenPrices: (state, action: PayloadAction<CoinGeckoPrices>) => {
       state.prices = action.payload;
     },
     addToken: (state, action: PayloadAction<Token>) => {
@@ -143,7 +143,7 @@ const tokensSlice = createSlice({
     canLoadPrices: (state) => {
       state.canLoadPrices = true;
     },
-    updatePrices: (state, action: PayloadAction<CoingeckoPrices>) => {
+    updatePrices: (state, action: PayloadAction<CoinGeckoPrices>) => {
       state.prices = action.payload;
     },
   },
