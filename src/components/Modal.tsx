@@ -43,7 +43,7 @@ const Modal = () => {
           leaveTo="opacity-0 scale-95"
           as={Fragment}
         >
-          <Dialog.Panel className="dialog">
+          <Dialog.Panel className="dialog max-h-screen sm-max-h-95vh">
             <button
               className="right-0 top-0 absolute p-2 z-50 rounded-tr-xl w-8 h-8 sm:hidden"
               onClick={onClose}

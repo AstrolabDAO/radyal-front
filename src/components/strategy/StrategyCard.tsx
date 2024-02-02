@@ -1,27 +1,29 @@
 import clsx from "clsx";
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+
 import { useAccount } from "wagmi";
 
+import { getIconFromStrategy } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
-import StrategyCardAPY from "./StrategyCardAPY";
-import StrategyCardIcons from "./StrategyCardIcons";
-import StrategyCardTVL from "./StrategyCardTVL";
 
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import SwapModal from "../modals/SwapModal";
+import { clearState } from "~/store/swapper";
 
-import { Web3Context } from "~/context/web3-context";
 import { useOpenModal } from "~/hooks/store/modal";
 import {
   useSelectStrategy,
   useSelectStrategyGroup,
   useSelectedStrategy,
 } from "~/hooks/store/strategies";
-import { getIconFromStrategy } from "~/utils";
+
+import StrategyCardAPY from "./StrategyCardAPY";
+import StrategyCardIcons from "./StrategyCardIcons";
+import StrategyCardTVL from "./StrategyCardTVL";
+import SwapModal from "../modals/SwapModal";
+
 import "./StrategyCard.css";
-import { useDispatch } from "react-redux";
-import { clearState } from "~/store/swapper";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -60,11 +62,8 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
       setShouldOpenModal(true);
     } else openModal(<SwapModal onClose={() => dispatch(clearState())} />);
   };
-  const protocols = useContext(Web3Context).protocols;
-  const strategyIconPath = getIconFromStrategy(strategy, protocols).replace(
-    ".svg",
-    "-mono.svg"
-  );
+
+  const strategyIconPath = (getIconFromStrategy(strategy).replace('.svg', '-mono.svg'));
   const assetIconPath = useMemo(() => {
     return (
       strategy.asset.icon.substring(0, strategy.asset.icon.length - 4) +
@@ -76,9 +75,10 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   };
   return (
     <div
-      className={clsx("card group strategy-card text-secondary-900", {
-        active: selectedStrategy?.slug === strategy.slug,
-      })}
+      className={clsx(
+        "card group strategy-card text-white",
+        { active: selectedStrategy?.slug === strategy.slug }
+      )}
       onClick={openModalStrategy}
     >
       <div className="absolute inset-0 flex top-7 left-5 z-0 contrast-63 group-hover:contrast-100">

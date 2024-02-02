@@ -1,13 +1,13 @@
-import { useMemo } from "react";
-
 import clsx from "clsx";
+import { useMemo } from "react";
 
 import { Strategy, Token } from "~/utils/interfaces";
 import { weiToAmount, round } from "~/utils/format";
 
+import { useBalanceByTokenSlug, usePrices } from "~/hooks/store/tokens";
+
 import { WalletIcon } from "@heroicons/react/24/solid";
 import IconGroup from "~/components/IconGroup";
-import { useBalanceByTokenSlug, usePrices } from "~/hooks/store/tokens";
 
 type SwapBlockProps = {
   disabled?: boolean;
@@ -81,11 +81,11 @@ const SwapBlock = ({
   ];
 
   return (
-    <div className="flex flex-col my-3">
-      <div className="mb-1">{label}</div>
+    <div className="flex flex-col">
+      <div className="mb-1 text-gray-500 font-medium">{ label }</div>
       <div
         className={clsx(
-          "flex flex-col md:flex-row p-2 rounded-xl border-1 border-solid",
+          "flex flex-col md:flex-row p-2 rounded-[1.15rem] border-1 border-solid",
           {
             "bg-dark-700": !disabled,
             "border-dark-500": disabled,
@@ -107,12 +107,8 @@ const SwapBlock = ({
                 <IconGroup icons={iconGroup} />
               </div>
               <div className="flex flex-col ps-1.5 pe-3 py-3 bg-medium my-auto">
-                <div className="text-xl font-bold text-secondary-900 group-hover:text-primary">
-                  {symbol}
-                </div>
-                <div className="-mt-2 pt-1 text-nowrap text-xs">
-                  on {network}
-                </div>
+                <div className="text-xl font-bold text-white group-hover:text-primary">{ symbol }</div>
+                <div className="-mt-2 pt-1 text-nowrap text-xs">on { network }</div>
               </div>
             </>
           )}
@@ -131,11 +127,10 @@ const SwapBlock = ({
             onClick={() => onWalletClick(balance)}
           >
             <WalletIcon className="flex me-1 my-auto h-3 w-3" />
-            <span className="flex my-auto"> {round(balance, 4)} </span>
+            <span className="flex my-auto"> {round(balanceEquivalent, 4)} </span>
           </div>
-          <div className="flex ms-auto">{children}</div>
-          <div className="text-xs text-dark-500 font-light">
-            ~{round(balanceEquivalent, 4)} $
+          <div className="flex ms-auto text-white">
+            { children }
           </div>
         </div>
       </div>

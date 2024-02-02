@@ -25,18 +25,20 @@ const WithdrawTab = () => {
   const estimation = useEstimatedRoute();
 
   return (
-    <div className="flex flex-col px-3 pt-3 relative">
-      <WithdrawWith strategy={fromToken as Strategy} />
+    <div className="flex flex-col pt-3 relative gap-3">
+      <WithdrawWith
+        strategy={ fromToken as Strategy }
+      />
       <WithdrawFor
         token={toToken as Token}
         onTokenClick={openChangeTokenModal}
       />
 
-      {estimation && estimation.steps && (
-        <SwapRouteDetail steps={estimation.steps} />
-      )}
-      <div className="sticky top-0">
-        <button className="btn btn-primary mt-5 w-full button-primary-gradient button-primary-gradient-inverse border-0">
+      { estimation && estimation.steps &&
+        <SwapRouteDetail steps={ estimation.steps }/>
+      }
+      <div className="flex">
+        <button className="btn btn-primary w-full">
           Withdraw and Bridge
         </button>
       </div>

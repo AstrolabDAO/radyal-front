@@ -10,7 +10,7 @@
 }
 
 .strategy-card {
-  @apply bg-dark-700/50 h-48 cursor-pointer border-1 border-dark-500 border-1 border-dark-500 border-solid hover:shadow-sm hover:border-primary/50 transition-all duration-500
+  @apply bg-dark-700/50 h-48 cursor-pointer border-1 border-dark-500 border-solid hover:shadow-sm hover:border-primary/50 transition-all duration-500
 }
 
 div.strategy-cta-size {
@@ -60,11 +60,5 @@ div.strategy-cta-size {
 }
 
 .strategy-banner-wrapper {
-  position: absolute;
   transform: rotate(-17deg);
-  left: -100px;
-  top: -110px;
-  width: calc(100vw + 200px);
-  right: 100px;
-  height: 0;
 }

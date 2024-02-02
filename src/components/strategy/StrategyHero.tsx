@@ -18,7 +18,7 @@ const StrategyHero = () => {
 
   return (
     <div
-      className="flex flex-col container px-2 overflow-hidden"
+      className="relative flex flex-col container px-2 overflow-hidden h-[35rem]"
     >
       <StrategyCardCTAOne strategyGroup={ groupOne } />
       <StrategyBanner

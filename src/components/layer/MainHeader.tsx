@@ -52,7 +52,7 @@ const Header = ({ emitMint }) => {
           <div className="navbar-center flex-row justify-center gap-10 hidden sm:flex">
             <a
               href="/"
-              className="text-xl flex font-extrabold text-white text-neon cursor-pointer hover:text-primary">
+              className="text-xl flex font-bold text-white text-neon cursor-pointer hover:text-primary">
               FARM
             </a>
             <div className="text-xl flex text-gray-500 cursor-default">

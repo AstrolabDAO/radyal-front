@@ -1,13 +1,14 @@
 import clsx from "clsx";
 
 import { useEffect, useMemo, useState } from "react";
+import { Transition } from "@headlessui/react";
 
-import { StrategyInteraction } from "~/utils/constants";
 
 import { watchAccount } from "wagmi/actions";
+import { BaseModalProps } from "../Modal";
 import DepositTab from "~/components/swap/DepositTab";
 import WithdrawTab from "~/components/swap/WithdrawTab";
-import { useSelectedStrategy } from "~/hooks/store/strategies";
+
 import {
   useInitSwapper,
   useInteraction,
@@ -17,9 +18,12 @@ import {
 } from "~/hooks/store/swapper";
 import { useBalances } from "~/hooks/store/tokens";
 import { useWriteDebounce } from "~/hooks/swapper-actions";
+import { useSelectedStrategy } from "~/hooks/store/strategies";
+
 import { getTokenBySlug } from "~/services/tokens";
 import { cacheHash } from "~/utils/format";
-import { BaseModalProps } from "../Modal";
+import { StrategyInteraction } from "~/utils/constants";
+
 import { EstimationProvider } from "~/context/estimation-context";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -126,20 +130,17 @@ const SwapModalContent = () => {
   }
 
   return (
-    <div className="bg-dark-800 pb-4 pt-6 px-3 max-h-screen sm-max-h-95vh">
-      <div className="flex flex-row justify-between px-3">
+    <div className="modal-wrapper">
+      <div className="flex flex-row justify-around items-center">
         <div
-          className={clsx("text-2xl cursor-pointer", {
-            "font-bold border-white text-primary text-3xl":
-              selectedTab === "deposit",
-          })}
-          onClick={() => {
-            handleTransition("deposit");
-          }}
+          className={
+            clsx("cursor-pointer text-2xl",
+            { "font-bold border-white text-primary text-3xl": selectedTab === "deposit" })
+          }
+          onClick={() => { handleTransition('deposit') }}
         >
           DEPOSIT
         </div>
-        <div className="my-auto text-gray-500">OR</div>
         <div
           className={clsx("cursor-pointer text-2xl", {
             "font-bold border-white text-primary text-3xl":
@@ -152,17 +153,28 @@ const SwapModalContent = () => {
           WITHDRAW
         </div>
       </div>
-      <div
-        key={selectedTab}
-        className={clsx("overflow-x-hidden", {
-          "enter-slide-in-left": animationEnter === "left",
-          "enter-slide-in-right": animationEnter === "right",
-          "leave-slide-in-right": animationLeave === "left",
-          "leave-slide-in-left": animationLeave === "right",
-        })}
-      >
-        {tabs[selectedTab].component}
-      </div>
+      <Transition>
+        <Transition.Child
+            enter="transition ease-out duration-300"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="transition ease-in duration-300"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+          <div
+            className={
+              clsx(
+                animationEnter === 'left' && 'enter-slide-in-left',
+                animationEnter === 'right' && 'enter-slide-in-right',
+                animationLeave === 'left' && 'leave-slide-in-right',
+                animationLeave === 'right' && 'leave-slide-in-left',
+              )
+            }>
+              { tabs[selectedTab].component }
+          </div>
+          </Transition.Child>
+      </Transition>
     </div>
   );
 };

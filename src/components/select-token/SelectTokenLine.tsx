@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-import { CoingeckoPrices, Token } from "~/utils/interfaces";
+import { CoinGeckoPrices, Token } from "~/utils/interfaces";
 import { weiToAmount, round } from "~/utils/format";
 import { useBalanceByTokenSlug } from "~/hooks/store/tokens";
 import IconGroup from "../IconGroup";
@@ -10,7 +10,7 @@ type SelectTokenLineProps = {
   onSelect: (token: Token) => void;
   switchSelectMode: () => void;
   haveBorder: boolean;
-  tokenPrices: CoingeckoPrices;
+  tokenPrices: CoinGeckoPrices;
 }
 
 const SelectTokenLine = ({
@@ -38,42 +38,43 @@ const SelectTokenLine = ({
     {
       url: token?.icon,
       alt: token?.symbol,
-      size: { width: 30, height: 30 },
+      size: { width: 32, height: 32 },
     },
     {
       url: token?.network?.icon,
       alt: token?.network?.name,
-      size: { width: 15, height: 15 },
-      classes: "-ms-2",
+      size: { width: 18, height: 18 },
+      classes: "-ms-3 -mb-1",
       small: true,
     },
   ];
   return (
     <div
       className={clsx(
-        "flex flex-col cursor-pointer mb-2 pt-2.5 pb-1.5 px-2 rounded-xl box-content border-solid border-1 border-transparent",
+        "flex flex-col cursor-pointer mb-2 px-2 rounded-xl box-content border-solid border-1 border-transparent",
         haveBorder && "border-b",
         "hover:bg-primary/5 hover:border-primary"
       )}
       onClick={ onTokenSelect }
     >
       <div className="flex flex-row w-full items-center">
-        <IconGroup icons={icons} />
-        <div className="ms-4">
-          <span className="text-xl font-bold text-white"> {token?.symbol} </span>
-          <span className="text-xs">
-            ({token.network.name})
-          </span>
+        <div className="my-auto">
+          <IconGroup icons={ icons }/>
+        </div>
+        <div className="flex flex-col ps-1.5 pe-3 py-3 bg-medium my-auto">
+          <div className="text-xl font-bold text-white group-hover:text-primary">{ token.symbol }</div>
+          <div className="-mt-2 pt-1 text-nowrap text-xs">on { token.network.name }</div>
         </div>
         <div className="ms-auto">
-          <span className="whitespace-nowrap block">
+          <span className="whitespace-nowrap flex flex-col">
             <span className="font-bold text-white">
-              {round(convertedBalance, 4)} </span>
+              {round(convertedBalance, 4)}
+            </span>
+            <span className="text-xs">
+              ~{round(convertedBalance * tokenPrice, 4)} $
+            </span>
           </span>
         </div>
-      </div>
-      <div className="ms-auto -mt-2 text-xs">
-        ~{round(convertedBalance * tokenPrice, 4)} $
       </div>
     </div>
   )

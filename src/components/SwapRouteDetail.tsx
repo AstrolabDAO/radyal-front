@@ -1,6 +1,9 @@
+import clsx from "clsx";
 import { useMemo } from "react";
-import { round, weiToAmount } from "~/utils/format";
-import { Icon, Protocol } from "~/utils/interfaces";
+import { getTokenBySlug } from "~/services/tokens";
+
+import { Icon } from "~/utils/interfaces";
+import { weiToAmount, round, stripName } from "~/utils/format";
 
 import {
   SwapRouteStepTypeTraduction,
@@ -54,62 +57,56 @@ const SwapRouteDetail = ({
     return `${amountFormatted} ${symbol}`;
   }
 
+  function getProtocolIconAndName(protocol: string) {
+    const protocolName = stripName(SwaptoolTraduction[protocol] ?? protocol);
+    const protocolData = protocolByStrippedSlug[protocolName];
+    return {
+      protocolName,
+      protocolIcon: {
+        url: protocolData?.icon,
+        classes: "ms-1.5",
+        size: { width: 20, height: 20 },
+      }
+    } as { protocolName: string, protocolIcon: Icon };
+  }
+
   const displayedSteps = useMemo(() => {
-    let haveWaitingStepCreated = false;
-
-    return steps.map((step) => {
-      const {
-        id,
-        type,
-        tool,
-        estimate,
-        toChain,
-        fromToken,
-        toToken,
-        fromChain,
-        status,
-      } = step;
-
-      const fromNetwork = networkByChainId[fromChain];
+    let shouldAssignLoadingStatus = true;
+    return steps.map(({ id, type, via, tool, estimate, toChain, fromToken, toToken, fromChain, status }) => {
       const fromAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
         fromChain,
         estimate?.fromAmount,
         fromToken
       );
-
-      const toNetwork = networkByChainId[toChain];
       const toAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
         toChain,
         estimate?.toAmount,
         toToken
       );
 
-      const swapRouteStepType = SwapRouteStepTypeTraduction[type] ?? type;
+      const { protocolName, protocolIcon } = getProtocolIconAndName(tool);
 
-      const convertedTool = SwaptoolTraduction[tool] ?? tool;
-      const protocol: Protocol = protocolByStrippedSlug[convertedTool];
-      const protocolIcon: Icon = {
-        url: protocol?.icon,
-        classes: "ms-2",
-        size: { width: 20, height: 20 },
-      };
-      const protocolName = protocol?.name ?? convertedTool;
       const displayedStep = {
         id,
-        fromNetwork,
-        toNetwork,
+        fromNetwork: networkByChainId[fromChain],
+        toNetwork: networkByChainId[toChain],
         protocolName,
         protocolIcon,
         type,
-        swapRouteStepType,
+        via,
+        swapRouteStepType: SwapRouteStepTypeTraduction[type] ?? type,
         fromAmountWithNetworkAndSymbol,
         toAmountWithNetworkAndSymbol,
         status: "neutral" as SwapRouteDetailLineStatus,
       };
+      console.log(getTokenBySlug(fromToken?.symbol), getTokenBySlug(toToken?.symbol))
       if (showStatus) {
-        if (status === OperationStatus.WAITING && !haveWaitingStepCreated) {
+        if (status === OperationStatus.FAILED) {
+          shouldAssignLoadingStatus = false;
+        }
+        if (status === OperationStatus.WAITING && shouldAssignLoadingStatus) {
           Object.assign(displayedStep, { status: "loading" });
-          haveWaitingStepCreated = true;
+          shouldAssignLoadingStatus = false;
         } else Object.assign(displayedStep, { status: getStatus(status) });
       }
       return displayedStep;
@@ -117,13 +114,13 @@ const SwapRouteDetail = ({
   }, [steps, showStatus]);
 
   return (
-    <div>
+    <div className={clsx({ 'max-h-0': steps.length  === 0 && !estimationError })}>
       {(steps.length > 0 || estimationError) && !showStatus && (
-        <div className="mb-1">VIA</div>
+        <div className="mb-1 font-medium text-gray-500">VIA</div>
       )}
       {!estimationError && (
         <ul
-          className="steps steps-vertical"
+          className="steps steps-vertical gap-0"
           style={{
             maxHeight: steps.length > 0 ? "500px" : "0px",
             transition: "max-height 2s ease-out",

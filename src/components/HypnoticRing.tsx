@@ -27,8 +27,8 @@ const HypnoticRing = ({
     const canvas: HTMLCanvasElement = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    let w = window.innerWidth;
+    let h = window.innerHeight;
     const scale = window.devicePixelRatio;
     canvas.width = w * scale;
     canvas.height = h * scale;
@@ -44,6 +44,7 @@ const HypnoticRing = ({
     ctx.lineWidth = 1.5;
     ctx.imageSmoothingQuality = 'high';
 
+    // Create rings
     for (let i = ringCount; i > 0; --i) {
       const radius = ((Math.pow(i / ringCount, spacingFactor) + initialRadius / ringCount) * vr) / spacingFactor;
       rings.push({
@@ -53,6 +54,25 @@ const HypnoticRing = ({
         r: radius,
         color: `hsl(${360 * Math.random() | 0}, 50%, 50%)`,
       });
+    }
+
+    let debounce: NodeJS.Timeout;
+    function onResize() {
+      if (debounce) {
+        clearTimeout(debounce);
+      }
+      debounce = setTimeout(() => {
+        clearTimeout(debounce);
+        w = window.innerWidth;
+        h = window.innerHeight;
+        const scale = window.devicePixelRatio;
+        canvas.width = w * scale;
+        canvas.height = h * scale;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.scale(scale, scale);
+        ctx.clearRect(0, 0, w, h);
+      }, 500);
     }
 
     const animate = () => {
@@ -88,6 +108,10 @@ const HypnoticRing = ({
     };
 
     animate();
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
+    };
   }, [ringCount, haveStrokeColor, haveFillColor, velocityFactor]);
 
   return (

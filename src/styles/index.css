@@ -1,12 +1,14 @@
-@import "reset.css";
-@import "typo.css";
-@import "base.css";
-@import "font.css";
-@import "layout.css";
-@import "stepper.css";
 @import "animation.css";
+@import "base.css";
 @import "button.css";
+@import "font.css";
+@import "input.css";
+@import "layout.css";
 @import "markdown.css";
+@import "modal.css";
+@import "reset.css";
+@import "stepper.css";
+@import "typo.css";
 
 @tailwind base;
 @tailwind components;

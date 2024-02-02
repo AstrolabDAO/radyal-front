@@ -31,7 +31,7 @@ const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
   }, [balances, mode, tokenBySlug, tokens]);
 
   return (
-    <div className="p-4 bg-dark-800 max-h-screen">
+    <div className="modal-wrapper">
       <SelectToken
         onBackClick={() => closeModal()}
         tokens={tokensList}

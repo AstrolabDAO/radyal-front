@@ -102,7 +102,7 @@ export interface Icon {
   classes?: string;
 }
 
-export interface CoingeckoPrices {
+export interface CoinGeckoPrices {
   [id: string]: {
     [currency: string]: number;
   };

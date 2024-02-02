@@ -15,8 +15,9 @@ const WithdrawFor = ({ token, onTokenClick }: WForProps) => {
     return estimate?.estimation;
   }, [estimate]);
   const canSwap = useCanSwap();
+
   const icons = {
-    background: `${token?.icon}`,
+    background: token.icon,
     foreground: token?.network?.icon,
   };
 
