@@ -1,13 +1,15 @@
 
 import clsx from "clsx";
 
+import { OperationStatus } from "~/model/operation";
+
 import { Network, Icon } from "~/utils/interfaces";
 import { FaLongArrowAltRight } from "react-icons/fa";
 
 import IconCard from "~/components/IconCard";
 
 type SwapRouteDetailLineProps = {
-  status?: "neutral" | "success" | "error" | "loading",
+  status?: OperationStatus | "NEUTRAL";
   step: {
     via: string,
     fromNetwork: Network;
@@ -22,7 +24,7 @@ type SwapRouteDetailLineProps = {
 };
 
 const SwapRouteDetailLine = ({
-  status = "neutral",
+  status = "NEUTRAL",
   step: {
     via,
     fromNetwork,
@@ -45,19 +47,19 @@ const SwapRouteDetailLine = ({
     <li
       className={ clsx(
         "step",
-        status === "neutral" && "step-transparent",
-        status === "loading" && "step-transparent step-loading",
-        status === "success" && "step-success validated",
-        status === "error" && "step-error failed",
+        status === "NEUTRAL" && "step-transparent",
+        status === OperationStatus.WAITING && "step-transparent step-loading",
+        status === OperationStatus.DONE && "step-success validated",
+        status === OperationStatus.FAILED && "step-error failed",
       )}
     >
       <div className="w-full flex flex-col text-start">
         <div
           className={ clsx(
           "font-bold flex flex-row",
-          status === "neutral" && "text-primary",
-          status === "success" && "text-success",
-          status === "error" && "text-error",
+          status === "NEUTRAL" && "text-primary",
+          status === OperationStatus.DONE && "text-success",
+          status === OperationStatus.FAILED && "text-error",
         )}
         >
           <div className="flex items-center">

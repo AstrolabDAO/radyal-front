@@ -3,7 +3,7 @@ import WithdrawWith from "./withdraw/WithdrawWith";
 
 import SelectTokenModal from "../modals/SelectTokenModal";
 
-import SwapRouteDetail from "../SwapRouteDetail";
+import SwapRouteDetail from "./helpers/SwapRouteDetail";
 
 import { useOpenModal } from "~/hooks/store/modal";
 import {

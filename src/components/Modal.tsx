@@ -7,6 +7,8 @@ import {
   useVisible,
 } from "~/hooks/store/modal";
 
+import Close from "~/assets/icons/close.svg?react";
+
 export interface BaseModal extends React.ReactElement {
   props: {
     onClose?: () => void;
@@ -48,16 +50,9 @@ const Modal = () => {
               className="right-0 top-0 absolute p-2 z-50 rounded-tr-xl w-8 h-8 sm:hidden"
               onClick={onClose}
             >
-              <svg fill="#C1C1C1" viewBox="0 0 16 16">
-                <path
-                  fill="#C1C1C1"
-                  fillRule="evenodd"
-                  d="M2.54 2.54a1 1 0 0 1 1.42 0L8 6.6l4.04-4.05a1 1 0 1 1 1.42 1.42L9.4 8l4.05 4.04a1 1 0 0 1-1.42 1.42L8 9.4l-4.04 4.05a1 1 0 0 1-1.42-1.42L6.6 8 2.54 3.96a1 1 0 0 1 0-1.42Z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <Close className="fill-[#1C1C1C]" />
             </button>
-            {selectedModal}
+            { selectedModal }
           </Dialog.Panel>
         </Transition.Child>
       </div>

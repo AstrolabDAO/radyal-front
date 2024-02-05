@@ -1,8 +1,7 @@
 import clsx from "clsx";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Transition } from "@headlessui/react";
-
 
 import { watchAccount } from "wagmi/actions";
 import { BaseModalProps } from "../Modal";
@@ -113,7 +112,7 @@ const SwapModalContent = () => {
   const [animationLeave, setAnimationLeave] = useState<"left" | "right">(null);
 
   const selectedTab = useInteraction();
-  function handleTransition(selectedTab: string) {
+  const handleTransition = useCallback((selectedTab: string) => {
     const animationKey = selectedTab === "deposit" ? "left" : "right";
     const action =
       selectedTab === "deposit"
@@ -127,7 +126,7 @@ const SwapModalContent = () => {
       setInteraction(action);
       setAnimationLeave(null);
     }, 500);
-  }
+  }, [setInteraction]);
 
   return (
     <div className="modal-wrapper">

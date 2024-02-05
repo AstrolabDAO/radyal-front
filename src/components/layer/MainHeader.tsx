@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { shortenAddress } from "~/utils/format";
 
-import Button from "../Button";
 import Logo from "~/assets/logo/logo.svg?react";
+
+import Button from "../Button";
+import HeaderActions from "./HeaderActions";
 
 const Header = ({ emitMint }) => {
   const { address, isConnected } = useAccount();
@@ -21,13 +23,13 @@ const Header = ({ emitMint }) => {
         setScrolling(false);
       }
     };
-
     window.addEventListener('scroll', handleScroll);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
 
   const headerStyle = {
     height: scrolling ? '3.61rem' : '5rem',
@@ -43,7 +45,7 @@ const Header = ({ emitMint }) => {
       style={ headerStyle }
     >
       <div className="container">
-        <div className="navbar overflow-hidden">
+        <div className="navbar">
           <div className="navbar-start">
             <Logo
               className="flex fill-white w-36"
@@ -66,12 +68,16 @@ const Header = ({ emitMint }) => {
           </div>
           <div className="navbar-end">
             { !isConnected && (
-              <Button onClick={() => web3Modal.open()}>Connect wallet</Button>
-            )}
+              <Button
+              className="uppercase font-semibold"
+              onClick={() => web3Modal.open()}>Connect</Button>
+              )}
             { isConnected && (
               <>
+                <HeaderActions />
                 <Button
-                  className="h-10 min-h-0 rounded-xl"
+                  className="h-10 min-h-0 rounded-xl btn-secondary"
+                  primary={false}
                   onClick={() => web3Modal.open()}
                 >
                   { shortenAddress(address.toLowerCase()) }

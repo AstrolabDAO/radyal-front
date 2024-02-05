@@ -12,7 +12,6 @@ import { useApproveAndDeposit } from "~/hooks/strategy";
 import { SelectTokenModalMode } from "~/utils/constants";
 import { Strategy, Token } from "~/utils/interfaces";
 
-
 import { useOpenModal } from "~/hooks/store/modal";
 import {
   useCanSwap,
@@ -26,7 +25,7 @@ import {
 import { useExectuteSwapperRoute } from "~/hooks/swapper-actions";
 
 import SelectTokenModal from "../modals/SelectTokenModal";
-import SwapRouteDetail from "../SwapRouteDetail";
+import SwapRouteDetail from "./helpers/SwapRouteDetail";
 
 const DepositTab = () => {
   const selectedStrategy = useSelectedStrategy();

@@ -1,11 +1,14 @@
 import { useMemo } from "react";
+
 import { useCloseModal } from "~/hooks/store/modal";
 import { useSelectToken, useSwitchSelection } from "~/hooks/store/swapper";
 import { useBalances, useTokenBySlug, useTokens } from "~/hooks/store/tokens";
-import { SelectTokenModalMode } from "~/utils/constants";
+
 import { Token } from "~/utils/interfaces";
+import { SelectTokenModalMode } from "~/utils/constants";
+
 import { BaseModalProps } from "../Modal";
-import SelectToken from "../SelectToken";
+import SelectToken from "../select-token/SelectToken";
 
 interface SelectTokenModalProps extends BaseModalProps {
   mode: SelectTokenModalMode;

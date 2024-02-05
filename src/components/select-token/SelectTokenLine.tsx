@@ -3,7 +3,8 @@ import clsx from "clsx";
 import { CoinGeckoPrices, Token } from "~/utils/interfaces";
 import { weiToAmount, round } from "~/utils/format";
 import { useBalanceByTokenSlug } from "~/hooks/store/tokens";
-import IconGroup from "../IconGroup";
+import TokenPresentation from "../TokenPresentation";
+import { useCallback } from "react";
 
 type SelectTokenLineProps = {
   token: Token;
@@ -20,10 +21,12 @@ const SelectTokenLine = ({
   haveBorder,
   tokenPrices,
 }: SelectTokenLineProps) => {
-  function onTokenSelect() {
+
+  const onTokenSelect = useCallback(() => {
     switchSelectMode();
     onSelect(token);
-  }
+  }, [switchSelectMode, onSelect, token]);
+
   const convertedPrice = Number(tokenPrices[token.coinGeckoId]?.usd);
 
   const tokenPrice = isNaN(convertedPrice) ? 0 : convertedPrice;
@@ -34,20 +37,6 @@ const SelectTokenLine = ({
     !balance ? BigInt(0) : BigInt(balance),
     token.decimals
   );
-  const icons = [
-    {
-      url: token?.icon,
-      alt: token?.symbol,
-      size: { width: 32, height: 32 },
-    },
-    {
-      url: token?.network?.icon,
-      alt: token?.network?.name,
-      size: { width: 18, height: 18 },
-      classes: "-ms-3 -mb-1",
-      small: true,
-    },
-  ];
   return (
     <div
       className={clsx(
@@ -58,13 +47,7 @@ const SelectTokenLine = ({
       onClick={ onTokenSelect }
     >
       <div className="flex flex-row w-full items-center">
-        <div className="my-auto">
-          <IconGroup icons={ icons }/>
-        </div>
-        <div className="flex flex-col ps-1.5 pe-3 py-3 bg-medium my-auto">
-          <div className="text-xl font-bold text-white group-hover:text-primary">{ token.symbol }</div>
-          <div className="-mt-2 pt-1 text-nowrap text-xs">on { token.network.name }</div>
-        </div>
+        <TokenPresentation token={ token }/>
         <div className="ms-auto">
           <span className="whitespace-nowrap flex flex-col">
             <span className="font-bold text-white">
