@@ -49,3 +49,29 @@
 w3m-modal {
   @apply backdrop-blur-medium;
 }
+header .action-wrapper {
+  @apply me-3 cursor-pointer relative bg-dark-600/50;
+}
+
+header .action-dropdown {
+  @apply absolute text-white right-0 mt-5 bg-dark-600/75;
+}
+
+header .action-dropdown,
+header .action-wrapper {
+  @apply p-2.5 border-solid border-dark-600 border-1 rounded-xl;
+}
+
+header .action-wrapper.active {
+  @apply border-primary;
+}
+header .action-wrapper.active .bell-icon {
+  @apply text-primary;
+}
+
+header .action-wrapper .notification-badge {
+  @apply absolute rounded-full bg-primary text-dark text-2xs font-extrabold;
+  padding: 0.1rem 0.4rem;
+  top: -7px;
+  right: -8.5px;
+}
