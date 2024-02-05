@@ -7,7 +7,7 @@ import { weiToAmount, round } from "~/utils/format";
 import { useBalanceByTokenSlug, usePrices } from "~/hooks/store/tokens";
 
 import { WalletIcon } from "@heroicons/react/24/solid";
-import IconGroup from "~/components/IconGroup";
+import TokenPresentation from "~/components/TokenPresentation";
 
 type SwapBlockProps = {
   disabled?: boolean;
@@ -26,7 +26,6 @@ type SwapBlockProps = {
 const SwapBlock = ({
   label,
   symbol,
-  icons,
   network,
   token,
   children,
@@ -59,27 +58,6 @@ const SwapBlock = ({
     return isNaN(price * value) ? 0 : price * value;
   }, [tokenPrices, token, value]);
 
-  const iconGroup = [
-    {
-      alt: symbol,
-      url: icons.background,
-      size: {
-        width: 32,
-        height: 32,
-      },
-    },
-    {
-      url: icons.foreground,
-      alt: network,
-      classes: "-ms-3 -mb-1",
-      size: {
-        width: 18,
-        height: 18,
-      },
-      small: true,
-    },
-  ];
-
   return (
     <div className="flex flex-col">
       <div className="mb-1 text-gray-500 font-medium">{ label }</div>
@@ -101,17 +79,9 @@ const SwapBlock = ({
           })}
           onClick={onTokenClick}
         >
-          {symbol && network && (
-            <>
-              <div className="my-auto">
-                <IconGroup icons={iconGroup} />
-              </div>
-              <div className="flex flex-col ps-1.5 pe-3 py-3 bg-medium my-auto">
-                <div className="text-xl font-bold text-white group-hover:text-primary">{ symbol }</div>
-                <div className="-mt-2 pt-1 text-nowrap text-xs">on { network }</div>
-              </div>
-            </>
-          )}
+          { symbol && network &&
+            <TokenPresentation token={token} />
+          }
         </div>
         <div className="flex flex-col ms-auto my-auto text-right">
           <div
