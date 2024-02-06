@@ -1,10 +1,11 @@
 import clsx from "clsx";
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { IToken as LiFiToken } from "@astrolabs/swapper/dist/src/LiFi";
 import { IToken as SquidToken } from "@astrolabs/swapper/dist/src/Squid";
 
 import { Icon } from "~/utils/interfaces";
 import { OperationStatus, OperationStep } from "~/store/interfaces/operations";
+import { useEstimatedRoute } from "~/hooks/store/swapper";
 
 import { weiToAmount, round, stripName } from "~/utils/format";
 
@@ -15,7 +16,6 @@ import {
   protocolByStrippedSlug,
 } from "~/utils/mappings";
 
-import { EstimationContext } from "~/context/estimation-context";
 import SwapRouteDetailLine from "./SwapRouteDetailLine";
 
 type SwapRouteDetailProps = {
@@ -27,7 +27,9 @@ const SwapRouteDetail = ({
   steps,
   showStatus = false,
 }: SwapRouteDetailProps) => {
-  const { estimationError } = useContext(EstimationContext);
+  const estimation = useEstimatedRoute();
+
+  const estimationError = estimation?.error;
 
   const amountWithNetworkAndSymbol = useCallback((
     chain: number,

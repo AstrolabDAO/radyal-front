@@ -7,15 +7,17 @@ import {
   useState,
 } from "react";
 
-import { SwapContext } from "~/context/swap-context";
-
 import { Web3Context } from "~/context/web3-context";
+
 import { usePrices } from "~/hooks/store/tokens";
-import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
-import SelectTokenLine from "./SelectTokenLine";
+import { useSwitchSelection } from "~/hooks/store/swapper";
+
+import { Token } from "~/utils/interfaces";
 
 import { FaChevronLeft } from "react-icons/fa";
-import { Token } from "~/utils/interfaces";
+
+import SelectTokenLine from "./SelectTokenLine";
+import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
 
 type SelectTokenProps = {
   tokens: Array<Token>;
@@ -27,7 +29,7 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
   const [search, setSearch] = useState("");
   const [networksFilter, setNetworksFilter] = useState([]);
 
-  const { switchSelectMode } = useContext(SwapContext);
+  const switchSelectMode = useSwitchSelection();
 
   const [displayedTokens, setDisplayedTokens] = useState([]);
   const [loading, setLoading] = useState(false);
