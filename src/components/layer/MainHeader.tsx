@@ -24,42 +24,38 @@ const Header = ({ emitMint }) => {
         setScrolling(false);
       }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-
   const headerStyle = {
-    height: scrolling ? '3.61rem' : '5rem',
-    backgroundColor: scrolling ? 'rgba(28, 28, 28, 0.6)' : 'transparent',
-    backdropFilter: scrolling ? 'blur(10px)' : 'none',
-    transition: 'background-color 0.3s ease-in-out',
+    height: scrolling ? "3.61rem" : "5rem",
+    backgroundColor: scrolling ? "rgba(28, 28, 28, 0.6)" : "transparent",
+    backdropFilter: scrolling ? "blur(10px)" : "none",
+    transition: "background-color 0.3s ease-in-out",
     // Add other styles for your header here
   };
 
   return (
-    <header
-      className="sticky top-0 z-20 w-full"
-      style={ headerStyle }
-    >
+    <header className="sticky top-0 z-20 w-full" style={headerStyle}>
       <div className="container">
         <div className="navbar">
           <div className="navbar-start">
-            <Logo
-              className="flex fill-white w-36"
-            />
+            <Logo className="flex fill-white w-36" />
           </div>
           <div className="navbar-center flex-row justify-center gap-10 hidden sm:flex">
             <a
               href="/"
-              className="text-xl flex font-bold text-white text-neon cursor-pointer hover:text-primary">
+              className="text-xl flex font-bold text-white text-neon cursor-pointer hover:text-primary"
+            >
               VAULTS
             </a>
-            <div className="text-xl flex text-gray-500 hover:text-gray-600 cursor-default"
-              onClick={ () => emitMint() }
+            <div
+              className="text-xl flex text-gray-500 hover:text-gray-600 cursor-default"
+              onClick={() => emitMint()}
             >
               BORROW
             </div>
@@ -71,20 +67,19 @@ const Header = ({ emitMint }) => {
             </div>
           </div>
           <div className="navbar-end">
-            { !isConnected && (
-              <Button
-              className="uppercase font-semibold"
-              onClick={() => web3Modal.open()}>Connect</Button>
-              )}
-            { isConnected && (
+            {!isConnected && (
+              <Button onClick={() => web3Modal.open({ view: "Connect" })}>
+                Connect wallet
+              </Button>
+            )}
+            {isConnected && (
               <>
                 <HeaderActions />
                 <Button
-                  className="h-10 min-h-0 rounded-xl btn-secondary"
-                  primary={false}
-                  onClick={() => web3Modal.open()}
+                  className="h-10 min-h-0 rounded-xl"
+                  onClick={() => web3Modal.open({ view: "Account" })}
                 >
-                  { shortenAddress(address.toLowerCase()) }
+                  {shortenAddress(address.toLowerCase())}
                 </Button>
               </>
             )}
