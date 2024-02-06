@@ -62,6 +62,8 @@ export const useExectuteSwapperRoute = () => {
     openModal(<SwapStepsModal />);
     const operation = new Operation({
       id: window.crypto.randomUUID(),
+      fromToken,
+      toToken,
       steps: estimation.steps.map((step: ICommonStep) => {
         return {
           ...step,
