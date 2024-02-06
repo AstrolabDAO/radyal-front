@@ -24,19 +24,21 @@ const Option = ({ ...props }: OptionProps) => {
 
 const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
   const styleOptions: StylesConfig<NetworkSelectData> = {
-    control: (baseStyles: any) => {
-      return {
-        ...baseStyles,
-        backgroundColor: "inherit",
-        borderColor: "var(--fallback-bc,oklch(var(--bc)/0.2))",
-        borderRadius: "0.375rem",
-        height: "3rem",
-        "&:hover": {
-          boxShadow: "none",
-          borderColor: "var(--primary)"
-        }
+    control: (baseStyles: any) => ({
+      ...baseStyles,
+      backgroundColor: "inherit",
+      borderColor: "var(--fallback-bc,oklch(var(--bc)/0.2))",
+      borderRadius: "0.375rem",
+      height: "3rem",
+      "&:hover": {
+        boxShadow: "none",
+        borderColor: "var(--primary)"
+      },
+      "&:focus": {
+        boxShadow: "none",
+        outline: 'none',
       }
-    },
+    }),
     option: (baseStyles: any) => ({
       ...baseStyles,
       backgroundColor: 'inherit',
@@ -45,14 +47,20 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
         cursor: "pointer",
       }
     }),
+    indicatorSeparator: (baseStyles: any) => ({
+      ...baseStyles,
+      backgroundColor: "var(--fallback-bc,oklch(var(--bc)/0.2))",
+    }),
     menu: (baseStyles: any) => ({
       ...baseStyles,
       zIndex: 1000,
       borderRadius: '0.375rem',
       backgroundColor: 'inherit',
+      "&:focus": { outline: 'none' },
     }),
     multiValue: (baseStyles: any) => ({
       ...baseStyles,
+      "&:focus": { outline: 'none' },
       backgroundColor: '#3f3f3f',
     }),
   }
@@ -65,7 +73,7 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
         label: <img src={network.icon} width={20} height={20} />,
         network: network,
       }))}
-      className="bg-dark-800"
+      className="bg-dark-800/25"
       isSearchable={false}
       components={{ Option }}
       {...props}

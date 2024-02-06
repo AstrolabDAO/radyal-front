@@ -21,13 +21,13 @@ const StrategyTableListItem = ({ strategyGroup, isLast }: StrategyTableListItemP
     url: strategy.asset.icon,
   }
   return (
-    <tr className={clsx("border-1 border-solid border-dark-600",
+    <tr className={clsx("border-t-1 border-solid border-dark-600",
       isLast && "rounded-b-xl"
     )}>
       <td className="pe-0 text-center"><IconCard icon={icon} /></td>
-      <td>{strategy.name}</td>
-      <td>12%</td>
-      <td>12%</td>
+      <td className="text-white">{strategy.name}</td>
+      <td className="text-white font-semibold">12%</td>
+      <td className="text-white">12%</td>
       <td>{ protocolsIcons.map((icon) =>
         IconCard({ icon: { url: icon, size: { width: 24, height: 24 } } })
       )}

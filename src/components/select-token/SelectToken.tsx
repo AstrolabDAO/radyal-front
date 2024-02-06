@@ -100,7 +100,7 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
             <input
               type="text"
               placeholder="USDC..."
-              className="input w-full border-0 focus:none bg-dark-700"
+              className="input w-full border-0 focus:outline-none bg-dark-800/25 backdrop-blur-3"
               onChange={({ target }) => {
                 setSearch(target.value);
               }}

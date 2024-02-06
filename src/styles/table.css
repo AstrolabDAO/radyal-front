@@ -1,0 +1,9 @@
+table {
+  box-shadow: 0 0 0 1px #323232; /* this draws the table border  */
+  backdrop-filter: blur(3px);
+  @apply bg-dark-800/25;
+}
+
+table tr > th{
+  @apply text-base font-normal text-gray-500;
+}
