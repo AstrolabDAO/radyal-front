@@ -1,6 +1,6 @@
 const MainFooter = () =>
   <footer
-    className="footer pt-5 mt-5 border-t border-solid border-dark-800 w-screen"
+    className="footer pt-5 mt-5 border-t border-solid border-dark-800 w-full"
     style={{
       backgroundColor: "transparent",
       backdropFilter: 'blur(2px)',

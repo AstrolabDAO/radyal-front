@@ -7,7 +7,8 @@ import { shortenAddress } from "~/utils/format";
 import Logo from "~/assets/logo/logo.svg?react";
 
 import Button from "../Button";
-import HeaderActions from "./HeaderActions";
+import HeaderActions from "./header/HeaderActions";
+import HeaderAbout from "./header/HeaderAbout";
 
 const Header = ({ emitMint }) => {
   const { address, isConnected } = useAccount();
@@ -55,15 +56,18 @@ const Header = ({ emitMint }) => {
             <a
               href="/"
               className="text-xl flex font-bold text-white text-neon cursor-pointer hover:text-primary">
-              FARM
+              VAULTS
             </a>
-            <div className="text-xl flex text-gray-500 cursor-default">
-              STAKE
-            </div>
             <div className="text-xl flex text-gray-500 hover:text-gray-600 cursor-default"
               onClick={ () => emitMint() }
             >
-              MINT
+              BORROW
+            </div>
+            <div className="text-xl flex text-gray-500 cursor-default">
+              FOLIO
+            </div>
+            <div className="text-xl flex text-gray-500 cursor-default relative">
+              <HeaderAbout />
             </div>
           </div>
           <div className="navbar-end">
