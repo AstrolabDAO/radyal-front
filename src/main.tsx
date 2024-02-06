@@ -25,7 +25,7 @@ export const queryClient = new QueryClient({
 const localStoragePersistor = createWebStoragePersistor({
   storage: window.localStorage,
 });
-const doNotPersistQueries: QueryKey[] = [];
+const doNotPersistQueries: QueryKey[] = ["estimation"];
 
 persistQueryClient({
   queryClient,

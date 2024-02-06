@@ -3,7 +3,6 @@ import { useCallback, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNetwork, usePublicClient } from "wagmi";
 import { switchNetwork } from "wagmi/actions";
-import SwapStepsModal from "~/components/modals/SwapStepsModal";
 import { Operation, OperationStatus } from "~/model/operation";
 import { addOperation, emmitStep, updateOperation } from "~/services/operation";
 import { getSwapperStore } from "~/services/swapper";
@@ -59,12 +58,13 @@ export const useExectuteSwapperRoute = () => {
     if (!fromToken || !toToken || !canSwap) return;
     setEstimationIsLocked(true);
     setLocked(true);
-    openModal(<SwapStepsModal />);
+    openModal({ modal: "steps" });
+
     const operation = new Operation({
       id: window.crypto.randomUUID(),
       fromToken,
       toToken,
-      steps: estimation.steps.map((step: ICommonStep) => {
+      steps: estimation.steps.map((step) => {
         return {
           ...step,
           status: OperationStatus.WAITING,
@@ -126,6 +126,14 @@ export const useExectuteSwapperRoute = () => {
         id: operation.id,
         payload: {
           status: OperationStatus.FAILED,
+          steps: operation.steps
+            .filter(({ status }) => status !== OperationStatus.DONE)
+            .map((step) => {
+              return {
+                ...step,
+                status: OperationStatus.FAILED,
+              };
+            }),
         },
       });
     }

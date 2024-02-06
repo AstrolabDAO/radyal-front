@@ -57,4 +57,6 @@ export const SwapRouteStepTypeTraduction = {
 export const SwaptoolTraduction = {
   custom: "radyal",
   "sushiswap-dai": "sushiswap",
+  hop: "hop-exchange",
+  cbridge: "celer-network",
 };

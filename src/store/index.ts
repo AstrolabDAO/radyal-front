@@ -4,6 +4,8 @@ import { promiseAwaitingMiddleware } from "./middlewares";
 import operationMiddlewares from "./middlewares/operations";
 import tokensMiddlewares from "./middlewares/tokens";
 import strategiesMiddlewares from "./middlewares/strategies";
+import swapperMiddlewares from "./middlewares/swapper";
+
 import { TokenReducer } from "./tokens";
 import { OperationReducer } from "./operations";
 import { StrategiesReducer } from "./strategies";
@@ -38,7 +40,8 @@ export const Store = configureStore({
       promiseAwaitingMiddleware,
       ...operationMiddlewares,
       ...tokensMiddlewares,
-      ...strategiesMiddlewares
+      ...strategiesMiddlewares,
+      ...swapperMiddlewares
     ),
 });
 

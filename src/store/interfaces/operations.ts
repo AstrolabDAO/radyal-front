@@ -1,4 +1,4 @@
-import { ICommonStep } from "@astrolabs/swapper";
+import { ICommonStep, OperationStatus } from "@astrolabs/swapper";
 import { Operation } from "~/model/operation";
 
 export interface LiFITransactionStatusResponse {
@@ -16,17 +16,6 @@ export interface LiFITransactionStatusResponse {
   bridgeExplorerLink: string;
 }
 
-export interface OperationInterface {
-  id: string;
-  status: OperationStatus;
-  txHash?: string;
-  estimation: any;
-  steps: OperationStep[];
-  receivingTx?: string;
-  sendingTx?: string;
-  currentStep: number;
-  substatus?: string;
-}
 interface TransactionDetail {
   txHash: string;
   txLink: string;
@@ -68,10 +57,14 @@ interface Metadata {
   integrator: string;
 }
 
-export interface OperationStep extends ICommonStep {
+export interface OperationStep
+  extends Omit<ICommonStep, "fromToken" | "toToken"> {
+  date?: number;
   status: OperationStatus;
   via: string;
   substatusMessage?: string;
+  fromToken: Token;
+  toToken: Token;
 }
 
 export interface EmmitStepAction {
@@ -81,11 +74,4 @@ export interface EmmitStepAction {
 export interface UpdateAction {
   id: string;
   payload: Partial<Operation>;
-}
-
-export enum OperationStatus {
-  WAITING = "WAITING",
-  PENDING = "PENDING",
-  DONE = "DONE",
-  FAILED = "FAILED",
 }

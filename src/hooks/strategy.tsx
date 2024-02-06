@@ -1,4 +1,4 @@
-import { abi } from "@astrolabs/registry/abis/StrategyV5Agent.json";
+import { abi } from "@astrolabs/registry/abis/StrategyV5.json";
 import { useCallback } from "react";
 import { useAccount, useContractRead, usePublicClient } from "wagmi";
 import { useApprove, useSwitchNetwork } from "./transaction";
@@ -9,7 +9,7 @@ import { ICommonStep } from "@astrolabs/swapper";
 import { getWalletClient } from "@wagmi/core";
 import { useStore } from "react-redux";
 
-import SwapStepsModal from "~/components/modals/SwapStepsModal";
+import ActionStepsModal from "~/components/modals/ActionStepsModal";
 import { Operation, OperationStatus } from "~/model/operation";
 import { OperationStep } from "~/store/interfaces/operations";
 import { useCloseModal, useOpenModal } from "./store/modal";
@@ -139,7 +139,7 @@ export const useApproveAndDeposit = () => {
       const _tx = new Operation({
         id: window.crypto.randomUUID(),
         status: OperationStatus.PENDING,
-        steps: estimation.steps.map((step: ICommonStep) => {
+        steps: estimation.steps.map((step) => {
           return {
             ...step,
             status: OperationStatus.PENDING,
@@ -148,7 +148,8 @@ export const useApproveAndDeposit = () => {
         estimation,
       });
 
-      openModal(<SwapStepsModal />);
+      openModal({ modal: "steps" });
+
       try {
         if (estimation.steps[0].type === "Approve") {
           const { hash: approveHash } = await approve({

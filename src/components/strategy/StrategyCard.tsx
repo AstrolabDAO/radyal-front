@@ -7,7 +7,6 @@ import { useAccount } from "wagmi";
 import { getIconFromStrategy } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
-
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { clearState } from "~/store/swapper";
 
@@ -21,9 +20,10 @@ import {
 import StrategyCardAPY from "./StrategyCardAPY";
 import StrategyCardIcons from "./StrategyCardIcons";
 import StrategyCardTVL from "./StrategyCardTVL";
-import SwapModal from "../modals/SwapModal";
+import ActionModal from "../modals/ActionModal";
 
 import "./StrategyCard.css";
+import { getRandomAPY, getRandomTVL } from "~/utils/mocking";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -38,7 +38,9 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   // isReconnected is true if the user was already connected
   const handleConnect = ({ isReconnected }) => {
     if (!isReconnected && isConnected && shouldOpenModal) {
-      openModal(<SwapModal onClose={() => dispatch(clearState())} />);
+      openModal({
+        modal: "swap" /*props:{onClose={() => dispatch(clearState())}}} */,
+      });
     }
   };
 
@@ -60,25 +62,27 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
     if (!isConnected) {
       web3Modal.open({ view: "Connect" });
       setShouldOpenModal(true);
-    } else openModal(<SwapModal onClose={() => dispatch(clearState())} />);
+    } else
+      openModal({
+        modal: "swap" /*props:{onClose={() => dispatch(clearState())}}} */,
+      });
   };
 
-  const strategyIconPath = (getIconFromStrategy(strategy).replace('.svg', '-mono.svg'));
+  const strategyIconPath = getIconFromStrategy(strategy).replace(
+    ".svg",
+    "-mono.svg"
+  );
   const assetIconPath = useMemo(() => {
     return (
       strategy.asset.icon.substring(0, strategy.asset.icon.length - 4) +
       "-mono.svg"
     );
   }, [strategy]);
-  const randomBetween = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  };
   return (
     <div
-      className={clsx(
-        "card group strategy-card text-white",
-        { active: selectedStrategy?.slug === strategy.slug }
-      )}
+      className={clsx("card group strategy-card text-white", {
+        active: selectedStrategy?.slug === strategy.slug,
+      })}
       onClick={openModalStrategy}
     >
       <div className="absolute inset-0 flex top-7 left-5 z-0 contrast-63 group-hover:contrast-100">
@@ -101,13 +105,13 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
             </div>
             <div className="flex font-light text-secondary-400 my-auto text-2xl">
               {" "}
-              {subtitle.join(" ")}{" "}
+              {subtitle.join(" ")}
             </div>
           </div>
         </div>
         <div className="flex flex-row mt-auto">
-          <StrategyCardAPY apy={randomBetween(8, 15)} />
-          <StrategyCardTVL tvl={randomBetween(8, 15)} />
+          <StrategyCardAPY apy={getRandomAPY(strategy.slug)} />
+          <StrategyCardTVL tvl={getRandomTVL(strategy.slug)} />
         </div>
       </div>
     </div>

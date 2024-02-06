@@ -5,8 +5,7 @@ import { useFromValue, useSetFromValue } from "~/hooks/store/swapper";
 import { getIconFromStrategy } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
-import SwapBlock from "../helpers/SwapBlock";
-
+import ActionBlock from "../helpers/ActionBlock";
 
 type WWithProps = {
   strategy: Strategy;
@@ -23,13 +22,13 @@ const WithdrawWith = ({ strategy }: WWithProps) => {
       .replace(/^[.]$/, "0.");
 
     setDepositValue(replace);
-    setFromValue(Number(event.target.value));
+    setFromValue(Number(replace));
   };
 
   const icons = {
     background: getIconFromStrategy(strategy),
-    foreground: strategy?.network.icon
-  }
+    foreground: strategy?.network.icon,
+  };
   const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
@@ -37,10 +36,11 @@ const WithdrawWith = ({ strategy }: WWithProps) => {
   }, [fromValue]);
   // TODO: add a guidance when no token is selected
   return (
-    <SwapBlock
-      token={ strategy }
-      isFocused={ isFocused }
+    <ActionBlock
+      token={strategy}
+      isFocused={isFocused}
       label="WITH"
+      disabled={true}
       icons={icons}
       symbol={strategy?.symbol}
       network={strategy?.network.name}
@@ -50,13 +50,11 @@ const WithdrawWith = ({ strategy }: WWithProps) => {
         <div className="flex ms-auto">
           <input
             className="swap-input-field"
-            type="number"
-            min="0"
             placeholder="10.0"
-            value={ depositValue?.toString() ?? "" }
-            onChange={ handleInputChange }
-            onFocus={ () => setIsFocused(true) }
-            onBlur={ () => setIsFocused(false) }
+            value={depositValue?.toString() ?? ""}
+            onChange={handleInputChange}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
           />
         </div>
       }

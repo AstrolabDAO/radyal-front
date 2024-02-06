@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { useCanSwap, useEstimatedRoute } from "~/hooks/store/swapper";
 import { Token } from "~/utils/interfaces";
-import SwapBlock from "../helpers/SwapBlock";
+import ActionBlock from "../helpers/ActionBlock";
 
 type WForProps = {
   token: Token;
@@ -17,14 +17,13 @@ const WithdrawFor = ({ token, onTokenClick }: WForProps) => {
   const canSwap = useCanSwap();
 
   const icons = {
-    background: token.icon,
+    background: token?.icon,
     foreground: token?.network?.icon,
   };
 
   return (
-    <SwapBlock
+    <ActionBlock
       token={token}
-      disabled={!canSwap}
       label="FOR"
       icons={icons}
       onTokenClick={onTokenClick}

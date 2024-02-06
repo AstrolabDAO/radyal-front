@@ -9,34 +9,37 @@ import { operationsSelector } from "~/store/selectors/operations";
 import { filterByNetworks, search } from "~/store/strategies";
 
 import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
-import SwapStepsModal from "../modals/SwapStepsModal";
+import ActionStepsModal from "../modals/ActionStepsModal";
 import StrategyCard from "./StrategyCard";
 import StrategyTable from "./table/StrategyTable";
 
-import CardIcon from '@/assets/icons/cards.svg?react';
-import TableIcon from '@/assets/icons/table.svg?react';
+import CardIcon from "@/assets/icons/cards.svg?react";
+import TableIcon from "@/assets/icons/table.svg?react";
 import { useCallback, useState } from "react";
 import { Transition } from "@headlessui/react";
 import clsx from "clsx";
 
 const StrategyGrid = () => {
-  const [tabActive, setTabActive] = useState<"cards" | "table">('cards');
+  const [tabActive, setTabActive] = useState<"cards" | "table">("cards");
   const [animationEnter, setAnimationEnter] = useState<"left" | "right">(null);
   const [animationLeave, setAnimationLeave] = useState<"left" | "right">(null);
 
-  const handleTransition = useCallback((selectedTab: string) => {
-    if (selectedTab === tabActive) {
-      return;
-    }
-    const animationKey = selectedTab === "cards" ? "left" : "right";
-    setAnimationEnter(null);
-    setAnimationLeave(animationKey);
-    setTimeout(() => {
-      setAnimationEnter(animationKey);
-      setTabActive(selectedTab as "cards" | "table");
-      setAnimationLeave(null);
-    }, 500);
-  }, [tabActive]);
+  const handleTransition = useCallback(
+    (selectedTab: string) => {
+      if (selectedTab === tabActive) {
+        return;
+      }
+      const animationKey = selectedTab === "cards" ? "left" : "right";
+      setAnimationEnter(null);
+      setAnimationLeave(animationKey);
+      setTimeout(() => {
+        setAnimationEnter(animationKey);
+        setTabActive(selectedTab as "cards" | "table");
+        setAnimationLeave(null);
+      }, 500);
+    },
+    [tabActive]
+  );
   const grouppedStrategies = useGrouppedStrategies();
   const operations = useSelector(operationsSelector);
   const dispatch = useDispatch();
@@ -49,16 +52,24 @@ const StrategyGrid = () => {
       <div className="flex flex-row ms-auto w-full justify-end gap-x-3 items-center">
         <div className="flex w-8 h-8">
           <TableIcon
-            className={ clsx(tabActive === 'cards' ? "fill-primary" : "fill-dark-500",
-            "cursor-pointer hover:fill-primary/50") }
-            onClick={() => { handleTransition('cards') }}
+            className={clsx(
+              tabActive === "cards" ? "fill-primary" : "fill-dark-500",
+              "cursor-pointer hover:fill-primary/50"
+            )}
+            onClick={() => {
+              handleTransition("cards");
+            }}
           />
         </div>
         <div className="flex w-8 h-8">
           <CardIcon
-            className={ clsx(tabActive === 'table' ? "fill-primary" : "fill-dark-500",
-            "cursor-pointer hover:fill-primary/50") }
-            onClick={() => { handleTransition('table') }}
+            className={clsx(
+              tabActive === "table" ? "fill-primary" : "fill-dark-500",
+              "cursor-pointer hover:fill-primary/50"
+            )}
+            onClick={() => {
+              handleTransition("table");
+            }}
           />
         </div>
       </div>
@@ -99,56 +110,38 @@ const StrategyGrid = () => {
       <div className="my-5">
         <Transition show={true}>
           <Transition.Child
-              enter="transition ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="transition ease-in duration-300"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
+            enter="transition ease-out duration-300"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="transition ease-in duration-300"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
             <div
-              className={
-                clsx(
-                  animationEnter === 'left' && 'enter-slide-in-left',
-                  animationEnter === 'right' && 'enter-slide-in-right',
-                  animationLeave === 'left' && 'leave-slide-in-right',
-                  animationLeave === 'right' && 'leave-slide-in-left',
-                )
-              }>
-                { tabActive === 'cards' && (
-                  <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-screen">
-                    {grouppedStrategies.map((strategyGroup, index) => (
-                      <StrategyCard
-                        strategyGroup={strategyGroup}
-                        key={`strategy-group-${index}`}
-                      />
-                    ))}
-                  </div>
-                )}
-                { tabActive === 'table' &&
-                  <StrategyTable
-                    strategies={grouppedStrategies}
-                  />
-                }
+              className={clsx(
+                animationEnter === "left" && "enter-slide-in-left",
+                animationEnter === "right" && "enter-slide-in-right",
+                animationLeave === "left" && "leave-slide-in-right",
+                animationLeave === "right" && "leave-slide-in-left"
+              )}
+            >
+              {tabActive === "cards" && (
+                <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-screen">
+                  {grouppedStrategies.map((strategyGroup, index) => (
+                    <StrategyCard
+                      strategyGroup={strategyGroup}
+                      key={`strategy-group-${index}`}
+                    />
+                  ))}
+                </div>
+              )}
+              {tabActive === "table" && (
+                <StrategyTable strategies={grouppedStrategies} />
+              )}
             </div>
           </Transition.Child>
         </Transition>
       </div>
-      <ul className="transactionList">
-        {operations.map((operation) => (
-          <li key={operation.id}>
-            <button
-              onClick={() => {
-                selectOperation(operation.id);
-                openModal(<SwapStepsModal />);
-              }}
-            >
-              {operation.id} {"=>"} {operation.status} {" => "}{" "}
-              {operation.substatus}
-            </button>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };

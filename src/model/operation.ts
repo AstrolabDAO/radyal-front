@@ -1,12 +1,25 @@
-import {
-  OperationInterface,
-  OperationStatus,
-  OperationStep,
-} from "~/store/interfaces/operations";
+import { OperationStatus } from "@astrolabs/swapper";
+import { OperationStep } from "~/store/interfaces/operations";
 import { Token } from "~/utils/interfaces";
+
+export interface OperationInterface {
+  id: string;
+  status: OperationStatus;
+  txHash?: string;
+  estimation: any;
+  steps: OperationStep[];
+  receivingTx?: string;
+  sendingTx?: string;
+  currentStep: number;
+  substatus?: string;
+
+  fromToken: Token;
+  toToken: Token;
+}
 
 class Operation implements OperationInterface {
   id: string;
+  date: number;
   status: OperationStatus;
   txHash?: string;
   estimation: any;
@@ -21,6 +34,7 @@ class Operation implements OperationInterface {
 
   constructor(tx: Partial<Operation>) {
     this.id = tx.id;
+    this.date = tx.date ?? new Date().getTime();
     this.status = tx.status ?? OperationStatus.WAITING;
     this.txHash = tx.txHash ?? null;
     this.estimation = tx.estimation ?? null;

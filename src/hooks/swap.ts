@@ -3,10 +3,13 @@ import { Client } from "viem";
 import { useAccount, usePublicClient } from "wagmi";
 import { tokensIsEqual } from "~/utils";
 import { previewStrategyTokenMove } from "~/utils/flows/strategy";
-import { weiToAmount } from "~/utils/format";
+import { weiToAmount } from "~/utils/maths";
 import { Strategy } from "~/utils/interfaces.ts";
 
-import { ICommonStep, ITransactionRequestWithEstimate } from "@astrolabs/swapper";
+import {
+  ICommonStep,
+  ITransactionRequestWithEstimate,
+} from "@astrolabs/swapper";
 
 import { useQueryClient } from "react-query";
 import { executeSwap, getSwapRoute } from "~/services/swap";
@@ -92,72 +95,81 @@ export const useEstimateRoute = () => {
   const previewStrategyTokenMove = usePreviewStrategyTokenMove();
 
   return useCallback(async () => {
-    if (estimationOnProgress) return;
-    setEstimationRouteOnProgress(true);
+    try {
+      if (estimationOnProgress) return;
+      setEstimationRouteOnProgress(true);
 
-    if (tokensIsEqual(fromToken, toToken)) {
-      setEstimationRouteOnProgress(false);
-      const result = await previewStrategyTokenMove();
-      setEstimationRouteOnProgress(false);
-      return result;
-    }
-
-    let result, interactionEstimation;
-    if (
-      fromToken.network.id === toToken.network.id ||
-      StrategyInteraction.WITHDRAW === interaction
-    ) {
-      if (interaction === StrategyInteraction.DEPOSIT) {
-        result = await getSwapRoute();
-        /*interactionEstimation = await previewStrategyTokenMove(
+      if (tokensIsEqual(fromToken, toToken)) {
+        setEstimationRouteOnProgress(false);
+        const result = await previewStrategyTokenMove();
+        setEstimationRouteOnProgress(false);
+        return result;
+      }
+      let result, interactionEstimation;
+      if (
+        fromToken.network.id === toToken.network.id ||
+        StrategyInteraction.WITHDRAW === interaction
+      ) {
+        if (interaction === StrategyInteraction.DEPOSIT) {
+          result = await getSwapRoute();
+          /*interactionEstimation = await previewStrategyTokenMove(
           result[0].estimatedOutput
         );*/
+        } else {
+          interactionEstimation = await previewStrategyTokenMove();
+          result = await getSwapRoute(interactionEstimation.estimation);
+        }
       } else {
-        interactionEstimation = await previewStrategyTokenMove();
-        result = await getSwapRoute(interactionEstimation.estimation);
+        result = await getSwapRoute();
       }
-    } else {
-      result = await getSwapRoute();
-    }
 
-    if (!result) {
-      toast.error("route not found from Swapper 🤯");
+      if (!result) {
+        toast.error("route not found from Swapper 🤯");
+        setEstimationRouteOnProgress(false);
+        return {
+          error: "route not found from Swapper 🤯",
+        };
+      }
+
+      const steps: OperationStep[] = result[0].steps.map(
+        (step: ICommonStep) => ({
+          ...step,
+          via: result[0].aggregatorId,
+        })
+      );
+      const lastStep = steps[steps.length - 1];
+
+      const estimationStep =
+        lastStep.type === "custom" ? steps[steps.length - 2] : lastStep;
+
+      const receiveEstimation =
+        result[0].estimatedOutput ??
+        weiToAmount(
+          estimationStep?.estimate?.toAmount,
+          estimationStep?.toToken?.decimals
+        );
+
+      const computedSteps = !interactionEstimation
+        ? steps
+        : interaction === StrategyInteraction.DEPOSIT
+          ? [
+              ...steps,
+              ...(tokensIsEqual(fromToken, toToken)
+                ? interactionEstimation.steps
+                : []),
+            ]
+          : [...interactionEstimation.steps, ...steps];
       setEstimationRouteOnProgress(false);
       return {
-        error: "route not found from Swapper 🤯",
+        id: window.crypto.randomUUID(),
+        estimation: receiveEstimation,
+        steps: computedSteps,
+        request: result[0],
       };
+    } catch (error) {
+      console.error(error);
+      toast.error("An error has occured");
     }
-    const steps: OperationStep[] = result[0].steps.map((step: ICommonStep) => ({
-      ...step,
-      via: result[0].aggregatorId
-    }));
-    const lastStep = steps[steps.length - 1];
-
-    const estimationStep =
-      lastStep.type === "custom" ? steps[steps.length - 2] : lastStep;
-
-    const receiveEstimation = weiToAmount(
-      estimationStep?.estimate?.toAmount,
-      estimationStep?.toToken?.decimals
-    );
-
-    const computedSteps = !interactionEstimation
-      ? steps
-      : interaction === StrategyInteraction.DEPOSIT
-        ? [
-            ...steps,
-            ...(tokensIsEqual(fromToken, toToken)
-              ? interactionEstimation.steps
-              : []),
-          ]
-        : [...interactionEstimation.steps, ...steps];
-    setEstimationRouteOnProgress(false);
-    return {
-      id: window.crypto.randomUUID(),
-      estimation: receiveEstimation,
-      steps: computedSteps,
-      request: result[0],
-    };
   }, [
     estimationOnProgress,
     setEstimationRouteOnProgress,
@@ -189,10 +201,8 @@ export const useGetSwapRoute = () => {
         amount: value
           ? BigInt(Math.round(value * fromToken?.weiPerUnit))
           : amount,
-        fromToken,
-        toToken: (toToken as Strategy)?.asset
-          ? (toToken as Strategy).asset
-          : toToken,
+        fromToken: "asset" in fromToken ? fromToken.asset : fromToken,
+        toToken: "asset" in toToken ? toToken.asset : toToken,
         strategy: selectedStrategy,
         interaction,
       });
@@ -210,10 +220,12 @@ export const usePreviewStrategyTokenMove = () => {
     chainId: selectedStrategy?.network?.id ?? 1,
   }) as Client;
 
+  const { address } = useAccount();
   return useCallback(
     (value: number = null) => {
       return previewStrategyTokenMove(
         {
+          address,
           strategy: selectedStrategy,
           interaction,
           value: value ? value : fromValue,

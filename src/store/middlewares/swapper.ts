@@ -1,3 +1,13 @@
-import { Middleware } from "@reduxjs/toolkit";
+import { Middleware, PayloadAction } from "@reduxjs/toolkit";
+import { clearState } from "../swapper";
 
-export default [] as Middleware[];
+const clearStoreMiddleware: Middleware =
+  (store) => (next) => (action: PayloadAction) => {
+    next(action);
+    if (action.type === "modal/closeModal") {
+      // clear store
+      if (store.getState().modal.list.length === 0)
+        store.dispatch(clearState());
+    }
+  };
+export default [clearStoreMiddleware] as Middleware[];

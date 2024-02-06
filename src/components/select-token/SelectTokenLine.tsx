@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 import { CoinGeckoPrices, Token } from "~/utils/interfaces";
-import { weiToAmount, round } from "~/utils/format";
+import { weiToAmount, round } from "~/utils/maths";
 import { useBalanceByTokenSlug } from "~/hooks/store/tokens";
 import TokenPresentation from "../TokenPresentation";
 import { useCallback } from "react";
@@ -12,7 +12,7 @@ type SelectTokenLineProps = {
   switchSelectMode: () => void;
   haveBorder: boolean;
   tokenPrices: CoinGeckoPrices;
-}
+};
 
 const SelectTokenLine = ({
   token,
@@ -21,7 +21,6 @@ const SelectTokenLine = ({
   haveBorder,
   tokenPrices,
 }: SelectTokenLineProps) => {
-
   const onTokenSelect = useCallback(() => {
     switchSelectMode();
     onSelect(token);
@@ -44,10 +43,10 @@ const SelectTokenLine = ({
         haveBorder && "border-b",
         "hover:bg-primary/5 hover:border-primary"
       )}
-      onClick={ onTokenSelect }
+      onClick={onTokenSelect}
     >
       <div className="flex flex-row w-full items-center">
-        <TokenPresentation token={ token }/>
+        <TokenPresentation token={token} />
         <div className="ms-auto">
           <span className="whitespace-nowrap flex flex-col">
             <span className="font-bold text-white">
@@ -60,6 +59,6 @@ const SelectTokenLine = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 export default SelectTokenLine;

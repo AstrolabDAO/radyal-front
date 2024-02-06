@@ -2,14 +2,13 @@ import clsx from "clsx";
 import { useCallback } from "react";
 
 import DepositFor from "./deposit/DepositFor";
-import DepositInto from "./deposit/DepositInto";
+import StrategyHeader from "./StrategyHeader";
 import DepositSelectNetwork from "./deposit/DepositSelectNetwork";
 import DepositWith from "./deposit/DepositWith";
 
 import { useSelectedStrategy } from "~/hooks/store/strategies";
 import { useApproveAndDeposit } from "~/hooks/strategy";
 
-import { SelectTokenModalMode } from "~/utils/constants";
 import { Strategy, Token } from "~/utils/interfaces";
 
 import { useOpenModal } from "~/hooks/store/modal";
@@ -24,8 +23,8 @@ import {
 } from "~/hooks/store/swapper";
 import { useExectuteSwapperRoute } from "~/hooks/swapper-actions";
 
-import SelectTokenModal from "../modals/SelectTokenModal";
-import SwapRouteDetail from "./helpers/SwapRouteDetail";
+import ActionRouteDetail from "./helpers/ActionRouteDetail";
+import Button from "../Button";
 
 const DepositTab = () => {
   const selectedStrategy = useSelectedStrategy();
@@ -43,28 +42,27 @@ const DepositTab = () => {
   const openModal = useOpenModal();
 
   const openChangeTokenModal = useCallback(() => {
-    openModal(<SelectTokenModal mode={SelectTokenModalMode.Deposit} />);
+    openModal({ modal: "select-token" });
   }, [openModal]);
 
   const executeSwapperRoute = useExectuteSwapperRoute();
   const needApprove = useNeedApprove();
   return (
     <>
+      <div>
+        <StrategyHeader strategy={selectedStrategy} />
+      </div>
       <div className="flex flex-col pt-3 relative gap-3">
-        <div className="flex md:flex-row flex-col">
-          <DepositInto strategy={selectedStrategy} />
-          <DepositSelectNetwork />
-        </div>
         <DepositWith
           token={fromToken as Token}
           onTokenClick={openChangeTokenModal}
         />
         <DepositFor strategy={toToken as Strategy} />
 
-        <SwapRouteDetail steps={estimation?.steps ?? []} />
+        <ActionRouteDetail steps={estimation?.steps ?? []} />
       </div>
       <div className="flex">
-        <button
+        <Button
           disabled={!canSwap}
           onClick={async () => {
             if (interactionNeedToSwap) {
@@ -73,15 +71,14 @@ const DepositTab = () => {
               await approveAndDeposit(fromValue);
             }
           }}
-          className={clsx("btn btn-primary w-full border-0 uppercase")}
+          className={clsx("w-full border-0 uppercase")}
         >
           {needApprove
             ? "Approve & Deposit"
             : interactionNeedToSwap
               ? "Swap & Deposit"
               : "Deposit"}
-        </button>
-
+        </Button>
       </div>
     </>
   );

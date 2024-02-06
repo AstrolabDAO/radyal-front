@@ -51,14 +51,12 @@ export const useReduxStoreDataInit = () => {
   }, [dispatch, prices]);
 };
 export const useLoadTokens = () => {
-  const { data: tokens, isLoading } = useQuery<Token[]>(
-    cacheHash("tokens"),
-    getTokens,
-    {
-      staleTime: 0,
-      //staleTime: ONE_MINUTE * 15,
-    }
-  );
+  const { data: tokens, isLoading } = useQuery<Token[]>("tokens", getTokens, {
+    //staleTime: 0,
+    //cacheTime: 0,
+    retry: true,
+  });
+  const dispatch = useDispatch();
 
   return !isLoading ? tokens : null;
 };

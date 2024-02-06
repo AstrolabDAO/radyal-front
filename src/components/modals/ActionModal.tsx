@@ -15,7 +15,7 @@ import {
   useSelectToken,
   useSetInteraction,
 } from "~/hooks/store/swapper";
-import { useBalances } from "~/hooks/store/tokens";
+import { useBalances, useTokenIsLoaded } from "~/hooks/store/tokens";
 import { useWriteDebounce } from "~/hooks/swapper-actions";
 import { useSelectedStrategy } from "~/hooks/store/strategies";
 
@@ -26,12 +26,12 @@ import { StrategyInteraction } from "~/utils/constants";
 import { EstimationProvider } from "~/context/estimation-context";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const SwapModal = (props: BaseModalProps) => {
+const ActionModal = (props: BaseModalProps) => {
   const initSwapper = useInitSwapper();
   const balances = useBalances();
   const selectedStrategy = useSelectedStrategy();
   const isInit = useIsInit();
-
+  const tokenIsLoaded = useTokenIsLoaded();
   const cleanBalances = useMemo(
     () =>
       balances.filter(
@@ -71,8 +71,7 @@ const SwapModal = (props: BaseModalProps) => {
   }, [balances, accountChanged, cleanBalances, balanceHash, selectToken]);
 
   useEffect(() => {
-    if (isInit) return;
-
+    if (isInit || !tokenIsLoaded) return;
     initSwapper({
       deposit: {
         from: getTokenBySlug(firstBalance?.token) ?? null,
@@ -88,16 +87,16 @@ const SwapModal = (props: BaseModalProps) => {
       },
       interaction: StrategyInteraction.DEPOSIT,
     });
-  });
+  }, [isInit, tokenIsLoaded]);
 
   return (
     <EstimationProvider>
-      <SwapModalContent />
+      <ActionModalContent />
     </EstimationProvider>
   );
 };
 
-const SwapModalContent = () => {
+const ActionModalContent = () => {
   const setInteraction = useSetInteraction();
   const tabs = {
     deposit: {
@@ -112,37 +111,42 @@ const SwapModalContent = () => {
   const [animationLeave, setAnimationLeave] = useState<"left" | "right">(null);
 
   const selectedTab = useInteraction();
-  const handleTransition = useCallback((selectedTab: string) => {
-    const animationKey = selectedTab === "deposit" ? "left" : "right";
-    const action =
-      selectedTab === "deposit"
-        ? StrategyInteraction.DEPOSIT
-        : StrategyInteraction.WITHDRAW;
-    setAnimationEnter(null);
-    setAnimationLeave(animationKey);
-    setTimeout(() => {
-      setAnimationEnter(animationKey);
+  const handleTransition = useCallback(
+    (selectedTab: string) => {
+      const animationKey = selectedTab === "deposit" ? "left" : "right";
+      const action =
+        selectedTab === "deposit"
+          ? StrategyInteraction.DEPOSIT
+          : StrategyInteraction.WITHDRAW;
+      setAnimationEnter(null);
+      setAnimationLeave(animationKey);
+      setTimeout(() => {
+        setAnimationEnter(animationKey);
 
-      setInteraction(action);
-      setAnimationLeave(null);
-    }, 500);
-  }, [setInteraction]);
+        setInteraction(action);
+        setAnimationLeave(null);
+      }, 500);
+    },
+    [setInteraction]
+  );
 
   return (
     <div className="modal-wrapper">
-      <div className="flex flex-row justify-around items-center">
+      <div className="flex flex-row justify-between">
         <div
-          className={
-            clsx("cursor-pointer text-2xl",
-            { "font-bold border-white text-primary text-3xl": selectedTab === "deposit" })
-          }
-          onClick={() => { handleTransition('deposit') }}
+          className={clsx("cursor-pointer text-2xl hover:text-primary", {
+            "font-bold border-white text-white text-3xl":
+              selectedTab === "deposit",
+          })}
+          onClick={() => {
+            handleTransition("deposit");
+          }}
         >
           DEPOSIT
         </div>
         <div
-          className={clsx("cursor-pointer text-2xl", {
-            "font-bold border-white text-primary text-3xl":
+          className={clsx("cursor-pointer text-2xl hover:text-primary", {
+            "font-bold border-white text-white text-3xl":
               selectedTab === "withdraw",
           })}
           onClick={() => {
@@ -154,27 +158,26 @@ const SwapModalContent = () => {
       </div>
       <Transition>
         <Transition.Child
-            enter="transition ease-out duration-300"
-            enterFrom="opacity-0 scale-95"
-            enterTo="opacity-100 scale-100"
-            leave="transition ease-in duration-300"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95"
-          >
+          enter="transition ease-out duration-300"
+          enterFrom="opacity-0 scale-95"
+          enterTo="opacity-100 scale-100"
+          leave="transition ease-in duration-300"
+          leaveFrom="opacity-100 scale-100"
+          leaveTo="opacity-0 scale-95"
+        >
           <div
-            className={
-              clsx(
-                animationEnter === 'left' && 'enter-slide-in-left',
-                animationEnter === 'right' && 'enter-slide-in-right',
-                animationLeave === 'left' && 'leave-slide-in-right',
-                animationLeave === 'right' && 'leave-slide-in-left',
-              )
-            }>
-              { tabs[selectedTab].component }
+            className={clsx(
+              animationEnter === "left" && "enter-slide-in-left",
+              animationEnter === "right" && "enter-slide-in-right",
+              animationLeave === "left" && "leave-slide-in-right",
+              animationLeave === "right" && "leave-slide-in-left"
+            )}
+          >
+            {tabs[selectedTab].component}
           </div>
-          </Transition.Child>
+        </Transition.Child>
       </Transition>
     </div>
   );
 };
-export default SwapModal;
+export default ActionModal;

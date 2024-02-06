@@ -5,8 +5,7 @@ import { Strategy } from "~/utils/interfaces";
 
 import { useEstimatedRoute } from "~/hooks/store/swapper";
 
-import SwapBlock from "../helpers/SwapBlock";
-
+import ActionBlock from "../helpers/ActionBlock";
 
 const DepositFor = ({
   strategy,
@@ -25,7 +24,7 @@ const DepositFor = ({
   };
 
   return (
-    <SwapBlock
+    <ActionBlock
       token={strategy}
       disabled={true}
       label="FOR"

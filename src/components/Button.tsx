@@ -9,7 +9,10 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
     return (
       <button
         ref={ref}
-        className={clsx(className, "btn", { "btn-primary": primary })}
+        className={clsx(className, "btn", {
+          "btn-primary": primary,
+          "btn-secondary": !primary,
+        })}
         {...props}
       >
         {children}

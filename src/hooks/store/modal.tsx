@@ -1,15 +1,15 @@
-import { useCallback } from "react";
+import { Component, useCallback } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { BaseModal } from "~/components/Modal";
 import { getModals } from "~/services/modal";
 import { IRootState } from "~/store";
-import { closeModal, openModal, setRender } from "~/store/modal";
+import { StoredModal, closeModal, openModal, setRender } from "~/store/modal";
 
 export const useOpenModal = () => {
   const dispatch = useDispatch();
   return useCallback(
-    (modal: BaseModal) => {
+    (modal: StoredModal) => {
       dispatch(setRender(true));
       setTimeout(() => {
         dispatch(openModal(modal));
