@@ -60,7 +60,7 @@ const SwapBlock = ({
 
   return (
     <div className="flex flex-col">
-      <div className="mb-1 text-gray-500 font-medium">{ label }</div>
+      <div className="mb-1 text-gray-500 font-medium">{label}</div>
       <div
         className={clsx(
           "flex flex-col md:flex-row p-2 rounded-[1.15rem] border-1 border-solid",
@@ -79,9 +79,7 @@ const SwapBlock = ({
           })}
           onClick={onTokenClick}
         >
-          { symbol && network &&
-            <TokenPresentation token={token} />
-          }
+          {symbol && network && <TokenPresentation token={token} />}
         </div>
         <div className="flex flex-col ms-auto my-auto text-right">
           <div
@@ -97,11 +95,9 @@ const SwapBlock = ({
             onClick={() => onWalletClick(balance)}
           >
             <WalletIcon className="flex me-1 my-auto h-3 w-3" />
-            <span className="flex my-auto"> {round(balanceEquivalent, 4)} </span>
+            <span className="flex my-auto"> {round(balance, 4)} </span>
           </div>
-          <div className="flex ms-auto text-white">
-            { children }
-          </div>
+          <div className="flex ms-auto text-white">{children}</div>
         </div>
       </div>
     </div>

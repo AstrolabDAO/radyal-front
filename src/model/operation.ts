@@ -3,6 +3,7 @@ import {
   OperationStatus,
   OperationStep,
 } from "~/store/interfaces/operations";
+import { Token } from "~/utils/interfaces";
 
 class Operation implements OperationInterface {
   id: string;
@@ -15,6 +16,8 @@ class Operation implements OperationInterface {
   sendingTx?: string;
   substatus?: string;
   substatusMessage?: string;
+  fromToken: Token;
+  toToken: Token;
 
   constructor(tx: Partial<Operation>) {
     this.id = tx.id;
@@ -27,6 +30,8 @@ class Operation implements OperationInterface {
     this.sendingTx = tx.sendingTx ?? null;
     this.substatus = tx.substatus ?? null;
     this.substatusMessage = tx.substatusMessage ?? null;
+    this.fromToken = tx.fromToken ?? null;
+    this.toToken = tx.toToken ?? null;
   }
 
   toObject(): Partial<Operation> {
