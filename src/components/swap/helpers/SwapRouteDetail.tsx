@@ -31,18 +31,17 @@ const SwapRouteDetail = ({
 
   const estimationError = estimation?.error;
 
-  const amountWithNetworkAndSymbol = useCallback((
-    chain: number,
-    amount: string,
-    token: LiFiToken | SquidToken
-  ) => {
-    const network = networkByChainId[chain];
-    const amountFormatted = round(weiToAmount(amount, token?.decimals), 4);
-    const symbol = token?.symbol ?? "???";
-    let networkName = network?.name ?? "???";
-    if (networkName === "Gnosis Chain-Mainnet") networkName = "Gnosis Chain";
-    return `${amountFormatted} ${symbol}`;
-  }, []);
+  const amountWithNetworkAndSymbol = useCallback(
+    (chain: number, amount: string, token: LiFiToken | SquidToken) => {
+      const network = networkByChainId[chain];
+      const amountFormatted = round(weiToAmount(amount, token?.decimals), 4);
+      const symbol = token?.symbol ?? "???";
+      let networkName = network?.name ?? "???";
+      if (networkName === "Gnosis Chain-Mainnet") networkName = "Gnosis Chain";
+      return `${amountFormatted} ${symbol}`;
+    },
+    []
+  );
 
   const getProtocolIconAndName = useCallback((protocol: string) => {
     const protocolName = stripName(SwaptoolTraduction[protocol] ?? protocol);
@@ -53,58 +52,75 @@ const SwapRouteDetail = ({
         url: protocolData?.icon,
         classes: "ms-1.5",
         size: { width: 20, height: 20 },
-      }
-    } as { protocolName: string, protocolIcon: Icon };
+      },
+    } as { protocolName: string; protocolIcon: Icon };
   }, []);
 
   const displayedSteps = useMemo(() => {
     let shouldAssignLoadingStatus = true;
-    return steps.map(({ id, type, via, tool, estimate, toChain, fromToken, toToken, fromChain, status }) => {
-      const fromAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
-        fromChain,
-        estimate.fromAmount,
-        fromToken
-      );
-      const toAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
-        toChain,
-        estimate.toAmount,
-        toToken
-      );
-
-      const { protocolName, protocolIcon } = getProtocolIconAndName(tool);
-
-      const displayedStep = {
+    return steps.map(
+      ({
         id,
-        fromNetwork: networkByChainId[fromChain],
-        toNetwork: networkByChainId[toChain],
-        protocolName,
-        protocolIcon,
         type,
         via,
-        swapRouteStepType: SwapRouteStepTypeTraduction[type] ?? type,
-        fromAmountWithNetworkAndSymbol,
-        toAmountWithNetworkAndSymbol,
+        tool,
+        estimate,
+        toChain,
+        fromToken,
+        toToken,
+        fromChain,
         status,
-      };
-      if (showStatus) {
-        if (status === OperationStatus.FAILED) {
-          shouldAssignLoadingStatus = false;
-        }
-        if (status === OperationStatus.WAITING) {
-          if (shouldAssignLoadingStatus) {
-            Object.assign(displayedStep, { status: OperationStatus.WAITING });
+        fromAmount,
+        toAmount,
+      }) => {
+        const fromAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
+          fromChain,
+          fromAmount ?? estimate.fromAmount,
+          fromToken
+        );
+        const toAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
+          toChain,
+          toAmount ?? estimate?.toAmount,
+          toToken
+        );
+
+        const { protocolName, protocolIcon } = getProtocolIconAndName(tool);
+
+        const displayedStep = {
+          id,
+          fromNetwork: networkByChainId[fromChain],
+          toNetwork: networkByChainId[toChain],
+          protocolName,
+          protocolIcon,
+          type,
+          via,
+          swapRouteStepType: SwapRouteStepTypeTraduction[type] ?? type,
+          fromAmountWithNetworkAndSymbol,
+          toAmountWithNetworkAndSymbol,
+          status,
+        };
+        if (showStatus) {
+          if (status === OperationStatus.FAILED) {
             shouldAssignLoadingStatus = false;
-          } else {
-            Object.assign(displayedStep, { status: "NEUTRAL" });
+          }
+          if (status === OperationStatus.WAITING) {
+            if (shouldAssignLoadingStatus) {
+              Object.assign(displayedStep, { status: OperationStatus.WAITING });
+              shouldAssignLoadingStatus = false;
+            } else {
+              Object.assign(displayedStep, { status: "NEUTRAL" });
+            }
           }
         }
+        return displayedStep;
       }
-      return displayedStep;
-    });
+    );
   }, [steps, showStatus, amountWithNetworkAndSymbol, getProtocolIconAndName]);
 
   return (
-    <div className={clsx({ 'max-h-0': steps.length  === 0 && !estimationError })}>
+    <div
+      className={clsx({ "max-h-0": steps.length === 0 && !estimationError })}
+    >
       {(steps.length > 0 || estimationError) && !showStatus && (
         <div className="mb-1 font-medium text-gray-500">VIA</div>
       )}
@@ -125,11 +141,11 @@ const SwapRouteDetail = ({
           ))}
         </ul>
       )}
-      { estimationError && (
+      {estimationError && (
         <div className="border-1 border-solid border-warning w-full py-2 rounded-xl bg-warning/10 mb-3">
           <div className="text-center text-primary font-medium leading-5">
-              No route found ! <br />
-              Please select another deposit token
+            No route found ! <br />
+            Please select another deposit token
           </div>
         </div>
       )}

@@ -47,12 +47,16 @@ export const getSwapRoute = async (params: LifiRequest) => {
     ];
   }
   const customContractCalls = [];
-
+  const slippage = 0.05;
   if (
     interaction === StrategyInteraction.DEPOSIT
     //&&fromToken.network.id !== toToken.network.id
   ) {
-    const callData = depositCallData(address, amount.toString());
+    const amontNumber = Number(amount);
+    const callData = depositCallData(
+      address,
+      (amontNumber - amontNumber * slippage).toString()
+    );
 
     customContractCalls.push({
       toAddress: strategy.address,
@@ -61,16 +65,16 @@ export const getSwapRoute = async (params: LifiRequest) => {
   }
 
   const quoteOpts: any = {
-    aggregatorId: ["LIFI" /*"SQUID"*/],
+    aggregatorId: ["LIFI", "SQUID"],
 
     inputChainId: fromToken.network.id,
     input: overrideZeroAddress(fromToken.address),
-    amountWei: Math.round(Number(amount) - Number(amount) * 0.02), // because if not 2%, the fromAmount is lower. Why ? I don't know.
+    amountWei: Math.round(Number(amount) - Number(amount) * 0.02), // because if not 2%, the fromAmount is highter. Why ? I don't know.
     outputChainId: toToken.network.id,
     output: overrideZeroAddress(toToken.address),
-    maxSlippage: 50,
+    maxSlippage: slippage * 1000,
     payer: address,
-    denyBridges: ["amarok"],
+    denyBridges: [],
     customContractCalls: customContractCalls.length
       ? customContractCalls
       : undefined,

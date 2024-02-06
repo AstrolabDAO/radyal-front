@@ -58,7 +58,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
     selectStrategy(strategy);
     selectGroup(strategyGroup);
     if (!isConnected) {
-      web3Modal.open();
+      web3Modal.open({ view: "Connect" });
       setShouldOpenModal(true);
     } else openModal(<SwapModal onClose={() => dispatch(clearState())} />);
   };
