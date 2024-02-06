@@ -1,37 +1,40 @@
-import { useContext } from "react";
+import { useMemo } from "react";
 
-import { EstimationContext } from "~/context/estimation-context";
-
+import { useCanSwap, useEstimatedRoute } from "~/hooks/store/swapper";
 import { Token } from "~/utils/interfaces";
 import SwapBlock from "../helpers/SwapBlock";
-import { SwapContext } from "~/context/swap-context";
 
 type WForProps = {
   token: Token;
   onTokenClick: () => void;
-}
+};
 
 const WithdrawFor = ({ token, onTokenClick }: WForProps) => {
-  const { toValue: depositToValue } = useContext(EstimationContext);
-  const { canSwap } = useContext(SwapContext);
+  const estimate = useEstimatedRoute();
+  const depositToValue = useMemo(() => {
+    return estimate?.estimation;
+  }, [estimate]);
+  const canSwap = useCanSwap();
   const icons = {
-    background: `/images/${token?.icon}`,
+    background: `${token?.icon}`,
     foreground: token?.network?.icon,
   };
 
   return (
     <SwapBlock
-      token={ token }
-      disabled={ !canSwap }
+      token={token}
+      disabled={!canSwap}
       label="FOR"
-      icons={ icons }
-      onTokenClick={ onTokenClick }
-      symbol={ token?.symbol }
-      network={ token?.network.name }
-      value={ depositToValue }
-      children={ <div className="text-xl font-bold mt-2 mb-1"> { depositToValue } </div> }
+      icons={icons}
+      onTokenClick={onTokenClick}
+      symbol={token?.symbol}
+      network={token?.network.name}
+      value={depositToValue}
+      children={
+        <div className="text-xl font-bold mt-2 mb-1"> {depositToValue} </div>
+      }
     />
-  )
-}
+  );
+};
 
 export default WithdrawFor;

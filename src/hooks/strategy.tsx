@@ -1,5 +1,5 @@
 import { abi } from "@astrolabs/registry/abis/StrategyV5Agent.json";
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { useAccount, useContractRead, usePublicClient } from "wagmi";
 import { useApprove, useSwitchNetwork } from "./transaction";
 
@@ -8,13 +8,14 @@ import toast from "react-hot-toast";
 import { ICommonStep } from "@astrolabs/swapper";
 import { getWalletClient } from "@wagmi/core";
 import { useStore } from "react-redux";
-import { EstimationContext } from "~/context/estimation-context";
-import { SwapModalContext } from "~/context/swap-modal-context";
+
+import SwapStepsModal from "~/components/modals/SwapStepsModal";
 import { Operation, OperationStatus } from "~/model/operation";
 import { OperationStep } from "~/store/interfaces/operations";
+import { useCloseModal, useOpenModal } from "./store/modal";
 import { useEmmitStep } from "./store/operation";
 import { useSelectedStrategy } from "./store/strategies";
-import SwapStepsModal from "~/components/modals/SwapStepsModal";
+import { useEstimatedRoute } from "./store/swapper";
 
 export const useMaxRedeem = () => {
   const strategy = useSelectedStrategy();
@@ -124,8 +125,11 @@ export const useApproveAndDeposit = () => {
   const approve = useApprove(asset);
   const switchNetwork = useSwitchNetwork(network.id);
   const emmitStep = useEmmitStep();
-  const { openModal } = useContext(SwapModalContext);
-  const { needApprove, estimation } = useContext(EstimationContext);
+  const openModal = useOpenModal();
+  const closeModal = useCloseModal();
+
+  const estimation = useEstimatedRoute();
+
   const store = useStore();
   return useCallback(
     async (value: number) => {
@@ -144,9 +148,9 @@ export const useApproveAndDeposit = () => {
         estimation,
       });
 
-      const close = openModal(<SwapStepsModal />);
+      openModal(<SwapStepsModal />);
       try {
-        if (needApprove) {
+        if (estimation.steps[0].type === "Approve") {
           const { hash: approveHash } = await approve({
             spender: strategy.address,
             amount,
@@ -168,7 +172,7 @@ export const useApproveAndDeposit = () => {
           await approvePending;
 
           emmitStep({
-            txId: _tx.id,
+            operationId: _tx.id,
           });
         }
         const depositHash = (await deposit(amount)) as `0x${string}`;
@@ -199,7 +203,7 @@ export const useApproveAndDeposit = () => {
           },
         });
       } catch (e) {
-        close();
+        closeModal();
         console.error(e);
         toast.error("An error has occured");
       }
@@ -207,10 +211,10 @@ export const useApproveAndDeposit = () => {
     [
       approve,
       asset.weiPerUnit,
+      closeModal,
       deposit,
       emmitStep,
       estimation,
-      needApprove,
       openModal,
       publicClient,
       store,

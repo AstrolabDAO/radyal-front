@@ -1,18 +1,14 @@
-import { useContext } from "react";
 import { FaArrowDown } from "react-icons/fa";
 import CrossChainTokenSelect from "~/components/CrossChainTokenSelect";
 
-import { SwapContext, SwapProvider } from "~/context/swap-context";
+import { useFromToken, useToToken } from "~/hooks/store/swapper";
 
 const SwapPage = () => {
-  return (
-    <SwapProvider>
-      <SwapPageContent />
-    </SwapProvider>
-  );
+  return <SwapPageContent />;
 };
 const SwapPageContent = () => {
-  const { fromToken, toToken } = useContext(SwapContext);
+  const fromToken = useFromToken();
+  const toToken = useToToken();
   return (
     <div>
       <h1>Bridge tokens</h1>

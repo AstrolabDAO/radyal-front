@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import clsx from "clsx";
 
-import { Strategy, Token } from '~/utils/interfaces';
+import { Strategy, Token } from "~/utils/interfaces";
 import { weiToAmount, round } from "~/utils/format";
 
 import { WalletIcon } from "@heroicons/react/24/solid";
@@ -66,7 +66,7 @@ const SwapBlock = ({
       size: {
         width: 32,
         height: 32,
-      }
+      },
     },
     {
       url: icons.foreground,
@@ -82,7 +82,7 @@ const SwapBlock = ({
 
   return (
     <div className="flex flex-col my-3">
-      <div className="mb-1">{ label }</div>
+      <div className="mb-1">{label}</div>
       <div
         className={clsx(
           "flex flex-col md:flex-row p-2 rounded-xl border-1 border-solid",
@@ -92,44 +92,51 @@ const SwapBlock = ({
             "border-primary/50": isFocused,
             "border-transparent": !isFocused && !disabled,
           }
-      )}>
-        <div className={
-          clsx("flex flex-row rounded-xl my-auto py-0 ps-2",
-          {
-            "group cursor-pointer bg-dark-550 hover:bg-primary/5 hover:ring-1 hover:ring-primary/25" : !disabled,
-          },
         )}
-          onClick={ onTokenClick }
+      >
+        <div
+          className={clsx("flex flex-row rounded-xl my-auto py-0 ps-2", {
+            "group cursor-pointer bg-dark-550 hover:bg-primary/5 hover:ring-1 hover:ring-primary/25":
+              !disabled,
+          })}
+          onClick={onTokenClick}
         >
-          { symbol && network &&
+          {symbol && network && (
             <>
               <div className="my-auto">
-                <IconGroup icons={ iconGroup }/>
+                <IconGroup icons={iconGroup} />
               </div>
               <div className="flex flex-col ps-1.5 pe-3 py-3 bg-medium my-auto">
-                <div className="text-xl font-bold text-secondary-900 group-hover:text-primary">{ symbol }</div>
-                <div className="-mt-2 pt-1 text-nowrap text-xs">on { network }</div>
+                <div className="text-xl font-bold text-secondary-900 group-hover:text-primary">
+                  {symbol}
+                </div>
+                <div className="-mt-2 pt-1 text-nowrap text-xs">
+                  on {network}
+                </div>
               </div>
             </>
-          }
+          )}
         </div>
         <div className="flex flex-col ms-auto my-auto text-right">
           <div
-            className={
-              clsx("text-xs flex rounded-md flex-row align-middle ms-auto rounded", {
-              "cursor-pointer hover:bg-primary hover:text-dark px-1" : !disabled,
-              "bg-transparent text-dark-500" : disabled,
-              "bg-dark-550" : !disabled,
-            })}
-            onClick={ () => onWalletClick(balance) }
+            className={clsx(
+              "text-xs flex rounded-md flex-row align-middle ms-auto rounded",
+              {
+                "cursor-pointer hover:bg-primary hover:text-dark px-1":
+                  !disabled,
+                "bg-transparent text-dark-500": disabled,
+                "bg-dark-550": !disabled,
+              }
+            )}
+            onClick={() => onWalletClick(balance)}
           >
-            <WalletIcon className="flex me-1 my-auto h-3 w-3"/>
-            <span className="flex my-auto"> { round(balance, 4) } </span>
+            <WalletIcon className="flex me-1 my-auto h-3 w-3" />
+            <span className="flex my-auto"> {round(balance, 4)} </span>
           </div>
-          <div className="flex ms-auto">
-            { children }
+          <div className="flex ms-auto">{children}</div>
+          <div className="text-xs text-dark-500 font-light">
+            ~{round(balanceEquivalent, 4)} $
           </div>
-          <div className="text-xs text-dark-500 font-light">~{ round(balanceEquivalent, 4) } $</div>
         </div>
       </div>
     </div>

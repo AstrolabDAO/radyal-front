@@ -9,11 +9,19 @@ import {
 } from "~/store/selectors/operations";
 import axios from "axios";
 import {
+  EmmitStepAction,
   LiFITransactionStatusResponse,
   OperationStep,
+  UpdateAction,
 } from "~/store/interfaces/operations";
-import { OperationsState, failCurrentStep, update } from "~/store/operations";
+import {
+  OperationsState,
+  add,
+  failCurrentStep,
+  update,
+} from "~/store/operations";
 
+import { emmitStep as StoreEmmitStep } from "~/store/operations";
 export const getOperationsStore = () => {
   return getStoreState().operations;
 };
@@ -43,7 +51,13 @@ export const getOperation = (operationId: string) => {
   const operationSelector = createOperationSelector(operationId);
   return operationSelector(getStoreState());
 };
+export const updateOperation = (action: UpdateAction) => {
+  getStore().dispatch(update(action));
+};
 
+export const addOperation = (operation: Operation) => {
+  getStore().dispatch(add(operation));
+};
 export const getCurrentStep = () => {
   const currentSteps = getCurrentSteps();
   return (
@@ -52,6 +66,10 @@ export const getCurrentStep = () => {
         status !== OperationStatus.DONE && status !== OperationStatus.FAILED
     )[0] ?? null
   );
+};
+
+export const emmitStep = (action: EmmitStepAction) => {
+  getStore().dispatch(StoreEmmitStep(action));
 };
 
 export const checkInterval = () => {

@@ -9,11 +9,8 @@ import { encodeFunctionData, parseGwei } from "viem";
 import { tokensIsEqual } from "~/utils";
 import { StrategyInteraction } from "~/utils/constants";
 import { overrideZeroAddress } from "~/utils/format";
-import { LifiRequest, Token } from "~/utils/interfaces";
+import { LifiRequest } from "~/utils/interfaces";
 import { executeTransaction } from "./transaction";
-
-import toast from "react-hot-toast";
-import { PublicClient } from "wagmi";
 
 export const depositCallData = (address: string, toAmount: string) => {
   return generateCallData({
@@ -36,7 +33,7 @@ export const generateCallData = ({
 };
 
 export const getSwapRoute = async (params: LifiRequest) => {
-  const { fromToken, toToken, address, amount, action, strategy } = params;
+  const { fromToken, toToken, address, amount, interaction, strategy } = params;
 
   if (tokensIsEqual(fromToken, toToken)) {
     return [
@@ -52,7 +49,7 @@ export const getSwapRoute = async (params: LifiRequest) => {
   const customContractCalls = [];
 
   if (
-    action === StrategyInteraction.DEPOSIT
+    interaction === StrategyInteraction.DEPOSIT
     //&&fromToken.network.id !== toToken.network.id
   ) {
     const callData = depositCallData(address, amount.toString());
@@ -64,7 +61,7 @@ export const getSwapRoute = async (params: LifiRequest) => {
   }
 
   const quoteOpts: any = {
-    aggregatorId: ["LIFI" /*, "SQUID"*/],
+    aggregatorId: ["LIFI" /*"SQUID"*/],
 
     inputChainId: fromToken.network.id,
     input: overrideZeroAddress(fromToken.address),

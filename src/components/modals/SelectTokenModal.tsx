@@ -1,22 +1,21 @@
-import { useContext, useMemo } from "react";
-import { SwapContext } from "~/context/swap-context";
-import { SwapModalContext } from "~/context/swap-modal-context";
+import { useMemo } from "react";
+import { useCloseModal } from "~/hooks/store/modal";
+import { useSelectToken, useSwitchSelection } from "~/hooks/store/swapper";
 import { useBalances, useTokenBySlug, useTokens } from "~/hooks/store/tokens";
 import { SelectTokenModalMode } from "~/utils/constants";
+import { Token } from "~/utils/interfaces";
 import { BaseModalProps } from "../Modal";
 import SelectToken from "../SelectToken";
-import { Token } from "~/utils/interfaces";
 
 interface SelectTokenModalProps extends BaseModalProps {
   mode: SelectTokenModalMode;
 }
 
 const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
-  const { selectFromToken, switchSelectMode, selectToToken } =
-    useContext(SwapContext);
+  const switchSelectMode = useSwitchSelection();
+  const selectToken = useSelectToken();
   const tokens = useTokens();
-  const { closeModal } = useContext(SwapModalContext);
-
+  const closeModal = useCloseModal();
   const balances = useBalances();
 
   const tokenBySlug = useTokenBySlug();
@@ -34,14 +33,13 @@ const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
   return (
     <div className="p-4 bg-dark-800 max-h-screen">
       <SelectToken
-        onBackClick={ () => closeModal() }
+        onBackClick={() => closeModal()}
         tokens={tokensList}
         onSelect={(token: Token) => {
-          if (mode === SelectTokenModalMode.Deposit) {
-            selectFromToken(token);
-          } else {
-            selectToToken(token);
-          }
+          selectToken({
+            token,
+            for: mode === SelectTokenModalMode.Deposit ? "from" : "to",
+          });
           switchSelectMode();
           closeModal();
         }}

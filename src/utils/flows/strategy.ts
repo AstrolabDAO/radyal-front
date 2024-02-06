@@ -6,7 +6,7 @@ import { Strategy } from "../interfaces";
 import { StrategyInteraction } from "../constants";
 
 export const previewStrategyTokenMove = async (
-  { strategy, action, value }: PreviewStrategyMoveProps,
+  { strategy, interaction, value }: PreviewStrategyMoveProps,
   publicClient: Client
 ) => {
   const contract = getContract({
@@ -17,30 +17,30 @@ export const previewStrategyTokenMove = async (
 
   if (
     ![StrategyInteraction.DEPOSIT, StrategyInteraction.WITHDRAW].includes(
-      action
+      interaction
     )
   )
     throw new Error("Invalid mode");
 
   const weiPerUnit =
-    action === StrategyInteraction.DEPOSIT
+    interaction === StrategyInteraction.DEPOSIT
       ? strategy.asset.weiPerUnit
       : strategy.weiPerUnit;
   const amount = BigInt(value * weiPerUnit);
 
   const previewAmount = (
-    action === StrategyInteraction.DEPOSIT
+    interaction === StrategyInteraction.DEPOSIT
       ? await contract.read.previewDeposit([amount])
       : await contract.read.previewRedeem([amount])
   ) as bigint;
 
   const fromToken: any =
-    action === StrategyInteraction.DEPOSIT ? strategy.asset : strategy;
+    interaction === StrategyInteraction.DEPOSIT ? strategy.asset : strategy;
   const toToken: any =
-    action === StrategyInteraction.DEPOSIT ? strategy : strategy.asset;
+    interaction === StrategyInteraction.DEPOSIT ? strategy : strategy.asset;
 
   const step: ICommonStep = {
-    type: action,
+    type: interaction,
     tool: "radyal",
     fromChain: strategy.network.id,
     toChain: strategy.network.id,
@@ -54,7 +54,7 @@ export const previewStrategyTokenMove = async (
 
   const estimation =
     Number(previewAmount) /
-    (action === StrategyInteraction.DEPOSIT
+    (interaction === StrategyInteraction.DEPOSIT
       ? strategy.weiPerUnit
       : strategy.asset.weiPerUnit);
 
@@ -67,6 +67,6 @@ export const previewStrategyTokenMove = async (
 
 interface PreviewStrategyMoveProps {
   strategy: Strategy;
-  action: StrategyInteraction;
+  interaction: StrategyInteraction;
   value: number;
 }

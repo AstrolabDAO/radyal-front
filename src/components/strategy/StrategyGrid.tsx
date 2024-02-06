@@ -1,6 +1,5 @@
-import { useContext } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { SwapModalContext } from "~/context/swap-modal-context";
+import { useDispatch, useSelector, useStore } from "react-redux";
+import { useOpenModal } from "~/hooks/store/modal";
 import { useSelectOperation } from "~/hooks/store/operation";
 import {
   useGrouppedStrategies,
@@ -18,7 +17,7 @@ const StrategyGrid = () => {
   const dispatch = useDispatch();
   const selectOperation = useSelectOperation();
   const strategiesNetworks = useStrategiesNetworks();
-  const { openModal } = useContext(SwapModalContext);
+  const openModal = useOpenModal();
 
   return (
     <div className="w-full container px-2 sm:mx-auto mt-5">
