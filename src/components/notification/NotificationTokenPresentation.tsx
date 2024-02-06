@@ -6,6 +6,7 @@ import DangerIcon from "~/assets/icons/danger.svg?react";
 import SuccessIcon from "~/assets/icons/checkmark.svg?react";
 
 import clsx from "clsx";
+import { OperationStatus } from "~/model/operation";
 
 type NotificationTokenPresentationProps = {
   operation: {
@@ -14,28 +15,28 @@ type NotificationTokenPresentationProps = {
     toToken: Token,
     fromToken: Token,
   };
-  status?: "success" | "pending" | "failed";
+  status?: OperationStatus;
 };
 
-const NotificationTokenPresentation = ({ operation, status = "pending" }: NotificationTokenPresentationProps) => {
+const NotificationTokenPresentation = ({ operation, status = OperationStatus.DONE }: NotificationTokenPresentationProps) => {
   return (
     <div
       key={`notification-${operation.id}`}
       className="flex flex-col"
     >
-      <div className="text-xs text-dark-400">
-        DEC 20 11:55PM
+      <div className="text-xs text-gray-400">
+        DEC 20 11:55<span className="text-2xs">PM</span>
       </div>
       <div
         className={clsx('flex flex-row justify-between border-solid border-2 rounded-xl px-3 pb-2',
           !['success', 'pending', 'failed'].includes(status) && 'border-dark-500',
-          status === 'success' && 'border-success/25',
-          status === 'pending' && 'border-warning/75',
-          status === 'failed' && 'border-error/25',
+          status === OperationStatus.DONE && 'border-success/25',
+          status === OperationStatus.WAITING && 'border-warning/75',
+          status === OperationStatus.FAILED && 'border-error/25',
         )}
       >
         <TokenPresentation token={operation.fromToken} isHoverable={false}>
-          <div className='text-xs text-nowrap'>
+          <div className='text-xs text-nowrap text-dark-300'>
             Deposited 122,39m
           </div>
         </TokenPresentation>
@@ -43,14 +44,14 @@ const NotificationTokenPresentation = ({ operation, status = "pending" }: Notifi
           <FaArrowRight className="fill-white w-4 h-4" />
         </div>
         <TokenPresentation token={operation.fromToken} isHoverable={false}>
-          <div className='text-xs text-nowrap'>
+          <div className='text-xs text-nowrap text-dark-300'>
             For 122,39m
           </div>
         </TokenPresentation>
         <div className="h-8 w-8 my-auto ms-3">
-          { status === 'success' && <SuccessIcon className="fill-success" /> }
-          { status === 'pending' && <div className="astrolab-loading h-8 w-8" /> }
-          { status === 'failed' && <DangerIcon className="fill-error" /> }
+          { status === OperationStatus.DONE && <SuccessIcon className="fill-success" /> }
+          { status === OperationStatus.WAITING && <div className="astrolab-loading h-8 w-8" /> }
+          { status === OperationStatus.FAILED && <DangerIcon className="fill-error" /> }
         </div>
       </div>
     </div>

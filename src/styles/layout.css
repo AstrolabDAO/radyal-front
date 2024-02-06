@@ -54,7 +54,7 @@ header .action-wrapper {
 }
 
 header .action-dropdown {
-  @apply absolute text-white right-0 mt-5 bg-dark-600/75;
+  @apply absolute text-white cursor-default right-0 mt-5 bg-dark-600;
 }
 
 header .action-dropdown,

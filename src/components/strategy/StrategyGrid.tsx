@@ -10,6 +10,7 @@ import { filterByNetworks, search } from "~/store/strategies";
 import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
 import SwapStepsModal from "../modals/SwapStepsModal";
 import StrategyCard from "./StrategyCard";
+import StrategyTable from "./table/StrategyTable";
 
 const StrategyGrid = () => {
   const grouppedStrategies = useGrouppedStrategies();
@@ -63,6 +64,9 @@ const StrategyGrid = () => {
           />
         ))}
       </div>
+      <StrategyTable
+        strategies={grouppedStrategies}
+      />
       <ul className="transactionList">
         {operations.map((operation) => (
           <li key={operation.id}>

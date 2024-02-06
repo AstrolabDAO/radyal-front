@@ -13,6 +13,7 @@ import {
 } from "~/hooks/store/swapper";
 import { useEstimateRoute } from "~/hooks/swap";
 import { useAllowance } from "~/hooks/transaction";
+import { OperationStep } from "~/store/interfaces/operations";
 import { Estimation } from "~/utils/interfaces";
 
 const EstimationContext = createContext({});
@@ -85,7 +86,7 @@ const EstimationProvider = ({ children }) => {
           tool: "custom",
           fromAmount: (fromValue * fromToken.weiPerUnit).toString(),
         },
-      } as any);
+      } as unknown as OperationStep);
     }
 
     const estimation = {
