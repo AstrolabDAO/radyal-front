@@ -10,6 +10,7 @@ import { filterByNetworks, search } from "~/store/strategies";
 import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
 import SwapStepsModal from "../modals/SwapStepsModal";
 import StrategyCard from "./StrategyCard";
+import StrategyTable from "./table/StrategyTable";
 
 const StrategyGrid = () => {
   const grouppedStrategies = useGrouppedStrategies();
@@ -37,7 +38,7 @@ const StrategyGrid = () => {
           <span className="label-text my-2">Chain</span>
           <NetworkSelect
             isSearchable={false}
-            className="w-64 h-12"
+            className="w-64 h-12 bg-dark-800"
             networks={strategiesNetworks}
             onChange={(value: Array<NetworkSelectData>) => {
               dispatch(filterByNetworks(value.map((v) => v.network?.slug)));
@@ -63,6 +64,9 @@ const StrategyGrid = () => {
           />
         ))}
       </div>
+      <StrategyTable
+        strategies={grouppedStrategies}
+      />
       <ul className="transactionList">
         {operations.map((operation) => (
           <li key={operation.id}>

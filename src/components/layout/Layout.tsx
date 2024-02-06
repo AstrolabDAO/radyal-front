@@ -13,6 +13,10 @@ import Footer from "../layer/MainFooter";
 
 const Layout = ({ changeColor }) => {
   const { accepted } = useContext(DisclaimerContext);
+  const style = {
+    backdropFilter: 'blur(10px)',
+    color: 'var(--gray-500)',
+  };
   if (!accepted) return <DisclaimerPage />;
   return (
     <>
@@ -22,8 +26,38 @@ const Layout = ({ changeColor }) => {
         />
         <div id="page-content" className="h-full relative">
           <RouterProvider router={router} />
-          <Toaster position="top-right" reverseOrder={false} />
-        </div>
+            <Toaster
+              containerClassName="container"
+              toastOptions={{
+                success: {
+                  className: "strategy-card",
+                  style,
+                  iconTheme: {
+                    primary: 'var(--success)',
+                    secondary: 'black',
+                  },
+                },
+                error: {
+                  style,
+                  className: "strategy-card",
+                  iconTheme: {
+                    primary: 'var(--error)',
+                    secondary: 'black',
+                  },
+                },
+                loading: {
+                  style,
+                  className: "strategy-card",
+                  iconTheme: {
+                    primary: 'var(--warning)',
+                    secondary: '#3f3f3f',
+                  },
+                },
+              }}
+              position="top-right"
+              reverseOrder={false}
+            />
+          </div>
       </main>
       <Footer />
     </>

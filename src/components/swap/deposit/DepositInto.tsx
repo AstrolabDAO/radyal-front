@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { Web3Context } from "~/context/web3-context";
 import { getIconFromStrategy } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
@@ -11,15 +9,14 @@ const DepositInto = ({ strategy }: DepositIntoProps) => {
 
   const { name } = strategy;
   const [title, subtitle]  = name.replace("Astrolab ", "").split(" ");
-  const protocols = useContext(Web3Context).protocols;
   const description = `Algorithmically provides liquidity across stable pools on ${title}.`
-  const strategyIconPath = (getIconFromStrategy(strategy, protocols).replace('.svg', '-mono.svg'));
+  const strategyIconPath = (getIconFromStrategy(strategy).replace('.svg', '-mono.svg'));
   return (
-    <div className="flex flex-col md:basis-3/5 text-secondary-900">
-      <div className="mb-1">INTO</div>
+    <div className="flex flex-col md:basis-3/5 text-white">
+      <div className="mb-1 text-gray-500 font-medium">INTO</div>
       <div className="flex flex-col m-0 p-3 border border-solid border-dark-500 rounded-3xl relative overflow-hidden">
         <div
-          className="absolute inset-0 flex justify-end items-center z-0 overflow-hidden contrast-63 -mr-16"
+          className="absolute inset-0 flex justify-end items-center z-0 overflow-hidden contrast-[0.7] -mr-16"
         >
           <img
             src={ strategyIconPath }

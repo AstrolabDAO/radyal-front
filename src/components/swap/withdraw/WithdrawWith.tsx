@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { useFromValue, useSetFromValue } from "~/hooks/store/swapper";
+
+import { getIconFromStrategy } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
+
 import SwapBlock from "../helpers/SwapBlock";
+
 
 type WWithProps = {
   strategy: Strategy;
@@ -23,9 +27,10 @@ const WithdrawWith = ({ strategy }: WWithProps) => {
   };
 
   const icons = {
-    foreground: strategy?.icon,
-    background: strategy?.network.icon,
-  };
+    background: getIconFromStrategy(strategy),
+    foreground: strategy?.network.icon
+  }
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     if (fromValue) setDepositValue(fromValue.toString());
@@ -33,8 +38,8 @@ const WithdrawWith = ({ strategy }: WWithProps) => {
   // TODO: add a guidance when no token is selected
   return (
     <SwapBlock
-      token={strategy}
-      disabled={true}
+      token={ strategy }
+      isFocused={ isFocused }
       label="WITH"
       icons={icons}
       symbol={strategy?.symbol}
@@ -44,10 +49,14 @@ const WithdrawWith = ({ strategy }: WWithProps) => {
       children={
         <div className="flex ms-auto">
           <input
-            className="input py-1 my-2 font-bold text-xl text-right ms-auto w-full basis-4/5"
+            className="swap-input-field"
             type="number"
-            value={depositValue?.toString() ?? ""}
-            onChange={handleInputChange}
+            min="0"
+            placeholder="10.0"
+            value={ depositValue?.toString() ?? "" }
+            onChange={ handleInputChange }
+            onFocus={ () => setIsFocused(true) }
+            onBlur={ () => setIsFocused(false) }
           />
         </div>
       }

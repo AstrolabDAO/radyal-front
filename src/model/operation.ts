@@ -32,6 +32,9 @@ class Operation implements OperationInterface {
   toObject(): Partial<Operation> {
     return Object.assign({}, this);
   }
+  toString(): string {
+    return JSON.stringify(this.toObject());
+  }
 }
 
 export { Operation, OperationStatus };

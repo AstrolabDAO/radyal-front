@@ -130,3 +130,28 @@
     transform: rotate(360deg);
   }
 }
+
+.astrolab-loading:after {
+  content: "";
+  border-width: 2px;
+  border-style: solid;
+  border-right-color: #444;
+  border-left-color: #444;
+  border-top-color: var(--primary);
+  border-bottom-color: var(--primary);
+  animation: loading 2s linear infinite;
+  z-index: 1;
+  position: relative;
+  grid-column-start: 1;
+  grid-row-start: 1;
+  display: grid;
+  height: 2rem;
+  width: 2rem;
+  place-items: center;
+  place-self: center;
+  border-radius: 9999px;
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-b3, oklch(var(--b3)))/var(--tw-bg-opacity);
+  --tw-text-opacity: 1;
+  color: var(--fallback-bc, oklch(var(--bc)))/var(--tw-text-opacity);
+}

@@ -27,7 +27,7 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
     control: (baseStyles: any) => {
       return {
         ...baseStyles,
-        backgroundColor: "#1C1C1C",
+        backgroundColor: "inherit",
         borderColor: "var(--fallback-bc,oklch(var(--bc)/0.2))",
         borderRadius: "0.375rem",
         height: "3rem",
@@ -39,13 +39,21 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
     },
     option: (baseStyles: any) => ({
       ...baseStyles,
-      backgroundColor: '#1C1C1C',
+      backgroundColor: 'inherit',
+      "&:hover": {
+        color: "var(--primary)",
+        cursor: "pointer",
+      }
     }),
     menu: (baseStyles: any) => ({
       ...baseStyles,
       zIndex: 1000,
       borderRadius: '0.375rem',
-      backgroundColor: '#1C1C1C',
+      backgroundColor: 'inherit',
+    }),
+    multiValue: (baseStyles: any) => ({
+      ...baseStyles,
+      backgroundColor: '#3f3f3f',
     }),
   }
   return (

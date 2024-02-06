@@ -4,7 +4,7 @@ import { zeroAddress } from "viem";
 import { getTokenBySlug } from "~/services/tokens";
 import { COINGECKO_API, TOKEN_BASENAME_REGEX } from "./constants";
 import { Strategy, Token } from "./interfaces";
-import { networkBySlug } from "./mappings";
+import { networkBySlug, protocolBySlug } from "./mappings";
 import { multicall } from "./multicall";
 import { ApiResponseStrategy } from "~/interfaces/astrolab-api";
 
@@ -165,7 +165,7 @@ export const getStrategies = async () => {
         slug,
         weiPerUnit: 10 ** decimals,
         sharePrice,
-        protocols,
+        protocols: protocols.map((slug) => protocolBySlug[slug]),
         aggregationLevel,
       } as Strategy;
       return _strat;

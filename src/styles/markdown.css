@@ -1,5 +1,12 @@
+.md {
+  @apply p-6 border-2 border-solid border-dark-800 rounded-xl;
+}
+
 .md p {
   margin-bottom: 1rem;
+}
+.md p:last-of-type {
+  margin-bottom: 0rem;
 }
 .md h1,
 .md h2,
@@ -9,6 +16,7 @@
 .md h6 {
   margin-top: 2rem;
   margin-bottom: 1.5rem;
+  @apply text-white
 }
 
 .md ul {

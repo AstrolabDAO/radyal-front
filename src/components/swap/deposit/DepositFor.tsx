@@ -1,12 +1,12 @@
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 
+import { getIconFromStrategy } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
+
+import { useEstimatedRoute } from "~/hooks/store/swapper";
 
 import SwapBlock from "../helpers/SwapBlock";
 
-import { getIconFromStrategy } from "~/utils";
-import { Web3Context } from "~/context/web3-context";
-import { useEstimatedRoute } from "~/hooks/store/swapper";
 
 const DepositFor = ({
   strategy,
@@ -19,12 +19,8 @@ const DepositFor = ({
     return strategy?.network.name;
   }, [strategy]);
 
-  const protocols = useContext(Web3Context)?.protocols;
-
-  const background = getIconFromStrategy(strategy, protocols);
-
   const icons = {
-    background,
+    background: getIconFromStrategy(strategy),
     foreground: strategy?.network?.icon,
   };
 

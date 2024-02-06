@@ -8,14 +8,16 @@ import {
 } from "react";
 
 import { Web3Context } from "~/context/web3-context";
+
 import { usePrices } from "~/hooks/store/tokens";
-import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
-import ModalLayout from "./layout/ModalLayout";
-import SelectTokenLine from "./select-token/SelectTokenLine";
+import { useSwitchSelection } from "~/hooks/store/swapper";
+
+import { Token } from "~/utils/interfaces";
 
 import { FaChevronLeft } from "react-icons/fa";
-import { useSwitchSelection } from "~/hooks/store/swapper";
-import { Token } from "~/utils/interfaces";
+
+import SelectTokenLine from "./SelectTokenLine";
+import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
 
 type SelectTokenProps = {
   tokens: Array<Token>;
@@ -83,19 +85,17 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
   }, [loadMoreRef, loadMoreTokens, loading]);
 
   return (
-    <ModalLayout className="max-h-screen min-h-96">
+    <>
       <header>
         <div className="flex flex-row mb-3">
           <FaChevronLeft
             className="cursor-pointer my-auto hover:text-primary"
-            onClick={onBackClick}
+            onClick={ onBackClick }
           />
-          <div className="flex-grow text-center font-bold text-2xl uppercase text-white">
-            Token Select
-          </div>
+          <div className="flex-grow text-center font-bold text-3xl uppercase text-white gilroy">Token Select</div>
         </div>
-        <div className="flex flex-row mt-8">
-          <div className="basis-2/3 pe-2">
+        <div className="flex flex-row mt-6">
+          <div className="basis-3/5 pe-1.5">
             <label className="flex mb-1">Search by name...</label>
             <input
               type="text"
@@ -106,39 +106,38 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
               }}
             />
           </div>
-          <div className="basis-1/3">
+          <div className="basis-2/5">
             <div className="flex mb-1">Filter by network</div>
-            <NetworkSelect
-              isSearchable
-              networks={networks}
-              className="basic-multi-select w-full mb-8"
-              classNamePrefix="select"
-              onChange={(value: Array<NetworkSelectData>) => {
-                setNetworksFilter(value.map((v) => v.network?.slug));
-              }}
-            />
+              <NetworkSelect
+                isSearchable={false}
+                networks={networks}
+                className="bg-dark-600 rounded-xl"
+                onChange={(value: Array<NetworkSelectData>) => {
+                  setNetworksFilter(value.map((v) => v.network?.slug));
+                }}
+              />
           </div>
         </div>
       </header>
       <div
-        className="overflow-y-scroll pe-2"
-        style={{ maxHeight: "calc(100vh - 450px)" }}
+        className="overflow-y-scroll pe-4 mt-4 -me-4"
+        style={{ maxHeight: "calc(100vh - 450px)" } }
       >
-        {displayedTokens.map((token, index) => {
+        { displayedTokens.map((token, index) => {
           return (
             <SelectTokenLine
-              key={`token-line-${index}`}
-              token={token}
-              tokenPrices={tokenPrices}
-              onSelect={onSelect}
-              switchSelectMode={switchSelectMode}
-              haveBorder={index !== tokens.length - 1}
+              key={ `token-line-${index}` }
+              token={ token }
+              tokenPrices={ tokenPrices }
+              onSelect={ onSelect }
+              switchSelectMode={ switchSelectMode }
+              haveBorder={ index !== tokens.length - 1 }
             />
-          );
+          )
         })}
         <div ref={loadMoreRef} />
       </div>
-    </ModalLayout>
+    </>
   );
 };
 export default SelectToken;

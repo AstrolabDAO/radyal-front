@@ -1,16 +1,8 @@
-.steps .step-transparent + .step-transparent:before,
-.steps .step-transparent:after {
-  --tw-bg-opacity: 1;
-  --tw-text-opacity: 1;
-  --tw-scale-y: 0.68;
-  --tw-scale-x: 1;
-  --tw-translate-y: -67%;
-}
 .step-transparent:before {
   background-color: #3F3F3F;
 }
 ul.steps-vertical .step-transparent:after {
-  background-color: transparent;
+  background-color: #1c1c1c;
   border: 2px solid #3F3F3F;
 }
 
@@ -22,6 +14,10 @@ ul.steps-vertical .step.failed:after {
 
 ul.steps-vertical .step.validated:after {
   content: "\2713";
+}
+.step.step-success + .step.step-error:before,
+.step.step-success + .step.step-loading:before {
+  background: linear-gradient(var(--success) 0%, var(--success) 50%, var(--error) 51%, var(--error) 100%);
 }
 
 ul.steps-vertical .step.failed:after {

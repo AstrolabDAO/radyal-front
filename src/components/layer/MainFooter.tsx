@@ -1,12 +1,12 @@
 const MainFooter = () =>
   <footer
-    className="footer container px-2 pt-5"
+    className="footer pt-5 mt-5 border-t border-solid border-dark-800 w-full"
     style={{
       backgroundColor: "transparent",
       backdropFilter: 'blur(2px)',
     }}
   >
-    <div className="footer container mx-auto relative overflow-y-hidden pb-5">
+    <div className="footer container mx-auto relative overflow-y-hidden pb-5 px-2">
       <nav>
         <header className="footer-title gilroy text-xl mb-0">SOCIALS</header>
         <a className="link link-hover hover:text-primary" href="https://twitter.com/AstrolabDAO" rel="nofollow noopener">Twitter</a>

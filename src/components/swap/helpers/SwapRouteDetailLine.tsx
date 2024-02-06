@@ -1,13 +1,17 @@
 
+import clsx from "clsx";
+
+import { OperationStatus } from "~/model/operation";
+
 import { Network, Icon } from "~/utils/interfaces";
 import { FaLongArrowAltRight } from "react-icons/fa";
 
 import IconCard from "~/components/IconCard";
-import clsx from "clsx";
 
 type SwapRouteDetailLineProps = {
-  status?: "neutral" | "success" | "error" | "loading",
+  status?: OperationStatus | "NEUTRAL";
   step: {
+    via: string,
     fromNetwork: Network;
     toNetwork: Network;
     protocolName: string;
@@ -20,8 +24,9 @@ type SwapRouteDetailLineProps = {
 };
 
 const SwapRouteDetailLine = ({
-  status = "neutral",
+  status = "NEUTRAL",
   step: {
+    via,
     fromNetwork,
     toNetwork,
     protocolName,
@@ -33,35 +38,45 @@ const SwapRouteDetailLine = ({
   }
 }: SwapRouteDetailLineProps) => {
   const size = { width: 15, height: 15 };
-  const classes = "ms-2";
+  const classes = "ms-1.5";
+  const viaIcon = { url: via ? `/images/protocols/${via.toLowerCase()}.svg` : null, size: {
+    width: 20,
+    height: 20,
+  }, classes: "ms-1.5 my-auto" };
   return (
     <li
       className={ clsx(
-        "step pb-4",
-        status === "neutral" && "step-transparent",
-        status === "loading" && "step-transparent step-loading",
-        status === "success" && "step-success validated",
-        status === "error" && "step-error failed",
+        "step",
+        status === "NEUTRAL" && "step-transparent",
+        status === OperationStatus.WAITING && "step-transparent step-loading",
+        status === OperationStatus.DONE && "step-success validated",
+        status === OperationStatus.FAILED && "step-error failed",
       )}
     >
       <div className="w-full flex flex-col text-start">
         <div
           className={ clsx(
           "font-bold flex flex-row",
-          status === "neutral" && "text-primary",
-          status === "success" && "text-success",
-          status === "error" && "text-error",
+          status === "NEUTRAL" && "text-primary",
+          status === OperationStatus.DONE && "text-success",
+          status === OperationStatus.FAILED && "text-error",
         )}
         >
           <div className="flex items-center">
             { swapRouteStepType }
           </div>
           { (type === "cross" || type === "swap") && (
-            <div className="flex items-center text-white mx-1 font-normal">
+            <div className="flex items-center text-secondary mx-1 font-normal">
               <div>
                 with <span className="capitalize"> { protocolName } </span>
               </div>
               { protocolIcon.url && ( <IconCard icon={ protocolIcon } /> ) }
+              { (type === "cross" || type === "swap") && viaIcon.url && (
+                <div className="flex justify-center">&nbsp;via { via }
+                  <IconCard icon={ viaIcon } />
+                </div>
+                )
+              }
             </div>
             )
           }
@@ -72,7 +87,7 @@ const SwapRouteDetailLine = ({
           { (type !== "Approve" && type !== "custom")  &&
             <>
               <FaLongArrowAltRight className="mx-2" />
-              { toAmountWithNetworkAndSymbol}
+              { toAmountWithNetworkAndSymbol }
               <IconCard icon={{ url: toNetwork.icon, size, classes }} />
             </>
           }

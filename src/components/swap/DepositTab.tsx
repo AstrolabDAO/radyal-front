@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useCallback } from "react";
 
 import DepositFor from "./deposit/DepositFor";
@@ -11,9 +12,6 @@ import { useApproveAndDeposit } from "~/hooks/strategy";
 import { SelectTokenModalMode } from "~/utils/constants";
 import { Strategy, Token } from "~/utils/interfaces";
 
-import SelectTokenModal from "../modals/SelectTokenModal";
-
-import clsx from "clsx";
 import { useOpenModal } from "~/hooks/store/modal";
 import {
   useCanSwap,
@@ -24,8 +22,10 @@ import {
   useNeedApprove,
   useToToken,
 } from "~/hooks/store/swapper";
-import SwapRouteDetail from "../SwapRouteDetail";
 import { useExectuteSwapperRoute } from "~/hooks/swapper-actions";
+
+import SelectTokenModal from "../modals/SelectTokenModal";
+import SwapRouteDetail from "./helpers/SwapRouteDetail";
 
 const DepositTab = () => {
   const selectedStrategy = useSelectedStrategy();
@@ -50,7 +50,7 @@ const DepositTab = () => {
   const needApprove = useNeedApprove();
   return (
     <>
-      <div className="flex flex-col px-3 pt-3 relative">
+      <div className="flex flex-col pt-3 relative gap-3">
         <div className="flex md:flex-row flex-col">
           <DepositInto strategy={selectedStrategy} />
           <DepositSelectNetwork />
@@ -63,7 +63,7 @@ const DepositTab = () => {
 
         <SwapRouteDetail steps={estimation?.steps ?? []} />
       </div>
-      <div className="mb-3 px-4">
+      <div className="flex">
         <button
           disabled={!canSwap}
           onClick={async () => {
@@ -72,11 +72,6 @@ const DepositTab = () => {
             } else {
               await approveAndDeposit(fromValue);
             }
-            /*if (!tokensIsEqual(fromToken, selectedStrategy.asset)) {
-              await swap();
-            } else {*/
-
-            //}
           }}
           className={clsx("btn btn-primary w-full border-0 uppercase")}
         >
@@ -86,6 +81,7 @@ const DepositTab = () => {
               ? "Swap & Deposit"
               : "Deposit"}
         </button>
+
       </div>
     </>
   );

@@ -24,15 +24,11 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
   return (
   <div
     className={ clsx(
-      "relative flex flex-col w-screen text-7xl gilroy italic font-black",
-      { "shimmer": !strategyOne || !strategyTwo },
+      "flex flex-col w-screen max-w-full text-7xl gilroy italic font-black my-auto"
       )}
   >
-    <div className="strategy-banner-wrapper">
-      <div
-        className="text-gray-500 absolute z-10"
-        style={{ maxHeight: '60px', height: "60px", top: -42 }}
-      >
+    <div className="strategy-banner-wrapper -mx-12">
+      <div className="text-gray-500 flex h-14">
         <div className="scrolling-text-rtl">
           <span>
             FARM<span className="text-sky-600"> ALL OF { titleOne }&nbsp;
@@ -62,10 +58,7 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
           </span>
         </div>
       </div>
-      <div
-        className="text-gray-500 absolute"
-        style={{ maxHeight: '60px', height: "60px", bottom: -77 }}
-      >
+      <div className="text-gray-500 flex h-14">
         <div className="scrolling-text-ltr">
           <span>&nbsp;- PROVIDE LIQUIDITY TO THE BEST<span className="text-white"> { titleTwo } POOLS&nbsp;
             { strategyTwo?.network.icon && <IconCard
