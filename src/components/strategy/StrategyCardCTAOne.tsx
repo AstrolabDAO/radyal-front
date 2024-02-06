@@ -58,7 +58,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
     selectStrategy(strategy as Strategy);
     selectGroup(strategyGroup);
     if (!isConnected) {
-      web3Modal.open();
+      web3Modal.open({ view: "Connect" });
       setShouldOpenModal(true);
     } else openModal(<SwapModal />);
   };
