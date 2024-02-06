@@ -1,6 +1,7 @@
 import { ICommonStep } from "@astrolabs/swapper";
 
 import { StrategyInteraction } from "./constants";
+import { OperationStep } from "~/store/interfaces/operations";
 
 export interface Network {
   id: number;
@@ -121,7 +122,7 @@ export interface LifiRequest {
   strategy: Strategy;
   amount: bigint;
   address: `0x${string}`;
-  action: StrategyInteraction;
+  interaction: StrategyInteraction;
 }
 
 export interface SwapEstimation {
@@ -133,4 +134,28 @@ export interface SwapEstimation {
 export interface DirectStrategyAction {
   value: number;
   address?: `0x${string}`;
+}
+
+export interface EstimationRequest {
+  from: `0x${string}`;
+  to: `0x${string}`;
+  approvalAddress: `0x${string}`;
+  aggregatorId: string;
+  chainId: number;
+  data: `0x${string}`;
+  estimatedExchangeRate: number;
+  estimatedOutput: number;
+  estimatedOutputWei: string;
+  gasLimit: `0x${string}`;
+  gasPrice: `0x${string}`;
+  value: `0x${string}`;
+  steps: ICommonStep[];
+}
+export interface Estimation {
+  estimation: number;
+  id: string;
+  request: EstimationRequest;
+  // It is an same of request.steps but with Approve step added if needed
+  steps: OperationStep[];
+  error?: any;
 }

@@ -84,9 +84,9 @@ const operationSlice = createSlice({
       state.selectedOperationIndex = state.indexById[action.payload];
     },
     emmitStep: (state, action: PayloadAction<EmmitStepAction>) => {
-      const { txId } = action.payload;
+      const { operationId } = action.payload;
 
-      const operationIndex = state.indexById[txId];
+      const operationIndex = state.indexById[operationId];
       const operation = state.list[operationIndex];
 
       if (!operation) return;

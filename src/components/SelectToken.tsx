@@ -7,8 +7,6 @@ import {
   useState,
 } from "react";
 
-import { SwapContext } from "~/context/swap-context";
-
 import { Web3Context } from "~/context/web3-context";
 import { usePrices } from "~/hooks/store/tokens";
 import NetworkSelect, { NetworkSelectData } from "./NetworkSelect";
@@ -16,6 +14,7 @@ import ModalLayout from "./layout/ModalLayout";
 import SelectTokenLine from "./select-token/SelectTokenLine";
 
 import { FaChevronLeft } from "react-icons/fa";
+import { useSwitchSelection } from "~/hooks/store/swapper";
 import { Token } from "~/utils/interfaces";
 
 type SelectTokenProps = {
@@ -28,7 +27,7 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
   const [search, setSearch] = useState("");
   const [networksFilter, setNetworksFilter] = useState([]);
 
-  const { switchSelectMode } = useContext(SwapContext);
+  const switchSelectMode = useSwitchSelection();
 
   const [displayedTokens, setDisplayedTokens] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -89,9 +88,11 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
         <div className="flex flex-row mb-3">
           <FaChevronLeft
             className="cursor-pointer my-auto hover:text-primary"
-            onClick={ onBackClick }
+            onClick={onBackClick}
           />
-          <div className="flex-grow text-center font-bold text-2xl uppercase text-white">Token Select</div>
+          <div className="flex-grow text-center font-bold text-2xl uppercase text-white">
+            Token Select
+          </div>
         </div>
         <div className="flex flex-row mt-8">
           <div className="basis-2/3 pe-2">
@@ -107,33 +108,33 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
           </div>
           <div className="basis-1/3">
             <div className="flex mb-1">Filter by network</div>
-              <NetworkSelect
-                isSearchable
-                networks={networks}
-                className="basic-multi-select w-full mb-8"
-                classNamePrefix="select"
-                onChange={(value: Array<NetworkSelectData>) => {
-                  setNetworksFilter(value.map((v) => v.network?.slug));
-                }}
-              />
+            <NetworkSelect
+              isSearchable
+              networks={networks}
+              className="basic-multi-select w-full mb-8"
+              classNamePrefix="select"
+              onChange={(value: Array<NetworkSelectData>) => {
+                setNetworksFilter(value.map((v) => v.network?.slug));
+              }}
+            />
           </div>
         </div>
       </header>
       <div
         className="overflow-y-scroll pe-2"
-        style={{ maxHeight: "calc(100vh - 450px)" } }
+        style={{ maxHeight: "calc(100vh - 450px)" }}
       >
-        { displayedTokens.map((token, index) => {
+        {displayedTokens.map((token, index) => {
           return (
             <SelectTokenLine
-              key={ `token-line-${index}` }
-              token={ token }
-              tokenPrices={ tokenPrices }
-              onSelect={ onSelect }
-              switchSelectMode={ switchSelectMode }
-              haveBorder={ index !== tokens.length - 1 }
+              key={`token-line-${index}`}
+              token={token}
+              tokenPrices={tokenPrices}
+              onSelect={onSelect}
+              switchSelectMode={switchSelectMode}
+              haveBorder={index !== tokens.length - 1}
             />
-          )
+          );
         })}
         <div ref={loadMoreRef} />
       </div>

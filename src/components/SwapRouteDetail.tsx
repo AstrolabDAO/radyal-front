@@ -1,5 +1,5 @@
-import { useContext, useMemo } from "react";
-import { weiToAmount, round } from "~/utils/format";
+import { useMemo } from "react";
+import { round, weiToAmount } from "~/utils/format";
 import { Icon, Protocol } from "~/utils/interfaces";
 
 import {
@@ -9,11 +9,11 @@ import {
   protocolByStrippedSlug,
 } from "~/utils/mappings";
 
-import { EstimationContext } from "~/context/estimation-context";
-import { OperationStatus, OperationStep } from "~/store/interfaces/operations";
-import SwapRouteDetailLine from "./swap/helpers/SwapRouteDetailLine";
 import { IToken as LiFiToken } from "@astrolabs/swapper/dist/src/LiFi";
 import { IToken as SquidToken } from "@astrolabs/swapper/dist/src/Squid";
+import { useEstimatedRoute } from "~/hooks/store/swapper";
+import { OperationStatus, OperationStep } from "~/store/interfaces/operations";
+import SwapRouteDetailLine from "./swap/helpers/SwapRouteDetailLine";
 
 type SwapRouteDetailProps = {
   steps: OperationStep[];
@@ -25,8 +25,9 @@ const SwapRouteDetail = ({
   steps,
   showStatus = false,
 }: SwapRouteDetailProps) => {
-  const { estimationError } = useContext(EstimationContext);
+  const estimation = useEstimatedRoute();
 
+  const estimationError = estimation?.error;
   function getStatus(status: OperationStatus): SwapRouteDetailLineStatus {
     switch (status) {
       case OperationStatus.PENDING:
@@ -52,8 +53,10 @@ const SwapRouteDetail = ({
     if (networkName === "Gnosis Chain-Mainnet") networkName = "Gnosis Chain";
     return `${amountFormatted} ${symbol}`;
   }
+
   const displayedSteps = useMemo(() => {
     let haveWaitingStepCreated = false;
+
     return steps.map((step) => {
       const {
         id,
@@ -70,14 +73,14 @@ const SwapRouteDetail = ({
       const fromNetwork = networkByChainId[fromChain];
       const fromAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
         fromChain,
-        estimate.fromAmount,
+        estimate?.fromAmount,
         fromToken
       );
 
       const toNetwork = networkByChainId[toChain];
       const toAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
         toChain,
-        estimate.toAmount,
+        estimate?.toAmount,
         toToken
       );
 
@@ -135,11 +138,11 @@ const SwapRouteDetail = ({
           ))}
         </ul>
       )}
-      { estimationError && (
+      {estimationError && (
         <div className="border-1 border-solid border-warning w-full py-2 rounded-xl bg-warning/10 mb-3">
           <div className="text-center text-primary font-medium leading-5">
-              No route found ! <br />
-              Please select another deposit token
+            No route found ! <br />
+            Please select another deposit token
           </div>
         </div>
       )}

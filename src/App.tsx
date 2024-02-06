@@ -9,8 +9,8 @@ import Layout from "./components/layout/Layout";
 import { useReduxStoreDataInit } from "./hooks/store/store";
 import { checkInterval } from "./services/operation";
 import { updateIntervalId } from "./store/operations";
-// import Julia from "./components/extra/Julia.tsx";
 import HypnoticRing from "./components/HypnoticRing.tsx";
+import Modal from "./components/Modal.tsx";
 
 function App() {
   useReduxStoreDataInit();
@@ -25,8 +25,8 @@ function App() {
     setHaveStrokeColor(true);
 
     debounceTimer = setTimeout(() => {
-        setHaveFillColor(false);
-        setHaveStrokeColor(false);
+      setHaveFillColor(false);
+      setHaveStrokeColor(false);
     }, 1000);
   }
   const dispatch = useDispatch();
@@ -39,14 +39,12 @@ function App() {
       <Web3Provider>
         <DisclaimerProvider>
           <HypnoticRing
-            haveFillColor={ haveFillColor }
-            haveStrokeColor={ haveStrokeColor }
+            haveFillColor={haveFillColor}
+            haveStrokeColor={haveStrokeColor}
           />
-          <Layout
-            changeColor={ changeColor }
-          />
+          <Layout changeColor={changeColor} />
         </DisclaimerProvider>
-        {/* <Julia /> */}
+        <Modal />
       </Web3Provider>
     </>
   );

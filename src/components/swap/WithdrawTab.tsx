@@ -1,40 +1,40 @@
-import { useContext } from "react";
-
-import WithdrawWith from './withdraw/WithdrawWith';
-import WithdrawFor from './withdraw/WithdrawFor';
+import WithdrawFor from "./withdraw/WithdrawFor";
+import WithdrawWith from "./withdraw/WithdrawWith";
 
 import SelectTokenModal from "../modals/SelectTokenModal";
 
 import SwapRouteDetail from "../SwapRouteDetail";
 
-import { SwapContext } from "~/context/swap-context";
-import { SwapModalContext } from "~/context/swap-modal-context";
-
+import { useOpenModal } from "~/hooks/store/modal";
+import {
+  useEstimatedRoute,
+  useFromToken,
+  useToToken,
+} from "~/hooks/store/swapper";
 import { SelectTokenModalMode } from "~/utils/constants";
 import { Strategy, Token } from "~/utils/interfaces";
-import { EstimationContext } from "~/context/estimation-context";
 
 const WithdrawTab = () => {
-  const { fromToken, toToken } = useContext(SwapContext);
-  const { openModal } = useContext(SwapModalContext);
+  const fromToken = useFromToken();
+  const toToken = useToToken();
+  const openModal = useOpenModal();
   function openChangeTokenModal() {
-    openModal(<SelectTokenModal mode={ SelectTokenModalMode.Withdraw } />);
+    openModal(<SelectTokenModal mode={SelectTokenModalMode.Withdraw} />);
   }
-  const { estimation } = useContext(EstimationContext);
+
+  const estimation = useEstimatedRoute();
 
   return (
     <div className="flex flex-col px-3 pt-3 relative">
-      <WithdrawWith
-        strategy={ fromToken as Strategy }
-      />
+      <WithdrawWith strategy={fromToken as Strategy} />
       <WithdrawFor
-        token={ toToken as Token }
-        onTokenClick={ openChangeTokenModal }
+        token={toToken as Token}
+        onTokenClick={openChangeTokenModal}
       />
 
-      { estimation && estimation.steps &&
-        <SwapRouteDetail steps={ estimation.steps }/>
-      }
+      {estimation && estimation.steps && (
+        <SwapRouteDetail steps={estimation.steps} />
+      )}
       <div className="sticky top-0">
         <button className="btn btn-primary mt-5 w-full button-primary-gradient button-primary-gradient-inverse border-0">
           Withdraw and Bridge

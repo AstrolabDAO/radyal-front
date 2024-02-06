@@ -1,39 +1,53 @@
-import { useContext } from "react";
+import { useCallback } from "react";
 
 import DepositFor from "./deposit/DepositFor";
 import DepositInto from "./deposit/DepositInto";
 import DepositSelectNetwork from "./deposit/DepositSelectNetwork";
 import DepositWith from "./deposit/DepositWith";
 
-import { EstimationContext } from "~/context/estimation-context";
-import { SwapContext } from "~/context/swap-context";
-import { SwapModalContext } from "~/context/swap-modal-context";
-
 import { useSelectedStrategy } from "~/hooks/store/strategies";
 import { useApproveAndDeposit } from "~/hooks/strategy";
 
-import { tokensIsEqual } from "~/utils";
 import { SelectTokenModalMode } from "~/utils/constants";
 import { Strategy, Token } from "~/utils/interfaces";
 
 import SelectTokenModal from "../modals/SelectTokenModal";
 
 import clsx from "clsx";
+import { useOpenModal } from "~/hooks/store/modal";
+import {
+  useCanSwap,
+  useEstimatedRoute,
+  useFromToken,
+  useFromValue,
+  useInteractionNeedToSwap,
+  useNeedApprove,
+  useToToken,
+} from "~/hooks/store/swapper";
 import SwapRouteDetail from "../SwapRouteDetail";
+import { useExectuteSwapperRoute } from "~/hooks/swapper-actions";
 
 const DepositTab = () => {
   const selectedStrategy = useSelectedStrategy();
-  const { fromToken, toToken, fromValue, canSwap, actionNeedToSwap } =
-    useContext(SwapContext);
-  const { swap, needApprove, estimation } = useContext(EstimationContext);
+
+  const fromToken = useFromToken();
+  const toToken = useToToken();
+  const fromValue = useFromValue();
+  const canSwap = useCanSwap();
+
+  const interactionNeedToSwap = useInteractionNeedToSwap();
+  const estimation = useEstimatedRoute();
 
   const approveAndDeposit = useApproveAndDeposit();
 
-  const { openModal } = useContext(SwapModalContext);
-  function openChangeTokenModal() {
-    openModal(<SelectTokenModal mode={SelectTokenModalMode.Deposit} />);
-  }
+  const openModal = useOpenModal();
 
+  const openChangeTokenModal = useCallback(() => {
+    openModal(<SelectTokenModal mode={SelectTokenModalMode.Deposit} />);
+  }, [openModal]);
+
+  const executeSwapperRoute = useExectuteSwapperRoute();
+  const needApprove = useNeedApprove();
   return (
     <>
       <div className="flex flex-col px-3 pt-3 relative">
@@ -53,17 +67,22 @@ const DepositTab = () => {
         <button
           disabled={!canSwap}
           onClick={async () => {
-            if (!tokensIsEqual(fromToken, selectedStrategy.asset)) {
-              await swap();
+            if (interactionNeedToSwap) {
+              executeSwapperRoute();
             } else {
               await approveAndDeposit(fromValue);
             }
+            /*if (!tokensIsEqual(fromToken, selectedStrategy.asset)) {
+              await swap();
+            } else {*/
+
+            //}
           }}
           className={clsx("btn btn-primary w-full border-0 uppercase")}
         >
           {needApprove
             ? "Approve & Deposit"
-            : actionNeedToSwap
+            : interactionNeedToSwap
               ? "Swap & Deposit"
               : "Deposit"}
         </button>

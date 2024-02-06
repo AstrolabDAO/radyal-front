@@ -1,127 +1,64 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import toast from "react-hot-toast";
+import { createContext, useEffect, useMemo } from "react";
 import { useQuery } from "react-query";
-import { useStore } from "react-redux";
 import { zeroAddress } from "viem";
-import { useAccount, usePublicClient } from "wagmi";
-import { useEstimateRoute, useExecuteSwap } from "~/hooks/swap";
-import { useAllowance, useSwitchNetwork } from "~/hooks/transaction";
-import { approve } from "~/services/transaction";
-import { cacheHash } from "~/utils/format";
-import { Strategy } from "~/utils/interfaces";
-import { SwapContext } from "./swap-context";
-
-import { ICommonStep } from "@astrolabs/swapper";
-import { Operation, OperationStatus } from "~/model/operation";
-
-import SwapStepsModal from "~/components/modals/SwapStepsModal";
+import { useAccount } from "wagmi";
 import { useSelectedStrategy } from "~/hooks/store/strategies";
-import { OperationStep } from "~/store/interfaces/operations";
-import { SwapModalContext } from "./swap-modal-context";
+import {
+  useEstimationHash,
+  useEstimationIsEnabled,
+  useFromToken,
+  useFromValue,
+  useInteractionNeedToSwap,
+  useSetInteractionEstimation,
+} from "~/hooks/store/swapper";
+import { useEstimateRoute } from "~/hooks/swap";
+import { useAllowance } from "~/hooks/transaction";
+import { Estimation } from "~/utils/interfaces";
 
-const EstimationContext = createContext<EstimationContextType>({
-  swap: async () => {},
-  lockEstimate: () => {},
-  unlockEstimate: () => {},
-  toValue: null,
-  estimation: null,
-  estimationError: null,
-  needApprove: false,
-});
-
-let debounceTimer;
+const EstimationContext = createContext({});
 
 const EstimationProvider = ({ children }) => {
-  const {
-    fromValue,
-    fromToken,
-    toToken,
-    action,
-    canSwap,
-    setCanSwap,
-    actionNeedToSwap,
-  } = useContext(SwapContext);
-  const { openModal } = useContext(SwapModalContext);
-
+  const hash = useEstimationHash();
+  const estimate = useEstimateRoute();
+  const isEnabled = useEstimationIsEnabled();
+  const fromValue = useFromValue();
+  const fromToken = useFromToken();
+  const setInteractionEstimation = useSetInteractionEstimation();
   const selectedStrategy = useSelectedStrategy();
-  const [writeOnProgress, setWriteOnprogress] = useState<boolean>(true);
-  const [estimationOnProgress, setEstimationOnProgress] =
-    useState<boolean>(false);
-
+  const interactionNeedToSwap = useInteractionNeedToSwap();
   const { address } = useAccount();
+  const { data: estimationData } = useQuery(hash, estimate, {
+    staleTime: 1000 * 15,
+    cacheTime: 1000 * 15,
+    retry: true,
+    refetchInterval: 1000 * 15,
+    enabled: isEnabled,
+  });
 
-  const [toValue, setToValue] = useState<number>(null);
-
-  const [estimationError, setEstimationError] = useState<string>(null);
-
-  const [updateEstimation, setUpdateEstimation] = useState(true);
-
-  const estimateRoute = useEstimateRoute();
-
-  const executeSwap = useExecuteSwap();
-
-  const switchNetwork = useSwitchNetwork(fromToken?.network?.id);
-  const publicClient = usePublicClient();
-  const { data: estimationData } = useQuery(
-    cacheHash("estimate", action, fromToken, toToken, fromValue),
-    async () => {
-      if (estimationOnProgress) return;
-      setEstimationOnProgress(true);
-      setEstimationError(null);
-      const estimate = await estimateRoute();
-
-      setEstimationOnProgress(false);
-      return estimate;
-    },
-    {
-      staleTime: 1000 * 15,
-      cacheTime: 1000 * 15,
-      retry: true,
-      refetchInterval: 1000 * 15,
-      enabled: !!(
-        fromToken &&
-        fromValue > 0 &&
-        !writeOnProgress &&
-        !estimationOnProgress &&
-        updateEstimation &&
-        fromValue > 0
-      ),
-    }
-  );
-
-  const [allowanceToken, toAllowanceAddress] = useMemo(() => {
+  const [allowanceToken, spender] = useMemo(() => {
     if (!fromToken) return [null, null];
-    const _token = fromToken as Strategy;
-    const allowanceToken = _token?.asset ? _token.asset : _token;
 
-    const spender = !actionNeedToSwap
+    const allowanceToken = "asset" in fromToken ? fromToken?.asset : fromToken;
+
+    const spender = !interactionNeedToSwap
       ? selectedStrategy?.address
       : estimationData?.request?.approvalAddress;
 
     if (!spender) return [null, null];
     return [allowanceToken, spender];
   }, [
-    actionNeedToSwap,
     estimationData?.request?.approvalAddress,
     fromToken,
+    interactionNeedToSwap,
     selectedStrategy?.address,
   ]);
 
   const allowance = useAllowance({
     address: allowanceToken?.address,
     chainId: allowanceToken?.network?.id,
-    args: [address, toAllowanceAddress],
+    args: [address, spender],
     enabled:
-      !!allowanceToken &&
-      !!toAllowanceAddress &&
-      allowanceToken?.address !== zeroAddress,
+      !!allowanceToken && !!spender && allowanceToken?.address !== zeroAddress,
   }) as any as bigint;
 
   const needApprove = useMemo(() => {
@@ -129,196 +66,44 @@ const EstimationProvider = ({ children }) => {
     return allowance < BigInt(fromValue * fromToken.weiPerUnit);
   }, [allowance, fromToken, fromValue]);
 
-  const estimation: any = useMemo(() => {
+  const estimation = useMemo(() => {
     if (!estimationData) return null;
-    const txSteps = estimationData?.steps;
+    const steps = estimationData?.steps;
 
-    if (needApprove && txSteps && txSteps[0].type !== "Approve") {
-      txSteps.unshift({
+    if (needApprove && steps && steps[0].type !== "Approve") {
+      steps.unshift({
         id: window.crypto.randomUUID(),
         type: "Approve",
         tool: "radyal",
         fromChain: fromToken?.network?.id,
         toChain: fromToken?.network?.id,
-        fromAmount: fromValue * fromToken.weiPerUnit,
+        fromAddress: fromToken?.address,
+        toAddress: spender,
+        fromAmount: (fromValue * fromToken.weiPerUnit).toString(),
         fromToken,
         estimate: {
           tool: "custom",
-          fromAmount: fromValue * fromToken.weiPerUnit,
+          fromAmount: (fromValue * fromToken.weiPerUnit).toString(),
         },
-      });
+      } as any);
     }
-    return {
+
+    const estimation = {
       ...estimationData,
-      steps: txSteps,
-    };
-  }, [estimationData, fromToken, fromValue, needApprove]);
+      steps,
+    } as Estimation;
+
+    return estimation;
+  }, [estimationData, fromToken, fromValue, needApprove, spender]);
 
   useEffect(() => {
-    if (!estimation || estimation?.error) {
-      setToValue(estimationOnProgress ? null : 0);
-      setCanSwap(false);
-      if (estimation?.error) setEstimationError(estimation.error);
-      return;
-    }
-
-    setToValue(estimation.estimation);
-    setCanSwap(true);
-  }, [
-    estimation,
-    estimationOnProgress,
-    fromToken,
-    fromValue,
-    needApprove,
-    setCanSwap,
-  ]);
-
-  const store = useStore();
-
-  useEffect(() => {
-    if (!fromValue) return;
-    setWriteOnprogress(true);
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      setWriteOnprogress(false);
-    }, 1000);
-  }, [fromValue]);
-
-  const swap = useCallback(async () => {
-    if (!fromToken || !toToken || !canSwap) return;
-    setUpdateEstimation(false);
-    const close = openModal(<SwapStepsModal />);
-    setCanSwap(false);
-    const _tx = new Operation({
-      id: window.crypto.randomUUID(),
-      steps: estimation.steps.map((step: ICommonStep) => {
-        return {
-          ...step,
-          status: OperationStatus.WAITING,
-        } as OperationStep;
-      }),
-      estimation,
-    });
-
-    try {
-      await switchNetwork();
-
-      if (needApprove) {
-        const amount = BigInt(Math.round(fromValue * fromToken.weiPerUnit));
-        const approvalAmount = amount; //+ amount / 500n; // 5%
-        store.dispatch({
-          type: "operations/add",
-          payload: _tx,
-        });
-        const { hash: approveHash } = await approve({
-          spender: toAllowanceAddress as `0x${string}`,
-          amount: approvalAmount,
-          address: fromToken.address,
-          chainId: fromToken.network.id,
-        });
-
-        const approvePending = publicClient.waitForTransactionReceipt({
-          hash: approveHash,
-        });
-        toast.promise(approvePending, {
-          loading: "Approve is pending...",
-          success: "Approve transaction successful",
-          error: "approve reverted rejected 🤯",
-        });
-
-        store.dispatch({
-          type: "operations/emmitStep",
-          payload: {
-            txId: _tx.id,
-            label: "approve-dispatch",
-            promise: approvePending,
-          },
-        });
-        await approvePending;
-        const hash = await executeSwap(_tx);
-
-        store.dispatch({
-          type: "operations/update",
-          payload: {
-            id: _tx.id,
-            payload: {
-              txHash: hash,
-              status: OperationStatus.PENDING,
-            },
-          },
-        });
-      } else {
-        store.dispatch({
-          type: "operations/add",
-          payload: _tx,
-        });
-        const hash = await executeSwap(_tx);
-        store.dispatch({
-          type: "operations/update",
-          payload: {
-            id: _tx.id,
-            payload: {
-              txHash: hash,
-              status: OperationStatus.PENDING,
-            },
-          },
-        });
-      }
-    } catch (error) {
-      close();
-      setUpdateEstimation(true);
-      setCanSwap(true);
-      toast.error(error.message);
-      store.dispatch({
-        type: "operations/update",
-        payload: {
-          id: _tx.id,
-          payload: {
-            status: OperationStatus.FAILED,
-          },
-        },
-      });
-    }
-  }, [
-    canSwap,
-    estimation,
-    executeSwap,
-    fromToken,
-    fromValue,
-    needApprove,
-    openModal,
-    publicClient,
-    setCanSwap,
-    store,
-    switchNetwork,
-    toAllowanceAddress,
-    toToken,
-  ]);
-
+    setInteractionEstimation(estimation);
+  }, [estimation, setInteractionEstimation]);
   return (
-    <EstimationContext.Provider
-      value={{
-        toValue,
-        estimation,
-        estimationError,
-        needApprove,
-        swap,
-        unlockEstimate: () => setUpdateEstimation(true),
-        lockEstimate: () => setUpdateEstimation(false),
-      }}
-    >
+    <EstimationContext.Provider value={{}}>
       {children}
     </EstimationContext.Provider>
   );
 };
-interface EstimationContextType {
-  swap: () => Promise<void>;
-  lockEstimate: () => void;
-  unlockEstimate: () => void;
-  estimation: any; // todo: change it;
-  estimationError: string;
-  toValue: number;
-  needApprove: boolean;
-}
 
 export { EstimationContext, EstimationProvider };

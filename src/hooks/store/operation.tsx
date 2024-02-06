@@ -5,8 +5,9 @@ import { OperationStatus } from "~/model/operation";
 import {
   EmmitStepAction,
   OperationInterface,
+  UpdateAction,
 } from "~/store/interfaces/operations";
-import { emmitStep, selectOperation } from "~/store/operations";
+import { add, emmitStep, selectOperation, update } from "~/store/operations";
 import {
   createOperationSelector,
   createOperationsByStatusSelector,
@@ -56,6 +57,21 @@ export const useEmmitStep = () => {
   const dispatch = useDispatch();
   return useCallback(
     (action: EmmitStepAction) => dispatch(emmitStep(action)),
+    [dispatch]
+  );
+};
+export const useAddOperation = () => {
+  const dispatch = useDispatch();
+  return useCallback(
+    (operation: OperationInterface) => dispatch(add(operation)),
+    [dispatch]
+  );
+};
+
+export const useUpdateOperation = () => {
+  const dispatch = useDispatch();
+  return useCallback(
+    (action: UpdateAction) => dispatch(update(action)),
     [dispatch]
   );
 };

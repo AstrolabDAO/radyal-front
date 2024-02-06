@@ -1,13 +1,13 @@
 import clsx from "clsx";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { FaChevronDown } from "react-icons/fa";
 
 import IconGroup from "./IconGroup";
 import Loader from "./Loader";
-import { SwapContext } from "~/context/swap-context";
+import { useSwitchSelection } from "~/hooks/store/swapper";
 
 const CrossChainTokenSelect = ({ selected, locked = false }) => {
-  const { switchSelectMode } = useContext(SwapContext);
+  const switchSelectMode = useSwitchSelection();
 
   const icons = useMemo(
     () => [
