@@ -1,11 +1,12 @@
 import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5Agent.json";
 import {
+  ICustomContractCall,
   ITransactionRequestWithEstimate,
   getAllTransactionRequests,
 } from "@astrolabs/swapper";
 import { PrepareSendTransactionArgs } from "@wagmi/core";
 import { erc20Abi } from "abitype/abis";
-import { encodeFunctionData, parseGwei } from "viem";
+import { encodeFunctionData } from "viem";
 import { tokensIsEqual } from "~/utils";
 import { StrategyInteraction } from "~/utils/constants";
 import { overrideZeroAddress } from "~/utils/format";
@@ -19,6 +20,14 @@ export const depositCallData = (address: string, toAmount: string) => {
     args: [toAmount, "0", address],
   });
 };
+
+export const approvalCallData = (spender: string, amount: string) => {
+  return generateCallData({
+    abi: erc20Abi,
+    functionName: "approve",
+    args: [spender, amount],
+  });
+}
 
 export const generateCallData = ({
   functionName,
@@ -46,30 +55,44 @@ export const getSwapRoute = async (params: LifiRequest) => {
       },
     ];
   }
-  const customContractCalls = [];
-  const slippage = 0.05;
+  const customContractCalls: ICustomContractCall[] = [];
+  const slippage = 0.1;
   if (
     interaction === StrategyInteraction.DEPOSIT
     //&&fromToken.network.id !== toToken.network.id
   ) {
-    const amontNumber = Number(amount);
+    const amountNumber = Number(amount);
+
+    const approval = approvalCallData(
+      strategy.address,
+      amountNumber.toString()
+    );
+
+    customContractCalls.push({
+      toAddress: toToken.address,
+      callData: approval,
+      inputPos: 1,
+      gasLimit: '200000',
+    });
+
     const callData = depositCallData(
       address,
-      (amontNumber - amontNumber * slippage).toString()
+      amountNumber.toString()
     );
 
     customContractCalls.push({
       toAddress: strategy.address,
       callData,
+      inputPos: 0,
+      gasLimit: '250000',
     });
   }
 
   const quoteOpts: any = {
-    aggregatorId: ["LIFI", "SQUID"],
-
+    aggregatorId: ["SQUID"],
     inputChainId: fromToken.network.id,
     input: overrideZeroAddress(fromToken.address),
-    amountWei: Math.round(Number(amount) - Number(amount) * 0.02), // because if not 2%, the fromAmount is highter. Why ? I don't know.
+    amountWei: amount,
     outputChainId: toToken.network.id,
     output: overrideZeroAddress(toToken.address),
     maxSlippage: slippage * 1000,
@@ -99,12 +122,11 @@ interface GenerateCallDataProps {
 }
 
 export const executeSwap = async (route: ITransactionRequestWithEstimate) => {
-  if (!route) return;
-  if (route.maxFeePerGas) delete route.maxFeePerGas;
-  if (route.maxPriorityFeePerGas) delete route.maxPriorityFeePerGas;
+  const tr = { ...route };
+  if (!tr) return;
+  if (tr.gasPrice) tr.gasPrice = undefined;
   const params: PrepareSendTransactionArgs = {
-    ...route,
-    gas: parseGwei("0.00001"),
+    ...tr,
   };
 
   console.log("🚀 ~ file: swap.ts:96 ~ executeSwap ~ route:", route);
