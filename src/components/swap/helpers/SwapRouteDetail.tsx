@@ -44,7 +44,7 @@ const SwapRouteDetail = ({
   );
 
   const getProtocolIconAndName = useCallback((protocol: string) => {
-    const protocolName = stripName(SwaptoolTraduction[protocol] ?? protocol);
+    const protocolName = stripName(SwaptoolTraduction[protocol] ?? protocol ?? "custom");
     const protocolData = protocolByStrippedSlug[protocolName];
     return {
       protocolName,
@@ -75,12 +75,12 @@ const SwapRouteDetail = ({
       }) => {
         const fromAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
           fromChain,
-          fromAmount ?? estimate.fromAmount,
+          fromAmount ?? estimate.fromAmount ?? '0',
           fromToken
         );
         const toAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
           toChain,
-          toAmount ?? estimate?.toAmount,
+          toAmount ?? estimate?.toAmount ?? '0',
           toToken
         );
 
