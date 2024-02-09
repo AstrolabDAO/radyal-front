@@ -1,4 +1,4 @@
-import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5Agent.json";
+import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5.json";
 import axios from "axios";
 import { zeroAddress } from "viem";
 import { getTokenBySlug } from "~/services/tokens";
@@ -80,7 +80,8 @@ export const getStrategies = async () => {
     .get(`${process.env.ASTROLAB_API}/strategies`)
     .then((res) => res.data.data as ApiResponseStrategy[]);
 
-  const strategiesByNetwork: { [key: number]: ApiResponseStrategyWithIndex[] } = {};
+  const strategiesByNetwork: { [key: number]: ApiResponseStrategyWithIndex[] } =
+    {};
 
   // Generate strategies mapping by Network with api Data
   for (let i = 0; i < strategiesData.length; i++) {
@@ -92,23 +93,27 @@ export const getStrategies = async () => {
     if (!strategiesByNetwork[network.id]) strategiesByNetwork[network.id] = [];
     // Add index on strategy to retrieve it after
     Object.assign(strategy, { index: i });
-    strategiesByNetwork[network.id].push(strategy as ApiResponseStrategyWithIndex);
+    strategiesByNetwork[network.id].push(
+      strategy as ApiResponseStrategyWithIndex
+    );
   }
 
   // Loop on Strategies by networks to multicall (getting strategy token details)
   for (const chainId of Object.keys(strategiesByNetwork)) {
-    const networkStrategies: ApiResponseStrategyWithIndex[] = strategiesByNetwork[chainId];
+    const networkStrategies: ApiResponseStrategyWithIndex[] =
+      strategiesByNetwork[chainId];
     const contractsCalls = networkStrategies
       .map((strategy) => {
         const call = {
           abi: AgentABI,
           address: strategy.nativeAddress,
         };
-        return ["symbol", "decimals", "sharePrice", "name"]
-          .map((functionName) => ({
+        return ["symbol", "decimals", "sharePrice", "name"].map(
+          (functionName) => ({
             ...call,
             functionName,
-          }));
+          })
+        );
       })
       .flat(1);
 
@@ -149,7 +154,11 @@ export const getStrategies = async () => {
         slug,
         protocols,
         aggregationLevel,
-      } = strategy as ApiResponseStrategy & { decimals: number, sharePrice: number, aggregationLevel: number };
+      } = strategy as ApiResponseStrategy & {
+        decimals: number;
+        sharePrice: number;
+        aggregationLevel: number;
+      };
 
       const network = networkBySlug[nativeNetwork];
 
@@ -161,7 +170,8 @@ export const getStrategies = async () => {
         address: nativeAddress,
         network,
         asset: token,
-        icon: `/tokens/${symbol?.toLowerCase()}.svg`,
+        //icon: `/images/tokens/${symbol?.toLowerCase()}.svg`,
+        icon: `/images/tokens/asl.svg`,
         slug,
         weiPerUnit: 10 ** decimals,
         sharePrice,

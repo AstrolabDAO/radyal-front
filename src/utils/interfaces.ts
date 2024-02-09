@@ -57,6 +57,8 @@ export interface Strategy extends Token {
   sharePrice: number;
   protocols?: any[];
   aggregationLevel?: number;
+  apy?: number;
+  tvl?: number;
 }
 
 export interface GrouppedStrategies {
@@ -116,7 +118,7 @@ export interface BalanceBySlugMapping {
   [slug: string]: Balance;
 }
 
-export interface LifiRequest {
+export interface SwapperRequest {
   fromToken: Token;
   toToken: Token;
   strategy: Strategy;

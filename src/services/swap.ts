@@ -1,4 +1,4 @@
-import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5Agent.json";
+import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5.json";
 import {
   ICustomContractCall,
   ITransactionRequestWithEstimate,
@@ -10,7 +10,7 @@ import { encodeFunctionData } from "viem";
 import { tokensIsEqual } from "~/utils";
 import { StrategyInteraction } from "~/utils/constants";
 import { overrideZeroAddress } from "~/utils/format";
-import { LifiRequest } from "~/utils/interfaces";
+import { SwapperRequest } from "~/utils/interfaces";
 import { executeTransaction } from "./transaction";
 
 export const depositCallData = (address: string, toAmount: string) => {
@@ -27,7 +27,7 @@ export const approvalCallData = (spender: string, amount: string) => {
     functionName: "approve",
     args: [spender, amount],
   });
-}
+};
 
 export const generateCallData = ({
   functionName,
@@ -41,7 +41,7 @@ export const generateCallData = ({
   });
 };
 
-export const getSwapRoute = async (params: LifiRequest) => {
+export const getSwapRoute = async (params: SwapperRequest) => {
   const { fromToken, toToken, address, amount, interaction, strategy } = params;
 
   if (tokensIsEqual(fromToken, toToken)) {
@@ -72,19 +72,16 @@ export const getSwapRoute = async (params: LifiRequest) => {
       toAddress: toToken.address,
       callData: approval,
       inputPos: 1,
-      gasLimit: '200000',
+      gasLimit: "200000",
     });
 
-    const callData = depositCallData(
-      address,
-      amountNumber.toString()
-    );
+    const callData = depositCallData(address, amountNumber.toString());
 
     customContractCalls.push({
       toAddress: strategy.address,
       callData,
       inputPos: 0,
-      gasLimit: '250000',
+      gasLimit: "250000",
     });
   }
 
@@ -97,7 +94,6 @@ export const getSwapRoute = async (params: LifiRequest) => {
     output: overrideZeroAddress(toToken.address),
     maxSlippage: slippage * 1000,
     payer: address,
-    denyBridges: [],
     customContractCalls: customContractCalls.length
       ? customContractCalls
       : undefined,

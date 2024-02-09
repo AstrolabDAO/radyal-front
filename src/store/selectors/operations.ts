@@ -1,5 +1,6 @@
+import { OperationStatus } from "@astrolabs/swapper";
 import { createSelector } from "@reduxjs/toolkit";
-import { Operation, OperationStatus } from "~/model/operation";
+import { Operation } from "~/model/operation";
 
 export const createStepsSelector = (operationId: string) => {
   return createSelector(

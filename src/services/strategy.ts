@@ -1,5 +1,5 @@
 import { Balance, Strategy } from "~/utils/interfaces";
-import { abi as AgentAbi } from "@astrolabs/registry/abis/StrategyV5Agent.json";
+import { abi as AgentAbi } from "@astrolabs/registry/abis/StrategyV5.json";
 import { networkByChainId } from "~/utils/mappings";
 import getBalances from "~/utils/multicall";
 

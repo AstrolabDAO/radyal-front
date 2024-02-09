@@ -8,12 +8,12 @@ type StrategyTableProps = {
 const StrategyTable: React.FC<StrategyTableProps> = ({ strategies }: StrategyTableProps) => {
 
   return (
-    <table className="table">
+    <table className="table border-dark-600 rounded-xl">
       <thead>
-        <tr className="border-1 border-solid border-dark-600 rounded-t-xl">
+        <tr>
           <th className="pe-0"></th>
           <th>Vault</th>
-          <th>APY</th>
+          <th className="text-white font-semibold">APY</th>
           <th>TVL</th>
           <th>Protocols</th>
           <th>Chains</th>
@@ -25,7 +25,7 @@ const StrategyTable: React.FC<StrategyTableProps> = ({ strategies }: StrategyTab
           return (
             <StrategyTableListItem
               strategyGroup={group}
-              key={`strategy-group-${index}`}
+              key={`strategy-table-list-${index}`}
               isLast={index === strategies.length - 1}
             />
           )

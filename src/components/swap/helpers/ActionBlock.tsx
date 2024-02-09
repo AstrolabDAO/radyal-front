@@ -2,14 +2,18 @@ import clsx from "clsx";
 import { useMemo } from "react";
 
 import { Strategy, Token } from "~/utils/interfaces";
-import { weiToAmount, round } from "~/utils/format";
+import { weiToAmount, round } from "~/utils/maths";
 
-import { useBalanceByTokenSlug, usePrices } from "~/hooks/store/tokens";
+import {
+  useBalanceByTokenSlug,
+  usePrices,
+  useTokenIsLoaded,
+} from "~/hooks/store/tokens";
 
 import { WalletIcon } from "@heroicons/react/24/solid";
 import TokenPresentation from "~/components/TokenPresentation";
 
-type SwapBlockProps = {
+type ActionBlockProps = {
   disabled?: boolean;
   isFocused?: boolean;
   label: string;
@@ -23,7 +27,7 @@ type SwapBlockProps = {
   onWalletClick?: (walletBalance: number) => void;
 };
 
-const SwapBlock = ({
+const ActionBlock = ({
   label,
   symbol,
   network,
@@ -34,7 +38,7 @@ const SwapBlock = ({
   isFocused = false,
   onTokenClick,
   onWalletClick = () => {},
-}: SwapBlockProps) => {
+}: ActionBlockProps) => {
   const tokenPrices = usePrices();
   const balanceBySlug = useBalanceByTokenSlug();
   const balance = useMemo(() => {
@@ -58,17 +62,20 @@ const SwapBlock = ({
     return isNaN(price * value) ? 0 : price * value;
   }, [tokenPrices, token, value]);
 
+  const tokenIsLoaded = useTokenIsLoaded();
+
   return (
     <div className="flex flex-col">
       <div className="mb-1 text-gray-500 font-medium">{label}</div>
       <div
         className={clsx(
-          "flex flex-col md:flex-row p-2 rounded-[1.15rem] border-1 border-solid",
+          "flex flex-col md:flex-row px-4 py-3 rounded-[1.15rem] border-1 border-solid",
           {
             "bg-dark-700": !disabled,
             "border-dark-500": disabled,
             "border-primary/50": isFocused,
             "border-transparent": !isFocused && !disabled,
+            "shimmer border-none": !tokenIsLoaded,
           }
         )}
       >
@@ -81,7 +88,12 @@ const SwapBlock = ({
         >
           {symbol && network && <TokenPresentation token={token} />}
         </div>
-        <div className="flex flex-col ms-auto my-auto text-right">
+
+        <div
+          className={clsx("flex flex-col ms-auto my-auto text-right", {
+            "opacity-0": !tokenIsLoaded,
+          })}
+        >
           <div
             className={clsx(
               "text-xs flex rounded-md flex-row align-middle ms-auto rounded",
@@ -98,10 +110,13 @@ const SwapBlock = ({
             <span className="flex my-auto"> {round(balance, 4)} </span>
           </div>
           <div className="flex ms-auto text-white">{children}</div>
+          <div className="text-xs text-dark-500 font-light">
+            ~{round(balanceEquivalent, 4)} $
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default SwapBlock;
+export default ActionBlock;

@@ -4,10 +4,14 @@ import { IToken as LiFiToken } from "@astrolabs/swapper/dist/src/LiFi";
 import { IToken as SquidToken } from "@astrolabs/swapper/dist/src/Squid";
 
 import { Icon } from "~/utils/interfaces";
-import { OperationStatus, OperationStep } from "~/store/interfaces/operations";
-import { useEstimatedRoute } from "~/hooks/store/swapper";
+import { OperationStep } from "~/store/interfaces/operations";
+import {
+  useEstimatedRoute,
+  useEstimationOnProgress,
+} from "~/hooks/store/swapper";
 
-import { weiToAmount, round, stripName } from "~/utils/format";
+import { weiToAmount, round } from "~/utils/maths";
+import { stripName } from "~/utils/format";
 
 import {
   SwapRouteStepTypeTraduction,
@@ -16,19 +20,22 @@ import {
   protocolByStrippedSlug,
 } from "~/utils/mappings";
 
-import SwapRouteDetailLine from "./SwapRouteDetailLine";
+import ActionRouteDetailLine from "./ActionRouteDetailLine";
+import Lottie from "lottie-react";
+import Loader from "~/components/Loader";
+import { OperationStatus } from "@astrolabs/swapper";
 
-type SwapRouteDetailProps = {
+type ActionRouteDetailProps = {
   steps: OperationStep[];
   showStatus?: boolean;
 };
 
-const SwapRouteDetail = ({
+const ActionRouteDetail = ({
   steps,
   showStatus = false,
-}: SwapRouteDetailProps) => {
+}: ActionRouteDetailProps) => {
   const estimation = useEstimatedRoute();
-
+  const estimationProgress = useEstimationOnProgress();
   const estimationError = estimation?.error;
 
   const amountWithNetworkAndSymbol = useCallback(
@@ -44,7 +51,9 @@ const SwapRouteDetail = ({
   );
 
   const getProtocolIconAndName = useCallback((protocol: string) => {
-    const protocolName = stripName(SwaptoolTraduction[protocol] ?? protocol ?? "custom");
+    const protocolName = stripName(
+      SwaptoolTraduction[protocol] ?? protocol ?? "custom"
+    );
     const protocolData = protocolByStrippedSlug[protocolName];
     return {
       protocolName,
@@ -75,12 +84,12 @@ const SwapRouteDetail = ({
       }) => {
         const fromAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
           fromChain,
-          fromAmount ?? estimate.fromAmount ?? '0',
+          fromAmount ?? estimate.fromAmount ?? "0",
           fromToken
         );
         const toAmountWithNetworkAndSymbol = amountWithNetworkAndSymbol(
           toChain,
-          toAmount ?? estimate?.toAmount ?? '0',
+          toAmount ?? estimate?.toAmount ?? "0",
           toToken
         );
 
@@ -118,38 +127,45 @@ const SwapRouteDetail = ({
   }, [steps, showStatus, amountWithNetworkAndSymbol, getProtocolIconAndName]);
 
   return (
-    <div
-      className={clsx({ "max-h-0": steps.length === 0 && !estimationError })}
+    <Loader
+      loaderClasses="w-20 mx-auto invert"
+      className="mx-auto text-nowrap text-white mb-4 text-center"
+      title={"searching route..."}
+      value={!estimationProgress}
     >
-      {(steps.length > 0 || estimationError) && !showStatus && (
-        <div className="mb-1 font-medium text-gray-500">VIA</div>
-      )}
-      {!estimationError && (
-        <ul
-          className="steps steps-vertical gap-0"
-          style={{
-            maxHeight: steps.length > 0 ? "500px" : "0px",
-            transition: "max-height 2s ease-out",
-          }}
-        >
-          {displayedSteps.map((step) => (
-            <SwapRouteDetailLine
-              key={`swap-route-detail-${step.id}`}
-              step={step}
-              status={step.status}
-            />
-          ))}
-        </ul>
-      )}
-      {estimationError && (
-        <div className="border-1 border-solid border-warning w-full py-2 rounded-xl bg-warning/10 mb-3">
-          <div className="text-center text-primary font-medium leading-5">
-            No route found ! <br />
-            Please select another deposit token
+      <div
+        className={clsx({ "max-h-0": steps.length === 0 && !estimationError })}
+      >
+        {(steps.length > 0 || estimationError) && !showStatus && (
+          <div className="mb-1 font-medium text-gray-500">VIA</div>
+        )}
+        {!estimationError && (
+          <ul
+            className="steps steps-vertical gap-0"
+            style={{
+              maxHeight: steps.length > 0 ? "500px" : "0px",
+              transition: "max-height 2s ease-out",
+            }}
+          >
+            {displayedSteps.map((step, index) => (
+              <ActionRouteDetailLine
+                key={`swap-route-detail-${index}`}
+                step={step}
+                status={step.status}
+              />
+            ))}
+          </ul>
+        )}
+        {estimationError && (
+          <div className="border-1 border-solid border-warning w-full py-2 rounded-xl bg-warning/10 mb-3">
+            <div className="text-center text-primary font-medium leading-5">
+              No route found ! <br />
+              Please select another deposit token
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </Loader>
   );
 };
-export default SwapRouteDetail;
+export default ActionRouteDetail;

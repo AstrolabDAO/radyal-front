@@ -1,12 +1,12 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaTwitter, FaDiscord, FaGithub } from "react-icons/fa";
 import { DisclaimerContext } from "~/context/disclaimer-context";
 
 import RiskDisclaimerMd from "~/assets/docs/risk.mdx";
 import Lottie from "lottie-react";
 import Button from "~/components/Button";
-
-import radyalAnimation from "~/assets/animations/logo.json";
+import axios from "axios";
+import Logo from "~/assets/animations/logo.json";
 
 const DisclaimerPage = () => {
   const { accept } = useContext(DisclaimerContext);
@@ -20,16 +20,24 @@ const DisclaimerPage = () => {
   };
 
   return (
-    <div id="disclaimer-page" className="relative container flex mx-auto h-screen">
+    <div
+      id="disclaimer-page"
+      className="relative container flex mx-auto h-screen"
+    >
       <div className="flex flex-col m-auto text-center">
-        <div className="w-52 h-52 mx-auto overflow-hidden mt-3">
+        <div className="w-52 h-52 mx-auto overflow-hidden my-3">
           <Lottie
-            animationData={radyalAnimation} loop={true}
-            className="scale-200"
+            animationData={Logo}
+            loop={true}
+            className="scale-140 invert"
           />
         </div>
-        <h1 className="text-8xl gilroy font-bold text-secondary leading-10 mt-5">RADYAL</h1>
-        <div className="text-2xl gilroy font-semibold mt-4">ALGORITHMIC YIELD PRIMITIVES</div>
+        <h1 className="text-8xl gilroy font-bold text-secondary leading-10 mt-5">
+          RADYAL
+        </h1>
+        <div className="text-2xl gilroy font-semibold mt-4">
+          ALGORITHMIC YIELD PRIMITIVES
+        </div>
         <div className="w-2/3 xl:w-8/12 mx-auto mt-6 mb-3">
           <div className="border-solid border-1 border-gray-600 rounded-xl p-4 h-64 overflow-scroll text-secondary text-left text-xs md disclaimer">
             <RiskDisclaimerMd />
@@ -43,7 +51,9 @@ const DisclaimerPage = () => {
             checked={saveDisclaimerStatus}
             onChange={handleCheckboxChange}
           />
-          <label htmlFor="saveDisclaimerStatus" className="text-xs">Hide for 30 days</label>
+          <label htmlFor="saveDisclaimerStatus" className="text-xs">
+            Hide for 30 days
+          </label>
         </div>
         <Button
           className="mb-10 mx-auto px-5 min-w-36"

@@ -1,11 +1,15 @@
 import { useMemo } from "react";
 
 import { useCloseModal } from "~/hooks/store/modal";
-import { useSelectToken, useSwitchSelection } from "~/hooks/store/swapper";
+import {
+  useInteraction,
+  useSelectToken,
+  useSwitchSelection,
+} from "~/hooks/store/swapper";
 import { useBalances, useTokenBySlug, useTokens } from "~/hooks/store/tokens";
 
 import { Token } from "~/utils/interfaces";
-import { SelectTokenModalMode } from "~/utils/constants";
+import { SelectTokenModalMode, StrategyInteraction } from "~/utils/constants";
 
 import { BaseModalProps } from "../Modal";
 import SelectToken from "../select-token/SelectToken";
@@ -14,16 +18,16 @@ interface SelectTokenModalProps extends BaseModalProps {
   mode: SelectTokenModalMode;
 }
 
-const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
+const SelectTokenModal = () => {
   const switchSelectMode = useSwitchSelection();
   const selectToken = useSelectToken();
   const tokens = useTokens();
   const closeModal = useCloseModal();
   const balances = useBalances();
-
+  const interaction = useInteraction();
   const tokenBySlug = useTokenBySlug();
   const tokensList = useMemo(() => {
-    return mode === SelectTokenModalMode.Deposit
+    return interaction === StrategyInteraction.DEPOSIT
       ? balances
           .filter((balance) => {
             const token = tokenBySlug[balance.token];
@@ -31,7 +35,7 @@ const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
           })
           .map((balance) => tokenBySlug[balance.token])
       : tokens;
-  }, [balances, mode, tokenBySlug, tokens]);
+  }, [balances, interaction, tokenBySlug, tokens]);
 
   return (
     <div className="modal-wrapper">
@@ -41,7 +45,7 @@ const SelectTokenModal = ({ mode }: SelectTokenModalProps) => {
         onSelect={(token: Token) => {
           selectToken({
             token,
-            for: mode === SelectTokenModalMode.Deposit ? "from" : "to",
+            for: interaction === StrategyInteraction.DEPOSIT ? "from" : "to",
           });
           switchSelectMode();
           closeModal();

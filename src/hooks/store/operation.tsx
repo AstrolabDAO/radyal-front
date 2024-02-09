@@ -1,12 +1,12 @@
 import { ICommonStep } from "@astrolabs/swapper";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { OperationStatus } from "~/model/operation";
 import {
-  EmmitStepAction,
+  Operation,
   OperationInterface,
-  UpdateAction,
-} from "~/store/interfaces/operations";
+  OperationStatus,
+} from "~/model/operation";
+import { EmmitStepAction, UpdateAction } from "~/store/interfaces/operations";
 import { add, emmitStep, selectOperation, update } from "~/store/operations";
 import {
   createOperationSelector,
@@ -45,7 +45,7 @@ export const useCurrentStep = () => {
   );
 };
 
-export const useOperations = () => {
+export const useOperations = (): Operation[] => {
   return useSelector(operationsSelector);
 };
 

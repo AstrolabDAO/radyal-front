@@ -1,10 +1,17 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { BaseModal } from "~/components/Modal";
+import ActionModal from "~/components/modals/ActionModal";
+import { Modals } from "~/utils/constants";
+
+export interface StoredModal {
+  modal: keyof typeof Modals;
+  props?: object;
+}
 
 interface ModalState {
   visible: boolean;
   render: boolean;
-  list: BaseModal[];
+  list: StoredModal[];
   selectedModal: number;
 }
 const initialState: ModalState = {
@@ -13,11 +20,12 @@ const initialState: ModalState = {
   list: [],
   selectedModal: 0,
 };
+
 const modalSlice = createSlice({
   name: "modal",
   initialState,
   reducers: {
-    openModal: (state, action: PayloadAction<BaseModal>) => {
+    openModal: (state, action: PayloadAction<StoredModal>) => {
       state.list.push(action.payload);
       state.selectedModal = state.list.length - 1;
       state.visible = true;

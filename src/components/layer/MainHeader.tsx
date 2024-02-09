@@ -9,6 +9,7 @@ import Logo from "~/assets/logo/logo.svg?react";
 import Button from "../Button";
 import HeaderActions from "./header/HeaderActions";
 import HeaderAbout from "./header/HeaderAbout";
+import clsx from "clsx";
 
 const Header = ({ emitMint }) => {
   const { address, isConnected } = useAccount();
@@ -32,7 +33,6 @@ const Header = ({ emitMint }) => {
   }, []);
 
   const headerStyle = {
-    height: scrolling ? "3.61rem" : "5rem",
     backgroundColor: scrolling ? "rgba(28, 28, 28, 0.6)" : "transparent",
     backdropFilter: scrolling ? "blur(10px)" : "none",
     transition: "background-color 0.3s ease-in-out",
@@ -40,7 +40,12 @@ const Header = ({ emitMint }) => {
   };
 
   return (
-    <header className="sticky top-0 z-20 w-full" style={headerStyle}>
+    <header
+      className={clsx("sticky top-0 z-20 w-full p-1", {
+        "border-b border-solid border-white-200": scrolling,
+      })}
+      style={headerStyle}
+    >
       <div className="container">
         <div className="navbar">
           <div className="navbar-start">
@@ -76,6 +81,7 @@ const Header = ({ emitMint }) => {
               <>
                 <HeaderActions />
                 <Button
+                  primary={false}
                   className="h-10 min-h-0 rounded-xl"
                   onClick={() => web3Modal.open({ view: "Account" })}
                 >

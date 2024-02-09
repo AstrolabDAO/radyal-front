@@ -30,7 +30,7 @@ const Layout = ({ changeColor }) => {
               containerClassName="container"
               toastOptions={{
                 success: {
-                  className: "strategy-card",
+                  className: "strategy-card h-autp",
                   style,
                   iconTheme: {
                     primary: 'var(--success)',
@@ -39,7 +39,7 @@ const Layout = ({ changeColor }) => {
                 },
                 error: {
                   style,
-                  className: "strategy-card",
+                  className: "strategy-card h-auto",
                   iconTheme: {
                     primary: 'var(--error)',
                     secondary: 'black',
@@ -47,7 +47,7 @@ const Layout = ({ changeColor }) => {
                 },
                 loading: {
                   style,
-                  className: "strategy-card",
+                  className: "strategy-card h-auto",
                   iconTheme: {
                     primary: 'var(--warning)',
                     secondary: '#3f3f3f',

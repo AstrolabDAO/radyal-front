@@ -1,4 +1,4 @@
-import StratV5Abi from "@astrolabs/registry/abis/StrategyV5Agent.json";
+import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
 
 import { ICommonStep } from "@astrolabs/swapper";
 import { Client, getContract } from "viem";
@@ -6,7 +6,7 @@ import { Strategy } from "../interfaces";
 import { StrategyInteraction } from "../constants";
 
 export const previewStrategyTokenMove = async (
-  { strategy, interaction, value }: PreviewStrategyMoveProps,
+  { strategy, interaction, value, address }: PreviewStrategyMoveProps,
   publicClient: Client
 ) => {
   const contract = getContract({
@@ -15,17 +15,11 @@ export const previewStrategyTokenMove = async (
     publicClient,
   });
 
-  if (
-    ![StrategyInteraction.DEPOSIT, StrategyInteraction.WITHDRAW].includes(
-      interaction
-    )
-  )
-    throw new Error("Invalid mode");
-
   const weiPerUnit =
     interaction === StrategyInteraction.DEPOSIT
       ? strategy.asset.weiPerUnit
       : strategy.weiPerUnit;
+
   const amount = BigInt(value * weiPerUnit);
 
   const previewAmount = (
@@ -69,4 +63,5 @@ interface PreviewStrategyMoveProps {
   strategy: Strategy;
   interaction: StrategyInteraction;
   value: number;
+  address: `0x${string}`;
 }

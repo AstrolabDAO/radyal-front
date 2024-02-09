@@ -1,13 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { OperationStatus } from "~/model/operation";
+import { OperationInterface, OperationStatus } from "~/model/operation";
 import LocalStorageService from "~/services/localStorage";
 import { cacheHash } from "~/utils/format";
 
-import {
-  EmmitStepAction,
-  OperationInterface,
-  UpdateAction,
-} from "./interfaces/operations";
+import { EmmitStepAction, UpdateAction } from "./interfaces/operations";
 
 export const CACHE_KEY = cacheHash("operations");
 
@@ -99,6 +95,7 @@ const operationSlice = createSlice({
       if (!currentStep) return;
 
       currentStep.status = OperationStatus.DONE;
+      currentStep.date = new Date().getTime();
       LocalStorageService.setItem(
         CACHE_KEY,
         state.list,

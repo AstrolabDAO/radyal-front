@@ -1,4 +1,4 @@
-import { Operation, OperationStatus } from "~/model/operation";
+import { Operation } from "~/model/operation";
 import { getStore, getStoreState } from "~/store";
 import {
   createOperationSelector,
@@ -22,6 +22,7 @@ import {
 } from "~/store/operations";
 
 import { emmitStep as StoreEmmitStep } from "~/store/operations";
+import { OperationStatus, getStatus } from "@astrolabs/swapper";
 export const getOperationsStore = () => {
   return getStoreState().operations;
 };
@@ -95,60 +96,69 @@ export const checkInterval = () => {
       .filter((operation) => !!operation.txHash)
       .forEach(async (operation: Operation) => {
         try {
-          if (operation.estimation.request.aggregatorId === "LIFI") {
-            const result: LiFITransactionStatusResponse = (
-              await axios.get(
-                `https://li.quest/v1/status?txHash=${operation.txHash}`
-              )
-            ).data;
+          const result = await getStatus({
+            aggregatorIds: [operation.estimation.request.aggregatorId],
+            transactionId: operation.txHash,
+          });
 
-            if (result?.status === OperationStatus.DONE) {
-              getStore().dispatch(
-                update({
-                  id: operation.id,
-                  payload: {
-                    status: OperationStatus.DONE,
-                    receivingTx: result?.receiving.txLink,
-                    sendingTx: result?.sending.txLink,
-                    substatus: result?.substatus,
-                    substatusMessage: result?.substatusMessage,
-                    steps: operation.steps.map((step: OperationStep) => {
-                      const isFail =
-                        result?.substatus === "PARTIAL" &&
-                        step.type === "custom";
+          if (result?.status === OperationStatus.DONE) {
+            getStore().dispatch(
+              update({
+                id: operation.id,
+                payload: {
+                  status: OperationStatus.DONE,
+                  receivingTx: result?.receivingTx,
+                  sendingTx: result?.sendingTx,
+                  substatus: result?.substatus,
+                  substatusMessage: result?.substatusMessage,
+                  steps: operation.steps.map((step: OperationStep) => {
+                    const isFail =
+                      result?.substatus === "PARTIAL" && step.type === "custom";
 
-                      return {
-                        ...step,
-                        failMessage: isFail
-                          ? result?.substatusMessage
-                          : undefined,
-                        status: isFail
-                          ? OperationStatus.FAILED
-                          : OperationStatus.DONE,
-                      };
-                    }),
-                  },
-                })
-              );
-            } else if (result.status === OperationStatus.FAILED) {
-              getStore().dispatch(
-                update({
-                  id: operation.id,
-                  payload: {
-                    status: OperationStatus.FAILED,
-                  },
-                })
-              );
-              getStore().dispatch(failCurrentStep(operation.id));
-            }
+                    return {
+                      ...step,
+                      failMessage: isFail
+                        ? result?.substatusMessage
+                        : undefined,
+                      status: isFail
+                        ? OperationStatus.FAILED
+                        : OperationStatus.DONE,
+                    };
+                  }),
+                },
+              })
+            );
+          } else if (result.status === OperationStatus.FAILED) {
+            getStore().dispatch(
+              update({
+                id: operation.id,
+                payload: {
+                  status: OperationStatus.FAILED,
+                  steps: operation.steps
+                    .filter(({ status }) => status !== OperationStatus.DONE)
+                    .map((step: OperationStep) => ({
+                      ...step,
+                      status: OperationStatus.FAILED,
+                    })),
+                },
+              })
+            );
+            getStore().dispatch(failCurrentStep(operation.id));
           }
         } catch (e) {
+          console.error(e);
           if (e?.response?.data?.code === 1011) {
             getStore().dispatch(
               update({
                 id: operation.id,
                 payload: {
                   status: OperationStatus.FAILED,
+                  steps: operation.steps
+                    .filter(({ status }) => status !== OperationStatus.DONE)
+                    .map((step: OperationStep) => ({
+                      ...step,
+                      status: OperationStatus.FAILED,
+                    })),
                 },
               })
             );

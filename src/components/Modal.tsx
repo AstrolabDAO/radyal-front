@@ -8,6 +8,7 @@ import {
 } from "~/hooks/store/modal";
 
 import Close from "~/assets/icons/close.svg?react";
+import { Modals } from "~/utils/constants";
 
 export interface BaseModal extends React.ReactElement {
   props: {
@@ -24,15 +25,11 @@ const Modal = () => {
   const closeModal = useCloseModal();
   const selectedModal = useSelectedModal();
   const onClose = useCallback(() => {
-    if (selectedModal) {
-      const { props } = selectedModal;
-
-      if (props?.onClose) props.onClose();
-    }
     closeModal();
   }, [selectedModal, closeModal]);
   if (!render) return null;
 
+  const ModalComponent = Modals[selectedModal?.modal];
   return (
     <Transition show={visible} as={Dialog} onClose={onClose}>
       <div className="transition-wrapper">
@@ -52,7 +49,7 @@ const Modal = () => {
             >
               <Close className="fill-[#1C1C1C]" />
             </button>
-            { selectedModal }
+            {selectedModal && <ModalComponent {...selectedModal?.props} />}
           </Dialog.Panel>
         </Transition.Child>
       </div>
