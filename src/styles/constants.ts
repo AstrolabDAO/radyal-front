@@ -1,17 +1,24 @@
 export const SENTIMENT_COLORS = {
-  positive: "#52E052",
+  positive: "#15C780",
+  success: "#15C780",
   negative: "#FF4242",
-  warning: "#f8b024",
+  error: "#FF4242",
+  warning: "#F8B024",
+  info: "#4D9DE0",
+  neutral: "#1C1C1C",
+  "neutral-content": "#A0A0A0",
 };
 
 export const COLORS = {
   primary: "#FFB800",
+  "primary-content": "#1C1C1C",
   secondary: "#CACADA",
   tertiary: "#131829",
-  active: "#ffd61e",
-  base: "#1c1c1c",
-  success: SENTIMENT_COLORS.positive,
-  error: SENTIMENT_COLORS.negative,
+  active: "#CACADA",
+  accent: "#FFB800",
+  base: "#1C1C1C",
+  dark: "#505050",
+  background: "#1C1C1C",
   ...SENTIMENT_COLORS,
 };
 

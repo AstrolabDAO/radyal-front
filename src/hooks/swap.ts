@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 import { useStore } from "react-redux";
 import { Operation } from "~/model/operation";
 import { StrategyInteraction } from "~/utils/constants";
-import { useSelectedStrategy } from "./store/strategies";
+import { useSelectedStrategy } from "./strategies";
 
 import {
   useEstimationHash,
@@ -27,11 +27,11 @@ import {
   useFromToken,
   useFromValue,
   useInteraction,
-  useSetEstimationOnprogress,
   useToToken,
-} from "./store/swapper";
+} from "./swapper";
 
 import { OperationStep } from "~/store/interfaces/operations";
+import { setEstimationOnprogress } from "~/services/swapper";
 
 export const useExecuteSwap = () => {
   const fromToken = useFromToken();
@@ -89,7 +89,6 @@ export const useEstimateRoute = () => {
   const toToken = useToToken();
   const interaction = useInteraction();
   const estimationOnProgress = useEstimationOnProgress();
-  const setEstimationRouteOnProgress = useSetEstimationOnprogress();
   const getSwapRoute = useGetSwapRoute();
 
   const previewStrategyTokenMove = usePreviewStrategyTokenMove();
@@ -97,12 +96,11 @@ export const useEstimateRoute = () => {
   return useCallback(async () => {
     try {
       if (estimationOnProgress) return;
-      setEstimationRouteOnProgress(true);
+      setEstimationOnprogress(true);
 
       if (tokensIsEqual(fromToken, toToken)) {
-        setEstimationRouteOnProgress(false);
         const result = await previewStrategyTokenMove();
-        setEstimationRouteOnProgress(false);
+        setEstimationOnprogress(false);
         return result;
       }
       let result, interactionEstimation;
@@ -125,7 +123,7 @@ export const useEstimateRoute = () => {
 
       if (!result) {
         toast.error("route not found from Swapper 🤯");
-        setEstimationRouteOnProgress(false);
+        setEstimationOnprogress(false);
         return {
           error: "route not found from Swapper 🤯",
         };
@@ -159,7 +157,7 @@ export const useEstimateRoute = () => {
                 : []),
             ]
           : [...interactionEstimation.steps, ...steps];
-      setEstimationRouteOnProgress(false);
+      setEstimationOnprogress(false);
       return {
         id: window.crypto.randomUUID(),
         estimation: receiveEstimation,
@@ -172,7 +170,6 @@ export const useEstimateRoute = () => {
     }
   }, [
     estimationOnProgress,
-    setEstimationRouteOnProgress,
     fromToken,
     toToken,
     interaction,

@@ -9,8 +9,8 @@
   width: $unit2;
   height: $unit2;
   border-radius: 0.25rem;
-  background: var(--p);
-  border: 1px solid $primary;
+  background: $secondary;
+  /* border: 1px solid $primary; */
   border-radius: 2rem;
   box-shadow: inset 0 0 $unit1 darken($secondary, 25);
 }
@@ -26,7 +26,6 @@
 }
 
 :root {
-
   font-family: Inter, sans-serif;
   line-height: 1.5;
   font-weight: 400;

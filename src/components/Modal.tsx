@@ -1,14 +1,12 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useCallback } from "react";
-import {
-  useCloseModal,
-  useRender,
-  useSelectedModal,
-  useVisible,
-} from "~/hooks/store/modal";
+import { Fragment, useCallback, useMemo } from "react";
+import { useRender, useSelectedModal, useVisible } from "~/hooks/modal";
 
 import Close from "~/assets/icons/close.svg?react";
 import { Modals } from "~/utils/constants";
+import clsx from "clsx";
+import { ModalSizeConverter } from "~/store/modal";
+import { closeModal } from "~/services/modal";
 
 export interface BaseModal extends React.ReactElement {
   props: {
@@ -22,14 +20,20 @@ export interface BaseModalProps {
 const Modal = () => {
   const render = useRender();
   const visible = useVisible();
-  const closeModal = useCloseModal();
   const selectedModal = useSelectedModal();
+
+  const size = useMemo(() => {
+    if (!selectedModal) return "small";
+    return selectedModal?.size;
+  }, [selectedModal]);
+
   const onClose = useCallback(() => {
     closeModal();
-  }, [selectedModal, closeModal]);
+  }, [selectedModal]);
   if (!render) return null;
 
   const ModalComponent = Modals[selectedModal?.modal];
+
   return (
     <Transition show={visible} as={Dialog} onClose={onClose}>
       <div className="transition-wrapper">
@@ -42,7 +46,7 @@ const Modal = () => {
           leaveTo="opacity-0 scale-95"
           as={Fragment}
         >
-          <Dialog.Panel className="dialog max-h-screen sm-max-h-95vh">
+          <Dialog.Panel className={clsx("dialog n sm-max-h-95vh w-full", size)}>
             <button
               className="right-0 top-0 absolute p-2 z-50 rounded-tr-xl w-8 h-8 sm:hidden"
               onClick={onClose}

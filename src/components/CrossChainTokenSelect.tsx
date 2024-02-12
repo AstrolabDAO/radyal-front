@@ -4,11 +4,9 @@ import { FaChevronDown } from "react-icons/fa";
 
 import IconGroup from "./IconGroup";
 import Loader from "./Loader";
-import { useSwitchSelection } from "~/hooks/store/swapper";
+import { switchSelection } from "~/services/swapper";
 
 const CrossChainTokenSelect = ({ selected, locked = false }) => {
-  const switchSelectMode = useSwitchSelection();
-
   const icons = useMemo(
     () => [
       { url: selected?.icon, alt: selected?.symbol },
@@ -31,7 +29,7 @@ const CrossChainTokenSelect = ({ selected, locked = false }) => {
         <div
           className="flex items-center w-full"
           onClick={() => {
-            if (!locked) switchSelectMode();
+            if (!locked) switchSelection();
           }}
         >
           <Loader value={selected}>

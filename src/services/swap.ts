@@ -6,7 +6,7 @@ import {
 } from "@astrolabs/swapper";
 import { PrepareSendTransactionArgs } from "@wagmi/core";
 import { erc20Abi } from "abitype/abis";
-import { encodeFunctionData } from "viem";
+import { encodeFunctionData, parseGwei } from "viem";
 import { tokensIsEqual } from "~/utils";
 import { StrategyInteraction } from "~/utils/constants";
 import { overrideZeroAddress } from "~/utils/format";
@@ -120,9 +120,11 @@ interface GenerateCallDataProps {
 export const executeSwap = async (route: ITransactionRequestWithEstimate) => {
   const tr = { ...route };
   if (!tr) return;
-  if (tr.gasPrice) tr.gasPrice = undefined;
+  if (tr.maxFeePerGas) delete tr.maxFeePerGas;
+  if (tr.maxPriorityFeePerGas) delete tr.maxPriorityFeePerGas;
   const params: PrepareSendTransactionArgs = {
     ...tr,
+    //gas: parseGwei("0.00001"),
   };
 
   console.log("🚀 ~ file: swap.ts:96 ~ executeSwap ~ route:", route);

@@ -1,23 +1,22 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useOpenModal } from "~/hooks/store/modal";
-import { useSelectOperation } from "~/hooks/store/operation";
+
 import {
   useGrouppedStrategies,
   useStrategiesNetworks,
-} from "~/hooks/store/strategies";
+} from "~/hooks/strategies";
 import { operationsSelector } from "~/store/selectors/operations";
 import { filterByNetworks, search } from "~/store/strategies";
 
 import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
-import ActionStepsModal from "../modals/ActionStepsModal";
 import StrategyCard from "./StrategyCard";
 import StrategyTable from "./table/StrategyTable";
 
 import CardIcon from "@/assets/icons/cards.svg?react";
 import TableIcon from "@/assets/icons/table.svg?react";
-import { useCallback, useState } from "react";
 import { Transition } from "@headlessui/react";
 import clsx from "clsx";
+import { useCallback, useState } from "react";
+import { Input } from "../styled";
 
 const StrategyGrid = () => {
   const [tabActive, setTabActive] = useState<"cards" | "table">("cards");
@@ -41,11 +40,8 @@ const StrategyGrid = () => {
     [tabActive]
   );
   const grouppedStrategies = useGrouppedStrategies();
-  const operations = useSelector(operationsSelector);
   const dispatch = useDispatch();
-  const selectOperation = useSelectOperation();
   const strategiesNetworks = useStrategiesNetworks();
-  const openModal = useOpenModal();
 
   return (
     <div className="w-full container px-2 sm:mx-auto mt-5 overflow-x-hidden">
@@ -76,7 +72,7 @@ const StrategyGrid = () => {
       <div className="flex flex-col md:flex-row w-full">
         <div className="mr-4 w-full flex flex-col">
           <span className="label-text block my-2">Search</span>
-          <input
+          <Input
             type="text"
             placeholder="“Stable”, “Arbitrum”, “Staking”..."
             className="input input-bordered hover:border-primary w-full focus:outline-none bg-dark-800/25 backdrop-blur-3"

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 
-import { useFromValue, useSetFromValue } from "~/hooks/store/swapper";
+import { useFromValue } from "~/hooks/swapper";
 
 import { getIconFromStrategy } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
 import ActionBlock from "../helpers/ActionBlock";
+import { setFromValue } from "~/services/swapper";
 
 type WWithProps = {
   strategy: Strategy;
@@ -13,7 +14,7 @@ type WWithProps = {
 
 const WithdrawWith = ({ strategy }: WWithProps) => {
   const [depositValue, setDepositValue] = useState<string | number>("");
-  const setFromValue = useSetFromValue();
+
   const fromValue = useFromValue();
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const replace = event.target.value

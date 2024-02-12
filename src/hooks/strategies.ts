@@ -5,17 +5,49 @@ import { useApprove, useSwitchNetwork } from "./transaction";
 
 import toast from "react-hot-toast";
 
-import { ICommonStep } from "@astrolabs/swapper";
 import { getWalletClient } from "@wagmi/core";
-import { useStore } from "react-redux";
+import { useSelector, useStore } from "react-redux";
 
-import ActionStepsModal from "~/components/modals/ActionStepsModal";
 import { Operation, OperationStatus } from "~/model/operation";
 import { OperationStep } from "~/store/interfaces/operations";
-import { useCloseModal, useOpenModal } from "./store/modal";
-import { useEmmitStep } from "./store/operation";
-import { useSelectedStrategy } from "./store/strategies";
-import { useEstimatedRoute } from "./store/swapper";
+
+import { emmitStep } from "~/services/operation";
+import { useEstimatedRoute } from "./swapper";
+import { closeModal, openModal } from "~/services/modal";
+import {
+  grouppedStrategiesSelector,
+  selectedStrategyGroupSelector,
+  selectedStrategySelector,
+  strategiesNetworksSelector,
+  strategyBySlugSelector,
+} from "~/store/selectors/strategies";
+import { IRootState } from "~/store";
+
+export const useStrategiesStore = () => {
+  return useSelector((state: IRootState) => state.strategies);
+};
+
+export const useStrategies = () => {
+  return useSelector((state: IRootState) => state.strategies.list);
+};
+
+export const useSelectedStrategy = () => {
+  return useSelector(selectedStrategySelector);
+};
+export const useStrategyBySlug = () => {
+  return useSelector(strategyBySlugSelector);
+};
+export const useGrouppedStrategies = () => {
+  return useSelector(grouppedStrategiesSelector);
+};
+
+export const useSelectedStrategyGroup = () => {
+  return useSelector(selectedStrategyGroupSelector);
+};
+
+export const useStrategiesNetworks = () => {
+  return useSelector(strategiesNetworksSelector);
+};
 
 export const useMaxRedeem = () => {
   const strategy = useSelectedStrategy();
@@ -124,9 +156,6 @@ export const useApproveAndDeposit = () => {
 
   const approve = useApprove(asset);
   const switchNetwork = useSwitchNetwork(network.id);
-  const emmitStep = useEmmitStep();
-  const openModal = useOpenModal();
-  const closeModal = useCloseModal();
 
   const estimation = useEstimatedRoute();
 
@@ -212,7 +241,6 @@ export const useApproveAndDeposit = () => {
     [
       approve,
       asset.weiPerUnit,
-      closeModal,
       deposit,
       emmitStep,
       estimation,

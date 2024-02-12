@@ -10,6 +10,7 @@ const pSBC = pSBCLib.default;
 
 export const PALETTE = {};
 
+
 const darkOffsets = Array.from({ length: 9 }, (_, i) => (i + 1) * 50);
 const lightOffsets = Array.from({ length: 9 }, (_, i) => (i + 1) * 50 + 500);
 
@@ -34,6 +35,10 @@ PALETTE["dark"] = {
   200: "#FBF8F4",
   100: "#FDFDFD",
 };
+
+//PALETTE.base["100"] = "#FDFDFD";
+
+
 
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -74,21 +79,7 @@ export default {
       {
         dark: {
           ...themes.default.dark,
-          ...Object.entries(COLORS).map(([key, color]) => [`--${key}`, color]).reduce((acc, [key, color]) => { acc[key] = color; return acc; }, {}),
-          background: "#1C1C1C",
-          primary: COLORS.primary,
-          success: COLORS.success,
-          dark: {
-            900: "#0C0C0C",
-            800: "#1C1C1C",
-            700: "#2A2A2A",
-            600: "#323232",
-            500: "#505050",
-            400: "#C8C8C8",
-            300: "#ECECEC",
-            200: "#FBF8F4",
-            100: "#FDFDFD",
-          }
+          ...COLORS,
         },
       },
     ],

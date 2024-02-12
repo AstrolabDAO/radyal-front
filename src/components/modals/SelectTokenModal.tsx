@@ -1,28 +1,23 @@
 import { useMemo } from "react";
 
-import { useCloseModal } from "~/hooks/store/modal";
-import {
-  useInteraction,
-  useSelectToken,
-  useSwitchSelection,
-} from "~/hooks/store/swapper";
-import { useBalances, useTokenBySlug, useTokens } from "~/hooks/store/tokens";
+import { useInteraction } from "~/hooks/swapper";
+import { useBalances, useTokenBySlug, useTokens } from "~/hooks/tokens";
 
 import { Token } from "~/utils/interfaces";
 import { SelectTokenModalMode, StrategyInteraction } from "~/utils/constants";
 
 import { BaseModalProps } from "../Modal";
 import SelectToken from "../select-token/SelectToken";
+import { closeModal } from "~/services/modal";
+import { selectToken, switchSelection } from "~/services/swapper";
 
 interface SelectTokenModalProps extends BaseModalProps {
   mode: SelectTokenModalMode;
 }
 
 const SelectTokenModal = () => {
-  const switchSelectMode = useSwitchSelection();
-  const selectToken = useSelectToken();
   const tokens = useTokens();
-  const closeModal = useCloseModal();
+
   const balances = useBalances();
   const interaction = useInteraction();
   const tokenBySlug = useTokenBySlug();
@@ -47,7 +42,7 @@ const SelectTokenModal = () => {
             token,
             for: interaction === StrategyInteraction.DEPOSIT ? "from" : "to",
           });
-          switchSelectMode();
+          switchSelection();
           closeModal();
         }}
       />

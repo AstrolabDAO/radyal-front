@@ -6,12 +6,11 @@ import StrategyHeader from "./StrategyHeader";
 import DepositSelectNetwork from "./deposit/DepositSelectNetwork";
 import DepositWith from "./deposit/DepositWith";
 
-import { useSelectedStrategy } from "~/hooks/store/strategies";
-import { useApproveAndDeposit } from "~/hooks/strategy";
+import { useSelectedStrategy } from "~/hooks/strategies";
+import { useApproveAndDeposit } from "~/hooks/strategies";
 
 import { Strategy, Token } from "~/utils/interfaces";
 
-import { useOpenModal } from "~/hooks/store/modal";
 import {
   useCanSwap,
   useEstimatedRoute,
@@ -20,11 +19,14 @@ import {
   useInteractionNeedToSwap,
   useNeedApprove,
   useToToken,
-} from "~/hooks/store/swapper";
+} from "~/hooks/swapper";
 import { useExectuteSwapperRoute } from "~/hooks/swapper-actions";
 
-import ActionRouteDetail from "./helpers/ActionRouteDetail";
+import ActionRouteDetail from "./helpers/OperationRouteDetail";
 import Button from "../Button";
+import { Operation } from "~/model/operation";
+import { openModal } from "~/services/modal";
+import { GasDetails } from "../GasDetails";
 
 const DepositTab = () => {
   const selectedStrategy = useSelectedStrategy();
@@ -39,14 +41,13 @@ const DepositTab = () => {
 
   const approveAndDeposit = useApproveAndDeposit();
 
-  const openModal = useOpenModal();
-
-  const openChangeTokenModal = useCallback(() => {
-    openModal({ modal: "select-token" });
-  }, [openModal]);
-
   const executeSwapperRoute = useExectuteSwapperRoute();
   const needApprove = useNeedApprove();
+
+  const operationSimulation = new Operation({
+    steps: estimation?.steps ?? [],
+    estimation,
+  });
   return (
     <>
       <div>
@@ -55,11 +56,11 @@ const DepositTab = () => {
       <div className="flex flex-col pt-3 relative gap-3">
         <DepositWith
           token={fromToken as Token}
-          onTokenClick={openChangeTokenModal}
+          onTokenClick={() => openModal({ modal: "select-token" })}
         />
         <DepositFor strategy={toToken as Strategy} />
-
-        <ActionRouteDetail steps={estimation?.steps ?? []} />
+        <GasDetails operation={operationSimulation} />
+        <ActionRouteDetail operation={new Operation(operationSimulation)} />
       </div>
       <div className="flex">
         <Button

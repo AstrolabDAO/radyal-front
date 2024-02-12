@@ -76,7 +76,7 @@ const swapperSlice = createSlice({
     setInteraction: (state, payload: PayloadAction<StrategyInteraction>) => {
       state.interaction = payload.payload;
     },
-    selectToken: (state, action: PayloadAction<SelectTokenAction>) => {
+    select: (state, action: PayloadAction<SelectTokenAction>) => {
       state[action.payload.interaction ?? state.interaction][
         action.payload.for
       ] = action.payload.token;
@@ -114,7 +114,7 @@ const swapperSlice = createSlice({
 
 export const {
   init,
-  selectToken,
+  select,
   clearState,
   switchSelection,
   setInteraction,
@@ -128,4 +128,5 @@ export const {
   lockEstimation,
   unlockEstimation,
 } = swapperSlice.actions;
+export default swapperSlice.actions;
 export const SwapperReducer = swapperSlice.reducer;

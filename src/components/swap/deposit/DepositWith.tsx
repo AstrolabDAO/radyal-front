@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { useFromValue, useSetFromValue } from "~/hooks/store/swapper";
+import { useFromValue } from "~/hooks/swapper";
 import { Token } from "~/utils/interfaces";
 import ActionBlock from "../helpers/ActionBlock";
-import { useTokenIsLoaded } from "~/hooks/store/tokens";
+import { useTokenIsLoaded } from "~/hooks/tokens";
+import { setFromValue } from "~/services/swapper";
 type DepositWithProps = {
   token: Token;
   onTokenClick: () => void;
@@ -13,7 +14,7 @@ const DepositWith = ({ token, onTokenClick }: DepositWithProps) => {
   const [depositValue, setDepositValue] = useState<string>("");
 
   const fromValue = useFromValue();
-  const setFromValue = useSetFromValue();
+
   const [isFocused, setIsFocused] = useState(false);
   const tokensIsLoading = useTokenIsLoaded();
 
@@ -63,7 +64,7 @@ const DepositWith = ({ token, onTokenClick }: DepositWithProps) => {
     >
       <div className="flex ms-auto">
         <input
-          className="swap-input-field"
+          className="swap-input-field font-3xl"
           placeholder="10.0"
           value={depositValue ?? ""}
           onChange={handleInputChange}

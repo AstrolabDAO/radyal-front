@@ -5,15 +5,14 @@ import { DisclaimerProvider } from "./context/disclaimer-context";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import Layout from "./components/layout/Layout";
-import { useReduxStoreDataInit } from "./hooks/store/store";
-import { checkInterval } from "./services/operation";
-import { updateIntervalId } from "./store/operations";
 import HypnoticRing from "./components/HypnoticRing.tsx";
 import Modal from "./components/Modal.tsx";
+import Layout from "./components/layout/Layout";
+import { AppProvider } from "./context/app.context.tsx";
+import { checkInterval } from "./services/operation";
+import { updateIntervalId } from "./store/operations";
 
 function App() {
-  useReduxStoreDataInit();
   const [haveStrokeColor, setHaveStrokeColor] = useState(false);
   const [haveFillColor, setHaveFillColor] = useState(false);
 
@@ -37,6 +36,7 @@ function App() {
   return (
     <>
       <Web3Provider>
+        <AppProvider />
         <DisclaimerProvider>
           <HypnoticRing
             haveFillColor={haveFillColor}
@@ -44,6 +44,7 @@ function App() {
           />
           <Layout changeColor={changeColor} />
         </DisclaimerProvider>
+
         <Modal />
       </Web3Provider>
     </>

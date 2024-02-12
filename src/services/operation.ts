@@ -1,16 +1,7 @@
 import { Operation } from "~/model/operation";
 import { getStore, getStoreState } from "~/store";
 import {
-  createOperationSelector,
-  createOperationsByStatusSelector,
-  createStepsSelector,
-  operationsSelector,
-  selectedOperationSelector,
-} from "~/store/selectors/operations";
-import axios from "axios";
-import {
   EmmitStepAction,
-  LiFITransactionStatusResponse,
   OperationStep,
   UpdateAction,
 } from "~/store/interfaces/operations";
@@ -20,9 +11,21 @@ import {
   failCurrentStep,
   update,
 } from "~/store/operations";
+import {
+  createOperationSelector,
+  createOperationsByStatusSelector,
+  createStepsSelector,
+  operationsSelector,
+  selectedOperationSelector,
+} from "~/store/selectors/operations";
 
-import { emmitStep as StoreEmmitStep } from "~/store/operations";
 import { OperationStatus, getStatus } from "@astrolabs/swapper";
+import {
+  emmitStep as storeEmmitStep,
+  selectOperation as storeSelectOperation,
+  deleteOperation as storeDeleteOperation,
+} from "~/store/operations";
+import { ONE_MINUTE } from "~/main";
 export const getOperationsStore = () => {
   return getStoreState().operations;
 };
@@ -59,6 +62,12 @@ export const updateOperation = (action: UpdateAction) => {
 export const addOperation = (operation: Operation) => {
   getStore().dispatch(add(operation));
 };
+export const deleteOperation = (id: string) => {
+  getStore().dispatch(storeDeleteOperation(id));
+};
+export const selectOperation = (id: string) => {
+  getStore().dispatch(storeSelectOperation(id));
+};
 export const getCurrentStep = () => {
   const currentSteps = getCurrentSteps();
   return (
@@ -70,7 +79,7 @@ export const getCurrentStep = () => {
 };
 
 export const emmitStep = (action: EmmitStepAction) => {
-  getStore().dispatch(StoreEmmitStep(action));
+  getStore().dispatch(storeEmmitStep(action));
 };
 
 export const checkInterval = () => {
@@ -81,8 +90,22 @@ export const checkInterval = () => {
     const intervalId = (getStoreState().operations as OperationsState)
       .intervalId;
 
+    const waitingOperatins = getOperationsByStatus(OperationStatus.WAITING);
     const listByStatus = getOperationsByStatus(OperationStatus.PENDING);
 
+    waitingOperatins.forEach(({ id, date }) => {
+      const now = new Date().getTime();
+
+      if (now > date + ONE_MINUTE * 5)
+        getStore().dispatch(
+          update({
+            id,
+            payload: {
+              status: OperationStatus.CANCELED,
+            },
+          })
+        );
+    });
     if (listByStatus.length === 0) {
       clearInterval(intervalId);
       getStore().dispatch({
@@ -101,7 +124,11 @@ export const checkInterval = () => {
             transactionId: operation.txHash,
           });
 
-          if (result?.status === OperationStatus.DONE) {
+          if (
+            [OperationStatus.DONE, OperationStatus.SUCCESS].includes(
+              result?.status.toUpperCase() as OperationStatus
+            )
+          ) {
             getStore().dispatch(
               update({
                 id: operation.id,
@@ -146,7 +173,7 @@ export const checkInterval = () => {
             getStore().dispatch(failCurrentStep(operation.id));
           }
         } catch (e) {
-          console.error(e);
+          console.error("ERROR", e);
           if (e?.response?.data?.code === 1011) {
             getStore().dispatch(
               update({

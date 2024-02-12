@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { useCanSwap, useEstimatedRoute } from "~/hooks/store/swapper";
+import { useCanSwap, useEstimatedRoute } from "~/hooks/swapper";
 import { Token } from "~/utils/interfaces";
 import ActionBlock from "../helpers/ActionBlock";
 

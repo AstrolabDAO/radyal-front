@@ -9,8 +9,8 @@ import { getStrategies } from "~/utils/api";
 import { Balance, Strategy } from "~/utils/interfaces";
 
 import { useDispatch } from "react-redux";
-import { useTokensStore } from "~/hooks/store/tokens";
-import { getStrategiesBalances } from "~/services/strategy";
+import { useTokensStore } from "~/hooks/tokens";
+import { getStrategiesBalances } from "~/services/strategies";
 
 import { init } from "~/store/strategies";
 import { addBalances, addTokens } from "~/store/tokens";

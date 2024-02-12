@@ -1,27 +1,27 @@
-import { ICommonStep } from "@astrolabs/swapper";
 import { useCallback, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNetwork, usePublicClient } from "wagmi";
 import { switchNetwork } from "wagmi/actions";
 import { Operation, OperationStatus } from "~/model/operation";
+import { closeModal, openModal } from "~/services/modal";
 import { addOperation, emmitStep, updateOperation } from "~/services/operation";
-import { getSwapperStore } from "~/services/swapper";
+import {
+  getSwapperStore,
+  lockEstimation,
+  setEstimationIsLocked,
+} from "~/services/swapper";
 import { approve } from "~/services/transaction";
 import { OperationStep } from "~/store/interfaces/operations";
-import { useCloseModal, useOpenModal } from "./store/modal";
+import { setOnWrite, unlockEstimation } from "~/store/swapper";
+import { useExecuteSwap } from "./swap";
 import {
   useCanSwap,
   useEstimatedRoute,
   useFromToken,
   useFromValue,
-  useSetEstimationIsLocked,
-  useSetLocked,
-  useSetOnWrite,
   useToToken,
-} from "./store/swapper";
-import { useExecuteSwap } from "./swap";
+} from "./swapper";
 export const useWriteDebounce = () => {
-  const setOnWrite = useSetOnWrite();
   const fromValue = useFromValue();
 
   useEffect(() => {
@@ -46,10 +46,7 @@ export const useExectuteSwapperRoute = () => {
   const fromToken = useFromToken();
   const toToken = useToToken();
   const canSwap = useCanSwap();
-  const setLocked = useSetLocked();
-  const openModal = useOpenModal();
-  const closeModal = useCloseModal();
-  const setEstimationIsLocked = useSetEstimationIsLocked();
+
   const estimation = useEstimatedRoute();
 
   const executeSwap = useExecuteSwap();
@@ -57,7 +54,7 @@ export const useExectuteSwapperRoute = () => {
   return useCallback(async () => {
     if (!fromToken || !toToken || !canSwap) return;
     setEstimationIsLocked(true);
-    setLocked(true);
+    lockEstimation();
     openModal({ modal: "steps" });
 
     const operation = new Operation({
@@ -120,7 +117,7 @@ export const useExectuteSwapperRoute = () => {
     } catch (error) {
       closeModal();
       setEstimationIsLocked(false);
-      setLocked(false);
+      unlockEstimation();
       toast.error(error.message);
       updateOperation({
         id: operation.id,
@@ -147,7 +144,6 @@ export const useExectuteSwapperRoute = () => {
     openModal,
     publicClient,
     setEstimationIsLocked,
-    setLocked,
     toToken,
   ]);
 };

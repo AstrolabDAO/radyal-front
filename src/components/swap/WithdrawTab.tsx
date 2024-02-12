@@ -1,30 +1,31 @@
 import WithdrawFor from "./withdraw/WithdrawFor";
 import WithdrawWith from "./withdraw/WithdrawWith";
 
-import ActionRouteDetail from "./helpers/ActionRouteDetail";
+import ActionRouteDetail from "./helpers/OperationRouteDetail";
 
-import { useOpenModal } from "~/hooks/store/modal";
-import { useSelectedStrategy } from "~/hooks/store/strategies";
+import { useSelectedStrategy } from "~/hooks/strategies";
 import {
   useEstimatedRoute,
   useFromToken,
   useInteractionNeedToSwap,
   useToToken,
-} from "~/hooks/store/swapper";
+} from "~/hooks/swapper";
 import { Strategy, Token } from "~/utils/interfaces";
 import StrategyHeader from "./StrategyHeader";
+import { Operation } from "~/model/operation";
+import { openModal } from "~/services/modal";
 
 const WithdrawTab = () => {
   const fromToken = useFromToken();
   const toToken = useToToken();
-  const openModal = useOpenModal();
-  function openChangeTokenModal() {
-    openModal({ modal: "select-token" });
-  }
 
   const estimation = useEstimatedRoute();
   const interactionNeedToSwap = useInteractionNeedToSwap();
   const selectedStrategy = useSelectedStrategy();
+
+  const operationSimulation = new Operation({
+    steps: estimation?.steps ?? [],
+  });
   return (
     <>
       <div>
@@ -34,9 +35,9 @@ const WithdrawTab = () => {
         <WithdrawWith strategy={fromToken as Strategy} />
         <WithdrawFor
           token={toToken as Token}
-          onTokenClick={openChangeTokenModal}
+          onTokenClick={() => openModal({ modal: "select-token" })}
         />
-        <ActionRouteDetail steps={estimation?.steps ?? []} />
+        <ActionRouteDetail operation={operationSimulation} />
         <div
           onClick={() => {
             if (interactionNeedToSwap) {

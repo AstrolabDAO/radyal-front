@@ -8,26 +8,21 @@ import { BaseModalProps } from "../Modal";
 import DepositTab from "~/components/swap/DepositTab";
 import WithdrawTab from "~/components/swap/WithdrawTab";
 
-import {
-  useInitSwapper,
-  useInteraction,
-  useIsInit,
-  useSelectToken,
-  useSetInteraction,
-} from "~/hooks/store/swapper";
-import { useBalances, useTokenIsLoaded } from "~/hooks/store/tokens";
+import { useInteraction, useIsInit } from "~/hooks/swapper";
+import { useBalances, useTokenIsLoaded } from "~/hooks/tokens";
 import { useWriteDebounce } from "~/hooks/swapper-actions";
-import { useSelectedStrategy } from "~/hooks/store/strategies";
+import { useSelectedStrategy } from "~/hooks/strategies";
 
 import { getTokenBySlug } from "~/services/tokens";
 import { cacheHash } from "~/utils/format";
 import { StrategyInteraction } from "~/utils/constants";
 
 import { EstimationProvider } from "~/context/estimation-context";
+import { initSwapper, selectToken, setInteraction } from "~/services/swapper";
+import InfoTab from "../swap/InfoTab";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ActionModal = (props: BaseModalProps) => {
-  const initSwapper = useInitSwapper();
   const balances = useBalances();
   const selectedStrategy = useSelectedStrategy();
   const isInit = useIsInit();
@@ -42,7 +37,6 @@ const ActionModal = (props: BaseModalProps) => {
   );
 
   const [balanceHash, setBalancesHash] = useState(cacheHash(cleanBalances));
-  const selectToken = useSelectToken();
   const [accountChanged, setAccountChanged] = useState(false);
   const firstBalance = useMemo(() => {
     return balances[0] ?? null;
@@ -68,7 +62,7 @@ const ActionModal = (props: BaseModalProps) => {
       setBalancesHash(newHash);
       setAccountChanged(false);
     }
-  }, [balances, accountChanged, cleanBalances, balanceHash, selectToken]);
+  }, [balances, accountChanged, cleanBalances, balanceHash]);
 
   useEffect(() => {
     if (isInit || !tokenIsLoaded) return;
@@ -97,7 +91,6 @@ const ActionModal = (props: BaseModalProps) => {
 };
 
 const ActionModalContent = () => {
-  const setInteraction = useSetInteraction();
   const tabs = {
     deposit: {
       component: <DepositTab />,
@@ -111,34 +104,37 @@ const ActionModalContent = () => {
   const [animationLeave, setAnimationLeave] = useState<"left" | "right">(null);
 
   const selectedTab = useInteraction();
-  const handleTransition = useCallback(
-    (selectedTab: string) => {
-      const animationKey = selectedTab === "deposit" ? "left" : "right";
+  const handleTransition = useCallback((selectedTab: string) => {
+    const animationKey = selectedTab === "deposit" ? "left" : "right";
+
+    if (selectedTab !== "info") {
       const action =
         selectedTab === "deposit"
           ? StrategyInteraction.DEPOSIT
           : StrategyInteraction.WITHDRAW;
-      setAnimationEnter(null);
-      setAnimationLeave(animationKey);
-      setTimeout(() => {
-        setAnimationEnter(animationKey);
+      setInteraction(action);
+    }
 
-        setInteraction(action);
-        setAnimationLeave(null);
-      }, 500);
-    },
-    [setInteraction]
-  );
+    setAnimationEnter(null);
+    setAnimationLeave(animationKey);
+    setTimeout(() => {
+      setAnimationEnter(animationKey);
 
+      setAnimationLeave(null);
+    }, 500);
+  }, []);
+
+  const [isInfo, setIsInfo] = useState(false);
   return (
     <div className="modal-wrapper">
       <div className="flex flex-row justify-between">
         <div
           className={clsx("cursor-pointer text-2xl hover:text-primary", {
             "font-bold border-white text-white text-3xl":
-              selectedTab === "deposit",
+              !isInfo && selectedTab === "deposit",
           })}
           onClick={() => {
+            setIsInfo(false);
             handleTransition("deposit");
           }}
         >
@@ -147,13 +143,25 @@ const ActionModalContent = () => {
         <div
           className={clsx("cursor-pointer text-2xl hover:text-primary", {
             "font-bold border-white text-white text-3xl":
-              selectedTab === "withdraw",
+              !isInfo && selectedTab === "withdraw",
           })}
           onClick={() => {
+            setIsInfo(false);
             handleTransition("withdraw");
           }}
         >
           WITHDRAW
+        </div>
+        <div
+          className={clsx("cursor-pointer text-2xl hover:text-primary", {
+            "font-bold border-white text-white text-3xl": isInfo,
+          })}
+          onClick={() => {
+            setIsInfo(true);
+            handleTransition("info");
+          }}
+        >
+          INFO
         </div>
       </div>
       <Transition>
@@ -173,7 +181,8 @@ const ActionModalContent = () => {
               animationLeave === "right" && "leave-slide-in-left"
             )}
           >
-            {tabs[selectedTab].component}
+            {!isInfo && tabs[selectedTab].component}
+            {isInfo && <InfoTab />}
           </div>
         </Transition.Child>
       </Transition>

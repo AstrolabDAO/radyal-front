@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-import { OperationStatus } from "~/model/operation";
+import { Operation, OperationStatus } from "~/model/operation";
 
 import { Network, Icon } from "~/utils/interfaces";
 import { FaLongArrowAltRight } from "react-icons/fa";
@@ -9,6 +9,7 @@ import IconCard from "~/components/IconCard";
 
 type ActionRouteDetailLineProps = {
   status?: OperationStatus | "NEUTRAL";
+  operation: Operation;
   step: {
     via: string;
     fromNetwork: Network;
@@ -24,6 +25,7 @@ type ActionRouteDetailLineProps = {
 
 const ActionRouteDetailLine = ({
   status = "NEUTRAL",
+  operation,
   step: {
     via,
     protocolIcon,
@@ -67,7 +69,7 @@ const ActionRouteDetailLine = ({
         >
           <div className="flex items-center">{swapRouteStepType}</div>
           {(type === "cross" || type === "swap") && (
-            <div className="flex items-center text-secondary mx-1 font-normal">
+            <div className="flex items-center mx-1 font-normal">
               <div>
                 with <span className="capitalize"> {protocolName} </span>
               </div>

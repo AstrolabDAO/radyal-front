@@ -2,7 +2,7 @@ import { createContext, useEffect, useMemo } from "react";
 import { useQuery } from "react-query";
 import { zeroAddress } from "viem";
 import { useAccount } from "wagmi";
-import { useSelectedStrategy } from "~/hooks/store/strategies";
+import { useSelectedStrategy } from "~/hooks/strategies";
 import {
   useEstimationHash,
   useEstimationIsEnabled,
@@ -10,14 +10,14 @@ import {
   useFromValue,
   useInteraction,
   useInteractionNeedToSwap,
-  useSetInteractionEstimation,
   useToToken,
-} from "~/hooks/store/swapper";
+} from "~/hooks/swapper";
 import { useEstimateRoute } from "~/hooks/swap";
 import { useAllowance } from "~/hooks/transaction";
 import { OperationStep } from "~/store/interfaces/operations";
 import { StrategyInteraction } from "~/utils/constants";
 import { Estimation } from "~/utils/interfaces";
+import { setInteractionEstimation } from "~/services/swapper";
 
 const EstimationContext = createContext({});
 
@@ -28,7 +28,6 @@ const EstimationProvider = ({ children }) => {
   const toToken = useToToken();
   const fromValue = useFromValue();
   const fromToken = useFromToken();
-  const setInteractionEstimation = useSetInteractionEstimation();
   const selectedStrategy = useSelectedStrategy();
   const interaction = useInteraction();
   const interactionNeedToSwap = useInteractionNeedToSwap();
@@ -129,7 +128,7 @@ const EstimationProvider = ({ children }) => {
 
   useEffect(() => {
     setInteractionEstimation(estimation);
-  }, [estimation, setInteractionEstimation]);
+  }, [estimation]);
   return (
     <EstimationContext.Provider value={{}}>
       {children}

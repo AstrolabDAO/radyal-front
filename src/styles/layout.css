@@ -44,7 +44,15 @@
 
 .dialog {
   @apply overflow-x-hidden rounded-2xl max-h-screen w-screen overflow-y-auto transition-all duration-500 bg-dark-800;
-  max-width: 32rem;
+  &.small {
+    @apply max-w-lg;
+  }
+  &.big {
+    @apply max-w-xl;
+  }
+  &.verybig {
+    @apply max-w-2xl;
+  }
 }
 
 w3m-modal {

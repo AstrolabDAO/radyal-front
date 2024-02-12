@@ -56,14 +56,15 @@ const strategiesSlice = createSlice({
       state.list = action.payload.strategies;
       updateMappings(state);
     },
-    selectStrategy: (state, action: PayloadAction<Strategy>) => {
+    select: (state, action: PayloadAction<Strategy>) => {
       state.selectedStrategyIndex =
         state.mappings.indexBySlug[action.payload.slug];
     },
-    selectStrategyGroup: (state, action: PayloadAction<Strategy[]>) => {
+    selectGroup: (state, action: PayloadAction<Strategy[]>) => {
       state.selectedStrategyGroup = action.payload.map(
         (strategy) => strategy.slug
       );
+
       state.selectedStrategyIndex =
         state.mappings.indexBySlug[state.selectedStrategyGroup[0]];
     },
@@ -76,12 +77,7 @@ const strategiesSlice = createSlice({
   },
 });
 
-export const {
-  init,
-  selectStrategy,
-  selectStrategyGroup,
-  search,
-  filterByNetworks,
-} = strategiesSlice.actions;
+export const { init, select, selectGroup, search, filterByNetworks } =
+  strategiesSlice.actions;
 
 export const StrategiesReducer = strategiesSlice.reducer;

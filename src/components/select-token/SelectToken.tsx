@@ -9,8 +9,7 @@ import {
 
 import { Web3Context } from "~/context/web3-context";
 
-import { usePrices } from "~/hooks/store/tokens";
-import { useSwitchSelection } from "~/hooks/store/swapper";
+import { usePrices } from "~/hooks/tokens";
 
 import { Token } from "~/utils/interfaces";
 
@@ -18,6 +17,8 @@ import { FaChevronLeft } from "react-icons/fa";
 
 import SelectTokenLine from "./SelectTokenLine";
 import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
+import { switchSelection } from "~/services/swapper";
+import { Input } from "../styled";
 
 type SelectTokenProps = {
   tokens: Array<Token>;
@@ -28,8 +29,6 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
   const { networks } = useContext(Web3Context);
   const [search, setSearch] = useState("");
   const [networksFilter, setNetworksFilter] = useState([]);
-
-  const switchSelectMode = useSwitchSelection();
 
   const [displayedTokens, setDisplayedTokens] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -90,17 +89,19 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
         <div className="flex flex-row mb-3">
           <FaChevronLeft
             className="cursor-pointer my-auto hover:text-primary"
-            onClick={ onBackClick }
+            onClick={onBackClick}
           />
-          <div className="flex-grow text-center font-bold text-3xl uppercase text-white gilroy">Token Select</div>
+          <div className="flex-grow text-center font-bold text-3xl uppercase text-white gilroy">
+            Token Select
+          </div>
         </div>
         <div className="flex flex-row mt-6">
           <div className="basis-3/5 pe-1.5">
             <label className="flex mb-1">Search by name...</label>
-            <input
+            <Input
               type="text"
               placeholder="USDC..."
-              className="input w-full border-0 focus:outline-none bg-dark-800/25 backdrop-blur-3"
+              className="input input-bordered hover:border-primary w-full focus:outline-none bg-dark-800/25 backdrop-blur-3"
               onChange={({ target }) => {
                 setSearch(target.value);
               }}
@@ -108,32 +109,32 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
           </div>
           <div className="basis-2/5">
             <div className="flex mb-1">Filter by network</div>
-              <NetworkSelect
-                isSearchable={false}
-                networks={networks}
-                className="bg-dark-600 rounded-xl"
-                onChange={(value: Array<NetworkSelectData>) => {
-                  setNetworksFilter(value.map((v) => v.network?.slug));
-                }}
-              />
+            <NetworkSelect
+              isSearchable={false}
+              networks={networks}
+              className="bg-dark-600 rounded-xl"
+              onChange={(value: Array<NetworkSelectData>) => {
+                setNetworksFilter(value.map((v) => v.network?.slug));
+              }}
+            />
           </div>
         </div>
       </header>
       <div
         className="overflow-y-scroll pe-4 mt-4 -me-4"
-        style={{ maxHeight: "calc(100vh - 450px)" } }
+        style={{ maxHeight: "calc(100vh - 450px)" }}
       >
-        { displayedTokens.map((token, index) => {
+        {displayedTokens.map((token, index) => {
           return (
             <SelectTokenLine
-              key={ `token-line-${index}` }
-              token={ token }
-              tokenPrices={ tokenPrices }
-              onSelect={ onSelect }
-              switchSelectMode={ switchSelectMode }
-              haveBorder={ index !== tokens.length - 1 }
+              key={`token-line-${index}`}
+              token={token}
+              tokenPrices={tokenPrices}
+              onSelect={onSelect}
+              switchSelectMode={switchSelection}
+              haveBorder={index !== tokens.length - 1}
             />
-          )
+          );
         })}
         <div ref={loadMoreRef} />
       </div>

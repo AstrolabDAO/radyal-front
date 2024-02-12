@@ -51,7 +51,7 @@ const operationSlice = createSlice({
   initialState,
   reducers: {
     add(state, action: PayloadAction<OperationInterface>) {
-      state.list.push(action.payload);
+      state.list.push({ ...action.payload, isStored: true });
       state.selectedOperationIndex = state.list.length - 1;
     },
     update: (state, action: PayloadAction<UpdateAction>) => {
@@ -72,8 +72,8 @@ const operationSlice = createSlice({
     ) => {
       state.intervalId = action.payload.intervalId;
     },
-    delete: (state, action: PayloadAction<{ id: string }>) => {
-      const index = state.indexById[action.payload.id];
+    deleteOperation: (state, action: PayloadAction<string>) => {
+      const index = state.indexById[action.payload];
       state.list.splice(index, 1);
     },
     selectOperation: (state, action: PayloadAction<string>) => {
@@ -123,6 +123,7 @@ const operationSlice = createSlice({
 export const {
   add,
   update,
+  deleteOperation,
   emmitStep,
   failCurrentStep,
   selectOperation,

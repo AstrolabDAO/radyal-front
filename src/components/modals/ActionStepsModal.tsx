@@ -4,17 +4,17 @@ import {
   useCurrentStep,
   useCurrentSteps,
   useSelectedOperation,
-} from "~/hooks/store/operation";
+} from "~/hooks/operation";
 
 import ChevronLeft from "~/assets/icons/chevron-left.svg?react";
 import Close from "~/assets/icons/close.svg?react";
 
 import clsx from "clsx";
 import ArrowRight from "~/assets/icons/left-to-right-thin.svg?react";
-import ActionRouteDetail from "~/components/swap/helpers/ActionRouteDetail";
+import ActionRouteDetail from "~/components/swap/helpers/OperationRouteDetail";
 import ActionStepsAnimation from "~/components/swap/helpers/ActionStepsAnimation.tsx";
 import TokenPresentation from "../TokenPresentation";
-import { useCloseModal } from "~/hooks/store/modal";
+import { closeModal } from "~/services/modal";
 
 const ActionStepsModal = () => {
   const currentSteps = useCurrentSteps();
@@ -26,7 +26,6 @@ const ActionStepsModal = () => {
     return currentStep.type as "bridge" | "deposit" | "swap" | "withdraw";
   }, [currentStep]);
 
-  const closeModal = useCloseModal();
   return (
     <div className="modal-wrapper">
       <div className="flex flex-col gap-3">
@@ -71,7 +70,7 @@ const ActionStepsModal = () => {
             <TokenPresentation token={operation.toToken} isHoverable={false} />
           </div>
         </div>
-        <ActionRouteDetail steps={currentSteps} showStatus={true} />
+        <ActionRouteDetail operation={operation} showStatus={true} />
       </div>
     </div>
   );

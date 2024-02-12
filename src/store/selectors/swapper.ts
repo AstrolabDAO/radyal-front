@@ -56,3 +56,8 @@ export const needApproveSelector = createSelector(
     return estimation?.steps?.[0]?.type === "Approve";
   }
 );
+
+export const estimatedRouteSelector = createSelector(
+  (state: IRootState) => state.swapper,
+  (state) => state[state.interaction].estimatedRoute
+);

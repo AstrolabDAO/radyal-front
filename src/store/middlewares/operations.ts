@@ -14,7 +14,13 @@ const convertClassToObjectMiddleware: Middleware =
 const operationsChangeMiddleware: Middleware =
   (store) => (next) => (action: PayloadAction) => {
     next(action);
-    if (["operations/add", "operations/update"].includes(action.type)) {
+    if (
+      [
+        "operations/add",
+        "operations/update",
+        "operations/deleteOperation",
+      ].includes(action.type)
+    ) {
       const state = store.getState().operations;
       LocalStorageService.setItem(
         CACHE_KEY,

@@ -8,7 +8,11 @@ type TokenPresentationProps = {
   children?: React.ReactNode;
 };
 
-const TokenPresentation = ({ token, isHoverable = true, children }: TokenPresentationProps) => {
+const TokenPresentation = ({
+  token,
+  isHoverable = true,
+  children,
+}: TokenPresentationProps) => {
   const icons = [
     {
       url: token?.icon,
@@ -26,20 +30,24 @@ const TokenPresentation = ({ token, isHoverable = true, children }: TokenPresent
   return (
     <div className="flex flex-row">
       <div className="my-auto">
-        <IconGroup icons={ icons }/>
+        <IconGroup icons={icons} />
       </div>
-      <div className="flex flex-col ps-1.5 pe-3 py-3 bg-medium my-auto">
-        <div className={
-          clsx("text-xl font-bold text-white", isHoverable && "group-hover:text-primary")}>
-            { token.symbol }
+      <div className="flex flex-col px-3 bg-medium my-auto">
+        <div
+          className={clsx(
+            "text-xl font-bold text-white",
+            isHoverable && "group-hover:text-primary"
+          )}
+        >
+          {token.symbol}
         </div>
-        { children &&
-          <div className="-mt-1 pb-0.5"> { children } </div>
-        }
-        <div className="-mt-2 pt-1 text-dark-400 text-nowrap text-xs">on { token.network.name }</div>
+        {children && <div className="-mt-1 pb-0.5"> {children} </div>}
+        <div className="-mt-2 pt-1 text-dark-400 text-nowrap text-xs">
+          on {token.network.name}
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default TokenPresentation;

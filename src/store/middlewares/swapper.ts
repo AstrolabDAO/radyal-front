@@ -4,7 +4,7 @@ import { clearState } from "../swapper";
 const clearStoreMiddleware: Middleware =
   (store) => (next) => (action: PayloadAction) => {
     next(action);
-    if (action.type === "modal/closeModal") {
+    if (action.type === "modal/close") {
       // clear store
       if (store.getState().modal.list.length === 0)
         store.dispatch(clearState());

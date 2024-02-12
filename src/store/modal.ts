@@ -1,12 +1,17 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { BaseModal } from "~/components/Modal";
-import ActionModal from "~/components/modals/ActionModal";
 import { Modals } from "~/utils/constants";
 
 export interface StoredModal {
   modal: keyof typeof Modals;
   props?: object;
+  size?: "small" | "big" | "verybig";
 }
+
+export const ModalSizeConverter = {
+  small: "sm",
+  big: "lg",
+  verybig: "xl",
+};
 
 interface ModalState {
   visible: boolean;
@@ -25,9 +30,11 @@ const modalSlice = createSlice({
   name: "modal",
   initialState,
   reducers: {
-    openModal: (state, action: PayloadAction<StoredModal>) => {
+    open: (state, action: PayloadAction<StoredModal>) => {
+      if (!action.payload.size) action.payload.size = "small";
       state.list.push(action.payload);
       state.selectedModal = state.list.length - 1;
+
       state.visible = true;
     },
     setRender: (state, action: PayloadAction<boolean>) => {
@@ -36,7 +43,7 @@ const modalSlice = createSlice({
     setVisible: (state, action: PayloadAction<boolean>) => {
       state.visible = action.payload;
     },
-    closeModal: (state) => {
+    close: (state) => {
       state.list = state.list.slice(0, state.list.length - 1);
 
       if (state.list.length === 0) {
@@ -49,6 +56,5 @@ const modalSlice = createSlice({
   },
 });
 
-export const { openModal, closeModal, setRender, setVisible } =
-  modalSlice.actions;
+export const { open, close, setRender, setVisible } = modalSlice.actions;
 export const ModalReducer = modalSlice.reducer;

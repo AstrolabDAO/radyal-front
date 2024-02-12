@@ -1,16 +1,15 @@
-import { FaArrowRight } from "react-icons/fa";
 import TokenPresentation from "../TokenPresentation";
 
-import SuccessIcon from "~/assets/icons/checkmark.svg?react";
-import DangerIcon from "~/assets/icons/danger.svg?react";
-
 import clsx from "clsx";
-import { useMemo } from "react";
-import { useOpenModal } from "~/hooks/store/modal";
-import { useSelectOperation } from "~/hooks/store/operation";
-import { Operation, OperationStatus } from "~/model/operation";
-import ActionStepsModal from "../modals/ActionStepsModal";
 import dayjs from "dayjs";
+import { useMemo } from "react";
+
+import { Operation, OperationStatus } from "~/model/operation";
+
+import ArrowRight from "~/assets/icons/left-to-right-thin.svg?react";
+import { selectOperation } from "~/services/operation";
+import { openModal } from "~/services/modal";
+
 type NotificationTokenPresentationProps = {
   operation: Operation;
   disabled?: boolean;
@@ -19,9 +18,6 @@ type NotificationTokenPresentationProps = {
 const NotificationTokenPresentation = ({
   operation,
 }: NotificationTokenPresentationProps) => {
-  const selectOperation = useSelectOperation();
-  const openModal = useOpenModal();
-
   const fromValue = useMemo(() => {
     const fromToken = operation.fromToken;
     const step1 = operation.steps[0];
@@ -52,7 +48,8 @@ const NotificationTokenPresentation = ({
       </div>
       <div
         className={clsx(
-          "flex flex-row justify-between border-solid border-2 rounded-xl px-3 pb-2",
+          "relative flex flex-row justify-between border-solid border-2 rounded-2xl py-4 px-8",
+          "border-dark-600",
           !["success", "pending", "failed"].includes(status) &&
             "border-dark-500",
           status === OperationStatus.DONE && "border-success/25",
@@ -61,27 +58,14 @@ const NotificationTokenPresentation = ({
         )}
       >
         <TokenPresentation token={operation.fromToken} isHoverable={false}>
-          <div className="text-xs text-nowrap text-dark-300">
-            Deposited {fromValue}
-          </div>
+          <div className="text-xs text-nowrap text-dark-300">{fromValue}</div>
         </TokenPresentation>
-        <div className="my-auto mx-4">
-          <FaArrowRight className="fill-white w-4 h-4" />
+        <div className="centerXY">
+          <ArrowRight className="fill-dark-500 w-10" />
         </div>
-        <TokenPresentation token={operation.fromToken} isHoverable={false}>
-          <div className="text-xs text-nowrap text-dark-300">For {toValue}</div>
+        <TokenPresentation token={operation.toToken} isHoverable={false}>
+          <div className="text-xs text-nowrap text-dark-300">{toValue}</div>
         </TokenPresentation>
-        <div className="h-8 w-8 my-auto ms-3">
-          {status === OperationStatus.DONE && (
-            <SuccessIcon className="fill-success" />
-          )}
-          {status === OperationStatus.WAITING && (
-            <div className="astrolab-loading h-8 w-8" />
-          )}
-          {status === OperationStatus.FAILED && (
-            <DangerIcon className="fill-error" />
-          )}
-        </div>
       </div>
     </div>
   );

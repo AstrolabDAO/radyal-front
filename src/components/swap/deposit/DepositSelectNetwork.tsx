@@ -1,26 +1,20 @@
 import clsx from "clsx";
 import {
-  useSelectStrategy,
   useSelectedStrategy,
   useSelectedStrategyGroup,
-} from "~/hooks/store/strategies";
-import { useInteraction, useSelectToken } from "~/hooks/store/swapper";
+} from "~/hooks/strategies";
+import { useInteraction } from "~/hooks/swapper";
+import { selectStrategy } from "~/services/strategies";
+import { selectToken } from "~/services/swapper";
 import { StrategyInteraction } from "~/utils/constants";
-import {
-  toDollarsAuto,
-  toDollarsCompact,
-  toFloatAuto,
-  toFloatCompact,
-  toPercent,
-} from "~/utils/format";
+import { toDollarsCompact, toPercent } from "~/utils/format";
 
 import { Strategy } from "~/utils/interfaces";
 import { getRandomAPY, getRandomTVL } from "~/utils/mocking";
 
 const DepositSelectNetwork = () => {
   const selectedGroup = useSelectedStrategyGroup();
-  const selectStrategy = useSelectStrategy();
-  const selectToken = useSelectToken();
+
   const interaction = useInteraction();
   const selectedStrategy: Strategy = useSelectedStrategy();
   const strategies: Array<Strategy> = selectedGroup.map((strategy) => ({

@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 import { CoinGeckoPrices, Token } from "~/utils/interfaces";
 import { weiToAmount, round } from "~/utils/maths";
-import { useBalanceByTokenSlug } from "~/hooks/store/tokens";
+import { useBalanceByTokenSlug } from "~/hooks/tokens";
 import TokenPresentation from "../TokenPresentation";
 import { useCallback } from "react";
 
@@ -39,7 +39,7 @@ const SelectTokenLine = ({
   return (
     <div
       className={clsx(
-        "flex flex-col cursor-pointer mb-2 px-2 rounded-xl box-content border-solid border-1 border-transparent",
+        "flex flex-col cursor-pointer p-2 rounded-xl box-content border-solid border-1 border-transparent",
         haveBorder && "border-b",
         "hover:bg-primary/5 hover:border-primary"
       )}

@@ -1,17 +1,16 @@
 import clsx from "clsx";
 
-import { useOperations } from "~/hooks/store/operation";
+import { useOperations } from "~/hooks/operation";
 
 import Bell from "~/assets/icons/bell.svg?react";
 
-import { useOpenModal } from "~/hooks/store/modal";
 import { OperationStatus } from "@astrolabs/swapper";
 import { useMemo } from "react";
+import { openModal } from "~/services/modal";
 
 const Dropdown: React.FC = () => {
   const operations = useOperations();
 
-  const openModal = useOpenModal();
   const pendingOperations = useMemo(
     () =>
       operations.filter(
@@ -19,9 +18,10 @@ const Dropdown: React.FC = () => {
       ),
     [operations]
   );
+
   return (
     <div
-      onClick={() => openModal({ modal: "notifications" })}
+      onClick={() => openModal({ modal: "notifications", size: "big" })}
       className={clsx(
         "action-wrapper group",
         pendingOperations.length > 0 && "active"

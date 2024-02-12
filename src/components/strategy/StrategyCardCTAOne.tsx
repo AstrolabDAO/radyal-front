@@ -11,14 +11,10 @@ import StrategyCardIcons from "./StrategyCardIcons";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import ActionModal from "../modals/ActionModal";
 
-import {
-  useSelectStrategy,
-  useSelectStrategyGroup,
-} from "~/hooks/store/strategies";
-import { useOpenModal } from "~/hooks/store/modal";
-
 import "./StrategyCard.css";
 import { getRandomAPY } from "~/utils/mocking";
+import { openModal } from "~/services/modal";
+import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -27,8 +23,6 @@ interface StrategyProps {
 const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
   const web3Modal = useWeb3Modal();
   const [shouldOpenModal, setShouldOpenModal] = useState<boolean>(false);
-
-  const openModal = useOpenModal();
 
   // handleConnect is called when the user connects to the wallet
   // isReconnected is true if the user was already connected
@@ -50,8 +44,6 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
     return [strategy, title, subtitle];
   }, [strategyGroup]);
 
-  const selectStrategy = useSelectStrategy();
-  const selectGroup = useSelectStrategyGroup();
   const strategyIconPath = getIconFromStrategy(strategy).replace(
     ".svg",
     "-mono.svg"
@@ -59,7 +51,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
   const openModalStrategy = () => {
     if (strategy === null) return;
     selectStrategy(strategy as Strategy);
-    selectGroup(strategyGroup);
+    selectStrategyGroup(strategyGroup);
     if (!isConnected) {
       web3Modal.open({ view: "Connect" });
       setShouldOpenModal(true);

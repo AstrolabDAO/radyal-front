@@ -1,7 +1,7 @@
 import { FaArrowDown } from "react-icons/fa";
 import CrossChainTokenSelect from "~/components/CrossChainTokenSelect";
 
-import { useFromToken, useToToken } from "~/hooks/store/swapper";
+import { useFromToken, useToToken } from "~/hooks/swapper";
 
 const SwapPage = () => {
   return <SwapPageContent />;

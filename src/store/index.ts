@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { PayloadAction, configureStore } from "@reduxjs/toolkit";
 
 import { promiseAwaitingMiddleware } from "./middlewares";
 import operationMiddlewares from "./middlewares/operations";
@@ -48,6 +48,10 @@ export const Store = configureStore({
 export const getStore = () => {
   return Store;
 };
+
+export const dispatch = (action: PayloadAction<any>) =>
+  getStore().dispatch(action);
+
 export const getStoreState = () => {
   return Store.getState();
 };

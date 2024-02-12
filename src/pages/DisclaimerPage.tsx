@@ -32,14 +32,12 @@ const DisclaimerPage = () => {
             className="scale-140 invert"
           />
         </div>
-        <h1 className="text-8xl gilroy font-bold text-secondary leading-10 mt-5">
-          RADYAL
-        </h1>
+        <h1 className="text-8xl gilroy font-bold leading-10 mt-5">RADYAL</h1>
         <div className="text-2xl gilroy font-semibold mt-4">
           ALGORITHMIC YIELD PRIMITIVES
         </div>
         <div className="w-2/3 xl:w-8/12 mx-auto mt-6 mb-3">
-          <div className="border-solid border-1 border-gray-600 rounded-xl p-4 h-64 overflow-scroll text-secondary text-left text-xs md disclaimer">
+          <div className="border-solid border-1 border-gray-600 rounded-xl p-4 h-64 overflow-scroll text-left text-xs md disclaimer">
             <RiskDisclaimerMd />
           </div>
         </div>

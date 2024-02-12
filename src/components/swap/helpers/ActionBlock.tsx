@@ -8,7 +8,7 @@ import {
   useBalanceByTokenSlug,
   usePrices,
   useTokenIsLoaded,
-} from "~/hooks/store/tokens";
+} from "~/hooks/tokens";
 
 import { WalletIcon } from "@heroicons/react/24/solid";
 import TokenPresentation from "~/components/TokenPresentation";
@@ -69,7 +69,7 @@ const ActionBlock = ({
       <div className="mb-1 text-gray-500 font-medium">{label}</div>
       <div
         className={clsx(
-          "flex flex-col md:flex-row px-4 py-3 rounded-[1.15rem] border-1 border-solid",
+          "flex flex-col md:flex-row p-2 pr-4 rounded-[1.15rem] border-1 border-solid",
           {
             "bg-dark-700": !disabled,
             "border-dark-500": disabled,
@@ -80,7 +80,7 @@ const ActionBlock = ({
         )}
       >
         <div
-          className={clsx("flex flex-row rounded-xl my-auto py-0 ps-2", {
+          className={clsx("flex flex-row rounded-xl py-0 ps-2", {
             "group cursor-pointer bg-dark-550 hover:bg-primary/5 hover:ring-1 hover:ring-primary/25":
               !disabled,
           })}
@@ -110,7 +110,7 @@ const ActionBlock = ({
             <span className="flex my-auto"> {round(balance, 4)} </span>
           </div>
           <div className="flex ms-auto text-white">{children}</div>
-          <div className="text-xs text-dark-500 font-light">
+          <div className="text-md text-dark-500 font-light -mt-1">
             ~{round(balanceEquivalent, 4)} $
           </div>
         </div>

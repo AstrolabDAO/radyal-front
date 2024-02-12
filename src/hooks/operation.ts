@@ -1,13 +1,6 @@
 import { ICommonStep } from "@astrolabs/swapper";
-import { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  Operation,
-  OperationInterface,
-  OperationStatus,
-} from "~/model/operation";
-import { EmmitStepAction, UpdateAction } from "~/store/interfaces/operations";
-import { add, emmitStep, selectOperation, update } from "~/store/operations";
+import { useSelector } from "react-redux";
+import { Operation, OperationStatus } from "~/model/operation";
 import {
   createOperationSelector,
   createOperationsByStatusSelector,
@@ -16,7 +9,7 @@ import {
   selectedOperationSelector,
 } from "~/store/selectors/operations";
 
-export const useSelectedOperation = (): OperationInterface => {
+export const useSelectedOperation = (): Operation => {
   return useSelector(selectedOperationSelector);
 };
 
@@ -52,34 +45,4 @@ export const useOperations = (): Operation[] => {
 export const useOperationsByStatus = (status: OperationStatus) => {
   const selector = createOperationsByStatusSelector(status);
   return useSelector(selector);
-};
-export const useEmmitStep = () => {
-  const dispatch = useDispatch();
-  return useCallback(
-    (action: EmmitStepAction) => dispatch(emmitStep(action)),
-    [dispatch]
-  );
-};
-export const useAddOperation = () => {
-  const dispatch = useDispatch();
-  return useCallback(
-    (operation: OperationInterface) => dispatch(add(operation)),
-    [dispatch]
-  );
-};
-
-export const useUpdateOperation = () => {
-  const dispatch = useDispatch();
-  return useCallback(
-    (action: UpdateAction) => dispatch(update(action)),
-    [dispatch]
-  );
-};
-
-export const useSelectOperation = () => {
-  const dispatch = useDispatch();
-  return useCallback(
-    (operationId: string) => dispatch(selectOperation(operationId)),
-    [dispatch]
-  );
 };

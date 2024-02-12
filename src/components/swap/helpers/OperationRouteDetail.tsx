@@ -1,17 +1,17 @@
-import clsx from "clsx";
-import { useCallback, useMemo } from "react";
 import { IToken as LiFiToken } from "@astrolabs/swapper/dist/src/LiFi";
 import { IToken as SquidToken } from "@astrolabs/swapper/dist/src/Squid";
+import clsx from "clsx";
+import { useCallback, useMemo } from "react";
 
-import { Icon } from "~/utils/interfaces";
-import { OperationStep } from "~/store/interfaces/operations";
 import {
+  useCanSwap,
   useEstimatedRoute,
   useEstimationOnProgress,
-} from "~/hooks/store/swapper";
+} from "~/hooks/swapper";
+import { Icon } from "~/utils/interfaces";
 
-import { weiToAmount, round } from "~/utils/maths";
 import { stripName } from "~/utils/format";
+import { round, weiToAmount } from "~/utils/maths";
 
 import {
   SwapRouteStepTypeTraduction,
@@ -20,23 +20,25 @@ import {
   protocolByStrippedSlug,
 } from "~/utils/mappings";
 
-import ActionRouteDetailLine from "./ActionRouteDetailLine";
-import Lottie from "lottie-react";
-import Loader from "~/components/Loader";
 import { OperationStatus } from "@astrolabs/swapper";
+import Loader from "~/components/Loader";
+import { Operation } from "~/model/operation";
+import ActionRouteDetailLine from "./ActionRouteDetailLine";
+import Button from "~/components/Button";
 
 type ActionRouteDetailProps = {
-  steps: OperationStep[];
+  operation: Operation;
   showStatus?: boolean;
 };
 
-const ActionRouteDetail = ({
-  steps,
+const OperationRouteDetail = ({
+  operation,
   showStatus = false,
 }: ActionRouteDetailProps) => {
   const estimation = useEstimatedRoute();
   const estimationProgress = useEstimationOnProgress();
   const estimationError = estimation?.error;
+  const steps = useMemo(() => operation.steps, [operation]);
 
   const amountWithNetworkAndSymbol = useCallback(
     (chain: number, amount: string, token: LiFiToken | SquidToken) => {
@@ -150,12 +152,14 @@ const ActionRouteDetail = ({
             {displayedSteps.map((step, index) => (
               <ActionRouteDetailLine
                 key={`swap-route-detail-${index}`}
+                operation={operation}
                 step={step}
                 status={step.status}
               />
             ))}
           </ul>
         )}
+
         {estimationError && (
           <div className="border-1 border-solid border-warning w-full py-2 rounded-xl bg-warning/10 mb-3">
             <div className="text-center text-primary font-medium leading-5">
@@ -168,4 +172,4 @@ const ActionRouteDetail = ({
     </Loader>
   );
 };
-export default ActionRouteDetail;
+export default OperationRouteDetail;

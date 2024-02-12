@@ -4,6 +4,7 @@ import { Token } from "~/utils/interfaces";
 
 export interface OperationInterface {
   id: string;
+  isStored: boolean;
   status: OperationStatus;
   txHash?: string;
   estimation: any;
@@ -12,13 +13,13 @@ export interface OperationInterface {
   sendingTx?: string;
   currentStep: number;
   substatus?: string;
-
   fromToken: Token;
   toToken: Token;
 }
 
 class Operation implements OperationInterface {
   id: string;
+  isStored: boolean;
   date: number;
   status: OperationStatus;
   txHash?: string;
@@ -34,6 +35,7 @@ class Operation implements OperationInterface {
 
   constructor(tx: Partial<Operation>) {
     this.id = tx.id;
+    this.isStored = false;
     this.date = tx.date ?? new Date().getTime();
     this.status = tx.status ?? OperationStatus.WAITING;
     this.txHash = tx.txHash ?? null;

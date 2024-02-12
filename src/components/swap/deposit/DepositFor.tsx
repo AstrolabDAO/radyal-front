@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { getIconFromStrategy } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
-import { useEstimatedRoute } from "~/hooks/store/swapper";
+import { useEstimatedRoute } from "~/hooks/swapper";
 
 import ActionBlock from "../helpers/ActionBlock";
 
@@ -33,13 +33,15 @@ const DepositFor = ({
       symbol={strategy?.symbol}
       network={networkName}
       value={depositToValue}
-      children={
-        <div className="text-xl font-medium text-secondary caret-primary">
-          {" "}
-          {depositToValue ?? 0}{" "}
-        </div>
-      }
-    />
+    >
+      <div className="flex ms-auto">
+        <input
+          className="swap-input-field bg-transparent font-3xl"
+          disabled={true}
+          value={depositToValue ?? 0}
+        />
+      </div>
+    </ActionBlock>
   );
 };
 

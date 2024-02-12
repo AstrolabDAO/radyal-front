@@ -10,12 +10,7 @@ import { Strategy } from "~/utils/interfaces";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { clearState } from "~/store/swapper";
 
-import { useOpenModal } from "~/hooks/store/modal";
-import {
-  useSelectStrategy,
-  useSelectStrategyGroup,
-  useSelectedStrategy,
-} from "~/hooks/store/strategies";
+import { useSelectedStrategy } from "~/hooks/strategies";
 
 import StrategyCardAPY from "./StrategyCardAPY";
 import StrategyCardIcons from "./StrategyCardIcons";
@@ -24,6 +19,8 @@ import ActionModal from "../modals/ActionModal";
 
 import "./StrategyCard.css";
 import { getRandomAPY, getRandomTVL } from "~/utils/mocking";
+import { openModal } from "~/services/modal";
+import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -32,7 +29,6 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   const web3Modal = useWeb3Modal();
   const [shouldOpenModal, setShouldOpenModal] = useState<boolean>(false);
 
-  const openModal = useOpenModal();
   const dispatch = useDispatch();
   // handleConnect is called when the user connects to the wallet
   // isReconnected is true if the user was already connected
@@ -53,12 +49,10 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
     .split(" ");
 
   const selectedStrategy = useSelectedStrategy();
-  const selectGroup = useSelectStrategyGroup();
-  const selectStrategy = useSelectStrategy();
 
   const openModalStrategy = () => {
     selectStrategy(strategy);
-    selectGroup(strategyGroup);
+    selectStrategyGroup(strategyGroup);
     if (!isConnected) {
       web3Modal.open({ view: "Connect" });
       setShouldOpenModal(true);
@@ -103,7 +97,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
               </div>
               <StrategyCardIcons strategyGroup={strategyGroup} />
             </div>
-            <div className="flex font-light text-secondary-400 my-auto text-2xl">
+            <div className="flex font-light my-auto text-2xl">
               {" "}
               {subtitle.join(" ")}
             </div>
