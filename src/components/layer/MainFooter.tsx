@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const MainFooter = () => (
   <footer className="footer pt-5 mt-5 border-t border-solid border-dark-800 w-full bg-blur">
     <div className="footer container mx-auto relative overflow-y-hidden pb-5 px-2 ">
@@ -6,6 +8,7 @@ const MainFooter = () => (
         <a
           className="link link-hover hover:text-primary"
           href="https://twitter.com/AstrolabDAO"
+          target="_blank"
           rel="nofollow noopener"
         >
           Twitter
@@ -14,6 +17,7 @@ const MainFooter = () => (
           className="link link-hover hover:text-primary"
           href="https://discord.gg/M5RV26xMuu"
           rel="nofollow noopener"
+          target="_blank"
         >
           Discord
         </a>
@@ -21,6 +25,7 @@ const MainFooter = () => (
           className="link link-hover hover:text-primary"
           href="https://github.com/AstrolabDAO"
           rel="nofollow noopener"
+          target="_blank"
         >
           Github
         </a>
@@ -31,35 +36,47 @@ const MainFooter = () => (
           className="link link-hover hover:text-primary"
           href="https://medium.com/@AstrolabFi"
           rel="nofollow noopener"
+          target="_blank"
         >
           Medium
         </a>
         <a
           className="link link-hover hover:text-primary"
           href="https://docs.astrolab.fi"
+          target="_blank"
         >
           Docs
         </a>
-        <a className="link link-hover hover:text-primary">Brand book</a>
+
+        <a
+          href="/documents/astrolab-brand-kit.zip"
+          target="_blank"
+          className="link link-hover hover:text-primary"
+        >
+          Brand book
+        </a>
       </nav>
       <nav className="place-self-end">
         <header className="footer-title gilroy text-xl mb-0">LEGAL</header>
-        <a className="link link-hover hover:text-primary" href="/tos">
-          Terms of services
-        </a>
-        <a
+        <Link
+          to="/terms-of-service"
           className="link link-hover hover:text-primary"
-          href="/risk-disclaimer"
+        >
+          Terms of services
+        </Link>
+        <Link
+          to="/risk-disclaimer"
+          className="link link-hover hover:text-primary"
         >
           Risk disclaimer
-        </a>
-        <a
+        </Link>
+        <Link
+          to="/privacy-policy"
           className="link link-hover hover:text-primary"
-          href="/privacy-policy"
         >
           Privacy policy
-        </a>
-        <div className="text-gray-600">Radyal - © 2023</div>
+        </Link>
+        <div className="text-gray-600">Radyal - © 2024</div>
       </nav>
       <nav className="mx-auto mt-auto">
         <footer className="w-36 h-36 position-relative">

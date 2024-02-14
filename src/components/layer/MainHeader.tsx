@@ -10,6 +10,7 @@ import HeaderActions from "./header/HeaderActions";
 import HeaderAbout from "./header/HeaderAbout";
 import clsx from "clsx";
 import { Button } from "../styled";
+import { Link } from "react-router-dom";
 
 const Header = ({ emitMint }) => {
   const { address, isConnected } = useAccount();
@@ -40,16 +41,16 @@ const Header = ({ emitMint }) => {
     >
       <div className="container">
         <div className="navbar">
-          <a href="/" className="navbar-start">
+          <Link to="/" className="navbar-start">
             <Logo className="flex fill-white w-36" />
-          </a>
+          </Link>
           <div className="navbar-center flex-row justify-center gap-10 hidden sm:flex">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="text-xl flex font-bold text-white text-neon cursor-pointer hover:text-primary"
             >
               VAULTS
-            </a>
+            </Link>
             <div
               className="text-xl flex text-gray-500 hover:text-gray-600 cursor-default"
               onClick={() => emitMint()}

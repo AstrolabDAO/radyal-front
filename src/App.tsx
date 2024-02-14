@@ -13,6 +13,8 @@ import { checkInterval } from "./services/operation";
 import { updateIntervalId } from "./store/operations";
 import { useIsMobile } from "./hooks/utils.ts";
 import MobileLock from "./pages/MobileLock.tsx";
+import { RouterProvider } from "react-router-dom";
+import router from "./router/router.tsx";
 
 function App() {
   const [haveStrokeColor, setHaveStrokeColor] = useState(false);
@@ -46,7 +48,7 @@ function App() {
             haveFillColor={haveFillColor}
             haveStrokeColor={haveStrokeColor}
           />
-          <Layout changeColor={changeColor} />
+          <RouterProvider router={router} />
         </DisclaimerProvider>
 
         <Modal />

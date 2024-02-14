@@ -16,7 +16,7 @@ const routes: RouteObject[] = [
     element: <SwapPage />,
   },
   {
-    path: "/tos",
+    path: "/terms-of-service",
     element: <TOSPage />,
   },
   {
@@ -27,7 +27,6 @@ const routes: RouteObject[] = [
     path: "/risk-disclaimer",
     element: <RiskDisclaimerPage />,
   },
-
 ];
 
 export default routes;
