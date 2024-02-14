@@ -39,6 +39,7 @@ function App() {
   }, [dispatch]);
 
   if (isMobile) return <MobileLock />;
+
   return (
     <>
       <Web3Provider>

@@ -1,23 +1,23 @@
 import { useContext } from "react";
 
-import router from "~/router/router";
-import { RouterProvider } from "react-router-dom";
-
 import { Toaster } from "react-hot-toast";
 
-import DisclaimerPage from "~/pages/DisclaimerPage";
 import { DisclaimerContext } from "~/context/disclaimer-context";
+import DisclaimerPage from "~/pages/DisclaimerPage";
 
-import Header from "../layer/MainHeader";
 import Footer from "../layer/MainFooter";
+import Header from "../layer/MainHeader";
 
 const Layout = ({ children }) => {
   const { accepted } = useContext(DisclaimerContext);
+
   const style = {
     backdropFilter: "blur(10px)",
     color: "var(--gray-500)",
   };
+
   if (!accepted) return <DisclaimerPage />;
+
   return (
     <>
       <main className="min-h-screen">

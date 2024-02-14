@@ -12,7 +12,7 @@ import clsx from "clsx";
 import { Button } from "../styled";
 import { Link } from "react-router-dom";
 
-const Header = ({ emitMint }) => {
+const Header = () => {
   const { address, isConnected } = useAccount();
   const web3Modal = useWeb3Modal();
 
@@ -51,10 +51,7 @@ const Header = ({ emitMint }) => {
             >
               VAULTS
             </Link>
-            <div
-              className="text-xl flex text-gray-500 hover:text-gray-600 cursor-default"
-              onClick={() => emitMint()}
-            >
+            <div className="text-xl flex text-gray-500 hover:text-gray-600 cursor-default">
               BORROW
             </div>
             <div className="text-xl flex text-gray-500 cursor-default">

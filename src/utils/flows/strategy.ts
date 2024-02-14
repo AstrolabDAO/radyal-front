@@ -9,7 +9,7 @@ export const previewStrategyTokenMove = async (
   { strategy, interaction, value, address }: PreviewStrategyMoveProps,
   publicClient: Client
 ) => {
-  const contract = getContract({
+  const contract: any = getContract({
     address: strategy.address,
     abi: StratV5Abi.abi,
     publicClient,

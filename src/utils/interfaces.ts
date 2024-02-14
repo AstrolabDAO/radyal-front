@@ -62,6 +62,7 @@ export interface Strategy extends Token {
   apy?: number;
   tvl?: number;
   valuable: any;
+  color1?: string;
 }
 
 export interface GrouppedStrategies {

@@ -58,6 +58,7 @@ const StrategiesPage = () => {
     if (balancesIsLoading || !balances) return;
     dispatch(addBalances(balances));
   }, [balancesIsLoading, balances, dispatch]);
+
   return (
     <Layout>
       <StrategyHero />
