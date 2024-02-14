@@ -1,13 +1,11 @@
 import clsx from "clsx";
-import { useCallback } from "react";
+import { useMemo } from "react";
 
-import DepositFor from "./deposit/DepositFor";
 import StrategyHeader from "./StrategyHeader";
-import DepositSelectNetwork from "./deposit/DepositSelectNetwork";
+import DepositFor from "./deposit/DepositFor";
 import DepositWith from "./deposit/DepositWith";
 
-import { useSelectedStrategy } from "~/hooks/strategies";
-import { useApproveAndDeposit } from "~/hooks/strategies";
+import { useApproveAndDeposit, useSelectedStrategy } from "~/hooks/strategies";
 
 import { Strategy, Token } from "~/utils/interfaces";
 
@@ -23,10 +21,11 @@ import {
 import { useExectuteSwapperRoute } from "~/hooks/swapper-actions";
 
 import ActionRouteDetail from "./helpers/OperationRouteDetail";
-import Button from "../Button";
+
 import { Operation } from "~/model/operation";
 import { openModal } from "~/services/modal";
 import { GasDetails } from "../GasDetails";
+import { Button } from "../styled";
 
 const DepositTab = () => {
   const selectedStrategy = useSelectedStrategy();
@@ -44,10 +43,14 @@ const DepositTab = () => {
   const executeSwapperRoute = useExectuteSwapperRoute();
   const needApprove = useNeedApprove();
 
-  const operationSimulation = new Operation({
-    steps: estimation?.steps ?? [],
-    estimation,
-  });
+  const operationSimulation = useMemo(
+    () =>
+      new Operation({
+        steps: estimation?.steps ?? [],
+        estimation,
+      }),
+    [estimation]
+  );
   return (
     <>
       <div>
@@ -56,7 +59,9 @@ const DepositTab = () => {
       <div className="flex flex-col pt-3 relative gap-3">
         <DepositWith
           token={fromToken as Token}
-          onTokenClick={() => openModal({ modal: "select-token" })}
+          onTokenClick={() =>
+            openModal({ modal: "select-token", title: "Token Select" })
+          }
         />
         <DepositFor strategy={toToken as Strategy} />
         <GasDetails operation={operationSimulation} />

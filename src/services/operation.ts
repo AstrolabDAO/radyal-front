@@ -101,7 +101,7 @@ export const checkInterval = () => {
           update({
             id,
             payload: {
-              status: OperationStatus.CANCELED,
+              status: OperationStatus.FAILED,
             },
           })
         );

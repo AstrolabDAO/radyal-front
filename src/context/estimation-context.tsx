@@ -1,4 +1,4 @@
-import { createContext, useEffect, useMemo } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { zeroAddress } from "viem";
 import { useAccount } from "wagmi";
@@ -17,7 +17,10 @@ import { useAllowance } from "~/hooks/transaction";
 import { OperationStep } from "~/store/interfaces/operations";
 import { StrategyInteraction } from "~/utils/constants";
 import { Estimation } from "~/utils/interfaces";
-import { setInteractionEstimation } from "~/services/swapper";
+import {
+  setEstimationOnprogress,
+  setInteractionEstimation,
+} from "~/services/swapper";
 
 const EstimationContext = createContext({});
 
@@ -25,6 +28,7 @@ const EstimationProvider = ({ children }) => {
   const hash = useEstimationHash();
   const estimate = useEstimateRoute();
   const isEnabled = useEstimationIsEnabled();
+
   const toToken = useToToken();
   const fromValue = useFromValue();
   const fromToken = useFromToken();
@@ -32,13 +36,16 @@ const EstimationProvider = ({ children }) => {
   const interaction = useInteraction();
   const interactionNeedToSwap = useInteractionNeedToSwap();
   const { address } = useAccount();
+  const [refetchInterval, setRefetchInterval] = useState<number>(15000);
+
   const { data: estimationData } = useQuery(hash, estimate, {
     staleTime: 0,
     cacheTime: 0,
     retry: true,
-    refetchInterval: 1000 * 15,
+    refetchInterval: 5000,
     enabled: isEnabled,
   });
+
   const [allowanceToken, spender] = useMemo(() => {
     if (!fromToken) return [null, null];
 
@@ -70,8 +77,16 @@ const EstimationProvider = ({ children }) => {
     return allowance < BigInt(fromValue * fromToken.weiPerUnit);
   }, [allowance, fromToken, fromValue]);
 
-  const estimation = useMemo(() => {
-    if (!estimationData) return null;
+  useEffect(() => {
+    setInteractionEstimation(null);
+  }, [hash]);
+  useEffect(() => {
+    if (!estimationData) {
+      setRefetchInterval(1000);
+      return;
+    }
+    setEstimationOnprogress(false);
+    setRefetchInterval(60000);
     let steps = estimationData?.steps;
 
     if (
@@ -123,14 +138,11 @@ const EstimationProvider = ({ children }) => {
       steps,
     } as Estimation;
 
-    return estimation;
+    setInteractionEstimation(estimation);
   }, [estimationData, fromToken, fromValue, needApprove, spender]);
 
-  useEffect(() => {
-    setInteractionEstimation(estimation);
-  }, [estimation]);
   return (
-    <EstimationContext.Provider value={{}}>
+    <EstimationContext.Provider value={{ estimationData }}>
       {children}
     </EstimationContext.Provider>
   );

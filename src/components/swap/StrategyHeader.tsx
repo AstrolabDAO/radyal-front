@@ -1,6 +1,6 @@
 import { getIconFromStrategy } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
-import DepositSelectNetwork from "./deposit/DepositSelectNetwork";
+import SelectStrategy from "./SelectStrategy";
 
 type StrategyHeaderProps = {
   strategy: Strategy;
@@ -18,7 +18,7 @@ const StrategyHeader = ({ strategy }: StrategyHeaderProps) => {
     <div className="md:basis-3/5 text-white">
       <div className="mb-1 text-gray-500 font-medium">INTO</div>
       <div className="flex">
-        <div className="flex flex-col m-0 p-3 border border-solid border-dark-500 rounded-3xl relative overflow-hidden flex-1 w-32">
+        <div className="flex flex-col m-0 p-3 border border-solid border-dark-500 rounded-3xl relative overflow-hidden flex-1">
           <div className="absolute inset-0 flex justify-end items-center z-0 overflow-hidden contrast-[0.7] -mr-16">
             <img
               src={strategyIconPath}
@@ -39,7 +39,7 @@ const StrategyHeader = ({ strategy }: StrategyHeaderProps) => {
             </div>
           </div>
         </div>
-        <DepositSelectNetwork />
+        <SelectStrategy />
       </div>
     </div>
   );

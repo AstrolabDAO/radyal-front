@@ -1,15 +1,16 @@
-import { useContext, useEffect, useState } from "react";
-import { FaTwitter, FaDiscord, FaGithub } from "react-icons/fa";
+import { useContext, useState } from "react";
+import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
 import { DisclaimerContext } from "~/context/disclaimer-context";
 
-import RiskDisclaimerMd from "~/assets/docs/risk.mdx";
 import Lottie from "lottie-react";
-import Button from "~/components/Button";
-import axios from "axios";
 import Logo from "~/assets/animations/logo.json";
+import Acknowledgement from "~/assets/docs/acknowledgement.mdx";
+import { Button } from "~/components/styled";
+import Layout from "~/components/layout/Layout";
 
 const DisclaimerPage = () => {
   const { accept } = useContext(DisclaimerContext);
+
   const [saveDisclaimerStatus, setSaveDisclaimerStatus] =
     useState<boolean>(false);
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +25,7 @@ const DisclaimerPage = () => {
       id="disclaimer-page"
       className="relative container flex mx-auto h-screen"
     >
-      <div className="flex flex-col m-auto text-center">
+      <div className="flex flex-col m-auto text-center text-white">
         <div className="w-52 h-52 mx-auto overflow-hidden my-3">
           <Lottie
             animationData={Logo}
@@ -38,7 +39,7 @@ const DisclaimerPage = () => {
         </div>
         <div className="w-2/3 xl:w-8/12 mx-auto mt-6 mb-3">
           <div className="border-solid border-1 border-gray-600 rounded-xl p-4 h-64 overflow-scroll text-left text-xs md disclaimer">
-            <RiskDisclaimerMd />
+            <Acknowledgement />
           </div>
         </div>
         <div className="flex flex-row mx-auto mb-3">

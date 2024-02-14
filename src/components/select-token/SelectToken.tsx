@@ -27,6 +27,7 @@ type SelectTokenProps = {
 };
 const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
   const { networks } = useContext(Web3Context);
+
   const [search, setSearch] = useState("");
   const [networksFilter, setNetworksFilter] = useState([]);
 
@@ -86,22 +87,12 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
   return (
     <>
       <header>
-        <div className="flex flex-row mb-3">
-          <FaChevronLeft
-            className="cursor-pointer my-auto hover:text-primary"
-            onClick={onBackClick}
-          />
-          <div className="flex-grow text-center font-bold text-3xl uppercase text-white gilroy">
-            Token Select
-          </div>
-        </div>
         <div className="flex flex-row mt-6">
           <div className="basis-3/5 pe-1.5">
             <label className="flex mb-1">Search by name...</label>
             <Input
               type="text"
               placeholder="USDC..."
-              className="input input-bordered hover:border-primary w-full focus:outline-none bg-dark-800/25 backdrop-blur-3"
               onChange={({ target }) => {
                 setSearch(target.value);
               }}
@@ -110,9 +101,9 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
           <div className="basis-2/5">
             <div className="flex mb-1">Filter by network</div>
             <NetworkSelect
+              className="z-50 relative"
               isSearchable={false}
               networks={networks}
-              className="bg-dark-600 rounded-xl"
               onChange={(value: Array<NetworkSelectData>) => {
                 setNetworksFilter(value.map((v) => v.network?.slug));
               }}
@@ -121,7 +112,7 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
         </div>
       </header>
       <div
-        className="overflow-y-scroll pe-4 mt-4 -me-4"
+        className=" pe-4 mt-4 -me-4"
         style={{ maxHeight: "calc(100vh - 450px)" }}
       >
         {displayedTokens.map((token, index) => {

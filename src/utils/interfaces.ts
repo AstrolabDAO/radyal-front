@@ -13,6 +13,7 @@ export interface Network {
   gasToken: string;
   slug: string;
   icon?: string;
+  color1: string;
 }
 
 export interface Protocol {
@@ -33,6 +34,7 @@ export interface Token {
   network: Network;
   symbol?: string;
   slug: string;
+  color1?: string;
 }
 
 export interface Balance {
@@ -59,6 +61,8 @@ export interface Strategy extends Token {
   aggregationLevel?: number;
   apy?: number;
   tvl?: number;
+  valuable: any;
+  color1?: string;
 }
 
 export interface GrouppedStrategies {

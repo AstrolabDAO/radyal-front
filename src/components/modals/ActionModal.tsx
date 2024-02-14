@@ -84,9 +84,11 @@ const ActionModal = (props: BaseModalProps) => {
   }, [isInit, tokenIsLoaded]);
 
   return (
-    <EstimationProvider>
-      <ActionModalContent />
-    </EstimationProvider>
+    <>
+      <EstimationProvider>
+        <ActionModalContent />
+      </EstimationProvider>
+    </>
   );
 };
 
@@ -126,11 +128,11 @@ const ActionModalContent = () => {
 
   const [isInfo, setIsInfo] = useState(false);
   return (
-    <div className="modal-wrapper">
+    <>
       <div className="flex flex-row justify-between">
         <div
           className={clsx("cursor-pointer text-2xl hover:text-primary", {
-            "font-bold border-white text-white text-3xl":
+            "font-bold border-white text-white":
               !isInfo && selectedTab === "deposit",
           })}
           onClick={() => {
@@ -142,7 +144,7 @@ const ActionModalContent = () => {
         </div>
         <div
           className={clsx("cursor-pointer text-2xl hover:text-primary", {
-            "font-bold border-white text-white text-3xl":
+            "font-bold border-white text-white":
               !isInfo && selectedTab === "withdraw",
           })}
           onClick={() => {
@@ -154,7 +156,7 @@ const ActionModalContent = () => {
         </div>
         <div
           className={clsx("cursor-pointer text-2xl hover:text-primary", {
-            "font-bold border-white text-white text-3xl": isInfo,
+            "font-bold border-white text-white": isInfo,
           })}
           onClick={() => {
             setIsInfo(true);
@@ -186,7 +188,7 @@ const ActionModalContent = () => {
           </div>
         </Transition.Child>
       </Transition>
-    </div>
+    </>
   );
 };
 export default ActionModal;

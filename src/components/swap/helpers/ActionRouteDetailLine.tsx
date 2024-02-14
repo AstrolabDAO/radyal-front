@@ -6,6 +6,7 @@ import { Network, Icon } from "~/utils/interfaces";
 import { FaLongArrowAltRight } from "react-icons/fa";
 
 import IconCard from "~/components/IconCard";
+import { useEffect } from "react";
 
 type ActionRouteDetailLineProps = {
   status?: OperationStatus | "NEUTRAL";
@@ -48,6 +49,7 @@ const ActionRouteDetailLine = ({
     },
     classes: "ms-1.5 my-auto",
   };
+
   return (
     <li
       className={clsx(

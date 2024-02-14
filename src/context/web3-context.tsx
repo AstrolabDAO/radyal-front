@@ -41,7 +41,7 @@ const Web3Provider = ({ children }) => {
 
   const { data: protocolsData } = useQuery("protocols", getProtocols);
 
-  const networks = useMemo(() => {
+  const filteredNetworks = useMemo(() => {
     return networksData?.filter((network) => NETWORKS.includes(network.slug));
   }, [networksData]);
   const protocols = useMemo(() => {
@@ -62,9 +62,10 @@ const Web3Provider = ({ children }) => {
     });
   }, [protocolsData]);
 
-  useEffect(() => {
-    if (isLoading || !networks) return;
-    networks.map(
+  const networks = useMemo(() => {
+    if (isLoading || !filteredNetworks) return;
+
+    const populatedNetorks = filteredNetworks.map(
       ({
         id,
         name,
@@ -73,6 +74,7 @@ const Web3Provider = ({ children }) => {
         explorers,
         explorerApi,
         gasToken,
+        color1,
         slug,
         icon,
       }) => {
@@ -81,6 +83,7 @@ const Web3Provider = ({ children }) => {
           name,
           httpRpcs,
           wsRpcs,
+          color1,
           explorers,
           explorerApi,
           gasToken,
@@ -98,6 +101,7 @@ const Web3Provider = ({ children }) => {
           deFiIdByChainId[network.id] = deFiNetwork.id;
           chainIdByDeFiId[deFiNetwork.id] = network.id;
         }
+        return network;
       }
     );
 
@@ -116,7 +120,9 @@ const Web3Provider = ({ children }) => {
 
     const { config } = setupWeb3modal(convertedNetworks);
     setConfig(config);
-  }, [networks, isLoading]);
+    return populatedNetorks;
+  }, [filteredNetworks, isLoading]);
+
   if (!config) return null;
 
   return (

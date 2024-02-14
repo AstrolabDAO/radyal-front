@@ -3,6 +3,7 @@ import { Modals } from "~/utils/constants";
 
 export interface StoredModal {
   modal: keyof typeof Modals;
+  title?: string;
   props?: object;
   size?: "small" | "big" | "verybig";
 }

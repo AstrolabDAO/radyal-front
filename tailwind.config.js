@@ -2,7 +2,7 @@
 
 import * as daisyui from "daisyui";
 import * as themes from "daisyui/src/theming/themes";
-import { COLORS } from "./src/styles/constants";
+import { COLORS, GRADIENTS } from "./src/styles/constants";
 
 import pSBCLib from "shade-blend-color";
 
@@ -39,7 +39,6 @@ PALETTE["dark"] = {
 //PALETTE.base["100"] = "#FDFDFD";
 
 
-
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -51,6 +50,9 @@ export default {
       borderWidth: {
         1: "1px",
       },
+      backgroundImage: theme => ({
+        ...GRADIENTS
+      }),
       colors: PALETTE,
       container: {
         center: true,

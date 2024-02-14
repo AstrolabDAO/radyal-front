@@ -15,6 +15,7 @@ import { getStrategiesBalances } from "~/services/strategies";
 import { init } from "~/store/strategies";
 import { addBalances, addTokens } from "~/store/tokens";
 import { cacheHash } from "~/utils/format";
+import Layout from "~/components/layout/Layout";
 const StrategiesPage = () => {
   const { address, isConnected } = useAccount();
 
@@ -57,11 +58,12 @@ const StrategiesPage = () => {
     if (balancesIsLoading || !balances) return;
     dispatch(addBalances(balances));
   }, [balancesIsLoading, balances, dispatch]);
+
   return (
-    <>
+    <Layout>
       <StrategyHero />
       <StrategyGrid />
-    </>
+    </Layout>
   );
 };
 export default StrategiesPage;

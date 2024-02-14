@@ -15,7 +15,7 @@ import { emmitStep } from "~/services/operation";
 import { useEstimatedRoute } from "./swapper";
 import { closeModal, openModal } from "~/services/modal";
 import {
-  grouppedStrategiesSelector,
+  createGrouppedStrategiesSelector,
   selectedStrategyGroupSelector,
   selectedStrategySelector,
   strategiesNetworksSelector,
@@ -37,8 +37,9 @@ export const useSelectedStrategy = () => {
 export const useStrategyBySlug = () => {
   return useSelector(strategyBySlugSelector);
 };
-export const useGrouppedStrategies = () => {
-  return useSelector(grouppedStrategiesSelector);
+export const useGrouppedStrategies = (filtered = true) => {
+  const selector = createGrouppedStrategiesSelector(filtered);
+  return useSelector(selector);
 };
 
 export const useSelectedStrategyGroup = () => {

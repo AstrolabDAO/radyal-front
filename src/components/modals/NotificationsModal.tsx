@@ -41,77 +41,85 @@ export const NotificationsModal = () => {
   );
 
   return (
-    <div className="modal-wrapper">
-      <div className="text-3xl text-white uppercase font-bold gilroy my-auto text-center mb-4">
-        NOTIFICATIONS
-      </div>
+    <div>
       <div>
-        <table className="table border-dark-600 rounded-xl">
-          <thead>
-            <tr>
-              {["date", "from", "to", "status", ""].map((header, index) => {
-                return <th key={`strategy-table-header-${index}`}>{header}</th>;
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {populatedOperations.map((operation, index) => {
-              const {
-                iconBase,
-                fromToken,
-                toToken,
-                fromValue,
-                toValue,
-                status,
-              } = operation;
-              return (
-                <tr
-                  key={`operation-${operation.id}-${index}`}
-                  className="cursor-pointer hover:bg-dark-700"
-                  onClick={() => {
-                    selectOperation(operation.id);
-                    openModal({ modal: "steps" });
-                  }}
-                >
-                  <td>{dayjs(operation.date).format("YYYY-MM-DD H:mm:ss")}</td>
-                  <td>
-                    <TokenPresentation token={fromToken}>
-                      {fromValue}
-                    </TokenPresentation>
-                  </td>
-                  <td>
-                    <TokenPresentation token={toToken}>
-                      {toValue}
-                    </TokenPresentation>
-                  </td>
-                  <td>
-                    {status === OperationStatus.DONE && (
-                      <SuccessIcon className="fill-success w-5" />
-                    )}
-                    {[
-                      OperationStatus.PENDING,
-                      OperationStatus.WAITING,
-                    ].includes(status) && (
-                      <div className="astrolab-loading after:h-5 after:w-5" />
-                    )}
-                    {status === OperationStatus.FAILED && (
-                      <DangerIcon className="fill-error w-5" />
-                    )}
-                  </td>
-                  <td
-                    className="text-white hover:text-primary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteOperation(operation.id);
+        {operations.length === 0 && (
+          <div className="uppercase text-center text-md mt-12">
+            Nothing to report yet
+          </div>
+        )}
+        {operations.length > 0 && (
+          <table className="table border-dark-600 rounded-xl">
+            <thead>
+              <tr>
+                {["date", "from", "to", "status", ""].map((header, index) => {
+                  return (
+                    <th key={`strategy-table-header-${index}`}>{header}</th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {populatedOperations.map((operation, index) => {
+                const {
+                  iconBase,
+                  fromToken,
+                  toToken,
+                  fromValue,
+                  toValue,
+                  status,
+                } = operation;
+                return (
+                  <tr
+                    key={`operation-${operation.id}-${index}`}
+                    className="cursor-pointer hover:bg-dark-700"
+                    onClick={() => {
+                      selectOperation(operation.id);
+                      openModal({ modal: "steps" });
                     }}
                   >
-                    <CgTrash />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                    <td>
+                      {dayjs(operation.date).format("YYYY-MM-DD H:mm:ss")}
+                    </td>
+                    <td>
+                      <TokenPresentation token={fromToken}>
+                        {fromValue}
+                      </TokenPresentation>
+                    </td>
+                    <td>
+                      <TokenPresentation token={toToken}>
+                        {toValue}
+                      </TokenPresentation>
+                    </td>
+                    <td>
+                      {status === OperationStatus.DONE && (
+                        <SuccessIcon className="fill-success w-5" />
+                      )}
+                      {[
+                        OperationStatus.PENDING,
+                        OperationStatus.WAITING,
+                      ].includes(status) && (
+                        <div className="astrolab-loading after:h-5 after:w-5" />
+                      )}
+                      {status === OperationStatus.FAILED && (
+                        <DangerIcon className="fill-error w-5" />
+                      )}
+                    </td>
+                    <td
+                      className="text-white hover:text-primary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteOperation(operation.id);
+                      }}
+                    >
+                      <CgTrash />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
