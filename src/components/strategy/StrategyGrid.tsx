@@ -69,23 +69,22 @@ const StrategyGrid = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col md:flex-row w-full">
+      <div className="flex flex-col md:flex-row w-full relative z-30">
         <div className="mr-4 w-full flex flex-col">
-          <span className="label-text block my-2">Search</span>
+          <span className="label-text block my-1">Search a strategy</span>
           <Input
             type="text"
             placeholder="“Stable”, “Arbitrum”, “Staking”..."
-            className="input input-bordered hover:border-primary w-full focus:outline-none bg-dark-800/25 backdrop-blur-3"
             onChange={({ target }) => {
               dispatch(search(target.value));
             }}
           />
         </div>
-        <div className="flex flex-col">
-          <span className="label-text my-2">Chain</span>
+        <div className="flex flex-col relative ">
+          <span className="label-text my-1">Chain</span>
           <NetworkSelect
             isSearchable={false}
-            className="w-64 h-12 bg-dark-800/25 backdrop-blur-3"
+            className="w-64 h-12"
             networks={strategiesNetworks}
             onChange={(value: Array<NetworkSelectData>) => {
               dispatch(filterByNetworks(value.map((v) => v.network?.slug)));
@@ -103,7 +102,7 @@ const StrategyGrid = () => {
           <div className="card shimmer h-36" />
         </div>
       )}
-      <div className="my-5">
+      <div className="my-5 relative">
         <Transition show={true}>
           <Transition.Child
             enter="transition ease-out duration-300"

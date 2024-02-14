@@ -4,7 +4,7 @@ import { DisclaimerContext } from "~/context/disclaimer-context";
 
 import RiskDisclaimerMd from "~/assets/docs/risk.mdx";
 import Lottie from "lottie-react";
-import Button from "~/components/Button";
+import { Button } from "~/components/styled";
 import axios from "axios";
 import Logo from "~/assets/animations/logo.json";
 
@@ -24,7 +24,7 @@ const DisclaimerPage = () => {
       id="disclaimer-page"
       className="relative container flex mx-auto h-screen"
     >
-      <div className="flex flex-col m-auto text-center">
+      <div className="flex flex-col m-auto text-center text-white">
         <div className="w-52 h-52 mx-auto overflow-hidden my-3">
           <Lottie
             animationData={Logo}

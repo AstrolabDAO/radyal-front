@@ -98,7 +98,6 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
               <StrategyCardIcons strategyGroup={strategyGroup} />
             </div>
             <div className="flex font-light my-auto text-2xl">
-              {" "}
               {subtitle.join(" ")}
             </div>
           </div>

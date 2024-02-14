@@ -1,12 +1,20 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useCallback, useMemo } from "react";
-import { useRender, useSelectedModal, useVisible } from "~/hooks/modal";
+import {
+  useModals,
+  useRender,
+  useSelectedModal,
+  useVisible,
+} from "~/hooks/modal";
 
 import Close from "~/assets/icons/close.svg?react";
+import ChevronLeft from "~/assets/icons/chevron-left.svg?react";
 import { Modals } from "~/utils/constants";
 import clsx from "clsx";
 import { ModalSizeConverter } from "~/store/modal";
 import { closeModal } from "~/services/modal";
+
+import { ModalWrapper } from "./styled";
 
 export interface BaseModal extends React.ReactElement {
   props: {
@@ -21,7 +29,7 @@ const Modal = () => {
   const render = useRender();
   const visible = useVisible();
   const selectedModal = useSelectedModal();
-
+  const modals = useModals();
   const size = useMemo(() => {
     if (!selectedModal) return "small";
     return selectedModal?.size;
@@ -35,7 +43,12 @@ const Modal = () => {
   const ModalComponent = Modals[selectedModal?.modal];
 
   return (
-    <Transition show={visible} as={Dialog} onClose={onClose}>
+    <Transition
+      show={visible}
+      as={Dialog}
+      onClose={onClose}
+      className="z-50 relative"
+    >
       <div className="transition-wrapper">
         <Transition.Child
           enter="transition ease-out duration-300"
@@ -46,14 +59,37 @@ const Modal = () => {
           leaveTo="opacity-0 scale-95"
           as={Fragment}
         >
-          <Dialog.Panel className={clsx("dialog n sm-max-h-95vh w-full", size)}>
-            <button
-              className="right-0 top-0 absolute p-2 z-50 rounded-tr-xl w-8 h-8 sm:hidden"
-              onClick={onClose}
+          <Dialog.Panel
+            className={clsx("dialog w-full relative overflow-visible", size)}
+          >
+            <ModalWrapper
+              className={clsx("max-h-90vh", {
+                "overflow-visible": selectedModal?.modal === "select-token",
+                "overflow-y-auto": selectedModal?.modal !== "select-token",
+              })}
             >
-              <Close className="fill-[#1C1C1C]" />
-            </button>
-            {selectedModal && <ModalComponent {...selectedModal?.props} />}
+              <div className="flex w-full mb-4">
+                {modals.length === 1 && <div></div>}
+                {modals.length > 1 && (
+                  <button className="flex flex-row items-center">
+                    <ChevronLeft
+                      className="cursor-pointer fill-base-content hover:fill-primary h-5"
+                      onClick={closeModal}
+                    />
+                  </button>
+                )}
+                <div className="flex-grow text-center font-bold text-3xl uppercase text-white gilroy flex-3">
+                  {selectedModal?.title}
+                </div>
+                <button
+                  className="z-50 rounded-tr-xl text-white"
+                  onClick={onClose}
+                >
+                  <Close className="h-6 fill-base-content hover:fill-primary" />
+                </button>
+              </div>
+              {selectedModal && <ModalComponent {...selectedModal?.props} />}
+            </ModalWrapper>
           </Dialog.Panel>
         </Transition.Child>
       </div>

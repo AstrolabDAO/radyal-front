@@ -15,6 +15,7 @@ import "./StrategyCard.css";
 import { getRandomAPY } from "~/utils/mocking";
 import { openModal } from "~/services/modal";
 import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
+import { Button } from "../styled";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -173,12 +174,12 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
               {subtitle}
             </div>
             <div className="flex flex-row justify-between px-5">
-              <div className="flex flex-row text-sm btn-primary text-dark rounded-xl my-auto px-10 pb-1 pt-1.5 font-bold gilroy">
+              <Button className="flex flex-row text-sm text-dark rounded-xl my-auto px-10 pb-1 pt-1.5 font-bold gilroy">
                 <StrategyCardAPY
                   hideLabel={true}
                   apy={getRandomAPY(strategy.slug)}
                 />
-              </div>
+              </Button>
             </div>
           </div>
         )}

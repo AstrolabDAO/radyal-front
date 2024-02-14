@@ -9,10 +9,11 @@ export const estimationIsEnabledSelector = createSelector(
     const action = state[interaction];
 
     return !!(
+      state.is.init &&
       !state.is.estimationOnprogress &&
-      action.from &&
+      !!action.from &&
       action.value > 0 &&
-      action.to &&
+      !!action.to &&
       !state.is.estimationLocked &&
       !state.is.onWrite
     );
@@ -37,12 +38,7 @@ export const canSwapSelector = createSelector(
     const interaction = state.interaction;
     const estimatedRoute = state[interaction].estimatedRoute;
 
-    return !!(
-      !state.is.estimationOnprogress &&
-      estimatedRoute &&
-      !estimatedRoute?.error &&
-      !state.is.locked
-    );
+    return !!(estimatedRoute && !estimatedRoute?.error && !state.is.locked);
   }
 );
 

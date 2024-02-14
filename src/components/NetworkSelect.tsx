@@ -1,10 +1,11 @@
+import clsx from "clsx";
 import ReactSelect, {
   components,
   OptionProps as ReactSelectOptionsProps,
   Props as ReactSelectProps,
   StylesConfig,
-
 } from "react-select";
+import { COLORS } from "~/styles/constants";
 import { Network } from "~/utils/interfaces";
 
 const Option = ({ ...props }: OptionProps) => {
@@ -22,7 +23,11 @@ const Option = ({ ...props }: OptionProps) => {
   );
 };
 
-const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
+const NetworkSelect = ({
+  networks,
+  className,
+  ...props
+}: NetworkSelectProps) => {
   const styleOptions: StylesConfig<NetworkSelectData> = {
     control: (baseStyles: any) => ({
       ...baseStyles,
@@ -32,20 +37,20 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
       height: "3rem",
       "&:hover": {
         boxShadow: "none",
-        borderColor: "var(--primary)"
+        borderColor: "var(--primary)",
       },
       "&:focus": {
         boxShadow: "none",
-        outline: 'none',
-      }
+        outline: "none",
+      },
     }),
     option: (baseStyles: any) => ({
       ...baseStyles,
-      backgroundColor: 'inherit',
+      backgroundColor: "inherit",
       "&:hover": {
         color: "var(--primary)",
         cursor: "pointer",
-      }
+      },
     }),
     indicatorSeparator: (baseStyles: any) => ({
       ...baseStyles,
@@ -54,16 +59,17 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
     menu: (baseStyles: any) => ({
       ...baseStyles,
       zIndex: 1000,
-      borderRadius: '0.375rem',
-      backgroundColor: 'inherit',
-      "&:focus": { outline: 'none' },
+      borderRadius: "0.375rem",
+      backgroundColor: COLORS.base,
+      "&:focus": { outline: "none" },
     }),
     multiValue: (baseStyles: any) => ({
       ...baseStyles,
-      "&:focus": { outline: 'none' },
-      backgroundColor: '#3f3f3f',
+      "&:focus": { outline: "none" },
+      backgroundColor: "#3f3f3f",
     }),
-  }
+  };
+
   return (
     <ReactSelect
       isMulti
@@ -73,7 +79,10 @@ const NetworkSelect = ({ networks, ...props }: NetworkSelectProps) => {
         label: <img src={network.icon} width={20} height={20} />,
         network: network,
       }))}
-      className="bg-dark-800/25"
+      className={clsx(
+        className,
+        "bg-dark-800/25 bg-base rounded-xl backdrop-blur-3xl"
+      )}
       isSearchable={false}
       components={{ Option }}
       {...props}

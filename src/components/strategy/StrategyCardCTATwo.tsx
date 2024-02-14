@@ -17,6 +17,7 @@ import { getIconFromStrategy } from "~/utils";
 import { getRandomAPY } from "~/utils/mocking";
 import { openModal } from "~/services/modal";
 import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
+import { Button } from "../styled";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -59,7 +60,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
       setShouldOpenModal(true);
     } else
       openModal({
-        modal: "swap" /*props:{onClose={() => dispatch(clearState())}}} */,
+        modal: "swap",
       });
   };
 
@@ -139,12 +140,12 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
                   hideLabel={true}
                   size={{ height: 50, width: 50 }}
                 />
-                <div className="btn-primary text-sm  text-dark rounded-xl my-auto px-10 pb-1 pt-1.5 font-bold italic gilroy">
+                <Button className="text-sm  text-dark rounded-xl my-auto px-10 pb-1 pt-1.5 font-bold italic gilroy">
                   <StrategyCardAPY
                     hideLabel={true}
                     apy={getRandomAPY(strategy.slug)}
                   />
-                </div>
+                </Button>
               </div>
             </div>
           </div>

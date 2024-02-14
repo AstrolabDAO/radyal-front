@@ -28,11 +28,11 @@ const TokenPresentation = ({
     },
   ];
   return (
-    <div className="flex flex-row">
-      <div className="my-auto">
+    <div className="flex flex-row items-center">
+      <div>
         <IconGroup icons={icons} />
       </div>
-      <div className="flex flex-col px-3 bg-medium my-auto">
+      <div className="flex flex-col px-3 bg-medium">
         <div
           className={clsx(
             "text-xl font-bold text-white",

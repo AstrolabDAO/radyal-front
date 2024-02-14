@@ -6,10 +6,10 @@ import { shortenAddress } from "~/utils/format";
 
 import Logo from "~/assets/logo/logo.svg?react";
 
-import Button from "../Button";
 import HeaderActions from "./header/HeaderActions";
 import HeaderAbout from "./header/HeaderAbout";
 import clsx from "clsx";
+import { Button } from "../styled";
 
 const Header = ({ emitMint }) => {
   const { address, isConnected } = useAccount();
@@ -32,25 +32,17 @@ const Header = ({ emitMint }) => {
     };
   }, []);
 
-  const headerStyle = {
-    backgroundColor: scrolling ? "rgba(28, 28, 28, 0.6)" : "transparent",
-    backdropFilter: scrolling ? "blur(10px)" : "none",
-    transition: "background-color 0.3s ease-in-out",
-    // Add other styles for your header here
-  };
-
   return (
     <header
       className={clsx("sticky top-0 z-20 w-full p-1", {
-        "border-b border-solid border-white-200": scrolling,
+        "border-b border-b-1 border-solid scrolled": scrolling,
       })}
-      style={headerStyle}
     >
       <div className="container">
         <div className="navbar">
-          <div className="navbar-start">
+          <a href="/" className="navbar-start">
             <Logo className="flex fill-white w-36" />
-          </div>
+          </a>
           <div className="navbar-center flex-row justify-center gap-10 hidden sm:flex">
             <a
               href="/"
@@ -71,10 +63,10 @@ const Header = ({ emitMint }) => {
               <HeaderAbout />
             </div>
           </div>
-          <div className="navbar-end">
+          <div className="navbar-end uppercase">
             {!isConnected && (
               <Button onClick={() => web3Modal.open({ view: "Connect" })}>
-                Connect wallet
+                Connect
               </Button>
             )}
             {isConnected && (
@@ -82,7 +74,6 @@ const Header = ({ emitMint }) => {
                 <HeaderActions />
                 <Button
                   primary={false}
-                  className="h-10 min-h-0 rounded-xl"
                   onClick={() => web3Modal.open({ view: "Account" })}
                 >
                   {shortenAddress(address.toLowerCase())}

@@ -12,6 +12,7 @@ export const SENTIMENT_COLORS = {
 export const COLORS = {
   primary: "#FFB800",
   "primary-content": "#1C1C1C",
+  "dark-grey": "#494949",
   secondary: "#CACADA",
   tertiary: "#131829",
   active: "#CACADA",
@@ -20,6 +21,36 @@ export const COLORS = {
   dark: "#505050",
   background: "#1C1C1C",
   ...SENTIMENT_COLORS,
+};
+
+export const GRADIENTS = {
+  "primary-gradient": `linear-gradient(
+    180deg,
+    #FFD25F 0%,
+    #F5B100 14.06%,
+    #FFB800 46.88%,
+    #FFC327 86.98%,
+    #9D7100 100%
+  )`,
+  "secondary-gradient": `linear-gradient(
+    to bottom,
+    #6B6B6B,
+    #464646 4%,
+    #3A3939 12%,
+    #434343 48.4%,
+    #3D3D3D 90.1%,
+    #242424 100%
+  )`,
+  "base-gradient": `linear-gradient(
+    180deg,
+    #212121 0%,
+    #1e1e1e 14.06%,
+    #1C1C1C 46.88%,
+    #191919 86.98%,
+    #161616 100%
+)
+
+`,
 };
 
 export const SIZES = {

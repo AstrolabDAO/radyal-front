@@ -24,7 +24,6 @@ import { OperationStatus } from "@astrolabs/swapper";
 import Loader from "~/components/Loader";
 import { Operation } from "~/model/operation";
 import ActionRouteDetailLine from "./ActionRouteDetailLine";
-import Button from "~/components/Button";
 
 type ActionRouteDetailProps = {
   operation: Operation;
@@ -35,9 +34,9 @@ const OperationRouteDetail = ({
   operation,
   showStatus = false,
 }: ActionRouteDetailProps) => {
-  const estimation = useEstimatedRoute();
   const estimationProgress = useEstimationOnProgress();
-  const estimationError = estimation?.error;
+
+  const estimationError = operation?.estimation?.error;
   const steps = useMemo(() => operation.steps, [operation]);
 
   const amountWithNetworkAndSymbol = useCallback(
@@ -69,6 +68,7 @@ const OperationRouteDetail = ({
 
   const displayedSteps = useMemo(() => {
     let shouldAssignLoadingStatus = true;
+
     return steps.map(
       ({
         id,
@@ -133,7 +133,7 @@ const OperationRouteDetail = ({
       loaderClasses="w-20 mx-auto invert"
       className="mx-auto text-nowrap text-white mb-4 text-center"
       title={"searching route..."}
-      value={!estimationProgress}
+      value={!(estimationProgress && !operation?.estimation)}
     >
       <div
         className={clsx({ "max-h-0": steps.length === 0 && !estimationError })}

@@ -12,7 +12,7 @@ import { toDollarsCompact, toPercent } from "~/utils/format";
 import { Strategy } from "~/utils/interfaces";
 import { getRandomAPY, getRandomTVL } from "~/utils/mocking";
 
-const DepositSelectNetwork = () => {
+const SelectStrategy = () => {
   const selectedGroup = useSelectedStrategyGroup();
 
   const interaction = useInteraction();
@@ -26,7 +26,7 @@ const DepositSelectNetwork = () => {
     return selectedStrategy?.network.id === strategy.network.id;
   };
   return (
-    <div className="flex flex-col md:basis-2/5 ps-6 mb-auto">
+    <div className="flex flex-col ps-3 mb-auto">
       <div className="flex flex-row text-center text-xs leading-6">
         <div className="basis-1/3 text-start">CHAIN</div>
         <div className="basis-1/3">APY</div>
@@ -56,7 +56,7 @@ const DepositSelectNetwork = () => {
               }}
             >
               <div className="flex flex-row items-center my-0.5 text-center">
-                <div className="basis-1/3">
+                <div className="pr-4">
                   <img
                     className="h-5 w-5 ms-1"
                     src={strategy.network.icon}
@@ -65,7 +65,7 @@ const DepositSelectNetwork = () => {
                 </div>
                 <div
                   className={clsx(
-                    "basis-1/3 font-bold",
+                    "basis-1/3 font-bold px-2",
                     isSelected(strategy) ? "text-primary" : "text-white"
                   )}
                 >
@@ -88,4 +88,4 @@ const DepositSelectNetwork = () => {
   );
 };
 
-export default DepositSelectNetwork;
+export default SelectStrategy;

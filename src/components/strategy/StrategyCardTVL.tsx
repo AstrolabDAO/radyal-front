@@ -10,8 +10,7 @@ const StrategyCardTVL = ({ tvl }: StrategyCardTVLProps) => {
       <div className="-mb-1 text-sm font-medium">WITH</div>
       <div className="flex flex-row font-extralight">
         <div className="text-3xl">{toDollarsCompact(tvl)}</div>
-        <div className="flex flex-col text-center font-medium">
-          {/* <span className="text-1xl strategy-card-data-unit">M</span> */}
+        <div className="flex flex-col text-center font-medium justify-end pb-1">
           <span className="strategy-card-data-label">TVL</span>
         </div>
       </div>

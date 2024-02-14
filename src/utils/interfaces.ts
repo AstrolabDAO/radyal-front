@@ -59,6 +59,7 @@ export interface Strategy extends Token {
   aggregationLevel?: number;
   apy?: number;
   tvl?: number;
+  valuable: any;
 }
 
 export interface GrouppedStrategies {

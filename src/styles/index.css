@@ -52,6 +52,18 @@
   }
 }
 
+header {
+  border-color: transparent;
+  &.scrolled {
+    @apply bg-blur;
+    border-bottom: 1px solid #494949;
+  }
+}
+
+.border-darkgrey {
+  boder: 1px solid #494949;
+}
+
 .shadow-none {
   box-shadow: none;
 }
@@ -69,6 +81,9 @@ body {
   display: flex;
   place-items: center;
   font-family: "Inter", sans-serif;
+}
+.max-h-90vh {
+  max-height: 90vh;
 }
 #root {
   min-height: 100vh;
@@ -135,5 +150,10 @@ body {
         rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
         rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     }
+  }
+  .bg-blur {
+    background-color: rgba(28, 28, 28, 0.6);
+    backdrop-filter: blur(10px);
+    transition: background-color 0.3s ease-in-out 0s;
   }
 }

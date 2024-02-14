@@ -1,34 +1,35 @@
+@layer utilities {
+  .btn:not(.btn-primary):not(:disabled) {
+    @apply text-white;
+    background: linear-gradient(
+      to bottom,
+      #6b6b6b,
+      #464646 4%,
+      #3a3939 12%,
+      #434343 48.4%,
+      #3d3d3d 90.1%,
+      #242424 100%
+    );
+  }
 
-.btn-primary:not(:disabled) {
-  background: linear-gradient(
-    180deg,
-    #FFD25F 0%,
-    #F5B100 14.06%,
-    #FFB800 46.88%,
-    #FFC327 86.98%,
-    #9D7100 100%
-  );
+  .btn-main:not(:disabled) {
+    background: linear-gradient(
+      180deg,
+      #ffd25f 0%,
+      #f5b100 14.06%,
+      #ffb800 46.88%,
+      #ffc327 86.98%,
+      #9d7100 100%
+    );
+  }
 
-}
-.btn-secondary:not(:disabled) {
-  @apply text-white;
-  background: linear-gradient(
-    to bottom,
-    #6B6B6B,
-    #464646 4%,
-    #3A3939 12%,
-    #434343 48.4%,
-    #3D3D3D 90.1%,
-    #242424 100%
-  );
-}
+  .btn.btn-small {
+    min-height: 2.85rem;
+  }
 
-.btn.btn-small {
-  min-height: 2.85rem;
-}
-
-.btn.btn-primary,
-.btn.btn-secondary {
-  @apply h-10 min-h-0 rounded-xl;
-  border: 0;
+  .btn.btn-primary,
+  .btn.btn-secondary {
+    @apply h-10 min-h-0 rounded-xl;
+    border: 0;
+  }
 }

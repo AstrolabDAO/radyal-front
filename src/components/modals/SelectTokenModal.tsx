@@ -3,17 +3,12 @@ import { useMemo } from "react";
 import { useInteraction } from "~/hooks/swapper";
 import { useBalances, useTokenBySlug, useTokens } from "~/hooks/tokens";
 
+import { StrategyInteraction } from "~/utils/constants";
 import { Token } from "~/utils/interfaces";
-import { SelectTokenModalMode, StrategyInteraction } from "~/utils/constants";
 
-import { BaseModalProps } from "../Modal";
-import SelectToken from "../select-token/SelectToken";
 import { closeModal } from "~/services/modal";
 import { selectToken, switchSelection } from "~/services/swapper";
-
-interface SelectTokenModalProps extends BaseModalProps {
-  mode: SelectTokenModalMode;
-}
+import SelectToken from "../select-token/SelectToken";
 
 const SelectTokenModal = () => {
   const tokens = useTokens();
@@ -33,20 +28,18 @@ const SelectTokenModal = () => {
   }, [balances, interaction, tokenBySlug, tokens]);
 
   return (
-    <div className="modal-wrapper">
-      <SelectToken
-        onBackClick={() => closeModal()}
-        tokens={tokensList}
-        onSelect={(token: Token) => {
-          selectToken({
-            token,
-            for: interaction === StrategyInteraction.DEPOSIT ? "from" : "to",
-          });
-          switchSelection();
-          closeModal();
-        }}
-      />
-    </div>
+    <SelectToken
+      onBackClick={() => closeModal()}
+      tokens={tokensList}
+      onSelect={(token: Token) => {
+        selectToken({
+          token,
+          for: interaction === StrategyInteraction.DEPOSIT ? "from" : "to",
+        });
+        switchSelection();
+        closeModal();
+      }}
+    />
   );
 };
 export default SelectTokenModal;

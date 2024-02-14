@@ -14,10 +14,9 @@ export const GasDetails = ({ operation }: { operation: Operation }) => {
     const toToken = lastStepBeforeCall.toToken;
     const fromValue = firstStep.fromAmount / 10 ** fromToken.decimals;
     const toValue = lastStepBeforeCall.toAmount / 10 ** toToken.decimals;
-    console.log("🚀 ~ const[fromValue,slippage]=useMemo ~ toValue:", toValue);
 
     const slippage = ((fromValue - toValue) / fromValue) * 100;
-    console.log("🚀 ~ const[fromValue,slippage]=useMemo ~ slippage:", slippage);
+
     return [fromValue, slippage];
   }, [operation, estimation]);
 

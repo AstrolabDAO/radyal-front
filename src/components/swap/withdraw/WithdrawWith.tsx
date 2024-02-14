@@ -7,6 +7,7 @@ import { Strategy } from "~/utils/interfaces";
 
 import ActionBlock from "../helpers/ActionBlock";
 import { setFromValue } from "~/services/swapper";
+import { Input } from "~/components/styled";
 
 type WWithProps = {
   strategy: Strategy;
@@ -49,7 +50,7 @@ const WithdrawWith = ({ strategy }: WWithProps) => {
       onTokenClick={() => {}}
       children={
         <div className="flex ms-auto">
-          <input
+          <Input
             className="swap-input-field"
             placeholder="10.0"
             value={depositValue?.toString() ?? ""}
