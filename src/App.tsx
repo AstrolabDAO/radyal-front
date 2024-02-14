@@ -11,10 +11,13 @@ import Layout from "./components/layout/Layout";
 import { AppProvider } from "./context/app.context.tsx";
 import { checkInterval } from "./services/operation";
 import { updateIntervalId } from "./store/operations";
+import { useIsMobile } from "./hooks/utils.ts";
+import MobileLock from "./pages/MobileLock.tsx";
 
 function App() {
   const [haveStrokeColor, setHaveStrokeColor] = useState(false);
   const [haveFillColor, setHaveFillColor] = useState(false);
+  const isMobile = useIsMobile();
 
   let debounceTimer: NodeJS.Timeout;
   function changeColor() {
@@ -33,6 +36,7 @@ function App() {
     dispatch(updateIntervalId({ intervalId: checkInterval() }));
   }, [dispatch]);
 
+  if (isMobile) return <MobileLock />;
   return (
     <>
       <Web3Provider>
