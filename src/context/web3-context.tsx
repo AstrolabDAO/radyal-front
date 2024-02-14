@@ -74,6 +74,7 @@ const Web3Provider = ({ children }) => {
         explorers,
         explorerApi,
         gasToken,
+        color1,
         slug,
         icon,
       }) => {
@@ -82,6 +83,7 @@ const Web3Provider = ({ children }) => {
           name,
           httpRpcs,
           wsRpcs,
+          color1,
           explorers,
           explorerApi,
           gasToken,

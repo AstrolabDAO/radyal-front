@@ -1,3 +1,4 @@
+import { stripName } from "./format";
 import { Strategy, Token } from "./interfaces";
 
 export const tokensIsEqual = (
@@ -15,8 +16,11 @@ export const tokensIsEqual = (
 export const getIconFromStrategy = (strategy: Strategy) => {
   if (!strategy) return "";
   switch (strategy.aggregationLevel) {
-    case 0: return strategy?.protocols[0]?.icon;
-    case 1: return strategy?.network?.icon;
-    default: return strategy?.asset?.icon;
+    case 0:
+      return strategy?.protocols[0]?.icon;
+    case 1:
+      return strategy?.network?.icon;
+    default:
+      return strategy?.asset?.icon;
   }
 };
