@@ -71,22 +71,22 @@ const Modal = () => {
               <div className="flex w-full mb-4">
                 {modals.length === 1 && <div></div>}
                 {modals.length > 1 && (
-                  <button className="flex flex-row items-center">
+                  <div className="flex flex-row items-center">
                     <ChevronLeft
                       className="cursor-pointer fill-base-content hover:fill-primary h-5"
                       onClick={closeModal}
                     />
-                  </button>
+                  </div>
                 )}
                 <div className="flex-grow text-center font-bold text-3xl uppercase text-white gilroy flex-3">
                   {selectedModal?.title}
                 </div>
-                <button
+                <div
                   className="z-50 rounded-tr-xl text-white"
                   onClick={onClose}
                 >
                   <Close className="h-6 fill-base-content hover:fill-primary" />
-                </button>
+                </div>
               </div>
               {selectedModal && <ModalComponent {...selectedModal?.props} />}
             </ModalWrapper>

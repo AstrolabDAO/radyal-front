@@ -4,7 +4,8 @@ import tw from "twin.macro";
 export const Input = tw.input`input input-bordered hover:border-primary w-full focus:outline-none bg-dark-800/25 backdrop-blur-3xl`;
 
 export const Button = styled.button<{ primary?: boolean; outline?: boolean }>`
-  ${(props) => (!props.outline ? tw`btn h-10 min-h-0 rounded-xl` : null)}
+  ${(props) =>
+    !props.outline ? tw`btn h-10 min-h-0 rounded-xl border-none` : null}
 
   ${(props) => {
     if (props.outline) return;
@@ -19,12 +20,6 @@ ${(props) =>
       ? tw`p-2.5 border-solid border-dark-600 border-1 rounded-xl bg-base text-white`
       : ""}
 `;
-
-export const OutlinedButton = tw.button`
-me-3 cursor-pointer relative bg-base
-p-2.5 border-solid border-dark-600 border-1 rounded-xl
-`;
-
 export const StyledDropdown = styled.div<{ visible: boolean }>`
   outline: none;
   font-family: "Gilroy", sans-serif;

@@ -21,6 +21,7 @@ import "./StrategyCard.css";
 import { getRandomAPY, getRandomTVL } from "~/utils/mocking";
 import { openModal } from "~/services/modal";
 import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
+import { toPercent } from "~/utils/format";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -43,6 +44,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   const { isConnected } = useAccount({ onConnect: handleConnect });
 
   const [strategy] = strategyGroup;
+
   const { name } = strategy;
   const [title, ...subtitle] = name
     .replace(/\b(Astrolab |v2|v3)\b/g, "")
@@ -72,6 +74,22 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
       "-mono.svg"
     );
   }, [strategy]);
+
+  const apy = useMemo(() => {
+    const value = strategy?.valuable?.last?.investedApyDaily;
+    const fakeApy = getRandomAPY(strategy.slug);
+    return value
+      ? Math.round(value * 100) / 100
+      : toPercent(fakeApy, 2, false, true);
+  }, [strategy]);
+  const tvl = useMemo(() => {
+    const value =
+      (strategy?.valuable?.last?.volume *
+        strategy?.valuable?.last?.sharePrice) /
+      strategy.weiPerUnit;
+    return value ? value : getRandomTVL(strategy.slug);
+  }, [strategy]);
+
   return (
     <div
       className={clsx("card group strategy-card text-white", {
@@ -103,8 +121,8 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
           </div>
         </div>
         <div className="flex flex-row mt-auto">
-          <StrategyCardAPY apy={getRandomAPY(strategy.slug)} />
-          <StrategyCardTVL tvl={getRandomTVL(strategy.slug)} />
+          <StrategyCardAPY apy={apy} />
+          <StrategyCardTVL tvl={tvl} />
         </div>
       </div>
     </div>

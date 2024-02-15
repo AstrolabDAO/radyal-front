@@ -4,6 +4,7 @@ export default {
     "removeDoctype",
     "removeXMLProcInst",
     "removeComments",
+    "removeUselessStrokeAndFill",
     "removeMetadata",
     "removeEditorsNSData",
     "cleanupEnableBackground",
