@@ -78,7 +78,7 @@ header .action-wrapper.active .bell-icon {
   @apply text-primary;
 }
 
-header .action-wrapper .notification-badge {
+.notification-badge {
   @apply absolute rounded-full bg-primary text-dark text-2xs font-extrabold;
   padding: 0.1rem 0.4rem;
   top: -7px;

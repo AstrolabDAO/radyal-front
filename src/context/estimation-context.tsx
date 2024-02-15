@@ -85,7 +85,7 @@ const EstimationProvider = ({ children }) => {
       setRefetchInterval(1000);
       return;
     }
-    setEstimationOnprogress(false);
+    //setEstimationOnprogress(false);
     setRefetchInterval(60000);
     let steps = estimationData?.steps;
 

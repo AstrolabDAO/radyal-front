@@ -129,7 +129,7 @@ const ActionModalContent = () => {
   const [isInfo, setIsInfo] = useState(false);
   return (
     <>
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row justify-between mb-8">
         <div
           className={clsx("cursor-pointer text-2xl hover:text-primary", {
             "font-bold border-white text-white":

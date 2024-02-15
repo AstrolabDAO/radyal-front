@@ -1,4 +1,5 @@
-import { dispatch, getStoreState } from "~/store";
+import { createSelector } from "@reduxjs/toolkit";
+import { IRootState, dispatch, getStoreState } from "~/store";
 import { SetOnWritePayload } from "~/store/interfaces/swapper";
 import {
   canSwapSelector,
@@ -74,6 +75,13 @@ export const setFromValue = (value: number) => {
   dispatch(swapperActions.setFromValue(value));
 };
 
+export const getEstimationOnProgress = () => {
+  const selector = createSelector(
+    (state: IRootState) => state.swapper.is.estimationOnprogress,
+    (onProgress) => onProgress
+  );
+  return selector(getStoreState());
+};
 export const setEstimationOnprogress = (value: boolean) => {
   dispatch(swapperActions.setEstimationOnprogress(value));
 };

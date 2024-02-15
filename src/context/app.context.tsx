@@ -4,7 +4,11 @@ import { useAccount } from "wagmi";
 import { useRequestedPriceCoingeckoIds } from "~/hooks/tokens";
 import { ONE_MINUTE } from "~/main";
 import { dispatch } from "~/store";
-import { init, setRequestedPriceCoingeckoIds } from "~/store/tokens";
+import {
+  init,
+  setBalances,
+  setRequestedPriceCoingeckoIds,
+} from "~/store/tokens";
 import { getTokens, getTokensPrices, loadBalancesByAddress } from "~/utils/api";
 import { cacheHash } from "~/utils/format";
 import { Balance, Token } from "~/utils/interfaces";
@@ -66,6 +70,10 @@ const AppProvider = () => {
     }
   );
 
+  useEffect(() => {
+    if (!STORE_IS_INIT || !balances) return;
+    dispatch(setBalances(balances));
+  });
   useEffect(() => {
     if (STORE_IS_INIT) return;
     if (tokens && !isConnected && !STORE_IS_PARTIAL_INIT) {

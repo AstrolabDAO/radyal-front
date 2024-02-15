@@ -1,10 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import {
   useGrouppedStrategies,
   useStrategiesNetworks,
 } from "~/hooks/strategies";
-import { operationsSelector } from "~/store/selectors/operations";
 import { filterByNetworks, search } from "~/store/strategies";
 
 import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";

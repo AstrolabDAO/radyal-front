@@ -30,7 +30,10 @@ const Dropdown: React.FC = () => {
           size: operations?.length ? "big" : "small",
         })
       }
-      className={clsx("me-3", pendingOperations.length > 0 && "active")}
+      className={clsx(
+        "me-3 border-darkgrey relative",
+        pendingOperations.length > 0 && "active"
+      )}
     >
       {pendingOperations.length > 0 && (
         <div className="notification-badge">{pendingOperations.length}</div>
