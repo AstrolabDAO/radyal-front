@@ -145,10 +145,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
                   style={{ paddingLeft: "2rem", paddingRight: "2rem" }}
                   className="text-sm  text-dark rounded-xl my-auto px-10 pb-1 pt-1.5 font-bold italic gilroy"
                 >
-                  <StrategyCardAPY
-                    hideLabel={true}
-                    apy={getRandomAPY(strategy.slug)}
-                  />
+                  <StrategyCardAPY hideLabel={true} apy={strategy.apy} />
                 </Button>
               </div>
             </div>

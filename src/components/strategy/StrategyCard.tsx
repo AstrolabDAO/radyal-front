@@ -8,20 +8,16 @@ import { getIconFromStrategy } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { clearState } from "~/store/swapper";
 
 import { useSelectedStrategy } from "~/hooks/strategies";
 
 import StrategyCardAPY from "./StrategyCardAPY";
 import StrategyCardIcons from "./StrategyCardIcons";
 import StrategyCardTVL from "./StrategyCardTVL";
-import ActionModal from "../modals/ActionModal";
 
-import "./StrategyCard.css";
-import { getRandomAPY, getRandomTVL } from "~/utils/mocking";
 import { openModal } from "~/services/modal";
 import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
-import { toPercent } from "~/utils/format";
+import "./StrategyCard.css";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -75,21 +71,6 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
     );
   }, [strategy]);
 
-  const apy = useMemo(() => {
-    const value = strategy?.valuable?.last?.investedApyDaily;
-    const fakeApy = getRandomAPY(strategy.slug);
-    return value
-      ? Math.round(value * 100) / 100
-      : toPercent(fakeApy, 2, false, true);
-  }, [strategy]);
-  const tvl = useMemo(() => {
-    const value =
-      (strategy?.valuable?.last?.volume *
-        strategy?.valuable?.last?.sharePrice) /
-      strategy.weiPerUnit;
-    return value ? value : getRandomTVL(strategy.slug);
-  }, [strategy]);
-
   return (
     <div
       className={clsx("card group strategy-card text-white", {
@@ -121,8 +102,8 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
           </div>
         </div>
         <div className="flex flex-row mt-auto">
-          <StrategyCardAPY apy={apy} />
-          <StrategyCardTVL tvl={tvl} />
+          <StrategyCardAPY apy={strategy.apy} />
+          <StrategyCardTVL tvl={strategy.tvl} />
         </div>
       </div>
     </div>

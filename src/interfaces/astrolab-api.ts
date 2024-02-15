@@ -115,6 +115,8 @@ export interface ApiResponseStrategy {
     last: {
       date: string;
       sharePrice: number;
+      investedApyDaily: number;
+      investedApyWeekly: number;
       volume: number;
       ror: number;
       exposureByNetwork: null | any;

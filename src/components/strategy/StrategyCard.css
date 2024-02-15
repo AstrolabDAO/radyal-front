@@ -6,11 +6,11 @@
 .strategy-cta-icon-filter,
 .group:hover .strategy-icon-filter {
   filter: invert(0.5) sepia(100%);
-  opacity: .25;
+  opacity: 0.25;
 }
 
 .strategy-card {
-  @apply bg-dark-700/50 h-48 cursor-pointer border-1 border-dark-500 border-solid hover:shadow-sm hover:border-primary/50 transition-all duration-500
+  @apply bg-dark-700/50 h-48 cursor-pointer border-1 border-dark-500 border-solid hover:shadow-sm hover:border-primary/50 transition-all duration-500;
 }
 
 div.strategy-cta-size {
@@ -23,12 +23,12 @@ div.strategy-cta-size {
 }
 
 .strategy-card-data-unit {
-  transform: scale(1.35,1);
+  transform: scale(1.35, 1);
   margin-top: 0.1rem;
 }
 .strategy-card-data-label {
   margin-top: -0.4rem;
-  @apply text-2xs
+  @apply text-2xs;
 }
 
 .strategy-card-cta-one {
@@ -38,8 +38,8 @@ div.strategy-cta-size {
   clip-path: polygon(
     0 0,
     100% 0%,
-    100% 40%, /* End rounding top right */
-    0 100%    /* End rounding bottom left */
+    100% 40%,
+    /* End rounding top right */ 0 100% /* End rounding bottom left */
   );
 }
 .strategy-card-cta-two {
@@ -51,12 +51,16 @@ div.strategy-cta-size {
 }
 
 .strategy-card-shadow:hover::before {
-    content: "";
-    position: absolute;
-    inset: 0px; /* control the spread */
-    z-index: -1; /* place the element behind */
-    background: linear-gradient(180deg, var(--secondary) 0%, var(--secondary) 100%);
-    filter: blur(10px); /* control the blur */
+  content: "";
+  position: absolute;
+  inset: 0px; /* control the spread */
+  z-index: -1; /* place the element behind */
+  background: linear-gradient(
+    180deg,
+    var(--secondary) 0%,
+    var(--secondary) 100%
+  );
+  filter: blur(10px); /* control the blur */
 }
 
 .strategy-banner-wrapper {
