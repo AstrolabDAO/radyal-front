@@ -83,7 +83,7 @@
 
 @keyframes scrolling-text-rtl {
   0% {
-    transform: translate(0, 0);
+    transform: translate(-10%, 0);
   }
   100% {
     transform: translate(-100%, 0);
@@ -92,7 +92,7 @@
 
 @keyframes scrolling-text-ltr {
   0% {
-    transform: translate(-100%, 0);
+    transform: translate(-90%, 0);
   }
   100% {
     transform: translate(0, 0);

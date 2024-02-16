@@ -132,14 +132,14 @@ const OperationRouteDetail = ({
     <Loader
       loaderClasses="w-20 mx-auto invert"
       className="mx-auto text-nowrap text-white mb-4 text-center"
-      title={"searching route..."}
+      title={"SEARCHING ROUTE"}
       value={!(estimationProgress && !operation?.estimation)}
     >
       <div
         className={clsx({ "max-h-0": steps.length === 0 && !estimationError })}
       >
         {(steps.length > 0 || estimationError) && !showStatus && (
-          <div className="mb-1 font-medium text-gray-500">VIA</div>
+          <div className="mb-1 font-medium mt-4">VIA</div>
         )}
         {!estimationError && (
           <ul

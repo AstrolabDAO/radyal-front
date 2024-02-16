@@ -44,23 +44,23 @@ const Header = () => {
           <Link to="/" className="navbar-start">
             <Logo className="flex fill-white w-36" />
           </Link>
-          <div className="navbar-center flex-row justify-center gap-10 hidden sm:flex">
+          <nav className="navbar-center text-secondary flex-row justify-center gap-10 hidden sm:flex ">
             <Link
               to="/"
-              className="text-xl flex font-bold text-white text-neon cursor-pointer hover:text-primary"
+              className="text-xl flex font-bold hover:text-white text-neon cursor-pointer"
             >
               VAULTS
             </Link>
-            <div className="text-xl flex text-gray-500 hover:text-gray-600 cursor-default">
+            <div className="text-xl flex hover:text-white cursor-default">
               BORROW
             </div>
-            <div className="text-xl flex text-gray-500 cursor-default">
+            <div className="text-xl flex cursor-default hover:text-white">
               FOLIO
             </div>
-            <div className="text-xl flex text-gray-500 cursor-default relative">
+            <div className="text-xl flex cursor-default relative">
               <HeaderAbout />
             </div>
-          </div>
+          </nav>
           <div className="navbar-end uppercase">
             {!isConnected && (
               <Button onClick={() => web3Modal.open({ view: "Connect" })}>

@@ -15,8 +15,8 @@ const StrategyHeader = ({ strategy }: StrategyHeaderProps) => {
     "-mono.svg"
   );
   return (
-    <div className="md:basis-3/5 text-white">
-      <div className="mb-1 text-gray-500 font-medium">INTO</div>
+    <div className="md:basis-3/5">
+      <div className="mb-1 font-medium">INTO</div>
       <div className="flex">
         <div className="flex flex-col m-0 p-3 border border-solid border-dark-500 rounded-3xl relative overflow-hidden flex-1">
           <div className="absolute inset-0 flex justify-end items-center z-0 overflow-hidden contrast-[0.7] -mr-16">
@@ -25,7 +25,7 @@ const StrategyHeader = ({ strategy }: StrategyHeaderProps) => {
               className="h-52 w-52 strategy-icon-filter"
             />
           </div>
-          <div className="relative z-10 px-2">
+          <div className="relative z-10 p-2  text-white">
             <div className="font-bold italic text-3xl -mb-1 uppercase gilroy">
               {title}
             </div>

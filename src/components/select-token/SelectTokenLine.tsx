@@ -41,7 +41,7 @@ const SelectTokenLine = ({
       className={clsx(
         "flex flex-col cursor-pointer p-2 rounded-xl box-content border-solid border-1 border-transparent",
         haveBorder && "border-b",
-        "hover:bg-primary/5 hover:border-primary"
+        "bordered-hover"
       )}
       onClick={onTokenSelect}
     >
@@ -49,10 +49,10 @@ const SelectTokenLine = ({
         <TokenPresentation token={token} />
         <div className="ms-auto">
           <span className="whitespace-nowrap flex flex-col">
-            <span className="font-bold text-white">
+            <span className="font-bold text-white text-right">
               {round(convertedBalance, 4)}
             </span>
-            <span className="text-xs">
+            <span className="text-xs text-right">
               ~{round(convertedBalance * tokenPrice, 4)} $
             </span>
           </span>

@@ -32,7 +32,8 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   const handleConnect = ({ isReconnected }) => {
     if (!isReconnected && isConnected && shouldOpenModal) {
       openModal({
-        modal: "swap" /*props:{onClose={() => dispatch(clearState())}}} */,
+        modal: "swap",
+        showTitle: false,
       });
     }
   };
@@ -56,7 +57,8 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
       setShouldOpenModal(true);
     } else
       openModal({
-        modal: "swap" /*props:{onClose={() => dispatch(clearState())}}} */,
+        modal: "swap",
+        showTitle: false,
       });
   };
 
@@ -96,7 +98,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
               </div>
               <StrategyCardIcons strategyGroup={strategyGroup} />
             </div>
-            <div className="flex font-light my-auto text-2xl">
+            <div className="flex font-light my-auto text-2xl text-secondary">
               {subtitle.join(" ")}
             </div>
           </div>

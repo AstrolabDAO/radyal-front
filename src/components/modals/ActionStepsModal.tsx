@@ -57,7 +57,7 @@ const ActionStepsModal = () => {
           <div
             className={clsx(
               "relative flex flex-row justify-between border-solid border-2 rounded-2xl py-4 px-8",
-              "border-dark-600"
+              "border-darkGrey"
             )}
           >
             <TokenPresentation
@@ -65,7 +65,7 @@ const ActionStepsModal = () => {
               isHoverable={false}
             />
             <div className="centerXY">
-              <ArrowRight className="fill-dark-500 w-10" />
+              <ArrowRight className="fill-base-content w-10" />
             </div>
             <TokenPresentation token={operation.toToken} isHoverable={false} />
           </div>

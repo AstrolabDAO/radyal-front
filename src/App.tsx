@@ -41,7 +41,7 @@ function App() {
   if (isMobile) return <MobileLock />;
 
   return (
-    <>
+    <div>
       <Web3Provider>
         <AppProvider />
         <DisclaimerProvider>
@@ -54,7 +54,7 @@ function App() {
 
         <Modal />
       </Web3Provider>
-    </>
+    </div>
   );
 }
 

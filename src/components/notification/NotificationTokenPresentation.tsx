@@ -41,7 +41,7 @@ const NotificationTokenPresentation = ({
         openModal({ modal: "steps" });
       }}
     >
-      <div className="text-xs text-gray-400">
+      <div className="text-xs">
         <span className="text-2xs">
           {dayjs(operation.date).format("YYYY-MM-DD H:mm:ss")}
         </span>

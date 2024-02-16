@@ -27,7 +27,7 @@ const HeaderAbout: React.FC = () => {
     <div>
       <div
         onClick={toggleDropdown}
-        className="text-gray-400 hover:text-white cursor-pointer flex-row flex"
+        className="hover:text-white cursor-pointer flex-row flex"
       >
         ABOUT
         <div className="h-4 w-4 flex items-center my-auto ms-1">
@@ -40,18 +40,15 @@ const HeaderAbout: React.FC = () => {
         tabIndex={-1}
         onBlur={onBlur}
       >
-        <div className="text-gray-400 hover:text-white cursor-pointer">
+        <a href="#" className="hover:text-white cursor-pointer">
           METRICS
-        </div>
-        <a
-          href="https://docs.astrolab.fi/"
-          className="text-gray-400 hover:text-white"
-        >
+        </a>
+        <a href="https://docs.astrolab.fi/" className=" hover:text-white">
           DOCS
         </a>
-        <div className="text-gray-400 hover:text-white cursor-pointer">
+        <a href="#" className=" hover:text-white cursor-pointer">
           AUDITS
-        </div>
+        </a>
       </StyledDropdown>
     </div>
   );

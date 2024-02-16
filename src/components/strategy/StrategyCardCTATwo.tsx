@@ -33,7 +33,8 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
   const handleConnect = ({ isReconnected }) => {
     if (!isReconnected && isConnected && shouldOpenModal) {
       openModal({
-        modal: "swap" /*props:{onClose={() => dispatch(clearState())}}} */,
+        modal: "swap",
+        showTitle: false,
       });
     }
   };
@@ -62,6 +63,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
     } else
       openModal({
         modal: "swap",
+        showTitle: false,
       });
   };
 
@@ -132,7 +134,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
               >
                 {title.toUpperCase()}
               </div>
-              <div className="text-2xl md:text-4xl gilroy ms-auto text-gray-450 mb-3">
+              <div className="text-2xl md:text-4xl gilroy ms-auto mb-3">
                 {subtitle}
               </div>
               <div className="flex flex-row justify-between">
@@ -142,10 +144,21 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
                   size={{ height: 50, width: 50 }}
                 />
                 <Button
+                  big={true}
                   style={{ paddingLeft: "2rem", paddingRight: "2rem" }}
-                  className="text-sm  text-dark rounded-xl my-auto px-10 pb-1 pt-1.5 font-bold italic gilroy"
+                  className="text-dark my-auto px-10 font-bold italic gilroy"
                 >
-                  <StrategyCardAPY hideLabel={true} apy={strategy.apy} />
+                  <div
+                    className={clsx(
+                      "text-4xl font-black group-hover:text-primary"
+                    )}
+                  >
+                    {strategy.apy}
+                  </div>
+                  <div className="flex flex-col text-center text-xs leading-none -mt-1 -ml-2">
+                    <span className="text-2xl font-black">%</span>
+                    <span className="font-bold text-xs -mt-2">APY</span>
+                  </div>
                 </Button>
               </div>
             </div>

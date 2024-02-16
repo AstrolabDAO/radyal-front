@@ -23,7 +23,7 @@ Object.entries(COLORS).forEach((value) => {
 });
 
 PALETTE["dark"] = {
-  DEFAULT: "#0C0C0C",
+  DEFAULT: "#1C1C1C",
   900: "#0C0C0C",
   800: "#1C1C1C",
   700: "#2A2A2A",
@@ -35,9 +35,6 @@ PALETTE["dark"] = {
   200: "#FBF8F4",
   100: "#FDFDFD",
 };
-
-//PALETTE.base["100"] = "#FDFDFD";
-
 
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],

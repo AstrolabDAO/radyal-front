@@ -44,9 +44,7 @@ const InfoTab = () => {
         <StrategyHeader strategy={selectedStrategy} />
       </div>
       <div className="flex flex-col pt-3 relative gap-3">
-        <div className="uppercase mt-2 text-gray-500 font-medium">
-          Contract addresses
-        </div>
+        <div className="uppercase mt-2 font-medium">Contract addresses</div>
         <table className="shadow-none border-none w-32">
           <tbody>
             {links.map((link, index) => {

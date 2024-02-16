@@ -11,9 +11,21 @@ const Colors = () => {
     const [key, color] = value;
 
     PALETTE[key] = [
-      ...lightOffsets.map((offset) => [offset, pSBC((offset - 500) / 500, color, "#fff")]),
-      ...darkOffsets.map((offset) => [offset, pSBC((500 - offset) / 500, color, "#000")]),
-    ].reduce((acc, [offset, color]) => { acc[offset] = color; return acc; }, { 500: color });
+      ...lightOffsets.map((offset) => [
+        offset,
+        pSBC((offset - 500) / 500, color, "#fff"),
+      ]),
+      ...darkOffsets.map((offset) => [
+        offset,
+        pSBC((500 - offset) / 500, color, "#000"),
+      ]),
+    ].reduce(
+      (acc, [offset, color]) => {
+        acc[offset] = color;
+        return acc;
+      },
+      { 500: color }
+    );
   });
   PALETTE["dark"] = {
     900: "#0C0C0C",
@@ -29,7 +41,7 @@ const Colors = () => {
 
   return (
     <div>
-      {Object.entries(PALETTE).map(([key, colors]) => (
+      {Object.entries(PALETTE).map(([key, colors]) =>
         Object.entries(colors).map(([offset, color]) => (
           <div
             key={`${key}-${offset}`}
@@ -39,9 +51,9 @@ const Colors = () => {
             <span className={`text-${key}-content`}>{`${key}-${offset}`}</span>
           </div>
         ))
-      ))}
+      )}
     </div>
   );
-}
+};
 
 export default Colors;

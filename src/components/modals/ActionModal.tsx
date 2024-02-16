@@ -8,6 +8,8 @@ import { BaseModalProps } from "../Modal";
 import DepositTab from "~/components/swap/DepositTab";
 import WithdrawTab from "~/components/swap/WithdrawTab";
 
+import Close from "~/assets/icons/close.svg?react";
+
 import { useInteraction, useIsInit } from "~/hooks/swapper";
 import { useBalances, useTokenIsLoaded } from "~/hooks/tokens";
 import { useWriteDebounce } from "~/hooks/swapper-actions";
@@ -20,6 +22,7 @@ import { StrategyInteraction } from "~/utils/constants";
 import { EstimationProvider } from "~/context/estimation-context";
 import { initSwapper, selectToken, setInteraction } from "~/services/swapper";
 import InfoTab from "../swap/InfoTab";
+import { closeModal } from "~/services/modal";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ActionModal = (props: BaseModalProps) => {
@@ -129,41 +132,49 @@ const ActionModalContent = () => {
   const [isInfo, setIsInfo] = useState(false);
   return (
     <>
-      <div className="flex flex-row justify-between mb-8">
-        <div
-          className={clsx("cursor-pointer text-2xl hover:text-primary", {
-            "font-bold border-white text-white":
-              !isInfo && selectedTab === "deposit",
-          })}
-          onClick={() => {
-            setIsInfo(false);
-            handleTransition("deposit");
-          }}
-        >
-          DEPOSIT
+      <div className="flex mb-8">
+        <div className="flex justify-between w-full uppercase text-2-5xl items-center">
+          <div
+            className={clsx("cursor-pointer hover:text-primary", {
+              "font-bold border-white text-white text-3xl":
+                !isInfo && selectedTab === "deposit",
+            })}
+            onClick={() => {
+              setIsInfo(false);
+              handleTransition("deposit");
+            }}
+          >
+            DEPOSIT
+          </div>
+          <div
+            className={clsx("cursor-pointer  hover:text-primary", {
+              "font-bold border-white text-white text-3xl":
+                !isInfo && selectedTab === "withdraw",
+            })}
+            onClick={() => {
+              setIsInfo(false);
+              handleTransition("withdraw");
+            }}
+          >
+            WITHDRAW
+          </div>
+          <div
+            className={clsx("cursor-pointer  hover:text-primary mr-4", {
+              "font-bold border-white text-white  text-3xl": isInfo,
+            })}
+            onClick={() => {
+              setIsInfo(true);
+              handleTransition("info");
+            }}
+          >
+            INFO
+          </div>
         </div>
         <div
-          className={clsx("cursor-pointer text-2xl hover:text-primary", {
-            "font-bold border-white text-white":
-              !isInfo && selectedTab === "withdraw",
-          })}
-          onClick={() => {
-            setIsInfo(false);
-            handleTransition("withdraw");
-          }}
+          className="z-50 rounded-tr-xl text-white my-auto"
+          onClick={closeModal}
         >
-          WITHDRAW
-        </div>
-        <div
-          className={clsx("cursor-pointer text-2xl hover:text-primary", {
-            "font-bold border-white text-white": isInfo,
-          })}
-          onClick={() => {
-            setIsInfo(true);
-            handleTransition("info");
-          }}
-        >
-          INFO
+          <Close className="h-6 fill-base-content hover:fill-primary" />
         </div>
       </div>
       <Transition>

@@ -4,6 +4,6 @@ table {
   @apply bg-dark-800/25;
 }
 
-table tr > th{
-  @apply text-base font-normal text-gray-500;
+table tr > th {
+  @apply text-base font-normal;
 }

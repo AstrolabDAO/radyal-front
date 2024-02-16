@@ -28,18 +28,20 @@ const SelectTokenModal = () => {
   }, [balances, interaction, tokenBySlug, tokens]);
 
   return (
-    <SelectToken
-      onBackClick={() => closeModal()}
-      tokens={tokensList}
-      onSelect={(token: Token) => {
-        selectToken({
-          token,
-          for: interaction === StrategyInteraction.DEPOSIT ? "from" : "to",
-        });
-        switchSelection();
-        closeModal();
-      }}
-    />
+    <div>
+      <SelectToken
+        onBackClick={() => closeModal()}
+        tokens={tokensList}
+        onSelect={(token: Token) => {
+          selectToken({
+            token,
+            for: interaction === StrategyInteraction.DEPOSIT ? "from" : "to",
+          });
+          switchSelection();
+          closeModal();
+        }}
+      />
+    </div>
   );
 };
 export default SelectTokenModal;

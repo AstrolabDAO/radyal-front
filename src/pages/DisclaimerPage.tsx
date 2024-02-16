@@ -39,7 +39,7 @@ const DisclaimerPage = () => {
           ALGORITHMIC YIELD PRIMITIVES
         </div>
         <div className="w-2/3 xl:w-8/12 mx-auto mt-6 mb-3">
-          <div className="border-solid border-1 border-gray-600 rounded-xl p-4 h-64 overflow-scroll text-left text-xs md disclaimer">
+          <div className="border-solid border-1 rounded-xl p-4 h-64 overflow-scroll text-left text-xs md disclaimer">
             <Acknowledgement />
           </div>
         </div>

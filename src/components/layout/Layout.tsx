@@ -7,20 +7,21 @@ import DisclaimerPage from "~/pages/DisclaimerPage";
 
 import Footer from "../layer/MainFooter";
 import Header from "../layer/MainHeader";
+import { COLORS } from "~/styles/constants";
 
 const Layout = ({ children }) => {
   const { accepted } = useContext(DisclaimerContext);
 
   const style = {
     backdropFilter: "blur(10px)",
-    color: "var(--gray-500)",
+    color: COLORS["base-content"],
   };
 
   if (!accepted) return <DisclaimerPage />;
 
   return (
     <>
-      <main className="min-h-screen">
+      <main className="min-h-screen overflow-x-hidden">
         <Header />
         <div id="page-content" className="h-full relative">
           {children}
@@ -32,7 +33,7 @@ const Layout = ({ children }) => {
                 style,
                 iconTheme: {
                   primary: "var(--success)",
-                  secondary: "black",
+                  secondary: "transparent",
                 },
               },
               error: {
@@ -40,7 +41,7 @@ const Layout = ({ children }) => {
                 className: "strategy-card h-auto",
                 iconTheme: {
                   primary: "var(--error)",
-                  secondary: "black",
+                  secondary: "transparent",
                 },
               },
               loading: {
@@ -48,7 +49,7 @@ const Layout = ({ children }) => {
                 className: "strategy-card h-auto",
                 iconTheme: {
                   primary: "var(--warning)",
-                  secondary: "#3f3f3f",
+                  secondary: COLORS.base,
                 },
               },
             }}

@@ -69,6 +69,7 @@ const DepositTab = () => {
       </div>
       <div className="flex">
         <Button
+          big={true}
           disabled={!canSwap}
           onClick={async () => {
             if (interactionNeedToSwap) {
@@ -82,7 +83,7 @@ const DepositTab = () => {
           {needApprove
             ? "Approve & Deposit"
             : interactionNeedToSwap
-              ? "Swap & Deposit"
+              ? "Swap AND Deposit"
               : "Deposit"}
         </Button>
       </div>

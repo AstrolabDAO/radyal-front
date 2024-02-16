@@ -16,7 +16,6 @@ import { getRandomAPY } from "~/utils/mocking";
 import { openModal } from "~/services/modal";
 import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
 import { Button } from "../styled";
-import { COLORS } from "~/styles/constants";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -31,7 +30,8 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
   const handleConnect = ({ isReconnected }) => {
     if (!isReconnected && isConnected && shouldOpenModal) {
       openModal({
-        modal: "swap" /*props:{onClose={() => dispatch(clearState())}}} */,
+        modal: "swap",
+        showTitle: false,
       });
     }
   };
@@ -59,7 +59,8 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
       setShouldOpenModal(true);
     } else
       openModal({
-        modal: "swap" /*props:{onClose={() => dispatch(clearState())}}} */,
+        modal: "swap",
+        showTitle: false,
       });
   };
 
@@ -137,7 +138,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
           <use
             className="transition-all duration-500 ease-in-out"
             xlinkHref="#border-path"
-            stroke={isHovered ? COLORS.primary : COLORS.secondary}
+            stroke={`var(--${isHovered ? "primary" : "secondary"})`}
             strokeWidth={isHovered ? "6px" : "2px"}
           />
           {strategy !== null && (
@@ -171,15 +172,25 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
                 size={{ height: 45, width: 45 }}
               />
             </div>
-            <div className="text-2xl md:text-4xl gilroy me-auto text-gray-450 px-5 mb-3">
+            <div className="text-2xl md:text-4xl gilroy me-auto  px-5 mb-3">
               {subtitle}
             </div>
             <div className="flex flex-row justify-between px-5">
               <Button
-                style={{ paddingLeft: "2rem", paddingRight: "2rem" }}
-                className="flex flex-row text-sm text-dark pb-1 pt-1.5 font-bold gilroy"
+                big={true}
+                className="text-dark font-bold gilroy items-center italic gap-0 w-44"
               >
-                <StrategyCardAPY hideLabel={true} apy={strategy.apy} />
+                <div
+                  className={clsx(
+                    "text-4xl font-black group-hover:text-primary"
+                  )}
+                >
+                  {strategy.apy}
+                </div>
+                <div className="flex flex-col text-center text-xs leading-none -mt-1 -ml-2">
+                  <span className="text-2xl font-black">%</span>
+                  <span className="font-bold text-xs -mt-2">APY</span>
+                </div>
               </Button>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const MainFooter = () => (
-  <footer className="footer pt-5 mt-5 border-t border-solid border-dark-800 w-full bg-blur">
+  <footer className="footer pt-5 mt-5 border-t border-solid border-darkerGrey w-full bg-blur">
     <div className="footer container mx-auto relative overflow-y-hidden pb-5 px-2 ">
       <nav>
         <header className="footer-title gilroy text-xl mb-0">SOCIALS</header>
@@ -76,7 +76,7 @@ const MainFooter = () => (
         >
           Privacy policy
         </Link>
-        <div className="text-gray-600">Radyal - © 2024</div>
+        <div className="text-tertiary">Radyal - © 2024</div>
       </nav>
       <nav className="mx-auto mt-auto">
         <footer className="w-36 h-36 position-relative">

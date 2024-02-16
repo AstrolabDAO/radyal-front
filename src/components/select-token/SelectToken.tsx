@@ -13,12 +13,10 @@ import { usePrices } from "~/hooks/tokens";
 
 import { Token } from "~/utils/interfaces";
 
-import { FaChevronLeft } from "react-icons/fa";
-
-import SelectTokenLine from "./SelectTokenLine";
-import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
 import { switchSelection } from "~/services/swapper";
+import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
 import { Input } from "../styled";
+import SelectTokenLine from "./SelectTokenLine";
 
 type SelectTokenProps = {
   tokens: Array<Token>;
@@ -89,7 +87,7 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
       <header>
         <div className="flex flex-row mt-6">
           <div className="basis-3/5 pe-1.5">
-            <label className="flex mb-1">Search by name...</label>
+            <label className="flex mb-1">Search by name</label>
             <Input
               type="text"
               placeholder="USDC..."
@@ -112,7 +110,7 @@ const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
         </div>
       </header>
       <div
-        className=" pe-4 mt-4 -me-4"
+        className="mt-4 overflow-y-scroll"
         style={{ maxHeight: "calc(100vh - 450px)" }}
       >
         {displayedTokens.map((token, index) => {

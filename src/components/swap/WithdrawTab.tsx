@@ -5,6 +5,7 @@ import ActionRouteDetail from "./helpers/OperationRouteDetail";
 
 import { useSelectedStrategy } from "~/hooks/strategies";
 import {
+  useCanSwap,
   useEstimatedRoute,
   useFromToken,
   useInteractionNeedToSwap,
@@ -14,6 +15,7 @@ import { Strategy, Token } from "~/utils/interfaces";
 import StrategyHeader from "./StrategyHeader";
 import { Operation } from "~/model/operation";
 import { openModal } from "~/services/modal";
+import { Button } from "../styled";
 
 const WithdrawTab = () => {
   const fromToken = useFromToken();
@@ -26,6 +28,8 @@ const WithdrawTab = () => {
   const operationSimulation = new Operation({
     steps: estimation?.steps ?? [],
   });
+
+  const canSwap = useCanSwap();
   return (
     <>
       <div>
@@ -46,9 +50,9 @@ const WithdrawTab = () => {
           }}
           className="flex"
         >
-          <button className="btn btn-primary w-full">
+          <Button disabled={!canSwap} className="btn btn-primary w-full">
             Withdraw and Bridge
-          </button>
+          </Button>
         </div>
       </div>
     </>

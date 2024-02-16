@@ -12,7 +12,7 @@ const Option = ({ ...props }: OptionProps) => {
   const { network } = props.data;
   return (
     <components.Option data={network.slug} {...props}>
-      <div className="flex whitespace-nowrap">
+      <div className="flex whitespace-nowrap bg-transparent">
         <img
           src={network.icon}
           style={{ width: 20, height: 20, marginRight: 10 }}
@@ -66,7 +66,7 @@ const NetworkSelect = ({
     multiValue: (baseStyles: any) => ({
       ...baseStyles,
       "&:focus": { outline: "none" },
-      backgroundColor: "#3f3f3f",
+      backgroundColor: "transparent",
     }),
   };
 
@@ -81,7 +81,7 @@ const NetworkSelect = ({
       }))}
       className={clsx(
         className,
-        "bg-dark-800/25 bg-base rounded-xl backdrop-blur-3xl"
+        "bg-base/25 bg-base rounded-xl backdrop-blur-3xl"
       )}
       isSearchable={false}
       components={{ Option }}

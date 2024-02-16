@@ -42,7 +42,7 @@ const TokenPresentation = ({
           {token.symbol}
         </div>
         {children && <div className="-mt-1 pb-0.5"> {children} </div>}
-        <div className="-mt-2 pt-1 text-dark-400 text-nowrap text-xs">
+        <div className="-mt-2 pt-1 text-nowrap text-xs">
           on {token.network.name}
         </div>
       </div>

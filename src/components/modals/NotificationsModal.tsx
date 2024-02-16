@@ -49,8 +49,8 @@ export const NotificationsModal = () => {
           </div>
         )}
         {operations.length > 0 && (
-          <table className="table border-dark-600 rounded-xl">
-            <thead>
+          <table className="table border-darkGrey rounded-xl">
+            <thead className="text-secondary">
               <tr>
                 {["date", "from", "to", "status", ""].map((header, index) => {
                   return (
@@ -72,7 +72,7 @@ export const NotificationsModal = () => {
                 return (
                   <tr
                     key={`operation-${operation.id}-${index}`}
-                    className="cursor-pointer hover:bg-dark-700"
+                    className="cursor-pointer bordered-hover"
                     onClick={() => {
                       selectOperation(operation.id);
                       openModal({ modal: "steps" });

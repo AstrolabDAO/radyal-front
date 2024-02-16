@@ -4,6 +4,7 @@ import { Modals } from "~/utils/constants";
 export interface StoredModal {
   modal: keyof typeof Modals;
   title?: string;
+  showTitle?: boolean;
   props?: object;
   size?: "small" | "big" | "verybig";
 }
@@ -33,6 +34,8 @@ const modalSlice = createSlice({
   reducers: {
     open: (state, action: PayloadAction<StoredModal>) => {
       if (!action.payload.size) action.payload.size = "small";
+      if (action.payload.showTitle === undefined)
+        action.payload.showTitle = true;
       state.list.push(action.payload);
       state.selectedModal = state.list.length - 1;
 

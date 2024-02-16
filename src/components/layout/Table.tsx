@@ -2,8 +2,8 @@ import clsx from "clsx";
 
 const Table = ({ headers = [], data = [] }) => {
   return (
-    <table className="table border-dark-600 rounded-xl">
-      <thead>
+    <table className="table border-darkGrey rounded-xl">
+      <thead className="text-secondary">
         <tr>
           <th className="pe-0"></th>
           {headers.map((header, index) => {
@@ -16,7 +16,7 @@ const Table = ({ headers = [], data = [] }) => {
           return (
             <tr
               className={clsx(
-                "border-t-1 border-solid border-dark-600",
+                "border-t-1 border-solid border-darkGrey",
                 index === data.length - 1 && "rounded-b-xl"
               )}
             >

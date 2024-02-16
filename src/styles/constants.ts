@@ -11,15 +11,19 @@ export const SENTIMENT_COLORS = {
 
 export const COLORS = {
   primary: "#FFB800",
-  "primary-content": "#1C1C1C",
   "dark-grey": "#494949",
-  secondary: "#CACADA",
-  tertiary: "#131829",
-  active: "#CACADA",
+  secondary: "#C8C8C8",
+  tertiary: "#969696",
+  active: "#C8C8C8",
   accent: "#FFB800",
-  base: "#1C1C1C",
-  dark: "#505050",
-  background: "#1C1C1C",
+  base: "#1B1B1B",
+  "base-100": "#1B1B1B",
+  baseGrey: "#969696",
+  darkGrey: "#606060",
+  darkerGrey: "#606060",
+  "base-content": "#969696",
+  dark: "#2A2A2A",
+  background: "#1B1B1B",
   ...SENTIMENT_COLORS,
 };
 
