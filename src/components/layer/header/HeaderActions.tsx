@@ -40,7 +40,7 @@ const Dropdown: React.FC = () => {
       )}
       <div className="w-4 h-4 flex">
         <Bell
-          className={clsx("fill-primary bell-icon border-darkgrey", {
+          className={clsx("fill-primary bell-icon", {
             "fill-primary": pendingOperations.length > 0,
             "fill-secondary": pendingOperations.length === 0,
           })}

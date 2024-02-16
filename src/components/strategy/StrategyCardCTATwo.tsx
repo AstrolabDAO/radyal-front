@@ -18,6 +18,7 @@ import { getRandomAPY } from "~/utils/mocking";
 import { openModal } from "~/services/modal";
 import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
 import { Button } from "../styled";
+import { COLORS } from "~/styles/constants";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -90,7 +91,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
           </clipPath>
           <use
             xlinkHref="#border-path-two"
-            stroke={`var(--${isHovered ? "primary" : "secondary"})`}
+            stroke={isHovered ? COLORS.primary : COLORS.secondary}
             strokeWidth={isHovered ? "6px" : "2px"}
           />
           <path
@@ -140,11 +141,11 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
                   hideLabel={true}
                   size={{ height: 50, width: 50 }}
                 />
-                <Button className="text-sm  text-dark rounded-xl my-auto px-10 pb-1 pt-1.5 font-bold italic gilroy">
-                  <StrategyCardAPY
-                    hideLabel={true}
-                    apy={getRandomAPY(strategy.slug)}
-                  />
+                <Button
+                  style={{ paddingLeft: "2rem", paddingRight: "2rem" }}
+                  className="text-sm  text-dark rounded-xl my-auto px-10 pb-1 pt-1.5 font-bold italic gilroy"
+                >
+                  <StrategyCardAPY hideLabel={true} apy={strategy.apy} />
                 </Button>
               </div>
             </div>

@@ -7,6 +7,7 @@ import Logo from "~/assets/animations/logo.json";
 import Acknowledgement from "~/assets/docs/acknowledgement.mdx";
 import { Button } from "~/components/styled";
 import Layout from "~/components/layout/Layout";
+import { SocialNetworks } from "~/components/SocialNetworks";
 
 const DisclaimerPage = () => {
   const { accept } = useContext(DisclaimerContext);
@@ -60,17 +61,7 @@ const DisclaimerPage = () => {
         >
           AGREE
         </Button>
-        <div className="flex flex-row mx-auto">
-          <button>
-            <FaTwitter className="h-8 w-8 mx-2" />
-          </button>
-          <button>
-            <FaDiscord className="h-8 w-8 mx-2" />
-          </button>
-          <button>
-            <FaGithub className="h-8 w-8 mx-2" />
-          </button>
-        </div>
+        <SocialNetworks />
       </div>
     </div>
   );

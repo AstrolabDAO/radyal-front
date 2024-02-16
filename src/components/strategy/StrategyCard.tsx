@@ -8,19 +8,16 @@ import { getIconFromStrategy } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { clearState } from "~/store/swapper";
 
 import { useSelectedStrategy } from "~/hooks/strategies";
 
 import StrategyCardAPY from "./StrategyCardAPY";
 import StrategyCardIcons from "./StrategyCardIcons";
 import StrategyCardTVL from "./StrategyCardTVL";
-import ActionModal from "../modals/ActionModal";
 
-import "./StrategyCard.css";
-import { getRandomAPY, getRandomTVL } from "~/utils/mocking";
 import { openModal } from "~/services/modal";
 import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
+import "./StrategyCard.css";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -43,6 +40,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   const { isConnected } = useAccount({ onConnect: handleConnect });
 
   const [strategy] = strategyGroup;
+
   const { name } = strategy;
   const [title, ...subtitle] = name
     .replace(/\b(Astrolab |v2|v3)\b/g, "")
@@ -72,6 +70,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
       "-mono.svg"
     );
   }, [strategy]);
+
   return (
     <div
       className={clsx("card group strategy-card text-white", {
@@ -103,8 +102,8 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
           </div>
         </div>
         <div className="flex flex-row mt-auto">
-          <StrategyCardAPY apy={getRandomAPY(strategy.slug)} />
-          <StrategyCardTVL tvl={getRandomTVL(strategy.slug)} />
+          <StrategyCardAPY apy={strategy.apy} />
+          <StrategyCardTVL tvl={strategy.tvl} />
         </div>
       </div>
     </div>

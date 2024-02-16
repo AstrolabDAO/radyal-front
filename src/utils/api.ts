@@ -7,6 +7,8 @@ import { Strategy, Token } from "./interfaces";
 import { networkBySlug, protocolBySlug } from "./mappings";
 import { multicall } from "./multicall";
 import { ApiResponseStrategy } from "~/interfaces/astrolab-api";
+import { getRandomAPY, getRandomTVL } from "./mocking";
+import { toPercent } from "./format";
 
 export const getTokenPrice = (token: Token) => {
   return axios.get(`${COINGECKO_API}/simple/price`, {
@@ -163,6 +165,18 @@ export const getStrategies = async () => {
 
       const network = networkBySlug[nativeNetwork];
 
+      const dailyAPY = strategy?.valuable?.last?.investedApyDaily;
+      const fakeApy = getRandomAPY(strategy.slug);
+
+      const apy = dailyAPY
+        ? Math.round(dailyAPY * 100) / 100
+        : toPercent(fakeApy, 2, false, true);
+
+      const calculatedTVL =
+        (valuable?.last?.volume * valuable?.last?.sharePrice) /
+        strategy.weiPerUnit;
+      const tvl = calculatedTVL ? calculatedTVL : getRandomTVL(strategy.slug);
+
       const token = getTokenBySlug(strategy.denomination);
       const _strat = {
         name,
@@ -179,6 +193,8 @@ export const getStrategies = async () => {
         sharePrice,
         protocols: protocols.map((slug) => protocolBySlug[slug]),
         aggregationLevel,
+        apy,
+        tvl,
       } as Strategy;
       return _strat;
     });

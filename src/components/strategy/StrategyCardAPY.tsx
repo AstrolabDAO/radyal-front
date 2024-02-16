@@ -1,7 +1,7 @@
 import { toPercent } from "~/utils/format";
 
 type StrategyCardAPYProps = {
-  apy: number;
+  apy: string | number;
   hideLabel?: boolean;
 };
 
@@ -11,7 +11,7 @@ const StrategyCardAPY = ({ apy, hideLabel }: StrategyCardAPYProps) => {
       {!hideLabel && <div className="-mb-1 text-sm font-medium">FOR</div>}
       <div className="flex flex-row font-bold">
         <div className="text-3xl mt-auto font-black group-hover:text-primary">
-          {toPercent(apy, 2, false, true)}
+          {apy}
         </div>
         <div className="flex flex-col text-center">
           <span className="text-1xl strategy-card-data-unit">%</span>
