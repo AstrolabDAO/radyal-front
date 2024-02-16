@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { useAccount } from "wagmi";
 
-import { getIconFromStrategy } from "~/utils";
+import { getStrategyIcon } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
 import { useWeb3Modal } from "@web3modal/wagmi/react";
@@ -62,7 +62,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
       });
   };
 
-  const strategyIconPath = getIconFromStrategy(strategy).replace(
+  const strategyIconPath = getStrategyIcon(strategy).replace(
     ".svg",
     "-mono.svg"
   );

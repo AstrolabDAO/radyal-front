@@ -42,7 +42,7 @@ const Header = () => {
       <div className="container">
         <div className="navbar">
           <Link to="/" className="navbar-start">
-            <Logo className="flex fill-white w-36" />
+            <Logo className="flex fill-white w-52" />
           </Link>
           <nav className="navbar-center text-secondary flex-row justify-center gap-10 hidden sm:flex ">
             <Link

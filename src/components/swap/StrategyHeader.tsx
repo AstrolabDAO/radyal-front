@@ -1,4 +1,4 @@
-import { getIconFromStrategy } from "~/utils";
+import { getStrategyIcon } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 import SelectStrategy from "./SelectStrategy";
 
@@ -10,7 +10,7 @@ const StrategyHeader = ({ strategy }: StrategyHeaderProps) => {
   const { name } = strategy;
   const [title, subtitle] = name.replace("Astrolab ", "").split(" ");
   const description = `Algorithmically provides liquidity across stable pools on ${title}.`;
-  const strategyIconPath = getIconFromStrategy(strategy).replace(
+  const strategyIconPath = getStrategyIcon(strategy).replace(
     ".svg",
     "-mono.svg"
   );

@@ -72,9 +72,11 @@
 }
 .scrolling-text-ltr > span {
   animation: scrolling-text-ltr 25s linear infinite;
+  /* animation-delay: -8s; */
 }
 .scrolling-text-rtl > span {
   animation: scrolling-text-rtl 25s linear infinite;
+  /* animation-delay: -8s; */
 }
 
 .scrolling-text-shadow > span {
@@ -83,7 +85,7 @@
 
 @keyframes scrolling-text-rtl {
   0% {
-    transform: translate(-10%, 0);
+    transform: translate(0%, 0);
   }
   100% {
     transform: translate(-100%, 0);
@@ -92,7 +94,7 @@
 
 @keyframes scrolling-text-ltr {
   0% {
-    transform: translate(-90%, 0);
+    transform: translate(-100%, 0);
   }
   100% {
     transform: translate(0, 0);

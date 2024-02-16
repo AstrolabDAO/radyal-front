@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useFromValue } from "~/hooks/swapper";
 
-import { getIconFromStrategy } from "~/utils";
+import { getStrategyIcon } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
 import ActionBlock from "../helpers/ActionBlock";
@@ -28,7 +28,7 @@ const WithdrawWith = ({ strategy }: WWithProps) => {
   };
 
   const icons = {
-    background: getIconFromStrategy(strategy),
+    background: getStrategyIcon(strategy),
     foreground: strategy?.network.icon,
   };
   const [isFocused, setIsFocused] = useState(false);

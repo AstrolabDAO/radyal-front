@@ -1,12 +1,12 @@
 ::-webkit-scrollbar {
   z-index: 15;
   transition: width 1s;
-  width: $unit2;
+  width: $unit1;
   height: $unit2;
 }
 
 ::-webkit-scrollbar-thumb {
-  width: $unit2;
+  width: $unit1;
   height: $unit2;
   border-radius: 0.25rem;
   background: $primary;
@@ -17,7 +17,7 @@
 
 ::-webkit-scrollbar-track {
   background: transparent;
-  width: $unit2;
+  width: $unit1;
   height: $unit2;
 }
 

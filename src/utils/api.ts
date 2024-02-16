@@ -146,6 +146,7 @@ export const getStrategies = async () => {
       return !!network && !!token && nativeAddress !== zeroAddress;
     })
     .map((strategy) => {
+      console.log('STRATEGY,',strategy)
       const {
         name,
         nativeNetwork,
@@ -155,6 +156,8 @@ export const getStrategies = async () => {
         decimals,
         sharePrice,
         slug,
+        color1,
+        color2,
         protocols,
         aggregationLevel,
       } = strategy as ApiResponseStrategy & {
@@ -186,7 +189,8 @@ export const getStrategies = async () => {
         network,
         asset: token,
         valuable,
-        //icon: `/images/tokens/${symbol?.toLowerCase()}.svg`,
+        color1,
+        color2,
         icon: `/images/tokens/asl.svg`,
         slug,
         weiPerUnit: 10 ** decimals,

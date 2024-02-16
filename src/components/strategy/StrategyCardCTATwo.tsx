@@ -13,7 +13,7 @@ import ActionModal from "../modals/ActionModal";
 
 import "./StrategyCard.css";
 
-import { getIconFromStrategy } from "~/utils";
+import { getStrategyIcon } from "~/utils";
 import { getRandomAPY } from "~/utils/mocking";
 import { openModal } from "~/services/modal";
 import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
@@ -49,7 +49,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
     return [strategy, title, subtitle];
   }, [strategyGroup]);
 
-  const strategyIconPath = getIconFromStrategy(strategy).replace(
+  const strategyIconPath = getStrategyIcon(strategy).replace(
     ".svg",
     "-mono.svg"
   );
@@ -70,7 +70,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   return (
-    <div className={clsx("md:-mt-24 absolute w-full bottom-0 right-0 pe-2")}>
+    <div className={clsx("md:-mt-24 absolute w-full bottom-0 right-0 pe-2 z-40")}>
       <div
         className="relative flex flex-col ms-auto pointers-event-none strategy-cta-size max-w-full"
         onClick={openModalStrategy}

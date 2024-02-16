@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 
-import { getIconFromStrategy } from "~/utils";
+import { getStrategyIcon } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
 import StrategyCardAPY from "./StrategyCardAPY";
@@ -16,6 +16,7 @@ import { getRandomAPY } from "~/utils/mocking";
 import { openModal } from "~/services/modal";
 import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
 import { Button } from "../styled";
+import { COLORS } from "~/styles/constants";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -46,7 +47,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
     return [strategy, title, subtitle];
   }, [strategyGroup]);
 
-  const strategyIconPath = getIconFromStrategy(strategy).replace(
+  const strategyIconPath = getStrategyIcon(strategy).replace(
     ".svg",
     "-mono.svg"
   );
@@ -138,7 +139,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
           <use
             className="transition-all duration-500 ease-in-out"
             xlinkHref="#border-path"
-            stroke={`var(--${isHovered ? "primary" : "secondary"})`}
+            stroke={isHovered ? COLORS.primary : COLORS.secondary}
             strokeWidth={isHovered ? "6px" : "2px"}
           />
           {strategy !== null && (
@@ -172,7 +173,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
                 size={{ height: 45, width: 45 }}
               />
             </div>
-            <div className="text-2xl md:text-4xl gilroy me-auto  px-5 mb-3">
+            <div className="text-2xl md:text-4xl gilroy me-auto px-5 mb-3">
               {subtitle}
             </div>
             <div className="flex flex-row justify-between px-5">

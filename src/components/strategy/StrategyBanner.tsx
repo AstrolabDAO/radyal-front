@@ -4,6 +4,7 @@ import { Strategy } from "~/utils/interfaces";
 import IconCard from "../IconCard";
 import clsx from "clsx";
 import styled from "styled-components";
+import { getStrategyColors, getStrategyIcon } from "~/utils";
 
 type StrategyBannerProps = {
   strategyOne: Strategy;
@@ -12,32 +13,42 @@ type StrategyBannerProps = {
 
 const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
   const size = { width: 55, height: 55 };
-  const [titleOne, titleTwo] = useMemo(() => {
+
+  const [title1, title2, icon1, icon2, color1, color2] = useMemo(() => {
     if (!strategyOne || !strategyTwo) return [null, null];
     const { name: nameOne } = strategyOne;
-    const [titleOne] = nameOne.replace("Astrolab ", "").split(" ");
+    const [title1] = nameOne.replace("Astrolab ", "").split(" ");
     const { name: nameTwo } = strategyTwo;
-    const [titleTwo] = nameTwo.replace("Astrolab ", "").split(" ");
-    return [titleOne.toUpperCase(), titleTwo.toUpperCase()];
+    const [title2] = nameTwo.replace("Astrolab ", "").split(" ");
+    const [color1, color2] = [getStrategyColors(strategyOne)[0], getStrategyColors(strategyTwo)[0]];
+    console.log("colors", color1, color2);
+    return [
+      title1.toUpperCase(),
+      title2.toUpperCase(),
+      getStrategyIcon(strategyOne),
+      getStrategyIcon(strategyTwo),
+      color1,
+      color2,
+    ];
   }, [strategyOne, strategyTwo]);
+
   return (
     <StrategyBannerMask
       className={clsx(
-        "flex flex-col text-7xl gilroy italic font-black h-full overflow-visible -mx-12 w-100vw"
+        "flex flex-col text-7xl gilroy italic font-black h-full overflow-visible -mx-12 w-100vw z-10"
       )}
     >
-      <div className="strategy-banner-wrapper  h-full flex flex-col justify-center -mx-24">
+      <div className="strategy-banner-wrapper h-full flex flex-col justify-center -mx-24">
         <div className="flex h-14">
           <div className="scrolling-text-rtl">
             <span>
               FARM
-              <span className="text-sky-600">
-                {" "}
-                ALL OF {titleOne}&nbsp;
-                {strategyOne?.network.icon && (
+              <span className="ml-5" style={{color: color1}}>
+                {` ALL OF ${title1} `}
+                {icon1 && (
                   <IconCard
                     icon={{
-                      url: strategyOne?.network.icon,
+                      url: icon1,
                       alt: strategyOne?.network.name,
                       size,
                     }}
@@ -51,20 +62,19 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
           <div className="scrolling-text-rtl scrolling-text-shadow">
             <span>
               FARM
-              <span className="text-sky-600">
-                {" "}
-                ALL OF {titleOne}&nbsp;
+              <span style={{color: color1}}>
+                {` ALL OF ${title1} `}
                 {strategyOne?.network.icon && (
                   <IconCard
                     icon={{
-                      url: strategyOne?.network.icon,
+                      url: icon1,
                       alt: strategyOne?.network.name,
                       size,
                     }}
                   />
                 )}
               </span>
-              &nbsp;STABLE DEFI - IN
+              &nbsp;STABLE POOLS - IN
               <span className="text-primary"> ONE VAULT </span>-&nbsp;
             </span>
           </div>
@@ -72,14 +82,13 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
         <div className="text-base-content flex h-14">
           <div className="scrolling-text-ltr">
             <span>
-              &nbsp;- PROVIDE LIQUIDITY TO THE BEST
-              <span className="text-white">
-                {" "}
-                {titleTwo} POOLS&nbsp;
-                {strategyTwo?.network.icon && (
+              {`- PROVIDE LIQUIDITY TO THE BEST `}
+              <span  style={{color: color1}}>
+                {` ${title2} POOLS `}
+                {icon2 && (
                   <IconCard
                     icon={{
-                      url: strategyTwo?.network.icon,
+                      url: icon2,
                       alt: strategyTwo?.network.name,
                       size,
                     }}
@@ -91,13 +100,12 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
           <div className="scrolling-text-ltr scrolling-text-shadow">
             <span>
               &nbsp;- PROVIDE LIQUIDITY TO THE BEST
-              <span className="text-white">
-                {" "}
-                {titleTwo} POOLS&nbsp;
-                {strategyTwo?.network.icon && (
+              <span className="ml-5" style={{color: color2}}>
+                {title2} POOLS&nbsp;
+                {icon2 && (
                   <IconCard
                     icon={{
-                      url: strategyTwo?.network.icon,
+                      url: icon2,
                       alt: strategyTwo?.network.name,
                       size,
                     }}

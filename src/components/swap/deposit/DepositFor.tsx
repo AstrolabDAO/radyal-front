@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { getIconFromStrategy } from "~/utils";
+import { getStrategyIcon } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
 import { useEstimatedRoute } from "~/hooks/swapper";
@@ -19,7 +19,7 @@ const DepositFor = ({
   }, [strategy]);
 
   const icons = {
-    background: getIconFromStrategy(strategy),
+    background: getStrategyIcon(strategy),
     foreground: strategy?.network?.icon,
   };
 

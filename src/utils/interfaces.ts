@@ -14,6 +14,7 @@ export interface Network {
   slug: string;
   icon?: string;
   color1: string;
+  color2: string;
 }
 
 export interface Protocol {
@@ -35,6 +36,7 @@ export interface Token {
   symbol?: string;
   slug: string;
   color1?: string;
+  color2?: string;
 }
 
 export interface Balance {

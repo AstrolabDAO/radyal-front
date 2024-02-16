@@ -6,6 +6,7 @@ import { zeroAddress } from "viem";
 import { getDigits, round, truncateTrailingZeroes } from "./maths";
 import { dateToDateString, dateToString, dateToTimeString } from "./date";
 import { Callable, Stringifiable } from "./typing";
+
 export function toRaw(s: string): string {
   return s
     .replace(/[^0-9A-Za-zÀ-ÖØ-öø-ÿ-_.,:;\s]+/g, "")

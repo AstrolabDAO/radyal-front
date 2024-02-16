@@ -13,7 +13,7 @@ export const tokensIsEqual = (
   );
 };
 
-export const getIconFromStrategy = (strategy: Strategy) => {
+export const getStrategyIcon = (strategy: Strategy) => {
   if (!strategy) return "";
   switch (strategy.aggregationLevel) {
     case 0:
@@ -22,6 +22,18 @@ export const getIconFromStrategy = (strategy: Strategy) => {
       return strategy?.network?.icon;
     default:
       return strategy?.asset?.icon;
+  }
+};
+
+export const getStrategyColors = (strategy: Strategy) => {
+  if (!strategy) return "";
+  switch (strategy.aggregationLevel) {
+    case 0:
+      return [strategy?.protocols[0]?.color1, strategy?.protocols[0]?.color2];
+    case 1:
+      return [strategy?.network?.color1, strategy?.network?.color2];
+    default:
+      return [strategy?.asset?.color1, strategy?.asset?.color2];
   }
 };
 

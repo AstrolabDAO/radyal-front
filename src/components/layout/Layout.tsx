@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <main className="min-h-screen overflow-x-hidden">
+      <main className="min-h-screen">
         <Header />
         <div id="page-content" className="h-full relative">
           {children}

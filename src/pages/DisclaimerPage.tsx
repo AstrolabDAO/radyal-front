@@ -8,6 +8,8 @@ import Acknowledgement from "~/assets/docs/acknowledgement.mdx";
 import { Button } from "~/components/styled";
 import Layout from "~/components/layout/Layout";
 import { SocialNetworks } from "~/components/SocialNetworks";
+import styled from "styled-components";
+import { COLORS } from "~/styles/constants";
 
 const DisclaimerPage = () => {
   const { accept } = useContext(DisclaimerContext);
@@ -39,9 +41,9 @@ const DisclaimerPage = () => {
           ALGORITHMIC YIELD PRIMITIVES
         </div>
         <div className="w-2/3 xl:w-8/12 mx-auto mt-6 mb-3">
-          <div className="border-solid border-1 rounded-xl p-4 h-64 overflow-scroll text-left text-xs md disclaimer">
+          <PrimaryLinksContainer className="border-solid border-1.5 rounded-xl p-4 h-64 overflow-scroll text-left text-xs md disclaimer bo-darkerGrey">
             <Acknowledgement />
-          </div>
+          </PrimaryLinksContainer>
         </div>
         <div className="flex flex-row mx-auto mb-3">
           <input
@@ -67,4 +69,10 @@ const DisclaimerPage = () => {
   );
 };
 
+
+const PrimaryLinksContainer = styled.div`
+  & a {
+    color: ${COLORS.primary}    
+  }
+`
 export default DisclaimerPage;
