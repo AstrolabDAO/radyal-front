@@ -37,7 +37,7 @@ const StrategyTableListItem = ({
       onClick={() => {
         selectGroup(strategyGroup);
         selectStrategy(strategy);
-        openModal({ modal: "swap", showClose: false });
+        openModal({ modal: "swap", showTitle: false });
       }}
     >
       <td className="pe-0 text-center">

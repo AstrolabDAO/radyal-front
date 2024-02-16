@@ -98,6 +98,10 @@ body {
   line-height: 2.5rem;
 }
 
+.base-border {
+  @apply border-1 border-solid border-dark;
+}
+
 .bordered-hover {
   @apply hover:bg-primary/5 hover:border-primary/25 border-1 border-solid border-transparent;
 }

@@ -57,7 +57,7 @@ const ActionStepsModal = () => {
           <div
             className={clsx(
               "relative flex flex-row justify-between border-solid border-2 rounded-2xl py-4 px-8",
-              "border-darkGrey"
+              "border-dark"
             )}
           >
             <TokenPresentation

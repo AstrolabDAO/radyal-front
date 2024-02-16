@@ -146,7 +146,7 @@ export const getStrategies = async () => {
       return !!network && !!token && nativeAddress !== zeroAddress;
     })
     .map((strategy) => {
-      console.log('STRATEGY,',strategy)
+      console.log("STRATEGY,", strategy);
       const {
         name,
         nativeNetwork,
@@ -156,6 +156,7 @@ export const getStrategies = async () => {
         decimals,
         sharePrice,
         slug,
+        asset,
         color1,
         color2,
         protocols,
@@ -181,6 +182,7 @@ export const getStrategies = async () => {
       const tvl = calculatedTVL ? calculatedTVL : getRandomTVL(strategy.slug);
 
       const token = getTokenBySlug(strategy.denomination);
+
       const _strat = {
         name,
         symbol,

@@ -16,7 +16,11 @@ const StrategyCardIcons = ({
   return (
     <div className="flex justify-end items-center">
       {!hideLabel && <span className="mr-2 font-medium">ON</span>}
-      <div className={"flex flex-row border border-solid  rounded-full px-0.5"}>
+      <div
+        className={
+          "flex flex-row border border-solid rounded-full px-0.5 base-border"
+        }
+      >
         {strategyGroup.slice(0, 2).map((strategy, index) => {
           return (
             <div

@@ -131,7 +131,7 @@ const OperationRouteDetail = ({
   return (
     <Loader
       loaderClasses="w-20 mx-auto invert"
-      className="mx-auto text-nowrap text-white mb-4 text-center"
+      className="mx-auto text-nowrap text-white mb-4 text-center text-xs"
       title={"SEARCHING ROUTE"}
       value={!(estimationProgress && !operation?.estimation)}
     >

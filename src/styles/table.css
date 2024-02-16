@@ -5,5 +5,5 @@ table {
 }
 
 table tr > th {
-  @apply text-base font-normal;
+  @apply font-normal;
 }

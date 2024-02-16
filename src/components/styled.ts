@@ -13,7 +13,8 @@ export const Button = styled.button<{
   ${(props) =>
     !props.outline ? tw`btn h-10 min-h-0 rounded-xl border-none` : null}
 
-  ${(props) => (props.big ? tw`h-14` : "")}
+  font-weight: 700;
+  ${(props) => (props.big ? tw`h-14 text-lg` : "")}
   ${(props) => {
     if (props.outline) return;
     if (props.primary === undefined) props.primary = true;
@@ -28,7 +29,7 @@ export const Button = styled.button<{
   }}
 ${(props) =>
     props.outline
-      ? tw`p-2.5 border-solid border-darkerGrey border-1 rounded-xl bg-base text-white`
+      ? tw`p-2.5 border-solid border-dark border-1 rounded-xl bg-base text-white`
       : ""}
 `;
 export const StyledDropdown = styled.div<{ visible: boolean }>`

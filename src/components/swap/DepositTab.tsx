@@ -67,7 +67,7 @@ const DepositTab = () => {
         <GasDetails operation={operationSimulation} />
         <ActionRouteDetail operation={new Operation(operationSimulation)} />
       </div>
-      <div className="flex">
+      <div className="flex mt-4">
         <Button
           big={true}
           disabled={!canSwap}
@@ -81,7 +81,7 @@ const DepositTab = () => {
           className={clsx("w-full border-0 uppercase")}
         >
           {needApprove
-            ? "Approve & Deposit"
+            ? "Approve AND Deposit"
             : interactionNeedToSwap
               ? "Swap AND Deposit"
               : "Deposit"}
