@@ -2,7 +2,7 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import { COLORS } from "~/styles/constants";
 
-export const Input = tw.input`input input-bordered hover:border-primary w-full focus:outline-none bg-base/25 backdrop-blur-3xl`;
+export const Input = tw.input`input input-bordered hover:border-primary w-full focus:outline-none bg-base/25 backdrop-blur-3xl placeholder:text-darkGrey`;
 
 export const Button = styled.button<{
   primary?: boolean;
@@ -13,8 +13,8 @@ export const Button = styled.button<{
   ${(props) =>
     !props.outline ? tw`btn h-10 min-h-0 rounded-xl border-none` : null}
 
-  font-weight: 700;
-  ${(props) => (props.big ? tw`h-14 text-lg` : "")}
+  font-weight: 600;
+  ${(props) => (props.big ? tw`h-12 text-lg` : "")}
   ${(props) => {
     if (props.outline) return;
     if (props.primary === undefined) props.primary = true;
@@ -29,7 +29,7 @@ export const Button = styled.button<{
   }}
 ${(props) =>
     props.outline
-      ? tw`p-2.5 border-solid border-dark border-1 rounded-xl bg-base text-white`
+      ? tw`p-2.5 border-solid border-darkerGrey border-2 rounded-xl bg-base text-white`
       : ""}
 `;
 export const StyledDropdown = styled.div<{ visible: boolean }>`
@@ -43,5 +43,5 @@ export const StyledDropdown = styled.div<{ visible: boolean }>`
 
 export const ModalWrapper = styled.div`
   max-height: 90vh;
-  ${tw`bg-base p-6 border-1 border-dark border-solid rounded-2xl`}
+  ${tw`bg-base p-6 rounded-2xl`}
 `;

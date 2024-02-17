@@ -2,11 +2,12 @@ import clsx from "clsx";
 
 import { Operation, OperationStatus } from "~/model/operation";
 
-import { Network, Icon } from "~/utils/interfaces";
+import { Network, Icon, Token } from "~/utils/interfaces";
 import { FaLongArrowAltRight } from "react-icons/fa";
 
 import IconCard from "~/components/IconCard";
 import { useEffect } from "react";
+import { capitalize } from "~/utils/format";
 
 type ActionRouteDetailLineProps = {
   status?: OperationStatus | "NEUTRAL";
@@ -15,6 +16,8 @@ type ActionRouteDetailLineProps = {
     via: string;
     fromNetwork: Network;
     toNetwork: Network;
+    fromToken: Token;
+    toToken: Token;
     protocolName: string;
     protocolIcon: Icon;
     type: string;
@@ -32,6 +35,8 @@ const ActionRouteDetailLine = ({
     protocolIcon,
     protocolName,
     fromNetwork,
+    fromToken,
+    toToken,
     toNetwork,
     type,
     swapRouteStepType,
@@ -49,7 +54,6 @@ const ActionRouteDetailLine = ({
     },
     classes: "ms-1.5 my-auto",
   };
-
   return (
     <li
       className={clsx(
@@ -64,35 +68,38 @@ const ActionRouteDetailLine = ({
         <div
           className={clsx(
             "font-bold flex flex-row",
-            status === "NEUTRAL" && "text-primary",
             status === OperationStatus.DONE && "text-success",
             status === OperationStatus.FAILED && "text-error"
           )}
         >
-          <div className="flex items-center">{swapRouteStepType}</div>
-          {(type === "cross" || type === "swap") && (
+          <div className="flex items-center text-primary">{capitalize(swapRouteStepType)}</div>
+          {(type == "cross" || type == "swap" || type == "bridge") && (
             <div className="flex items-center mx-1 font-normal">
               <div>
-                with <span className="capitalize"> {protocolName} </span>
+                with <span className="capitalize">{protocolName}</span>
               </div>
               {protocolIcon.url && <IconCard icon={protocolIcon} />}
-              {(type === "cross" || type === "swap") && viaIcon.url && (
-                <div className="flex justify-center">
-                  &nbsp;via {via}
+              {(type == "cross" || type == "swap" || type == "bridge") && viaIcon.url && (
+                <div className="flex justify-center ml-2">
+                  via {capitalize(via.toLowerCase())}
                   <IconCard icon={viaIcon} />
                 </div>
               )}
             </div>
           )}
         </div>
-        <span className="flex items-center text-xs">
+        <span className="flex items-center">
           {fromAmountWithNetworkAndSymbol}
-          <IconCard icon={{ url: fromNetwork.icon, size, classes }} />
+          <IconCard icon={{ url: fromToken?.icon ?? (fromToken as any).logoURI, size, classes }} />
+          &nbsp;on
+          <IconCard icon={{ url: fromNetwork?.icon ?? (fromToken as any).logoURI, size, classes }} />
           {type !== "Approve" && (
             <>
               <FaLongArrowAltRight className="mx-2" />
               {toAmountWithNetworkAndSymbol}
-              <IconCard icon={{ url: toNetwork.icon, size, classes }} />
+              <IconCard icon={{ url: toToken?.icon ?? (toToken as any).logoURI, size, classes }} />
+              &nbsp;on
+              <IconCard icon={{ url: toNetwork?.icon ?? (toToken as any).logoURI, size, classes }} />
             </>
           )}
         </span>

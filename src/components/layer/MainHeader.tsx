@@ -19,24 +19,15 @@ const Header = () => {
   const [scrolling, setScrolling] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolling(true);
-      } else {
-        setScrolling(false);
-      }
-    };
+    const handleScroll = () => setScrolling(window.scrollY > 20 ? true : false);
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <header
-      className={clsx("sticky top-0 z-20 w-full p-1", {
-        "border-b border-b-1 border-solid scrolled": scrolling,
+      className={clsx("sticky top-0 w-full p-1 z-50", {
+        "scrolled": scrolling,
       })}
     >
       <div className="container">
@@ -51,13 +42,13 @@ const Header = () => {
             >
               VAULTS
             </Link>
-            <div className="text-xl flex hover:text-white cursor-default">
+            <div className="text-xl flex hover:text-white cursor-pointer">
               BORROW
             </div>
-            <div className="text-xl flex cursor-default hover:text-white">
+            <div className="text-xl flex cursor-pointer hover:text-white">
               FOLIO
             </div>
-            <div className="text-xl flex cursor-default relative">
+            <div className="text-xl flex cursor-pointer relative">
               <HeaderAbout />
             </div>
           </nav>

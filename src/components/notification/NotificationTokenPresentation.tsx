@@ -38,7 +38,7 @@ const NotificationTokenPresentation = ({
       className={clsx("flex flex-col my-4 cursor-pointer  ")}
       onClick={() => {
         selectOperation(operation.id);
-        openModal({ modal: "steps" });
+        openModal({ modal: "steps",title: "TX TRACKER" });
       }}
     >
       <div className="text-xs">
@@ -49,9 +49,9 @@ const NotificationTokenPresentation = ({
       <div
         className={clsx(
           "relative flex flex-row justify-between border-solid border-2 rounded-2xl py-4 px-8",
-          "border-dark-600",
+          "border-darkGrey",
           !["success", "pending", "failed"].includes(status) &&
-            "border-dark-500",
+            "border-darkGrey",
           status === OperationStatus.DONE && "border-success/25",
           status === OperationStatus.WAITING && "border-warning/75",
           status === OperationStatus.FAILED && "border-error/25"

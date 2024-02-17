@@ -66,13 +66,13 @@ const ActionBlock = ({
 
   return (
     <div className="flex flex-col">
-      <div className="mb-1 text-darkGrey font-medium">{label}</div>
+      <div className="mb-1 font-medium">{label}</div>
       <div
         className={clsx(
           "flex flex-col md:flex-row p-2 pr-4 rounded-[1.15rem] border-1 border-solid",
           {
             "bg-dark-700": !disabled,
-            "border-dark-500": disabled,
+            "border-darkGrey": disabled,
             "border-primary/50": isFocused,
             "border-transparent": !isFocused && !disabled,
             "shimmer border-none": !tokenIsLoaded,

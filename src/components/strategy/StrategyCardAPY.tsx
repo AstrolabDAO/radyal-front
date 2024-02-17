@@ -8,15 +8,15 @@ type StrategyCardAPYProps = {
 
 const StrategyCardAPY = ({ apy, hideLabel }: StrategyCardAPYProps) => {
   return (
-    <div className="flex flex-col">
-      {!hideLabel && <div className="-mb-1 text-sm font-medium">FOR</div>}
+    <div className="flex flex-col text-white">
+      {!hideLabel && <div className="-mb-1 text-sm font-medium text-grey">FOR</div>}
       <div className="flex flex-row font-bold">
         <div
           className={clsx(
-            "text-3xl mt-auto font-black group-hover:text-primary"
+            "text-3xl mt-auto font-extrabold group-hover:text-primary italic"
           )}
         >
-          {apy}
+          {toPercent(Number(apy) / 100, 2, false, true)}
         </div>
         <div className="flex flex-col text-center h-full">
           <span className="strategy-card-data-unit">%</span>

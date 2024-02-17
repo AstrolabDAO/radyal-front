@@ -3,24 +3,53 @@ import { Operation } from "~/model/operation";
 import Gas from "~/assets/icons/gas.svg?react";
 import Slippage from "~/assets/icons/slippage.svg?react";
 import { useMemo } from "react";
-import { useFromValue } from "~/hooks/swapper";
+import { useFromToken, useFromValue, useToToken } from "~/hooks/swapper";
+import { usePrices } from "~/hooks/tokens";
+
 import clsx from "clsx";
+import { toDollarsAuto, toPercent } from "~/utils/format";
+import { Token } from "~/utils/interfaces";
+import { ICommonStep } from "@astrolabs/swapper";
 
 export const GasDetails = ({ operation }: { operation: Operation }) => {
   const estimation = useMemo(() => operation?.estimation?.request, [operation]);
   // TODO -> CONVERT TO DOLLARD
-  const [fromValue, slippage] = useMemo(() => {
+  const fromToken = useFromToken()
+  const toToken = useToToken()
+  const tokenPrices = usePrices();
+
+  const [fromValue, slippage, slippageUsd] = useMemo(() => {
     if (!estimation) return [null, null];
+
     const firstStep = estimation.steps[0];
-    const lastStepBeforeCall = estimation.steps[estimation.steps.length - 2];
-    const fromToken = firstStep.fromToken;
-    const toToken = lastStepBeforeCall.toToken;
+    const lastStepBeforeCall = estimation.steps[estimation.steps.length - 2] as ICommonStep;
     const fromValue = firstStep.fromAmount / 10 ** fromToken.decimals;
-    const toValue = lastStepBeforeCall.toAmount / 10 ** toToken.decimals;
+    const toValue = Number(lastStepBeforeCall.toAmount) / 10 ** lastStepBeforeCall.toToken.decimals;
 
-    const slippage = ((fromValue - toValue) / fromValue) * 100;
+    const getPrice = (t: any) => {
+      let p = 0;
+      if (t.coinGeckoId) {
+        p = tokenPrices[t.coinGeckoId]?.usd;
+      } else if (t.priceUSD) {
+        p = t.priceUSD;
+      } else if (t.sharePrice) {
+        if (t.asset)
+          p = (getPrice(t.asset) * t.sharePrice) / t.weiPerUnit;
+      }
+      return Number(p);
+    }
 
-    return [fromValue, slippage];
+    let fromPrice = getPrice(fromToken);
+    let toPrice = getPrice(lastStepBeforeCall.toToken);
+
+    const tokenReceive = estimation.estimation;
+
+    const fromValueUsd = fromValue * fromPrice;
+    const toValueUsd = toValue * toPrice
+    const slippageUsd = fromValueUsd - toValueUsd;
+    const slippage = (slippageUsd / fromValueUsd);
+
+    return [fromValue, slippage, slippageUsd];
   }, [operation, estimation]);
 
   if (!estimation) return;
@@ -28,10 +57,10 @@ export const GasDetails = ({ operation }: { operation: Operation }) => {
   return (
     <div className="flex">
       <div className="flex w-1/2 items-center">
-        <Slippage className="w-6 fill-white" />
+        <Slippage className="w-6 fill-base-content" />
         <span className="ml-2">Slippage </span>
         <span className={clsx("text-darkGrey mx-2")}>
-          ~{Math.round(slippage * 100) / 100} %
+          ~{toPercent(slippage)}
         </span>
         <span
           className={clsx("text-darkGrey", {
@@ -39,15 +68,14 @@ export const GasDetails = ({ operation }: { operation: Operation }) => {
             "text-negative": slippage > 0,
           })}
         >
-          ${(Math.round(fromValue * (slippage / 100) * 100) / 100) * -1}
+          {toDollarsAuto(slippageUsd)}
         </span>
       </div>
       <div className="flex w-1/2 justify-end items-center">
-        <Gas className="w-6 fill-white" />
+        <Gas className="w-6 fill-base-content" />
         <span className="ml-2">Gas </span>
-
         <span className="mx-2 text-darkGrey">
-          ~ {Math.round(estimation.gasPrice / 10 ** 9)} Gwei
+          {Math.round(estimation.gasPrice / 10 ** 9)} Gwei
         </span>
         <span className="text-negative">${estimation.totalGasUsd}</span>
       </div>

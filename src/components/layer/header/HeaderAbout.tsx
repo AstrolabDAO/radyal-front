@@ -35,6 +35,7 @@ const HeaderAbout: React.FC = () => {
         </div>
       </div>
       <StyledDropdown
+      className="border-darkerGrey"
         visible={isOpen}
         ref={dropdownRef}
         tabIndex={-1}

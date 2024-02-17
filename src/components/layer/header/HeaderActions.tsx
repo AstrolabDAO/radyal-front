@@ -31,14 +31,14 @@ const Dropdown: React.FC = () => {
         })
       }
       className={clsx(
-        "me-3 border-darkgrey relative",
+        "me-3 border-darkGrey relative",
         pendingOperations.length > 0 && "active"
       )}
     >
       {pendingOperations.length > 0 && (
         <div className="notification-badge">{pendingOperations.length}</div>
       )}
-      <div className="w-4 h-4 flex">
+      <div className="w-5 h-5 flex">
         <Bell
           className={clsx("fill-primary bell-icon", {
             "fill-primary": pendingOperations.length > 0,

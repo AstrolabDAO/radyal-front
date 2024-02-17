@@ -68,7 +68,7 @@ const NetworkSelect = ({
       "&:focus": { outline: "none" },
       backgroundColor: "transparent",
     }),
-  };
+  }
 
   return (
     <ReactSelect

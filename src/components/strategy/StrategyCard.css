@@ -1,4 +1,4 @@
-.background-icon-blender {
+`.background-icon-blender {
   filter: grayscale(1);
   mix-blend-mode: overlay;
 }
@@ -10,11 +10,11 @@
 }
 
 .strategy-card {
-  @apply bg-dark h-48 cursor-pointer border-1 border-dark border-solid hover:shadow-sm hover:border-primary/50 transition-all duration-500;
+  @apply bg-darkGrey/20 h-48 cursor-pointer border-darkGrey hover:shadow-sm hover:border-primary/50 transition-all duration-500 backdrop-blur-xl;
 }
 
 div.strategy-cta-size {
-  max-width: 45rem;
+  max-width: 39rem;
 }
 @media screen and (max-width: 1024px) {
   div.strategy-cta-size {

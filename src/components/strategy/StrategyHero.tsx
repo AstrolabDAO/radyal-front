@@ -15,7 +15,7 @@ const StrategyHero = () => {
   }, [grouppedStrategies]);
 
   return (
-    <div className="relative flex flex-col container px-2 h-[35rem]">
+    <div className="relative flex flex-col container px-2 my-3 h-[30rem]">
       <StrategyCardCTAOne strategyGroup={groupOne} />
       <StrategyBanner strategyOne={strategyOne} strategyTwo={strategyTwo} />
       <StrategyCardCTATwo strategyGroup={groupTwo} />

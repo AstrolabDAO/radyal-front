@@ -23,55 +23,36 @@ const ActionStepsModal = () => {
 
   const animationStep = useMemo(() => {
     if (!currentStep) return null;
-    return currentStep.type as "bridge" | "deposit" | "swap" | "withdraw";
+    return currentStep.type;
   }, [currentStep]);
 
   return (
-    <div className="modal-wrapper">
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-row gap-0 items-center justify-between">
-          <div className="flex my-auto h-5">
-            <ChevronLeft
-              onClick={closeModal}
-              className="fill-[#616161] hover:fill-primary cursor-pointer"
-            />
-          </div>
-          <div className="text-3xl text-white uppercase font-bold gilroy my-auto text-center">
-            Tx tracking
-          </div>
-          <div className="flex my-auto h-5">
-            <Close
-              onClick={closeModal}
-              className="fill-[#616161] hover:fill-primary cursor-pointer"
-            />
-          </div>
-        </div>
-        <ActionStepsAnimation
-          mode={animationStep}
-          className="mx-auto overflow-hidden invert w-52 -mt-6 mb-2"
-        />
+    <div className="flex flex-col gap-3">
+      <ActionStepsAnimation
+        mode={animationStep}
+        className="mx-auto overflow-hidden invert w-52 -mt-6 mb-2"
+      />
+      <div
+        key={`notification-${operation.id}`}
+        className={clsx("flex flex-col")}
+      >
         <div
-          key={`notification-${operation.id}`}
-          className={clsx("flex flex-col")}
+          className={clsx(
+            "relative flex flex-row justify-between border-solid border-2 rounded-2xl py-4 px-8",
+            "border-darkGrey"
+          )}
         >
-          <div
-            className={clsx(
-              "relative flex flex-row justify-between border-solid border-2 rounded-2xl py-4 px-8",
-              "border-dark"
-            )}
-          >
-            <TokenPresentation
-              token={operation.fromToken}
-              isHoverable={false}
-            />
-            <div className="centerXY">
-              <ArrowRight className="fill-base-content w-10" />
-            </div>
-            <TokenPresentation token={operation.toToken} isHoverable={false} />
+          <TokenPresentation
+            token={operation.fromToken}
+            isHoverable={false}
+          />
+          <div className="centerXY">
+            <ArrowRight className="fill-base-content w-10" />
           </div>
+          <TokenPresentation token={operation.toToken} isHoverable={false} />
         </div>
-        <ActionRouteDetail operation={operation} showStatus={true} />
       </div>
+      <ActionRouteDetail operation={operation} showStatus={true} />
     </div>
   );
 };

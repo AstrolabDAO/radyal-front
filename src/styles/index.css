@@ -55,12 +55,8 @@ header {
   border-color: transparent;
   &.scrolled {
     @apply bg-blur;
-    border-bottom: 1px solid #494949;
+    border-bottom: 2px solid #494949;
   }
-}
-
-.border-darkgrey {
-  border: 1px solid #494949;
 }
 
 .shadow-none {
@@ -98,13 +94,14 @@ body {
   line-height: 2.5rem;
 }
 
-.base-border {
-  @apply border-1 border-solid border-dark;
+.border-darkGrey {
+  @apply border-2 border-solid border-darkerGrey;
 }
 
 .bordered-hover {
-  @apply hover:bg-primary/5 hover:border-primary/25 border-1 border-solid border-transparent;
+  @apply hover:bg-primary/5 hover:border-primary/25 border-2 border-solid border-transparent;
 }
+
 .title {
   font-weight: 600;
 }

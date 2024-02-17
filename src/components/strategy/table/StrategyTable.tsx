@@ -9,7 +9,7 @@ const StrategyTable: React.FC<StrategyTableProps> = ({
   strategies,
 }: StrategyTableProps) => {
   return (
-    <table className="table border-dark rounded-xl">
+    <table className="table border-darkGrey rounded-xl">
       <thead className="text-secondary">
         <tr>
           <th className="pe-0"></th>

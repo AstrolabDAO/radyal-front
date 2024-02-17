@@ -122,11 +122,10 @@ export const useEstimateRoute = () => {
       }
 
       if (!result) {
-        toast.error("route not found from Swapper 🤯");
+        const error = "No viable route found by Swapper 🤯";
+        toast.error(error);
         setEstimationOnprogress(false);
-        return {
-          error: "route not found from Swapper 🤯",
-        };
+        return { error };
       }
 
       const steps: OperationStep[] = result[0].steps.map(

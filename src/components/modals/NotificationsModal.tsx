@@ -49,7 +49,7 @@ export const NotificationsModal = () => {
           </div>
         )}
         {operations.length > 0 && (
-          <table className="table border-dark rounded-xl">
+          <table className="table border-darkGrey rounded-xl">
             <thead className="text-secondary">
               <tr>
                 {["date", "from", "to", "status", ""].map((header, index) => {
@@ -75,7 +75,7 @@ export const NotificationsModal = () => {
                     className="cursor-pointer bordered-hover"
                     onClick={() => {
                       selectOperation(operation.id);
-                      openModal({ modal: "steps" });
+                      openModal({ modal: "steps",title: "TX TRACKER" });
                     }}
                   >
                     <td>

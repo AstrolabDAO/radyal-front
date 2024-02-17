@@ -42,14 +42,14 @@ export const getTokens = async () => {
           token.network = network;
           return !!token.network;
         })
-        .map(({ nativeAddress, symbol, network, scale, coinGeckoId, slug }) => {
+        .map(({ nativeAddress, symbol, network, scale, coinGeckoId, slug,logoURI }) => {
           const cleanSymbol = symbol.replace(TOKEN_BASENAME_REGEX, "$1");
           const token = {
             address: nativeAddress,
             symbol,
             decimals: scale,
             weiPerUnit: 10 ** scale,
-            icon: `/images/tokens/${encodeURI(cleanSymbol.toLowerCase())}.svg`,
+            icon: logoURI ?? `/images/tokens/${encodeURI(cleanSymbol.toLowerCase())}.svg`,
             network,
             slug,
             coinGeckoId,

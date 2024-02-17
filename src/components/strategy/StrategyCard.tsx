@@ -75,7 +75,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
 
   return (
     <div
-      className={clsx("card group strategy-card text-white", {
+      className={clsx("card group strategy-card", {
         active: selectedStrategy?.slug === strategy.slug,
       })}
       onClick={openModalStrategy}
@@ -93,12 +93,12 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
         <div className="flex flex-row w-full">
           <div className="flex flex-col m-0 p-0 gilroy w-full">
             <div className="flex flex-row">
-              <div className="font-extrabold italic uppercase text-4xl -mb-1 group-hover:text-primary me-auto">
+              <div className="font-extrabold italic uppercase text-4xl -mb-1 group-hover:text-primary me-auto text-white">
                 {title}
               </div>
               <StrategyCardIcons strategyGroup={strategyGroup} />
             </div>
-            <div className="flex font-light my-auto text-2xl text-secondary">
+            <div className="flex font-light my-auto text-2xl">
               {subtitle.join(" ")}
             </div>
           </div>

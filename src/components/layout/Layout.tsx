@@ -23,7 +23,7 @@ const Layout = ({ children }) => {
     <>
       <main className="min-h-screen">
         <Header />
-        <div id="page-content" className="h-full relative overflow-x-hidden">
+        <div id="page-content" className="h-full relative overflow-x-hidden z-20">
           {children}
           <Toaster
             containerClassName="container"

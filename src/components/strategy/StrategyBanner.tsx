@@ -20,7 +20,7 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
     const [title1] = nameOne.replace("Astrolab ", "").split(" ");
     const { name: nameTwo } = strategyTwo;
     const [title2] = nameTwo.replace("Astrolab ", "").split(" ");
-    const [color1, color2] = [getStrategyColors(strategyOne)[0], getStrategyColors(strategyTwo)[0]];
+    const [color1, color2] = [getStrategyColors(strategyOne)[0] ?? "#fff", getStrategyColors(strategyTwo)[0] ?? "#c048e8"];
     console.log("colors", color1, color2);
     return [
       title1.toUpperCase(),
@@ -43,8 +43,10 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
           <div className="scrolling-text-rtl">
             <span>
               FARM
-              <span className="ml-5" style={{color: color1}}>
-                {` ALL OF ${title1} `}
+              <span className="mx-5" style={{color: color1}}>
+                ALL OF {title1}
+              </span>
+              <span className="mr-5">
                 {icon1 && (
                   <IconCard
                     icon={{
@@ -55,16 +57,18 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
                   />
                 )}
               </span>
-              &nbsp;STABLE DEFI - IN
-              <span className="text-primary"> ONE VAULT </span>-&nbsp;
+              STABLE POOLS - IN
+              <span className="text-primary"> ONE VAULT </span>-
             </span>
           </div>
           <div className="scrolling-text-rtl scrolling-text-shadow">
-            <span>
+          <span>
               FARM
-              <span style={{color: color1}}>
-                {` ALL OF ${title1} `}
-                {strategyOne?.network.icon && (
+              <span className="mx-5" style={{color: color1}}>
+                ALL OF {title1}
+              </span>
+              <span className="mr-5">
+                {icon1 && (
                   <IconCard
                     icon={{
                       url: icon1,
@@ -74,17 +78,17 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
                   />
                 )}
               </span>
-              &nbsp;STABLE POOLS - IN
-              <span className="text-primary"> ONE VAULT </span>-&nbsp;
+              STABLE POOLS - IN
+              <span className="text-primary"> ONE VAULT </span>-
             </span>
           </div>
         </div>
         <div className="text-base-content flex h-14">
-          <div className="scrolling-text-ltr">
+        <div className="scrolling-text-ltr">
             <span>
-              {`- PROVIDE LIQUIDITY TO THE BEST `}
-              <span  style={{color: color1}}>
-                {` ${title2} POOLS `}
+              - PROVIDE LIQUIDITY TO THE
+              <span className="mx-5" style={{color: color2}}>BEST {title2} POOLS</span>
+              <span className="mr-5">
                 {icon2 && (
                   <IconCard
                     icon={{
@@ -99,9 +103,9 @@ const StrategyBanner = ({ strategyOne, strategyTwo }: StrategyBannerProps) => {
           </div>
           <div className="scrolling-text-ltr scrolling-text-shadow">
             <span>
-              &nbsp;- PROVIDE LIQUIDITY TO THE BEST
-              <span className="ml-5" style={{color: color2}}>
-                {title2} POOLS&nbsp;
+              - PROVIDE LIQUIDITY TO THE
+              <span className="mx-5" style={{color: color2}}>BEST {title2} POOLS</span>
+              <span className="mr-5">
                 {icon2 && (
                   <IconCard
                     icon={{

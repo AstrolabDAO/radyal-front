@@ -1,5 +1,5 @@
 .md {
-  @apply p-6 border-2 border-solid border-dark-800 rounded-xl;
+  @apply p-6 border-2 border-solid  text-white rounded-xl;
 }
 
 .md p {

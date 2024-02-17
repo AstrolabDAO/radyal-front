@@ -1,29 +1,33 @@
 import { IToken as LiFiToken } from "@astrolabs/swapper/dist/src/LiFi";
 import { IToken as SquidToken } from "@astrolabs/swapper/dist/src/Squid";
 import clsx from "clsx";
-import { useCallback, useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 
 import {
   useCanSwap,
   useEstimatedRoute,
   useEstimationOnProgress,
 } from "~/hooks/swapper";
-import { Icon } from "~/utils/interfaces";
+import { Icon, Token } from "~/utils/interfaces";
 
-import { stripName } from "~/utils/format";
+import { clearFrom, stripName, toFloatAuto } from "~/utils/format";
 import { round, weiToAmount } from "~/utils/maths";
 
 import {
   SwapRouteStepTypeTraduction,
   SwaptoolTraduction,
   networkByChainId,
+  protocolBySlug,
   protocolByStrippedSlug,
+  protocolByThirdPartyId,
 } from "~/utils/mappings";
 
 import { OperationStatus } from "@astrolabs/swapper";
 import Loader from "~/components/Loader";
 import { Operation } from "~/model/operation";
 import ActionRouteDetailLine from "./ActionRouteDetailLine";
+import { Web3Context } from "~/context/web3-context";
+import { findClosestMatch } from "~/utils";
 
 type ActionRouteDetailProps = {
   operation: Operation;
@@ -38,32 +42,53 @@ const OperationRouteDetail = ({
 
   const estimationError = operation?.estimation?.error;
   const steps = useMemo(() => operation.steps, [operation]);
+  const { protocols } = useContext(Web3Context);
 
   const amountWithNetworkAndSymbol = useCallback(
-    (chain: number, amount: string, token: LiFiToken | SquidToken) => {
+    (chain: number, amount: string, token: Token) => {
       const network = networkByChainId[chain];
-      const amountFormatted = round(weiToAmount(amount, token?.decimals), 4);
+      const amountFormatted = toFloatAuto(weiToAmount(amount, token?.decimals), false, 2);
       const symbol = token?.symbol ?? "???";
       let networkName = network?.name ?? "???";
-      if (networkName === "Gnosis Chain-Mainnet") networkName = "Gnosis Chain";
+      networkName = clearFrom(networkName, "-Mainnet|-Testnet");
       return `${amountFormatted} ${symbol}`;
     },
     []
   );
 
-  const getProtocolIconAndName = useCallback((protocol: string) => {
-    const protocolName = stripName(
-      SwaptoolTraduction[protocol] ?? protocol ?? "custom"
-    );
-    const protocolData = protocolByStrippedSlug[protocolName];
-    return {
-      protocolName,
+  const getProtocolIconAndName = useCallback((id: string) => {
+    const protocol = {
+      // protocolName,
       protocolIcon: {
-        url: protocolData?.icon,
+        // url: protocolData?.icon,
         classes: "ms-1.5",
         size: { width: 20, height: 20 },
-      },
-    } as { protocolName: string; protocolIcon: Icon };
+      } as Icon,
+    };
+
+    let p = protocolByThirdPartyId[id];
+
+    if (!p) {
+      const slug = findClosestMatch(
+        id,
+        protocols.map((p) => p.slug)
+      );
+      if (!slug) return { protocolName: id, protocolIcon: null };
+      p = protocolBySlug[slug];
+    }
+    const protocolName = stripName(
+      SwaptoolTraduction[id] ?? p.name ?? id ?? "custom"
+    );
+    p ??= protocolByStrippedSlug[protocolName];
+
+    return {
+      protocolName: p?.name ?? protocolName,
+      protocolIcon: {
+        url: p?.icon,
+        classes: "ms-1.5",
+        size: { width: 20, height: 20 },
+      } as Icon,
+    };
   }, []);
 
   const displayedSteps = useMemo(() => {
@@ -95,7 +120,7 @@ const OperationRouteDetail = ({
           toToken
         );
 
-        const { protocolName, protocolIcon } = getProtocolIconAndName(tool);
+        const { protocolName, protocolIcon } = getProtocolIconAndName(tool ?? type);
 
         const displayedStep = {
           id,
@@ -105,6 +130,8 @@ const OperationRouteDetail = ({
           protocolIcon,
           type,
           via,
+          fromToken,
+          toToken,
           swapRouteStepType: SwapRouteStepTypeTraduction[type] ?? type,
           fromAmountWithNetworkAndSymbol,
           toAmountWithNetworkAndSymbol,
@@ -161,7 +188,7 @@ const OperationRouteDetail = ({
         )}
 
         {estimationError && (
-          <div className="border-1 border-solid border-warning w-full py-2 rounded-xl bg-warning/10 mb-3">
+          <div className="border-2 border-solid border-warning w-full py-2 rounded-xl bg-warning/10 mb-3">
             <div className="text-center text-primary font-medium leading-5">
               No route found ! <br />
               Please select another deposit token

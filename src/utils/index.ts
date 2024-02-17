@@ -70,3 +70,82 @@ export const getStrategyHook = (strategy: Strategy) => {
     }
   }
 };
+
+export function jaroWinklerDistance(s1, s2) {
+  const jaro = (str1, str2) => {
+    const s1Length = str1.length
+    const s2Length = str2.length
+    if (s1Length === 0 && s2Length === 0) return 1.0
+
+    const matchDistance = Math.floor(Math.max(s1Length, s2Length) / 2) - 1
+    const s1Matches = new Array(s1Length).fill(false)
+    const s2Matches = new Array(s2Length).fill(false)
+
+    let matches = 0
+    let transpositions = 0
+
+    for (let i = 0; i < s1Length; i++) {
+      const start = Math.max(0, i - matchDistance)
+      const end = Math.min(i + matchDistance + 1, s2Length)
+
+      for (let j = start; j < end; j++) {
+        if (s2Matches[j]) continue
+        if (str1[i] !== str2[j]) continue
+        s1Matches[i] = true
+        s2Matches[j] = true
+        matches++
+        break
+      }
+    }
+
+    if (matches === 0) return 0
+
+    let k = 0
+    for (let i = 0; i < s1Length; i++) {
+      if (!s1Matches[i]) continue
+      while (!s2Matches[k]) k++
+      if (str1[i] !== str2[k]) transpositions++
+      k++
+    }
+
+    return (
+      (matches / s1Length +
+        matches / s2Length +
+        (matches - transpositions / 2) / matches) /
+      3
+    )
+  }
+
+  const jaroDistance = jaro(s1, s2)
+  const prefixLength = Math.min(4, s1.length, s2.length)
+  let prefixScore = 0
+
+  for (let i = 0; i < prefixLength; i++) {
+    if (s1[i] === s2[i]) {
+      prefixScore++
+    } else {
+      break
+    }
+  }
+
+  return jaroDistance + 0.1 * prefixScore * (1 - jaroDistance)
+}
+
+export function findClosestMatch(target: string, candidates: string[], min: number = 0.7): string | null {
+  let closestMatch: string | null = null;
+  let highestScore = 0.0;
+
+  candidates.forEach(candidate => {
+      const score = jaroWinklerDistance(target, candidate);
+      if (score > highestScore) {
+          highestScore = score;
+          closestMatch = candidate;
+      }
+  });
+
+  if (highestScore < min) {
+      return null; // or return "" if you prefer an empty string to indicate no match
+  }
+
+  return closestMatch;
+}

@@ -18,7 +18,7 @@ const StrategyCardIcons = ({
       {!hideLabel && <span className="mr-2 font-medium">ON</span>}
       <div
         className={
-          "flex flex-row border border-solid rounded-full px-0.5 base-border"
+          "flex flex-row border border-solid border-2 rounded-full px-0.5 border-darkerGrey"
         }
       >
         {strategyGroup.slice(0, 2).map((strategy, index) => {
@@ -40,7 +40,7 @@ const StrategyCardIcons = ({
         {strategyGroup.length > 2 && (
           <div
             style={{ width, height }}
-            className="my-auto p-0.5 rounded-full mx-0.5 text-xs border-1 border-solid border-secondary-300"
+            className="my-auto p-0.5 rounded-full mx-0.5 text-xs font-bold"
           >
             +{strategyGroup.length - 2}
           </div>

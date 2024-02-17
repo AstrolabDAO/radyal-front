@@ -18,7 +18,7 @@ const StrategyHeader = ({ strategy }: StrategyHeaderProps) => {
     <div className="md:basis-3/5">
       <div className="mb-1 font-medium">INTO</div>
       <div className="flex">
-        <div className="flex flex-col m-0 p-3 border border-solid border-dark-500 rounded-3xl relative overflow-hidden flex-1">
+        <div className="flex flex-col m-0 p-3 border border-solid border-darkGrey rounded-3xl relative overflow-hidden flex-1">
           <div className="absolute inset-0 flex justify-end items-center z-0 overflow-hidden contrast-[0.7] -mr-16">
             <img
               src={strategyIconPath}

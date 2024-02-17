@@ -55,7 +55,7 @@ export const useExectuteSwapperRoute = () => {
     if (!fromToken || !toToken || !canSwap) return;
     setEstimationIsLocked(true);
     lockEstimation();
-    openModal({ modal: "steps" });
+    openModal({ modal: "steps",title: "TX TRACKER" });
 
     const operation = new Operation({
       id: window.crypto.randomUUID(),

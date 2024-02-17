@@ -22,14 +22,14 @@ const animations = {
 };
 
 enum Actiontitle {
-  BRIDGING = "Bridging",
-  DEPOSIT = "Deposit",
-  WITHDRAW = "Withdraw",
-  SWAP = "Swap",
+  BRIDGE = "Bridging",
+  DEPOSIT = "Depositing",
+  WITHDRAW = "Withdrawing",
+  SWAP = "Swapping",
 }
 const animationTitle = {
-  bridge: Actiontitle.BRIDGING,
-  cross: Actiontitle.BRIDGING,
+  bridge: Actiontitle.BRIDGE,
+  cross: Actiontitle.BRIDGE,
   deposit: Actiontitle.DEPOSIT,
   custom: Actiontitle.DEPOSIT,
   swap: Actiontitle.SWAP,

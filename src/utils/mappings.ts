@@ -15,6 +15,8 @@ export const chainImages: { [id: number]: string } = {};
 export const strategiesByChainId: { [networkId: number]: Strategy[] } = {};
 export const strategyBalanceBySlug: { [slug: string]: Balance } = {};
 
+export const protocolByThirdPartyId: { [id: string]: Protocol } = {};
+
 export const wagmiChainById: { [id: number]: Chain } = {};
 Object.values(wagmiChains).map((chain) => (wagmiChainById[chain.id] = chain));
 

@@ -39,7 +39,7 @@ const SelectTokenLine = ({
   return (
     <div
       className={clsx(
-        "flex flex-col cursor-pointer p-2 rounded-xl box-content border-solid border-1 border-transparent",
+        "flex flex-col cursor-pointer p-2 rounded-xl box-content border-solid border-2 border-transparent",
         haveBorder && "border-b",
         "bordered-hover"
       )}
