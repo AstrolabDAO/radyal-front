@@ -178,7 +178,7 @@ export const useApproveAndDeposit = () => {
         estimation,
       });
 
-      openModal({ modal: "steps" });
+      openModal({ modal: "steps",title: "TX TRACKER" });
 
       try {
         if (estimation.steps[0].type === "Approve") {

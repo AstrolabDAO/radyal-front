@@ -75,6 +75,8 @@ const OperationRouteDetail = ({
       );
       if (!slug) return { protocolName: id, protocolIcon: null };
       p = protocolBySlug[slug];
+      // add to search cache
+      protocolByThirdPartyId[id] = p;
     }
     const protocolName = stripName(
       SwaptoolTraduction[id] ?? p.name ?? id ?? "custom"
