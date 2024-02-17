@@ -1,10 +1,5 @@
-import { Operation } from "~/model/operation";
+import { EmmitStepAction, Operation, UpdateAction } from "~/model/operation";
 import { getStore, getStoreState } from "~/store";
-import {
-  EmmitStepAction,
-  OperationStep,
-  UpdateAction,
-} from "~/store/interfaces/operations";
 import {
   OperationsState,
   add,
@@ -19,7 +14,7 @@ import {
   selectedOperationSelector,
 } from "~/store/selectors/operations";
 
-import { AggregatorId, OperationStatus, aggregatorById, getStatus } from "@astrolabs/swapper";
+import { AggregatorId, OperationStatus, OperationStep, aggregatorById, getStatus } from "@astrolabs/swapper";
 import {
   emmitStep as storeEmmitStep,
   selectOperation as storeSelectOperation,
@@ -143,7 +138,7 @@ export const checkInterval = () => {
                   sendingTx: result?.sendingTx,
                   substatus: result?.substatus,
                   substatusMessage: result?.substatusMessage,
-                  steps: op.steps.map((step: OperationStep) => {
+                  steps: op.steps.map((step: any) => {
                     const isFail =
                       result?.substatus === "PARTIAL" && step.type === "custom";
 
@@ -168,7 +163,7 @@ export const checkInterval = () => {
                   status: OperationStatus.FAILED,
                   steps: op.steps
                     .filter(({ status }) => status !== OperationStatus.DONE)
-                    .map((step: OperationStep) => ({
+                    .map((step: any) => ({
                       ...step,
                       status: OperationStatus.FAILED,
                     })),
@@ -200,7 +195,7 @@ export const checkInterval = () => {
                   status: OperationStatus.FAILED,
                   steps: op.steps
                     .filter(({ status }) => status !== OperationStatus.DONE)
-                    .map((step: OperationStep) => ({
+                    .map((step: any) => ({
                       ...step,
                       status: OperationStatus.FAILED,
                     })),

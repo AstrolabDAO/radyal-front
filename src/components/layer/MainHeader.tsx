@@ -38,14 +38,14 @@ const Header = () => {
           <nav className="navbar-center text-secondary flex-row justify-center gap-10 hidden sm:flex ">
             <Link
               to="/"
-              className="text-xl flex font-bold hover:text-white text-neon cursor-pointer"
+              className="text-xl flex font-bold hover:text-primary text-neon cursor-pointer font-bold"
             >
               VAULTS
             </Link>
-            <div className="text-xl flex hover:text-white cursor-pointer">
+            <div className="text-xl flex hover:text-primary cursor-pointer font-medium">
               BORROW
             </div>
-            <div className="text-xl flex cursor-pointer hover:text-white">
+            <div className="text-xl flex cursor-pointer hover:text-primary font-medium">
               FOLIO
             </div>
             <div className="text-xl flex cursor-pointer relative">

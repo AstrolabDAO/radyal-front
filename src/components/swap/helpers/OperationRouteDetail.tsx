@@ -24,7 +24,7 @@ import {
 
 import { OperationStatus } from "@astrolabs/swapper";
 import Loader from "~/components/Loader";
-import { Operation } from "~/model/operation";
+import { Operation, SwapperToken } from "~/model/operation";
 import ActionRouteDetailLine from "./ActionRouteDetailLine";
 import { Web3Context } from "~/context/web3-context";
 import { findClosestMatch } from "~/utils";
@@ -45,7 +45,7 @@ const OperationRouteDetail = ({
   const { protocols } = useContext(Web3Context);
 
   const amountWithNetworkAndSymbol = useCallback(
-    (chain: number, amount: string, token: Token) => {
+    (chain: number, amount: string, token: SwapperToken) => {
       const network = networkByChainId[chain];
       const amountFormatted = toFloatAuto(weiToAmount(amount, token?.decimals), false, 2);
       const symbol = token?.symbol ?? "???";
@@ -182,7 +182,7 @@ const OperationRouteDetail = ({
               <ActionRouteDetailLine
                 key={`swap-route-detail-${index}`}
                 operation={operation}
-                step={step}
+                step={step as any}
                 status={step.status}
               />
             ))}

@@ -1,19 +1,17 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { OperationInterface, OperationStatus } from "~/model/operation";
+import { EmmitStepAction, IOperation, OperationStatus, UpdateAction } from "~/model/operation";
 import LocalStorageService from "~/services/localStorage";
 import { cacheHash } from "~/utils/format";
-
-import { EmmitStepAction, UpdateAction } from "./interfaces/operations";
 
 export const CACHE_KEY = cacheHash("operations");
 
 export interface OperationsState {
-  list: OperationInterface[];
+  list: IOperation[];
   intervalId: NodeJS.Timeout;
   selectedOperationIndex: number;
-  byId: { [id: string]: OperationInterface };
-  byHash: { [hash: string]: OperationInterface };
-  byStatus: { [status: string]: OperationInterface[] };
+  byId: { [id: string]: IOperation };
+  byHash: { [hash: string]: IOperation };
+  byStatus: { [status: string]: IOperation[] };
   indexById: { [id: string]: number };
 }
 
@@ -50,7 +48,7 @@ const operationSlice = createSlice({
   name: "operations",
   initialState,
   reducers: {
-    add(state, action: PayloadAction<OperationInterface>) {
+    add(state, action: PayloadAction<IOperation>) {
       state.list.push({ ...action.payload, isStored: true });
       state.selectedOperationIndex = state.list.length - 1;
     },

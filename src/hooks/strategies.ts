@@ -8,8 +8,7 @@ import toast from "react-hot-toast";
 import { getWalletClient } from "@wagmi/core";
 import { useSelector, useStore } from "react-redux";
 
-import { Operation, OperationStatus } from "~/model/operation";
-import { OperationStep } from "~/store/interfaces/operations";
+import { Operation, OperationStatus, OperationStep } from "~/model/operation";
 
 import { emmitStep } from "~/services/operation";
 import { useEstimatedRoute } from "./swapper";
@@ -181,7 +180,7 @@ export const useApproveAndDeposit = () => {
       openModal({ modal: "steps",title: "TX TRACKER" });
 
       try {
-        if (estimation.steps[0].type === "Approve") {
+        if ((estimation.steps[0] as any).type === "approve") {
           const { hash: approveHash } = await approve({
             spender: strategy.address,
             amount,

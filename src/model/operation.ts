@@ -1,8 +1,52 @@
-import { OperationStatus } from "@astrolabs/swapper";
-import { OperationStep } from "~/store/interfaces/operations";
+import { ICommonStep, OperationStatus } from "@astrolabs/swapper";
 import { Token } from "~/utils/interfaces";
 
-export interface OperationInterface {
+export interface TransactionDetail {
+  txHash: string;
+  txLink: string;
+  amount: string;
+  token: SwapperToken;
+  chainId: number;
+  gasPrice: string;
+  gasUsed: string;
+  gasToken: SwapperToken;
+  gasAmount: string;
+  gasAmountUSD: string;
+  amountUSD: string;
+  timestamp: number;
+}
+
+export interface SwapperToken {
+  address: string;
+  chainId: number;
+  symbol: string;
+  decimals: number;
+  name: string;
+  coinKey: string;
+  logoURI: string;
+  priceUSD: string;
+}
+
+export interface OperationStep
+  extends Omit<ICommonStep, "fromToken" | "toToken"> {
+  date?: number;
+  status: OperationStatus;
+  via: string;
+  substatusMessage?: string;
+  fromToken: SwapperToken;
+  toToken: SwapperToken;
+}
+
+export interface EmmitStepAction {
+  operationId: string;
+  promise?: Promise<any>;
+}
+export interface UpdateAction {
+  id: string;
+  payload: Partial<Operation>;
+}
+
+export interface IOperation {
   id: string;
   isStored: boolean;
   status: OperationStatus;
@@ -17,7 +61,7 @@ export interface OperationInterface {
   toToken: Token;
 }
 
-class Operation implements OperationInterface {
+class Operation implements IOperation {
   id: string;
   isStored: boolean;
   date: number;

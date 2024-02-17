@@ -127,7 +127,7 @@ export const executeRoute = async () => {
     estimation,
   });
   try {
-    if (estimation.steps[0].type === "Approve") {
+    if (estimation.steps[0].type === "approve") {
       const approveStep = estimation.steps[0];
 
       addOperation(operation);

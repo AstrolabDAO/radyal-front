@@ -77,7 +77,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="-3 -3 5050 2250"
+          viewBox="-3 -3 5050 2252"
           fill="none"
         >
           <defs>

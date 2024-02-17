@@ -93,7 +93,7 @@ const ActionRouteDetailLine = ({
           <IconCard icon={{ url: fromToken?.icon ?? (fromToken as any).logoURI, size, classes }} />
           &nbsp;on
           <IconCard icon={{ url: fromNetwork?.icon ?? (fromToken as any).logoURI, size, classes }} />
-          {type !== "Approve" && (
+          {type !== "approve" && (
             <>
               <FaLongArrowAltRight className="mx-2" />
               {toAmountWithNetworkAndSymbol}

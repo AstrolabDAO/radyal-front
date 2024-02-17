@@ -6,9 +6,10 @@ import BridgeAnimation from "~/assets/animations/bridge.json";
 import DepositAnimation from "~/assets/animations/deposit.json";
 import SwapAnimation from "~/assets/animations/swap.json";
 import WithdrawAnimation from "~/assets/animations/withdraw.json";
+import { StepType } from "~/utils/interfaces";
 
 type SelectTokenAnimationProps = {
-  mode: "cross" | "bridge" | "deposit" | "swap" | "withdraw";
+  mode: StepType;
   className?: string;
 };
 

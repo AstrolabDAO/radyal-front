@@ -156,7 +156,7 @@ export const getStrategies = async () => {
         decimals,
         sharePrice,
         slug,
-        asset,
+        // asset,
         color1,
         color2,
         protocols,

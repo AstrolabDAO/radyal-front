@@ -1,7 +1,9 @@
 import { ICommonStep } from "@astrolabs/swapper";
 
 import { StrategyInteraction } from "./constants";
-import { OperationStep } from "~/store/interfaces/operations";
+import { OperationStep } from "~/model/operation";
+
+export type StepType = "cross" | "bridge" | "swap" | "deposit" | "withdraw" | "approve" | "custom";
 
 export interface Network {
   id: number;

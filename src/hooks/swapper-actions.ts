@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNetwork, usePublicClient } from "wagmi";
 import { switchNetwork } from "wagmi/actions";
-import { Operation, OperationStatus } from "~/model/operation";
+import { Operation, OperationStatus, OperationStep } from "~/model/operation";
 import { closeModal, openModal } from "~/services/modal";
 import { addOperation, emmitStep, updateOperation } from "~/services/operation";
 import {
@@ -11,7 +11,6 @@ import {
   setEstimationIsLocked,
 } from "~/services/swapper";
 import { approve } from "~/services/transaction";
-import { OperationStep } from "~/store/interfaces/operations";
 import { setOnWrite, unlockEstimation } from "~/store/swapper";
 import { useExecuteSwap } from "./swap";
 import {
@@ -73,7 +72,7 @@ export const useExectuteSwapperRoute = () => {
     try {
       if (currentNetwork.chain.id !== fromToken.network.id)
         await switchNetwork({ chainId: fromToken?.network?.id });
-      if (estimation.steps[0].type === "Approve") {
+      if (estimation.steps[0].type == "approve") {
         const approveStep = estimation.steps[0];
 
         addOperation(operation);

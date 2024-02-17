@@ -49,7 +49,7 @@ export const needApproveSelector = createSelector(
     const action = state[interaction];
     const estimation = action.estimatedRoute;
     if (!estimation) return false;
-    return estimation?.steps?.[0]?.type === "Approve";
+    return estimation?.steps?.[0]?.type == "approve";
   }
 );
 

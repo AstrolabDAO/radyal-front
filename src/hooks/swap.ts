@@ -17,7 +17,7 @@ import { useSwitchNetwork } from "./transaction";
 
 import toast from "react-hot-toast";
 import { useStore } from "react-redux";
-import { Operation } from "~/model/operation";
+import { Operation, OperationStep } from "~/model/operation";
 import { StrategyInteraction } from "~/utils/constants";
 import { useSelectedStrategy } from "./strategies";
 
@@ -30,7 +30,6 @@ import {
   useToToken,
 } from "./swapper";
 
-import { OperationStep } from "~/store/interfaces/operations";
 import { setEstimationOnprogress } from "~/services/swapper";
 
 export const useExecuteSwap = () => {

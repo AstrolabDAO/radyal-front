@@ -14,13 +14,13 @@ import {
 } from "~/hooks/swapper";
 import { useEstimateRoute } from "~/hooks/swap";
 import { useAllowance } from "~/hooks/transaction";
-import { OperationStep } from "~/store/interfaces/operations";
 import { StrategyInteraction } from "~/utils/constants";
 import { Estimation } from "~/utils/interfaces";
 import {
   setEstimationOnprogress,
   setInteractionEstimation,
 } from "~/services/swapper";
+import { OperationStep } from "~/model/operation";
 
 const EstimationContext = createContext({});
 
@@ -93,7 +93,7 @@ const EstimationProvider = ({ children }) => {
       steps &&
       !(steps?.length === 1 && interaction === StrategyInteraction.WITHDRAW)
     ) {
-      if (needApprove && steps[0].type !== "Approve") {
+      if (needApprove && steps[0].type !== "approve") {
         const leftArray = [steps[0]];
         const rightArray = steps.slice(1);
         const isDeposit = interaction === StrategyInteraction.DEPOSIT;
@@ -105,7 +105,7 @@ const EstimationProvider = ({ children }) => {
         const approveAmount = Math.round(fromAmount / weiPerUnit) * weiPerUnit;
         (isDeposit ? leftArray : rightArray).unshift({
           id: window.crypto.randomUUID(),
-          type: "Approve",
+          type: "approve",
           tool: "radyal",
           fromChain: fromToken?.network?.id,
           toChain: fromToken?.network?.id,

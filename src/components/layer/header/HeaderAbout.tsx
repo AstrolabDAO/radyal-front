@@ -2,6 +2,7 @@ import clsx from "clsx";
 
 import { useEffect, useRef, useState } from "react";
 import ChevronDown from "~/assets/icons/chevron-down.svg?react";
+import Link from "~/assets/icons/link.svg";
 import Dropdown from "./HeaderActions";
 import { StyledDropdown } from "~/components/styled";
 
@@ -26,11 +27,11 @@ const HeaderAbout: React.FC = () => {
   return (
     <div>
       <div
-        onClick={toggleDropdown}
-        className="hover:text-white cursor-pointer flex-row flex"
+        onMouseEnter={toggleDropdown}
+        className="hover:text-primary cursor-pointer flex-row flex font-medium"
       >
         ABOUT
-        <div className="h-4 w-4 flex items-center my-auto ms-1">
+        <div className="h-3 w-3 flex items-center my-auto ms-1">
           <ChevronDown className="flex my-auto" />
         </div>
       </div>
@@ -40,15 +41,26 @@ const HeaderAbout: React.FC = () => {
         ref={dropdownRef}
         tabIndex={-1}
         onBlur={onBlur}
+        onMouseLeave={toggleDropdown}
       >
-        <a href="#" className="hover:text-white cursor-pointer">
+        <a href="#" className="hover:text-primary cursor-pointer">
           METRICS
         </a>
-        <a href="https://docs.astrolab.fi/" className=" hover:text-white">
-          DOCS
+        <a href="https://docs.astrolab.fi/" className=" hover:text-primary">
+          DOCS&nbsp;
+          <img
+            className="invert w-4 inline"
+            src={Link}
+            alt="link"
+          />
         </a>
-        <a href="#" className=" hover:text-white cursor-pointer">
-          AUDITS
+        <a href="#" className=" hover:text-primary cursor-pointer">
+          AUDITS&nbsp;
+          <img
+            className="invert w-4 inline"
+            src={Link}
+            alt="link"
+          />
         </a>
       </StyledDropdown>
     </div>
