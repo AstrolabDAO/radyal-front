@@ -9,7 +9,7 @@ import WithdrawAnimation from "~/assets/animations/withdraw.json";
 import { StepType } from "~/utils/interfaces";
 
 type SelectTokenAnimationProps = {
-  mode: StepType;
+  mode: string;
   className?: string;
 };
 

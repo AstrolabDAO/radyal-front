@@ -17,14 +17,14 @@
 @layer base {
   :root {
     /* For rgb(255 115 179 / <alpha-value>) */
-    //--color-primary: 65 89 243;
+    /*--color-primary: 65 89 243;*/
 
     /* For hsl(198deg 93% 60% / <alpha-value>) */
-    //--color-primary: 232deg 88% 60%;
+    /*--color-primary: 232deg 88% 60%;*/
 
     /* For rgba(255, 115, 179, <alpha-value>) */
-    //--color-primary: 65 89 243 1;
-    //background-color: $background;
+    /*--color-primary: 65 89 243 1;*/
+    /*background-color: $background;*/
   }
   h1,
   h2,
@@ -63,7 +63,7 @@ header {
   box-shadow: none;
 }
 a {
-  //font-weight: 500;
+  /*font-weight: 500;*/
   color: #ededed;
   text-decoration: inherit;
 }
