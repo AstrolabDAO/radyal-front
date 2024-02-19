@@ -1,36 +1,26 @@
 .md {
-  @apply p-6 border-2 border-solid  text-white rounded-xl;
-}
+  @apply p-6 border-2 border-solid border-darkerGrey text-white rounded-xl;
 
-.md p {
-  margin-bottom: 1rem;
-}
-.md p:last-of-type {
-  margin-bottom: 0rem;
-}
-.md h1,
-.md h2,
-.md h3,
-.md h4,
-.md h5,
-.md h6 {
-  margin-top: 2rem;
-  margin-bottom: 1.5rem;
-  @apply text-white
-}
+  p {
+    margin-bottom: 1rem;
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
 
-.md ul {
-  @apply list-disc ps-3;
-}
+  ul {
+    @apply list-disc ps-3;
+  }
 
-.disclaimer.md h1 {
-  @apply mt-0;
-}
-.disclaimer.md h1,
-.disclaimer.md h2,
-.disclaimer.md h3,
-.disclaimer.md h4,
-.disclaimer.md h5,
-.disclaimer.md h6 {
-  @apply text-xl gilroy mb-1;
+  h1, h2, h3, h4, h5, h6 {
+    @apply gilroy mb-1 mt-7;
+    font-size: 1.5rem;
+  }
+
+  h1 {
+    @apply text-3xl;
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
 }

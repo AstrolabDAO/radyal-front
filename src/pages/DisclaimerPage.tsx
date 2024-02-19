@@ -37,7 +37,7 @@ const DisclaimerPage = () => {
           />
         </div>
         <h1 className="text-8xl gilroy font-bold leading-10 mt-5">RADYAL</h1>
-        <div className="text-2xl gilroy font-semibold mt-4">
+        <div className="text-xl gilroy font-semibold mt-4">
           ALGORITHMIC YIELD PRIMITIVES
         </div>
         <div className="w-2/3 xl:w-8/12 mx-auto mt-6 mb-3">
