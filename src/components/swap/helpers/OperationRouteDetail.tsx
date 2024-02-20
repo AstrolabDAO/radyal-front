@@ -45,9 +45,13 @@ const OperationRouteDetail = ({
   const { protocols } = useContext(Web3Context);
 
   const amountWithNetworkAndSymbol = useCallback(
-    (chain: number, amount: string, token: SwapperToken) => {
+    (chain: number, amount: string, token: Token) => {
       const network = networkByChainId[chain];
-      const amountFormatted = toFloatAuto(weiToAmount(amount, token?.decimals), false, 2);
+      const amountFormatted = toFloatAuto(
+        weiToAmount(amount, token?.decimals),
+        false,
+        2
+      );
       const symbol = token?.symbol ?? "???";
       let networkName = network?.name ?? "???";
       networkName = clearFrom(networkName, "-Mainnet|-Testnet");
@@ -122,7 +126,9 @@ const OperationRouteDetail = ({
           toToken
         );
 
-        const { protocolName, protocolIcon } = getProtocolIconAndName(tool ?? type);
+        const { protocolName, protocolIcon } = getProtocolIconAndName(
+          tool ?? type
+        );
 
         const displayedStep = {
           id,

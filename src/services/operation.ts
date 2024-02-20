@@ -14,7 +14,13 @@ import {
   selectedOperationSelector,
 } from "~/store/selectors/operations";
 
-import { AggregatorId, OperationStatus, OperationStep, aggregatorById, getStatus } from "@astrolabs/swapper";
+import {
+  AggregatorId,
+  OperationStatus,
+  OperationStep,
+  aggregatorById,
+  getStatus,
+} from "@astrolabs/swapper";
 import {
   emmitStep as storeEmmitStep,
   selectOperation as storeSelectOperation,
@@ -77,7 +83,7 @@ export const emmitStep = (action: EmmitStepAction) => {
   getStore().dispatch(storeEmmitStep(action));
 };
 
-export const startTimeById: {[key: string]: number} = {};
+export const startTimeById: { [key: string]: number } = {};
 
 export const checkInterval = () => {
   const intervalId = (getStoreState().operations as OperationsState).intervalId;
@@ -92,7 +98,6 @@ export const checkInterval = () => {
 
     const now = new Date().getTime();
     waitingOperatins.forEach(({ id, date }) => {
-
       if (now > date + ONE_MINUTE * 5)
         getStore().dispatch(
           update({
@@ -171,19 +176,6 @@ export const checkInterval = () => {
               })
             );
             getStore().dispatch(failCurrentStep(op.id));
-          } else if (op.estimation.request.aggregatorId === AggregatorId.SQUID) {
-            if (op.currentStep > op.steps.length - 2) return;
-            const startedAt = startTimeById[op.id];
-            const step = op.steps[op.currentStep];
-            const length = step.type == "bridge" ? 30 : 8;
-            const stepShouldFinishAt = startedAt + length;
-            if (now > stepShouldFinishAt) {
-              op.steps[op.currentStep].status = OperationStatus.SUCCESS;
-              startTimeById[op.id] = now;
-              if (op.currentStep < op.steps.length - 1) {
-                op.currentStep++;
-              }
-            }
           }
         } catch (e) {
           console.error("ERROR", e);

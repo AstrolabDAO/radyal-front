@@ -1,16 +1,18 @@
 import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5.json";
 import {
   ICustomContractCall,
-  ITransactionRequestWithEstimate,
   getAllTransactionRequests,
 } from "@astrolabs/swapper";
-import { PrepareSendTransactionArgs } from "@wagmi/core";
 import { erc20Abi } from "abitype/abis";
-import { encodeFunctionData, parseGwei } from "viem";
+import toast from "react-hot-toast";
+import { PublicClient, encodeFunctionData } from "viem";
+import { getAccount } from "wagmi/actions";
+import { Operation } from "~/model/operation";
+import { Store } from "~/store";
 import { tokensIsEqual } from "~/utils";
 import { StrategyInteraction } from "~/utils/constants";
 import { overrideZeroAddress } from "~/utils/format";
-import { SwapperRequest } from "~/utils/interfaces";
+import { getSwapperStore } from "./swapper";
 import { executeTransaction } from "./transaction";
 
 export const depositCallData = (address: string, toAmount: string) => {
@@ -41,35 +43,34 @@ export const generateCallData = ({
   });
 };
 
-export const getSwapRoute = async (params: SwapperRequest) => {
-  const { fromToken, toToken, address, amount, interaction, strategy } = params;
-
-  if (tokensIsEqual(fromToken, toToken)) {
+export const getSwapRoute = async (_value?: number) => {
+  const { address } = getAccount();
+  const store = getSwapperStore();
+  const interaction = store.interaction;
+  const { from: basefrom, to: baseTo, value } = store[interaction];
+  const from = "asset" in basefrom ? basefrom.asset : basefrom;
+  const to = "asset" in baseTo ? baseTo.asset : baseTo;
+  const amount = BigInt(Math.round((_value ?? value) * from.weiPerUnit));
+  if (tokensIsEqual(from, to)) {
     return [
       {
         to: address,
         data: "0x00",
         estimatedExchangeRate: 1, // 1:1 exchange rate
         estimatedOutputWei: amount,
-        estimatedOutput: Number(amount) / fromToken.weiPerUnit,
+        estimatedOutput: Number(amount) / from.weiPerUnit,
       },
     ];
   }
   const customContractCalls: ICustomContractCall[] = [];
   const slippage = 0.1;
-  if (
-    interaction === StrategyInteraction.DEPOSIT
-    //&&fromToken.network.id !== toToken.network.id
-  ) {
+  if (interaction === StrategyInteraction.DEPOSIT) {
     const amountNumber = Number(amount);
 
-    const approval = approvalCallData(
-      strategy.address,
-      amountNumber.toString()
-    );
+    const approval = approvalCallData(baseTo.address, amountNumber.toString());
 
     customContractCalls.push({
-      toAddress: toToken.address,
+      toAddress: to.address,
       callData: approval,
       inputPos: 1,
       gasLimit: "200000",
@@ -78,7 +79,7 @@ export const getSwapRoute = async (params: SwapperRequest) => {
     const callData = depositCallData(address, amountNumber.toString());
 
     customContractCalls.push({
-      toAddress: strategy.address,
+      toAddress: baseTo.address,
       callData,
       inputPos: 0,
       gasLimit: "250000",
@@ -87,11 +88,11 @@ export const getSwapRoute = async (params: SwapperRequest) => {
 
   const quoteOpts: any = {
     aggregatorId: ["SQUID"],
-    inputChainId: fromToken.network.id,
-    input: overrideZeroAddress(fromToken.address),
+    inputChainId: from.network.id,
+    input: overrideZeroAddress(from.address),
     amountWei: amount,
-    outputChainId: toToken.network.id,
-    output: overrideZeroAddress(toToken.address),
+    outputChainId: to.network.id,
+    output: overrideZeroAddress(to.address),
     maxSlippage: slippage * 1000,
     payer: address,
     customContractCalls: customContractCalls.length
@@ -102,7 +103,7 @@ export const getSwapRoute = async (params: SwapperRequest) => {
   if (customContractCalls.length) {
     quoteOpts.postHook = [
       {
-        toAddress: strategy.address,
+        toAddress: baseTo.address,
         callData: customContractCalls[0].callData,
       },
     ];
@@ -117,21 +118,37 @@ interface GenerateCallDataProps {
   args: any[];
 }
 
-export const executeSwap = async (route: ITransactionRequestWithEstimate) => {
-  const tr = { ...route };
+export const executeSwap = async (
+  operation: Operation,
+  _publicClient: PublicClient
+) => {
+  const tr = { ...operation.estimation.request };
   if (!tr) return;
   if (tr.maxFeePerGas) delete tr.maxFeePerGas;
   if (tr.maxPriorityFeePerGas) delete tr.maxPriorityFeePerGas;
-  const params: PrepareSendTransactionArgs = {
-    ...tr,
-    //gas: parseGwei("0.00001"),
-  };
 
-  console.log("🚀 ~ file: swap.ts:96 ~ executeSwap ~ route:", route);
-  const { hash } = await executeTransaction(params);
+  const { hash } = await executeTransaction(tr);
 
   console.log("lifiExplorer: ", `https://explorer.li.fi/tx/${hash}`);
   console.log("squidExplorer: ", `https://axelarscan.io/gmp/${hash}`);
-  console.log("hash: ", hash);
-  return { hash };
+
+  const swapPending = _publicClient.waitForTransactionReceipt({
+    hash: hash,
+  });
+  toast.promise(swapPending, {
+    loading: "Swap transaction is pending...",
+    success: "Swap transaction successful",
+    error: "Swap reverted rejected 🤯",
+  });
+
+  Store.dispatch({
+    type: "operations/emmitStep",
+    payload: {
+      operationId: operation.id,
+      label: "swap-pending",
+      promise: swapPending,
+    },
+  });
+  await swapPending;
+  return hash;
 };

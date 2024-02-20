@@ -72,34 +72,61 @@ const ActionRouteDetailLine = ({
             status === OperationStatus.FAILED && "text-error"
           )}
         >
-          <div className="flex items-center text-primary">{capitalize(swapRouteStepType)}</div>
+          <div className="flex items-center text-primary">
+            {capitalize(swapRouteStepType)}
+          </div>
           {(type == "cross" || type == "swap" || type == "bridge") && (
             <div className="flex items-center mx-1 font-normal">
               <div>
                 with <span className="capitalize">{protocolName}</span>
               </div>
-              {protocolIcon.url && <IconCard icon={protocolIcon} />}
-              {(type == "cross" || type == "swap" || type == "bridge") && viaIcon.url && (
-                <div className="flex justify-center ml-2">
-                  via {capitalize(via.toLowerCase())}
-                  <IconCard icon={viaIcon} />
-                </div>
-              )}
+              {protocolIcon?.url && <IconCard icon={protocolIcon} />}
+              {(type == "cross" || type == "swap" || type == "bridge") &&
+                viaIcon.url && (
+                  <div className="flex justify-center ml-2">
+                    via {capitalize(via.toLowerCase())}
+                    <IconCard icon={viaIcon} />
+                  </div>
+                )}
             </div>
           )}
         </div>
         <span className="flex items-center">
           {fromAmountWithNetworkAndSymbol}
-          <IconCard icon={{ url: fromToken?.icon ?? (fromToken as any).logoURI, size, classes }} />
+          <IconCard
+            icon={{
+              url: fromToken?.icon ?? (fromToken as any).logoURI,
+              size,
+              classes,
+            }}
+          />
           &nbsp;on
-          <IconCard icon={{ url: fromNetwork?.icon ?? (fromToken as any).logoURI, size, classes }} />
+          <IconCard
+            icon={{
+              url: fromNetwork?.icon ?? (fromToken as any).logoURI,
+              size,
+              classes,
+            }}
+          />
           {type !== "approve" && (
             <>
               <FaLongArrowAltRight className="mx-2" />
               {toAmountWithNetworkAndSymbol}
-              <IconCard icon={{ url: toToken?.icon ?? (toToken as any).logoURI, size, classes }} />
+              <IconCard
+                icon={{
+                  url: toToken?.icon ?? (toToken as any).logoURI,
+                  size,
+                  classes,
+                }}
+              />
               &nbsp;on
-              <IconCard icon={{ url: toNetwork?.icon ?? (toToken as any).logoURI, size, classes }} />
+              <IconCard
+                icon={{
+                  url: toNetwork?.icon ?? (toToken as any).logoURI,
+                  size,
+                  classes,
+                }}
+              />
             </>
           )}
         </span>

@@ -19,7 +19,7 @@ export const NETWORKS = [
   "fantom-mainnet-opera",
   "avalanche-mainnet",
   "bnb-chain-mainnet",
-  "gnosis-chain-mainnet",
+  //"gnosis-chain-mainnet",
   "scroll-mainnet",
   "linea-mainnet",
   "mantle-mainnet",

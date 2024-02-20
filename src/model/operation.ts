@@ -30,11 +30,11 @@ export interface SwapperToken {
 export interface OperationStep
   extends Omit<ICommonStep, "fromToken" | "toToken"> {
   date?: number;
-  status: OperationStatus;
-  via: string;
+  status?: OperationStatus;
+  via?: string;
   substatusMessage?: string;
-  fromToken: SwapperToken;
-  toToken: SwapperToken;
+  fromToken?: Token;
+  toToken?: Token;
 }
 
 export interface EmmitStepAction {

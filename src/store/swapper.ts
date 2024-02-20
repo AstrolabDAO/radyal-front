@@ -31,7 +31,7 @@ const initialState: SwapperState = {
     selection: false,
     estimationOnprogress: false,
     estimationLocked: false,
-    onWrite: false,
+    onWrite: true,
     locked: false,
   },
   deposit: {

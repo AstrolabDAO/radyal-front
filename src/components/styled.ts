@@ -7,7 +7,7 @@ export const Input = tw.input`input input-bordered hover:border-primary w-full f
 export const Button = styled.button<{
   primary?: boolean;
   outline?: boolean;
-  big?: true;
+  big?: boolean;
 }>`
   text-transform: uppercase;
   ${(props) =>

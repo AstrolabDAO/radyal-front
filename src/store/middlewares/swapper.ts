@@ -1,5 +1,5 @@
 import { Middleware, PayloadAction } from "@reduxjs/toolkit";
-import { clearState } from "../swapper";
+import { clearState, setOnWrite } from "../swapper";
 
 const clearStoreMiddleware: Middleware =
   (store) => (next) => (action: PayloadAction) => {
@@ -10,4 +10,25 @@ const clearStoreMiddleware: Middleware =
         store.dispatch(clearState());
     }
   };
-export default [clearStoreMiddleware] as Middleware[];
+
+const debounceTimerMiddleware: Middleware =
+  (store) => (next) => (action: PayloadAction) => {
+    next(action);
+    if (action.type === "swapper/setFromValue") {
+      const { debounceTimer } = store.getState().swapper;
+      if (debounceTimer) clearTimeout(debounceTimer);
+      store.dispatch(
+        setOnWrite({
+          onWrite: true,
+          debounceTimer: setTimeout(() => {
+            store.dispatch(
+              setOnWrite({
+                onWrite: false,
+              })
+            );
+          }, 1000),
+        })
+      );
+    }
+  };
+export default [clearStoreMiddleware, debounceTimerMiddleware] as Middleware[];

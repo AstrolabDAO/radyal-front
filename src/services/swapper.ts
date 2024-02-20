@@ -1,9 +1,11 @@
-import { createSelector } from "@reduxjs/toolkit";
+import { createSelector, current } from "@reduxjs/toolkit";
 import { IRootState, dispatch, getStoreState } from "~/store";
 import { SetOnWritePayload } from "~/store/interfaces/swapper";
 import {
   canSwapSelector,
   estimatedRouteSelector,
+  interactionNeedToSwapSelector,
+  needApproveSelector,
 } from "~/store/selectors/swapper";
 import swapperActions, {
   SelectTokenAction,
@@ -11,6 +13,13 @@ import swapperActions, {
 } from "~/store/swapper";
 import { StrategyInteraction } from "~/utils/constants";
 import { Estimation } from "~/utils/interfaces";
+import { closeModal, openModal } from "./modal";
+import { Operation, OperationStatus, OperationStep } from "~/model/operation";
+import { addOperation, emmitStep, updateOperation } from "./operation";
+import { approve } from "./transaction";
+import { getPublicClient } from "wagmi/actions";
+import toast from "react-hot-toast";
+import { executeSwap } from "./swap";
 
 export const getSwapperStore = () => getStoreState().swapper;
 
@@ -77,8 +86,8 @@ export const setFromValue = (value: number) => {
 
 export const getEstimationOnProgress = () => {
   const selector = createSelector(
-    (state: IRootState) => state.swapper.is.estimationOnprogress,
-    (onProgress) => onProgress
+    (state: IRootState) => state.swapper,
+    (state) => state.is.estimationOnprogress
   );
   return selector(getStoreState());
 };
@@ -99,25 +108,37 @@ export const getEstimatedRoute = () => {
   return estimatedRouteSelector(state);
 };
 
-/*
-export const executeRoute = async () => {
-  const fromToken = getFromToken();
-  const toToken = getToToken();
-  const canSwap = getCanSwap();
-  const estimation = getEstimatedRoute();
+export const getInteractionNeedApprove = () => {
+  const state = getStoreState();
+  return needApproveSelector(state);
+};
 
-  const publicClient = createPublicClient({
-    chain: networkToWagmiChain(fromToken.network),
-    transport: http(),
-  });
-  if (!fromToken || !toToken || !canSwap) throw new Error("Invalid route");
+export const getInteractionNeedToSwap = () => {
+  const state = getStoreState();
+  return interactionNeedToSwapSelector(state);
+};
+
+export const executeSwapperRoute = async (
+  estimation: Estimation = getEstimatedRoute(),
+  interaction: StrategyInteraction = StrategyInteraction.DEPOSIT
+) => {
+  const store = getSwapperStore();
+  const { from, to } = store[interaction];
+  const canSwap = getCanSwap();
+
+  const publicClient = getPublicClient({ chainId: from.network.id });
+
+  if (!from || !to || !canSwap) return;
+
+  setEstimationIsLocked(true);
   lockEstimation();
-  openModal({ modal: "steps" });
+
+  openModal({ modal: "steps", title: "TX TRACKER" });
 
   const operation = new Operation({
     id: window.crypto.randomUUID(),
-    fromToken,
-    toToken,
+    fromToken: from,
+    toToken: to,
     steps: estimation.steps.map((step) => {
       return {
         ...step,
@@ -126,8 +147,9 @@ export const executeRoute = async () => {
     }),
     estimation,
   });
+
   try {
-    if (estimation.steps[0].type === "approve") {
+    if (estimation.steps[0].type == "approve") {
       const approveStep = estimation.steps[0];
 
       addOperation(operation);
@@ -149,7 +171,8 @@ export const executeRoute = async () => {
         operationId: operation.id,
         promise: approvePending,
       });
-      const hash = await executeSwap(operation);
+
+      const hash = await executeSwap(operation, publicClient);
       updateOperation({
         id: operation.id,
         payload: {
@@ -159,7 +182,7 @@ export const executeRoute = async () => {
       });
     } else {
       addOperation(operation);
-      const hash = await executeSwap(operation);
+      const hash = await executeSwap(operation, publicClient);
       updateOperation({
         id: operation.id,
         payload: {
@@ -170,6 +193,7 @@ export const executeRoute = async () => {
     }
   } catch (error) {
     closeModal();
+    setEstimationIsLocked(false);
     unlockEstimation();
     toast.error(error.message);
     updateOperation({
@@ -188,4 +212,3 @@ export const executeRoute = async () => {
     });
   }
 };
-*/

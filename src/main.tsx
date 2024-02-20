@@ -25,7 +25,7 @@ export const queryClient = new QueryClient({
 const localStoragePersistor = createWebStoragePersistor({
   storage: window.localStorage,
 });
-const doNotPersistQueries: QueryKey[] = ["estimation"];
+const doNotPersistQueries: QueryKey[] = ["estimation", "toto"];
 
 persistQueryClient({
   queryClient,
@@ -34,7 +34,10 @@ persistQueryClient({
   hydrateOptions: {},
   dehydrateOptions: {
     shouldDehydrateQuery: ({ queryKey }) => {
-      return !doNotPersistQueries.includes(queryKey);
+      return (
+        !doNotPersistQueries.includes(queryKey) ||
+        !(queryKey as string).startsWith("estimation")
+      );
     },
   },
 });

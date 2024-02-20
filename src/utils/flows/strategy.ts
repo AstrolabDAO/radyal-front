@@ -1,18 +1,19 @@
 import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
 
 import { ICommonStep } from "@astrolabs/swapper";
-import { Client, getContract } from "viem";
-import { Strategy } from "../interfaces";
+import { getContract } from "wagmi/actions";
 import { StrategyInteraction } from "../constants";
+import { Estimation, Strategy } from "../interfaces";
+import { Operation, OperationStep } from "~/model/operation";
 
-export const previewStrategyTokenMove = async (
-  { strategy, interaction, value, address }: PreviewStrategyMoveProps,
-  publicClient: Client
-) => {
+export const previewStrategyTokenMove = async ({
+  strategy,
+  interaction,
+  value,
+}: PreviewStrategyMoveProps): Promise<Estimation> => {
   const contract: any = getContract({
     address: strategy.address,
     abi: StratV5Abi.abi,
-    publicClient,
   });
 
   const weiPerUnit =
@@ -33,7 +34,7 @@ export const previewStrategyTokenMove = async (
   const toToken: any =
     interaction === StrategyInteraction.DEPOSIT ? strategy : strategy.asset;
 
-  const step: ICommonStep = {
+  const step: OperationStep = {
     type: interaction,
     tool: "radyal",
     fromChain: strategy.network.id,
@@ -53,6 +54,7 @@ export const previewStrategyTokenMove = async (
       : strategy.asset.weiPerUnit);
 
   return {
+    id: window.crypto.randomUUID(),
     estimation: estimation,
     steps: [step],
     request: null,
@@ -63,5 +65,4 @@ interface PreviewStrategyMoveProps {
   strategy: Strategy;
   interaction: StrategyInteraction;
   value: number;
-  address: `0x${string}`;
 }
