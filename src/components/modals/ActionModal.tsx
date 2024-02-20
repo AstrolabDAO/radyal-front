@@ -17,12 +17,13 @@ import { useSelectedStrategy } from "~/hooks/strategies";
 
 import { getTokenBySlug } from "~/services/tokens";
 import { cacheHash } from "~/utils/format";
-import { StrategyInteraction } from "~/utils/constants";
+import { OperationType } from "~/constants";
 
 import { EstimationProvider } from "~/context/estimation-context";
 import { initSwapper, selectToken, setInteraction } from "~/services/swapper";
 import InfoTab from "../swap/InfoTab";
 import { closeModal } from "~/services/modal";
+import { WAGMI_CONFIG } from "~/utils/setup-web3modal";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ActionModal = (props: BaseModalProps) => {
@@ -48,8 +49,10 @@ const ActionModal = (props: BaseModalProps) => {
   useWriteDebounce();
 
   useEffect(() => {
-    watchAccount(() => {
-      setAccountChanged(true);
+    watchAccount(WAGMI_CONFIG, {
+      onChange(data) {
+        setAccountChanged(true);
+      },
     });
   }, []);
 
@@ -59,7 +62,7 @@ const ActionModal = (props: BaseModalProps) => {
       const token = getTokenBySlug(balances?.[0]?.token) ?? null;
       selectToken({
         token,
-        interaction: StrategyInteraction.DEPOSIT,
+        interaction: OperationType.DEPOSIT,
         for: "from",
       });
       setBalancesHash(newHash);
@@ -82,7 +85,7 @@ const ActionModal = (props: BaseModalProps) => {
         value: 0,
         estimatedRoute: null,
       },
-      interaction: StrategyInteraction.DEPOSIT,
+      interaction: OperationType.DEPOSIT,
     });
   }, [isInit, tokenIsLoaded]);
 
@@ -115,8 +118,8 @@ const ActionModalContent = () => {
     if (selectedTab !== "info") {
       const action =
         selectedTab === "deposit"
-          ? StrategyInteraction.DEPOSIT
-          : StrategyInteraction.WITHDRAW;
+          ? OperationType.DEPOSIT
+          : OperationType.WITHDRAW;
       setInteraction(action);
     }
 

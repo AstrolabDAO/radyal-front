@@ -18,7 +18,7 @@ import {
   useNeedApprove,
   useToToken,
 } from "~/hooks/swapper";
-import { useExectuteSwapperRoute } from "~/hooks/swapper-actions";
+import { useExecuteSwapperRoute } from "~/hooks/swapper-actions";
 
 import ActionRouteDetail from "./helpers/OperationRouteDetail";
 
@@ -40,7 +40,7 @@ const DepositTab = () => {
 
   const approveAndDeposit = useApproveAndDeposit();
 
-  const executeSwapperRoute = useExectuteSwapperRoute();
+  const executeSwapperRoute = useExecuteSwapperRoute();
   const needApprove = useNeedApprove();
 
   const operationSimulation = useMemo(

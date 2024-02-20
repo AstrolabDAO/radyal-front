@@ -1,21 +1,14 @@
-import { IToken as LiFiToken } from "@astrolabs/swapper/dist/src/LiFi";
-import { IToken as SquidToken } from "@astrolabs/swapper/dist/src/Squid";
 import clsx from "clsx";
 import { useCallback, useContext, useMemo } from "react";
 
-import {
-  useCanSwap,
-  useEstimatedRoute,
-  useEstimationOnProgress,
-} from "~/hooks/swapper";
-import { Icon, Token } from "~/utils/interfaces";
+import { useEstimationOnProgress } from "~/hooks/swapper";
+import { Icon } from "~/utils/interfaces";
 
 import { clearFrom, stripName, toFloatAuto } from "~/utils/format";
-import { round, weiToAmount } from "~/utils/maths";
+import { weiToAmount } from "~/utils/maths";
 
 import {
   SwapRouteStepTypeTraduction,
-  SwaptoolTraduction,
   networkByChainId,
   protocolBySlug,
   protocolByStrippedSlug,
@@ -24,10 +17,10 @@ import {
 
 import { OperationStatus } from "@astrolabs/swapper";
 import Loader from "~/components/Loader";
-import { Operation, SwapperToken } from "~/model/operation";
-import ActionRouteDetailLine from "./ActionRouteDetailLine";
 import { Web3Context } from "~/context/web3-context";
+import { Operation, SwapperToken } from "~/model/operation";
 import { findClosestMatch } from "~/utils";
+import ActionRouteDetailLine from "./ActionRouteDetailLine";
 
 type ActionRouteDetailProps = {
   operation: Operation;
@@ -78,9 +71,7 @@ const OperationRouteDetail = ({
       // add to search cache
       protocolByThirdPartyId[id] = p;
     }
-    const protocolName = stripName(
-      SwaptoolTraduction[id] ?? p.name ?? id ?? "custom"
-    );
+    const protocolName = stripName(p.name ?? id ?? "custom");
     p ??= protocolByStrippedSlug[protocolName];
 
     return {

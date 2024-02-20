@@ -21,6 +21,7 @@ import {
   strategyBySlugSelector,
 } from "~/store/selectors/strategies";
 import { IRootState } from "~/store";
+import { WAGMI_CONFIG } from "~/utils/setup-web3modal";
 
 export const useStrategiesStore = () => {
   return useSelector((state: IRootState) => state.strategies);
@@ -73,7 +74,7 @@ export const useStrategyContractFunction = (functionName: string) => {
 
   return useCallback(
     async (args?: any) => {
-      const walletClient = await getWalletClient({
+      const walletClient = await getWalletClient(WAGMI_CONFIG, {
         chainId: network.id,
       });
       return walletClient.writeContract({
@@ -114,6 +115,7 @@ export const useWithdraw = () => {
   const withdraw = useStrategyContractFunction("safeRedeem");
   const switchNetwork = useSwitchNetwork(network.id);
   const publicClient = usePublicClient({
+    config: WAGMI_CONFIG,
     chainId: strategy?.network?.id,
   });
 
@@ -147,19 +149,17 @@ export const useWithdraw = () => {
 export const useApproveAndDeposit = () => {
   const strategy = useSelectedStrategy();
   const { asset, network } = strategy;
-
   const publicClient = usePublicClient({
+    config: WAGMI_CONFIG,
     chainId: network.id,
   });
-
   const deposit = useDeposit();
-
   const approve = useApprove(asset);
   const switchNetwork = useSwitchNetwork(network.id);
-
   const estimation = useEstimatedRoute();
-
   const store = useStore();
+  let hash: `0x${string}`;
+
   return useCallback(
     async (value: number) => {
       await switchNetwork();
@@ -181,13 +181,13 @@ export const useApproveAndDeposit = () => {
 
       try {
         if ((estimation.steps[0] as any).type === "approve") {
-          const { hash: approveHash } = await approve({
+          const hash = await approve({
             spender: strategy.address,
             amount,
           });
 
           const approvePending = publicClient.waitForTransactionReceipt({
-            hash: approveHash,
+            hash,
           });
           store.dispatch({
             type: "operations/add",

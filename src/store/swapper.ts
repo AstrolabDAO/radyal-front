@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { StrategyInteraction } from "~/utils/constants";
+import { OperationType } from "~/constants";
 import { Estimation, Strategy, Token } from "~/utils/interfaces";
 import {
   SetOnWritePayload,
@@ -20,7 +20,7 @@ export interface SwapperState {
   };
   deposit: SwapperOperationDeposit;
   withdraw: SwapperOperationWithdraw;
-  interaction: StrategyInteraction;
+  interaction: OperationType;
 }
 
 const initialState: SwapperState = {
@@ -46,13 +46,13 @@ const initialState: SwapperState = {
     value: null,
     estimatedRoute: null,
   },
-  interaction: StrategyInteraction.DEPOSIT,
+  interaction: OperationType.DEPOSIT,
 };
 
 export interface SelectTokenAction {
   token: Token | Strategy;
   for: "from" | "to";
-  interaction?: StrategyInteraction;
+  interaction?: OperationType;
 }
 const swapperSlice = createSlice({
   name: "swapper",
@@ -73,7 +73,7 @@ const swapperSlice = createSlice({
     switchSelection: (state) => {
       state.is.selection = !state.is.selection;
     },
-    setInteraction: (state, payload: PayloadAction<StrategyInteraction>) => {
+    setInteraction: (state, payload: PayloadAction<OperationType>) => {
       state.interaction = payload.payload;
     },
     select: (state, action: PayloadAction<SelectTokenAction>) => {

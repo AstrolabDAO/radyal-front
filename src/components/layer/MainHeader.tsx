@@ -1,4 +1,4 @@
-import { useAccount } from "wagmi";
+import { useAccount, useAccountEffect } from "wagmi";
 import { useState, useEffect } from "react";
 
 import { useWeb3Modal } from "@web3modal/wagmi/react";
@@ -14,6 +14,12 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   const { address, isConnected } = useAccount();
+  useAccountEffect(
+    {
+      onConnect() { console.log("Connected") },
+      onDisconnect() {},
+    }
+  );
   const web3Modal = useWeb3Modal();
 
   const [scrolling, setScrolling] = useState(false);

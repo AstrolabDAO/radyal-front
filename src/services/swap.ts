@@ -4,14 +4,14 @@ import {
   ITransactionRequestWithEstimate,
   getAllTransactionRequests,
 } from "@astrolabs/swapper";
-import { PrepareSendTransactionArgs } from "@wagmi/core";
 import { erc20Abi } from "abitype/abis";
 import { encodeFunctionData, parseGwei } from "viem";
 import { tokensIsEqual } from "~/utils";
-import { StrategyInteraction } from "~/utils/constants";
+import { OperationType } from "~/constants";
 import { overrideZeroAddress } from "~/utils/format";
 import { SwapperRequest } from "~/utils/interfaces";
 import { executeTransaction } from "./transaction";
+import { WAGMI_CONFIG } from "~/utils/setup-web3modal";
 
 export const depositCallData = (address: string, toAmount: string) => {
   return generateCallData({
@@ -58,7 +58,7 @@ export const getSwapRoute = async (params: SwapperRequest) => {
   const customContractCalls: ICustomContractCall[] = [];
   const slippage = 0.1;
   if (
-    interaction === StrategyInteraction.DEPOSIT
+    interaction === OperationType.DEPOSIT
     //&&fromToken.network.id !== toToken.network.id
   ) {
     const amountNumber = Number(amount);
@@ -122,13 +122,13 @@ export const executeSwap = async (route: ITransactionRequestWithEstimate) => {
   if (!tr) return;
   if (tr.maxFeePerGas) delete tr.maxFeePerGas;
   if (tr.maxPriorityFeePerGas) delete tr.maxPriorityFeePerGas;
-  const params: PrepareSendTransactionArgs = {
+  const params = {
     ...tr,
     //gas: parseGwei("0.00001"),
   };
 
   console.log("🚀 ~ file: swap.ts:96 ~ executeSwap ~ route:", route);
-  const { hash } = await executeTransaction(params);
+  const hash = await executeTransaction(params);
 
   console.log("lifiExplorer: ", `https://explorer.li.fi/tx/${hash}`);
   console.log("squidExplorer: ", `https://axelarscan.io/gmp/${hash}`);

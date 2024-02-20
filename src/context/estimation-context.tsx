@@ -14,7 +14,7 @@ import {
 } from "~/hooks/swapper";
 import { useEstimateRoute } from "~/hooks/swap";
 import { useAllowance } from "~/hooks/transaction";
-import { StrategyInteraction } from "~/utils/constants";
+import { OperationType } from "~/constants";
 import { Estimation } from "~/utils/interfaces";
 import {
   setEstimationOnprogress,
@@ -91,12 +91,12 @@ const EstimationProvider = ({ children }) => {
 
     if (
       steps &&
-      !(steps?.length === 1 && interaction === StrategyInteraction.WITHDRAW)
+      !(steps?.length === 1 && interaction === OperationType.WITHDRAW)
     ) {
       if (needApprove && steps[0].type !== "approve") {
         const leftArray = [steps[0]];
         const rightArray = steps.slice(1);
-        const isDeposit = interaction === StrategyInteraction.DEPOSIT;
+        const isDeposit = interaction === OperationType.DEPOSIT;
         const { weiPerUnit } = fromToken;
         const fromAmount = isDeposit
           ? fromValue * weiPerUnit

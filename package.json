@@ -20,7 +20,7 @@
     "@tanstack/react-query": "^5.10.0",
     "@tanstack/react-query-persist-client": "^5.10.0",
     "@types/shade-blend-color": "^1.0.3",
-    "@web3modal/wagmi": "^3.3.2",
+    "@web3modal/wagmi": "^4.0.5",
     "abitype": "^0.10.2",
     "axios": "^1.6.2",
     "babel-plugin-macros": "^3.1.0",
@@ -43,8 +43,8 @@
     "shade-blend-color": "^1.0.0",
     "styled-components": "^6.1.8",
     "twin.macro": "^3.4.1",
-    "viem": "^1.19.3",
-    "wagmi": "^1.4.7"
+    "viem": "^2.7.10",
+    "wagmi": "^2.5.7"
   },
   "devDependencies": {
     "@emotion/styled": "^11.11.0",

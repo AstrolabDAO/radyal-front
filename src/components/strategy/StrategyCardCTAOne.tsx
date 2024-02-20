@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useMemo, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useAccountEffect } from "wagmi";
 
 import { getStrategyIcon } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
@@ -37,7 +37,10 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
     }
   };
 
-  const { isConnected } = useAccount({ onConnect: handleConnect });
+  const { isConnected } = useAccount();
+  useAccountEffect({
+    onConnect(data) { handleConnect(data) }
+  });
 
   const [strategy, title, subtitle] = useMemo(() => {
     if (!strategyGroup || strategyGroup.length === 0) return [null, null, null];

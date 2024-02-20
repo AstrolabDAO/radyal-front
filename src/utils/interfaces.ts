@@ -1,6 +1,6 @@
 import { ICommonStep } from "@astrolabs/swapper";
 
-import { StrategyInteraction } from "./constants";
+import { OperationType } from "../constants";
 import { OperationStep } from "~/model/operation";
 
 export type StepType = "cross" | "bridge" | "swap" | "deposit" | "withdraw" | "approve" | "custom";
@@ -132,7 +132,7 @@ export interface SwapperRequest {
   strategy: Strategy;
   amount: bigint;
   address: `0x${string}`;
-  interaction: StrategyInteraction;
+  interaction: OperationType;
 }
 
 export interface SwapEstimation {

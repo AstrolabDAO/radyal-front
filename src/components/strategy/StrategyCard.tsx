@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { useAccount } from "wagmi";
+import { useAccount, useAccountEffect } from "wagmi";
 
 import { getStrategyIcon } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
@@ -18,6 +18,7 @@ import StrategyCardTVL from "./StrategyCardTVL";
 import { openModal } from "~/services/modal";
 import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
 import "./StrategyCard.css";
+import { WAGMI_CONFIG } from "~/utils/setup-web3modal";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -38,8 +39,11 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
     }
   };
 
-  const { isConnected } = useAccount({ onConnect: handleConnect });
-
+  const { isConnected } = useAccount(WAGMI_CONFIG as any);
+  useAccountEffect({
+    onConnect(data) { handleConnect(data) },
+    onDisconnect() {},
+  })
   const [strategy] = strategyGroup;
 
   const { name } = strategy;

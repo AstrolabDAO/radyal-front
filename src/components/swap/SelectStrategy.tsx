@@ -6,7 +6,7 @@ import {
 import { useInteraction } from "~/hooks/swapper";
 import { selectStrategy } from "~/services/strategies";
 import { selectToken } from "~/services/swapper";
-import { StrategyInteraction } from "~/utils/constants";
+import { OperationType } from "~/constants";
 import { toDollarsCompact, toPercent } from "~/utils/format";
 
 import { Strategy } from "~/utils/interfaces";
@@ -49,7 +49,7 @@ const SelectStrategy = () => {
                 selectToken({
                   token: strategy,
                   for:
-                    interaction === StrategyInteraction.DEPOSIT ? "to" : "from",
+                    interaction === OperationType.DEPOSIT ? "to" : "from",
                 });
               }}
             >

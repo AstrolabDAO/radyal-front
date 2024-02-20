@@ -2,7 +2,7 @@ import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5.json";
 import axios from "axios";
 import { zeroAddress } from "viem";
 import { getTokenBySlug } from "~/services/tokens";
-import { COINGECKO_API, TOKEN_BASENAME_REGEX } from "./constants";
+import { COINGECKO_API, TOKEN_BASENAME_REGEX } from "../constants";
 import { Strategy, Token } from "./interfaces";
 import { networkBySlug, protocolBySlug } from "./mappings";
 import { multicall } from "./multicall";

@@ -3,7 +3,7 @@ import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
 import { ICommonStep } from "@astrolabs/swapper";
 import { Client, getContract } from "viem";
 import { Strategy } from "../interfaces";
-import { StrategyInteraction } from "../constants";
+import { OperationType } from "../../constants";
 
 export const previewStrategyTokenMove = async (
   { strategy, interaction, value, address }: PreviewStrategyMoveProps,
@@ -16,22 +16,22 @@ export const previewStrategyTokenMove = async (
   });
 
   const weiPerUnit =
-    interaction === StrategyInteraction.DEPOSIT
+    interaction === OperationType.DEPOSIT
       ? strategy.asset.weiPerUnit
       : strategy.weiPerUnit;
 
   const amount = BigInt(value * weiPerUnit);
 
   const previewAmount = (
-    interaction === StrategyInteraction.DEPOSIT
+    interaction === OperationType.DEPOSIT
       ? await contract.read.previewDeposit([amount])
       : await contract.read.previewRedeem([amount])
   ) as bigint;
 
   const fromToken: any =
-    interaction === StrategyInteraction.DEPOSIT ? strategy.asset : strategy;
+    interaction === OperationType.DEPOSIT ? strategy.asset : strategy;
   const toToken: any =
-    interaction === StrategyInteraction.DEPOSIT ? strategy : strategy.asset;
+    interaction === OperationType.DEPOSIT ? strategy : strategy.asset;
 
   const step: ICommonStep = {
     type: interaction,
@@ -48,7 +48,7 @@ export const previewStrategyTokenMove = async (
 
   const estimation =
     Number(previewAmount) /
-    (interaction === StrategyInteraction.DEPOSIT
+    (interaction === OperationType.DEPOSIT
       ? strategy.weiPerUnit
       : strategy.asset.weiPerUnit);
 
@@ -61,7 +61,7 @@ export const previewStrategyTokenMove = async (
 
 interface PreviewStrategyMoveProps {
   strategy: Strategy;
-  interaction: StrategyInteraction;
+  interaction: OperationType;
   value: number;
   address: `0x${string}`;
 }

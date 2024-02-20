@@ -5,14 +5,13 @@ import { WagmiConfig } from "wagmi";
 import { getNetworks, getProtocols } from "~/utils/api.ts";
 import {
   chainIdByDeFiId,
-  chainImages,
+  iconByNetwork,
   deFiIdByChainId,
   networkByChainId,
   networkBySlug,
   protocolBySlug,
   protocolByStrippedSlug,
 } from "~/utils/mappings";
-import { NETWORKS } from "~/utils/web3-constants";
 import {
   clearNetworkTypeFromSlug,
   networkToWagmiChain,
@@ -21,6 +20,7 @@ import {
 import { setupWeb3modal } from "~/utils/setup-web3modal";
 import deFiNetworks from "../data/defi-networks.json";
 import { Network, Protocol } from "~/utils/interfaces";
+import { NETWORKS } from "~/constants";
 
 interface Web3ContextType {
   config: any;
@@ -36,9 +36,7 @@ const Web3Context = createContext<Web3ContextType>({
 
 const Web3Provider = ({ children }) => {
   const [config, setConfig] = useState(null);
-
   const { data: networksData, isLoading } = useQuery("networks", getNetworks);
-
   const { data: protocolsData } = useQuery("protocols", getProtocols);
 
   const filteredNetworks = useMemo(() => {
@@ -94,7 +92,10 @@ const Web3Provider = ({ children }) => {
         };
 
         networkBySlug[network.slug] = network;
-
+        network.icon ??= `/images/networks/${clearNetworkTypeFromSlug(
+          network.slug
+        )}.svg`;
+        iconByNetwork[network.id] = network.icon;
         networkByChainId[network.id] = network;
         const deFiNetwork = deFiNetworks.find(
           (n) => n.metadata.absoluteChainId === network.id
@@ -107,20 +108,9 @@ const Web3Provider = ({ children }) => {
       }
     );
 
-    const convertedNetworks = NETWORKS.map((n) => {
-      const network = networkBySlug[n];
-      const icon = `/images/networks/${clearNetworkTypeFromSlug(
-        network.slug
-      )}.svg`;
-      chainImages[network.id] = icon;
-      network.icon = `/images/networks/${clearNetworkTypeFromSlug(
-        network.slug
-      )}.svg`;
+    const wagmiChains = NETWORKS.map((n) => networkToWagmiChain(networkBySlug[n])).filter(n => !!n);
+    const { config } = setupWeb3modal(wagmiChains);
 
-      return network ? networkToWagmiChain(network) : null;
-    });
-
-    const { config } = setupWeb3modal(convertedNetworks);
     setConfig(config);
     return populatedNetorks;
   }, [filteredNetworks, isLoading]);

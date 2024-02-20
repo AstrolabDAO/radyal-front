@@ -9,7 +9,7 @@ import swapperActions, {
   SelectTokenAction,
   SwapperState,
 } from "~/store/swapper";
-import { StrategyInteraction } from "~/utils/constants";
+import { OperationType } from "~/constants";
 import { Estimation } from "~/utils/interfaces";
 
 export const getSwapperStore = () => getStoreState().swapper;
@@ -57,7 +57,7 @@ export const switchSelection = () => {
   dispatch(swapperActions.switchSelection());
 };
 
-export const setInteraction = (interaction: StrategyInteraction) => {
+export const setInteraction = (interaction: OperationType) => {
   dispatch(swapperActions.setInteraction(interaction));
 };
 
@@ -131,7 +131,7 @@ export const executeRoute = async () => {
       const approveStep = estimation.steps[0];
 
       addOperation(operation);
-      const { hash: approveHash } = await approve({
+      const hash = await approve({
         spender: approveStep.toAddress as `0x${string}`,
         amount: BigInt(approveStep.fromAmount),
         address: approveStep.fromAddress as `0x${string}`,

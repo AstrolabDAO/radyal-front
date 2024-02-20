@@ -18,7 +18,7 @@ import { useSwitchNetwork } from "./transaction";
 import toast from "react-hot-toast";
 import { useStore } from "react-redux";
 import { Operation, OperationStep } from "~/model/operation";
-import { StrategyInteraction } from "~/utils/constants";
+import { OperationType } from "~/constants";
 import { useSelectedStrategy } from "./strategies";
 
 import {
@@ -31,6 +31,7 @@ import {
 } from "./swapper";
 
 import { setEstimationOnprogress } from "~/services/swapper";
+import { WAGMI_CONFIG } from "~/utils/setup-web3modal";
 
 export const useExecuteSwap = () => {
   const fromToken = useFromToken();
@@ -38,6 +39,7 @@ export const useExecuteSwap = () => {
 
   const hash = useEstimationHash();
   const publicClient = usePublicClient({
+    config: WAGMI_CONFIG,
     chainId: fromToken?.network?.id,
   });
 
@@ -105,9 +107,9 @@ export const useEstimateRoute = () => {
       let result, interactionEstimation;
       if (
         fromToken.network.id === toToken.network.id ||
-        StrategyInteraction.WITHDRAW === interaction
+        OperationType.WITHDRAW === interaction
       ) {
-        if (interaction === StrategyInteraction.DEPOSIT) {
+        if (interaction === OperationType.DEPOSIT) {
           result = await getSwapRoute();
           /*interactionEstimation = await previewStrategyTokenMove(
           result[0].estimatedOutput
@@ -147,7 +149,7 @@ export const useEstimateRoute = () => {
 
       const computedSteps = !interactionEstimation
         ? steps
-        : interaction === StrategyInteraction.DEPOSIT
+        : interaction === OperationType.DEPOSIT
           ? [
               ...steps,
               ...(tokensIsEqual(fromToken, toToken)
@@ -212,6 +214,7 @@ export const usePreviewStrategyTokenMove = () => {
   const fromValue = useFromValue();
   const interaction = useInteraction();
   const publicClient = usePublicClient({
+    config: WAGMI_CONFIG,
     chainId: selectedStrategy?.network?.id ?? 1,
   }) as Client;
 

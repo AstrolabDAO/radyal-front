@@ -1,12 +1,13 @@
 import { MulticallContracts, Narrow } from "viem";
 import { multicall as wagmiMulticalll } from "wagmi/actions";
 import { Balance, Network, Token } from "./interfaces";
+import { WAGMI_CONFIG } from "./setup-web3modal";
 
 export const multicall = (
   chainId: number,
   calls: Narrow<readonly [...MulticallContracts<any>]>
 ) => {
-  return wagmiMulticalll({
+  return wagmiMulticalll(WAGMI_CONFIG, {
     chainId,
     contracts: calls,
   });
@@ -17,7 +18,7 @@ export const getBalances = async (
   contracts: { abi: any; address: `0x${string}`; token: Token }[] = [],
   address: `0x${string}`
 ) => {
-  const result = await wagmiMulticalll({
+  const result = await wagmiMulticalll(WAGMI_CONFIG, {
     chainId: network.id,
     contracts: contracts
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 import { useMemo, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useAccountEffect } from "wagmi";
 
 import { Strategy } from "~/utils/interfaces";
 
@@ -19,6 +19,7 @@ import { openModal } from "~/services/modal";
 import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
 import { Button } from "../styled";
 import { COLORS } from "~/styles/constants";
+import { WAGMI_CONFIG } from "~/utils/setup-web3modal";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -39,7 +40,10 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
     }
   };
 
-  const { isConnected } = useAccount({ onConnect: handleConnect });
+  const { isConnected } = useAccount(WAGMI_CONFIG as any);
+  useAccountEffect({
+    onConnect(data) { handleConnect(data) }
+  });
 
   const [strategy, title, subtitle] = useMemo(() => {
     if (!strategyGroup || strategyGroup.length === 0) return [null, null, null];

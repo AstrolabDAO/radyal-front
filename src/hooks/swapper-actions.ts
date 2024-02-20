@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 import toast from "react-hot-toast";
-import { useNetwork, usePublicClient } from "wagmi";
+import { useAccount, usePublicClient } from "wagmi";
 import { switchNetwork } from "wagmi/actions";
 import { Operation, OperationStatus, OperationStep } from "~/model/operation";
 import { closeModal, openModal } from "~/services/modal";
@@ -20,6 +20,7 @@ import {
   useFromValue,
   useToToken,
 } from "./swapper";
+import { WAGMI_CONFIG } from "~/utils/setup-web3modal";
 export const useWriteDebounce = () => {
   const fromValue = useFromValue();
 
@@ -40,8 +41,8 @@ export const useWriteDebounce = () => {
   }, [fromValue, setOnWrite]);
 };
 
-export const useExectuteSwapperRoute = () => {
-  const publicClient = usePublicClient();
+export const useExecuteSwapperRoute = () => {
+  const publicClient = usePublicClient({ config: WAGMI_CONFIG });
   const fromToken = useFromToken();
   const toToken = useToToken();
   const canSwap = useCanSwap();
@@ -49,7 +50,9 @@ export const useExectuteSwapperRoute = () => {
   const estimation = useEstimatedRoute();
 
   const executeSwap = useExecuteSwap();
-  const currentNetwork = useNetwork();
+  const currentNetwork = useAccount().chain;
+  let hash: string;
+
   return useCallback(async () => {
     if (!fromToken || !toToken || !canSwap) return;
     setEstimationIsLocked(true);
@@ -70,21 +73,19 @@ export const useExectuteSwapperRoute = () => {
     });
 
     try {
-      if (currentNetwork.chain.id !== fromToken.network.id)
-        await switchNetwork({ chainId: fromToken?.network?.id });
+      if (currentNetwork.id !== fromToken.network.id)
+        await switchNetwork(WAGMI_CONFIG, { chainId: fromToken?.network?.id });
       if (estimation.steps[0].type == "approve") {
         const approveStep = estimation.steps[0];
 
         addOperation(operation);
-        const { hash: approveHash } = await approve({
+        let hash = await approve({
           spender: approveStep.toAddress as `0x${string}`,
           amount: BigInt(approveStep.fromAmount),
           address: approveStep.fromAddress as `0x${string}`,
           chainId: approveStep.fromChain,
         });
-        const approvePending = publicClient.waitForTransactionReceipt({
-          hash: approveHash,
-        });
+        const approvePending = publicClient.waitForTransactionReceipt({ hash });
         toast.promise(approvePending, {
           loading: "Approve is pending...",
           success: "Approve transaction successful",
@@ -94,7 +95,7 @@ export const useExectuteSwapperRoute = () => {
           operationId: operation.id,
           promise: approvePending,
         });
-        const hash = await executeSwap(operation);
+        hash = await executeSwap(operation);
         updateOperation({
           id: operation.id,
           payload: {
@@ -104,7 +105,7 @@ export const useExectuteSwapperRoute = () => {
         });
       } else {
         addOperation(operation);
-        const hash = await executeSwap(operation);
+        hash = await executeSwap(operation);
         updateOperation({
           id: operation.id,
           payload: {
@@ -136,7 +137,7 @@ export const useExectuteSwapperRoute = () => {
   }, [
     canSwap,
     closeModal,
-    currentNetwork.chain.id,
+    currentNetwork.id,
     estimation,
     executeSwap,
     fromToken,

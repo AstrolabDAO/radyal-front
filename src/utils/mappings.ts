@@ -6,15 +6,11 @@ export const networkBySlug: { [slug: string]: Network } = {};
 export const networkByChainId: { [chainId: number]: Network } = {};
 export const deFiIdByChainId: { [chainId: number]: number } = {};
 export const chainIdByDeFiId: { [deFiId: number]: number } = {};
-
 export const protocolBySlug: { [slug: string]: Protocol } = {};
 export const protocolByStrippedSlug: { [slug: string]: Protocol } = {};
-
-export const chainImages: { [id: number]: string } = {};
-
+export const iconByNetwork: { [id: number]: string } = {};
 export const strategiesByChainId: { [networkId: number]: Strategy[] } = {};
 export const strategyBalanceBySlug: { [slug: string]: Balance } = {};
-
 export const protocolByThirdPartyId: { [id: string]: Protocol } = {};
 
 export const wagmiChainById: { [id: number]: Chain } = {};
@@ -55,10 +51,4 @@ export const SwapRouteStepTypeTraduction = {
   swap: "Swap",
   cross: "Bridge",
   custom: "Deposit",
-};
-export const SwaptoolTraduction = {
-  custom: "radyal",
-  "sushiswap-dai": "sushiswap",
-  hop: "hop-exchange",
-  cbridge: "celer-network",
 };

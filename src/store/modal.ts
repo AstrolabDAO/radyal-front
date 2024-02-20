@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Modals } from "~/utils/constants";
+import { Modals } from "~/modal-registry";
 
 export interface StoredModal {
   modal: keyof typeof Modals;

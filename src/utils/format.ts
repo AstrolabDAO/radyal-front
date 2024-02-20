@@ -2,7 +2,7 @@ import { unwraps, wagmiChainById } from "./mappings";
 import { ChainRpcUrls, Network } from "./interfaces";
 
 import md5 from "md5";
-import { zeroAddress } from "viem";
+import { defineChain, zeroAddress } from "viem";
 import { getDigits, round, truncateTrailingZeroes } from "./maths";
 import { dateToDateString, dateToString, dateToTimeString } from "./date";
 import { Callable, Stringifiable } from "./typing";
@@ -81,16 +81,42 @@ export const cacheHash = (...params: any[]) => {
   return md5(JSON.stringify(params));
 };
 
-export const networkToWagmiChain = (network: Network) => {
-  if (!network) return;
+export const networkToWagmiChain = (n: Network) => {
+  if (!n) return;
 
-  const wagmiNetwork = wagmiChainById[network.id];
-
-  if (wagmiNetwork) return wagmiNetwork;
-
-  wagmiNetwork.rpcUrls.default = {
-    http: network.httpRpcs,
-  } as ChainRpcUrls;
+  const wagmiChain = wagmiChainById[n.id];
+  const common = {
+    id: n.id,
+    network: n.slug, // slugify(n.name)
+    name: n.name,
+    blockExplorers: {
+      default: {
+        name: `${n.name} Explorer`,
+        url: n.explorers[0],
+      },
+    },
+    nativeCurrency: {
+      symbol: n.gasToken,
+      name: n.gasToken,
+      decimals: 18,
+    },
+    rpcUrls: {
+      default: { http: [n.httpRpcs[0]] },
+      public: { http: [n.httpRpcs[0]] },
+    },
+    // contracts: {
+      // ensRegistry: {
+      //   address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+      // },
+      // ensUniversalResolver: {
+      //   address: "0xc0497E381f536Be9ce14B0dD3817cBcAe57d2F62",
+      // },
+      // multicall3: {
+      //   address: "0xca11bde05977b3631167028862be2a173976ca11",
+      // },
+    // },
+  };
+  return wagmiChain ? Object.assign(wagmiChain, common) : defineChain(common);
 };
 
 export const overrideZeroAddress = (address: string) => {
@@ -99,7 +125,6 @@ export const overrideZeroAddress = (address: string) => {
     : address;
 };
 
-// TODO v2: make Currency a stored class
 export enum Currency {
   USD = "USD",
   EUR = "EUR",
@@ -139,9 +164,6 @@ export const SYMBOL_BY_ISO: { [currency: string]: string } = {
   [Currency.RUB]: "₽",
   [Currency.MXN]: "$",
 };
-
-// export const ISO_BY_SYMBOL: { [symbol: string]: string } =
-//   transposeObject(SYMBOL_BY_ISO);
 
 export const DEFAULT_VALUE_BY_TYPE: { [k: string]: unknown } = {
   number: 0,

@@ -9,12 +9,12 @@ import {
 
 import Close from "~/assets/icons/close.svg?react";
 import ChevronLeft from "~/assets/icons/chevron-left.svg?react";
-import { Modals } from "~/utils/constants";
 import clsx from "clsx";
 import { ModalSizeConverter } from "~/store/modal";
 import { closeModal } from "~/services/modal";
 
 import { ModalWrapper } from "./styled";
+import { Modals } from "~/modal-registry";
 
 export interface BaseModal extends React.ReactElement {
   props: {
