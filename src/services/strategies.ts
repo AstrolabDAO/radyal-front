@@ -4,6 +4,7 @@ import { networkByChainId } from "~/utils/mappings";
 import getBalances from "~/utils/multicall";
 import { getStore } from "~/store";
 import { select, selectGroup } from "~/store/strategies";
+import { selectedStrategySelector } from "~/store/selectors/strategies";
 
 export const getStrategiesBalances = async (
   address: `0x${string}`,
@@ -38,6 +39,11 @@ export const getStrategiesBalances = async (
   } catch (e) {
     console.error(e);
   }
+};
+
+export const getSelectedStrategy = () => {
+  const state = getStore().getState();
+  return selectedStrategySelector(state);
 };
 
 export const selectStrategy = (strategy: Strategy) =>

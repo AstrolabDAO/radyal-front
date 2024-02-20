@@ -10,7 +10,6 @@ export const estimationIsEnabledSelector = createSelector(
 
     return !!(
       state.is.init &&
-      !state.is.estimationOnprogress &&
       !!action.from &&
       action.value > 0 &&
       !!action.to &&

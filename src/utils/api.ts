@@ -42,21 +42,33 @@ export const getTokens = async () => {
           token.network = network;
           return !!token.network;
         })
-        .map(({ nativeAddress, symbol, network, scale, coinGeckoId, slug,logoURI }) => {
-          const cleanSymbol = symbol.replace(TOKEN_BASENAME_REGEX, "$1");
-          const token = {
-            address: nativeAddress,
+        .map(
+          ({
+            nativeAddress,
             symbol,
-            decimals: scale,
-            weiPerUnit: 10 ** scale,
-            icon: logoURI ?? `/images/tokens/${encodeURI(cleanSymbol.toLowerCase())}.svg`,
             network,
-            slug,
+            scale,
             coinGeckoId,
-          } as Token;
+            slug,
+            logoURI,
+          }) => {
+            const cleanSymbol = symbol.replace(TOKEN_BASENAME_REGEX, "$1");
+            const token = {
+              address: nativeAddress,
+              symbol,
+              decimals: scale,
+              weiPerUnit: 10 ** scale,
+              icon:
+                logoURI ??
+                `/images/tokens/${encodeURI(cleanSymbol.toLowerCase())}.svg`,
+              network,
+              slug,
+              coinGeckoId,
+            } as Token;
 
-          return token;
-        });
+            return token;
+          }
+        );
 
       return filteredTokens;
     });
@@ -146,7 +158,6 @@ export const getStrategies = async () => {
       return !!network && !!token && nativeAddress !== zeroAddress;
     })
     .map((strategy) => {
-      console.log("STRATEGY,", strategy);
       const {
         name,
         nativeNetwork,

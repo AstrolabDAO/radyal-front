@@ -12,7 +12,7 @@ import Close from "~/assets/icons/close.svg?react";
 
 import { useInteraction, useIsInit } from "~/hooks/swapper";
 import { useBalances, useTokenIsLoaded } from "~/hooks/tokens";
-import { useWriteDebounce } from "~/hooks/swapper-actions";
+
 import { useSelectedStrategy } from "~/hooks/strategies";
 
 import { getTokenBySlug } from "~/services/tokens";
@@ -44,8 +44,6 @@ const ActionModal = (props: BaseModalProps) => {
   const firstBalance = useMemo(() => {
     return balances[0] ?? null;
   }, [balances]);
-
-  useWriteDebounce();
 
   useEffect(() => {
     watchAccount(() => {

@@ -3,7 +3,14 @@ import { ICommonStep } from "@astrolabs/swapper";
 import { StrategyInteraction } from "./constants";
 import { OperationStep } from "~/model/operation";
 
-export type StepType = "cross" | "bridge" | "swap" | "deposit" | "withdraw" | "approve" | "custom";
+export type StepType =
+  | "cross"
+  | "bridge"
+  | "swap"
+  | "deposit"
+  | "withdraw"
+  | "approve"
+  | "custom";
 
 export interface Network {
   id: number;
@@ -162,10 +169,14 @@ export interface EstimationRequest {
   steps: ICommonStep[];
 }
 export interface Estimation {
-  estimation: number;
-  id: string;
-  request: EstimationRequest;
+  estimation?: number;
+  id?: string;
+  request?: EstimationRequest;
   // It is an same of request.steps but with Approve step added if needed
-  steps: OperationStep[];
-  error?: any;
+  steps?: OperationStep[];
+  error?: string;
+}
+
+export interface EstimationError {
+  error: string;
 }

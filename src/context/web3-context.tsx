@@ -1,4 +1,4 @@
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useMemo, useState } from "react";
 
 import { useQuery } from "react-query";
 import { WagmiConfig } from "wagmi";
