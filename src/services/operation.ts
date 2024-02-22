@@ -14,19 +14,13 @@ import {
   selectedOperationSelector,
 } from "~/store/selectors/operations";
 
+import { OperationStatus, getStatus } from "@astrolabs/swapper";
+import { ONE_MINUTE } from "~/App";
 import {
-  AggregatorId,
-  OperationStatus,
-  OperationStep,
-  aggregatorById,
-  getStatus,
-} from "@astrolabs/swapper";
-import {
+  deleteOperation as storeDeleteOperation,
   emmitStep as storeEmmitStep,
   selectOperation as storeSelectOperation,
-  deleteOperation as storeDeleteOperation,
 } from "~/store/operations";
-import { ONE_MINUTE } from "~/App";
 
 export const getOperationsStore = () => {
   return getStoreState().operations;

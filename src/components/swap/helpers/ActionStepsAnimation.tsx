@@ -1,12 +1,10 @@
 import Lottie from "lottie-react";
 import { useMemo } from "react";
-import { custom } from "viem";
 
 import BridgeAnimation from "~/assets/animations/bridge.json";
 import DepositAnimation from "~/assets/animations/deposit.json";
 import SwapAnimation from "~/assets/animations/swap.json";
 import WithdrawAnimation from "~/assets/animations/withdraw.json";
-import { StepType } from "~/utils/interfaces";
 
 type SelectTokenAnimationProps = {
   mode: string;

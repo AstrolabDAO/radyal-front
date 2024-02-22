@@ -1,5 +1,5 @@
 import { erc20Abi } from "abitype/abis";
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 
 import { useChainId, useReadContract } from "wagmi";
 import { switchChain } from "wagmi/actions";

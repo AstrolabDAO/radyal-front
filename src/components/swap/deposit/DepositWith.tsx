@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { useFromValue } from "~/hooks/swapper";
+import { setFromValue } from "~/services/swapper";
 import { Token } from "~/utils/interfaces";
 import ActionBlock from "../helpers/ActionBlock";
-import { useTokenIsLoaded } from "~/hooks/tokens";
-import { setFromValue } from "~/services/swapper";
 type DepositWithProps = {
   token: Token;
   onTokenClick: () => void;
@@ -16,7 +15,6 @@ const DepositWith = ({ token, onTokenClick }: DepositWithProps) => {
   const fromValue = useFromValue();
 
   const [isFocused, setIsFocused] = useState(false);
-  const tokensIsLoading = useTokenIsLoaded();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const replace = event.target.value

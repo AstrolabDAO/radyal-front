@@ -26,8 +26,8 @@ const Header = () => {
 
   return (
     <header
-      className={clsx("sticky top-0 w-full p-1 z-50", {
-        "scrolled": scrolling,
+      className={clsx("sticky top-0 w-full p-1 z-40", {
+        scrolled: scrolling,
       })}
     >
       <div className="container">

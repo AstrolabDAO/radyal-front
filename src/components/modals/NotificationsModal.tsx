@@ -2,16 +2,15 @@ import dayjs from "dayjs";
 import { useMemo } from "react";
 
 import { useOperations } from "~/hooks/operation";
-import IconCard from "../IconCard";
 
 import { OperationStatus } from "@astrolabs/swapper";
 import SuccessIcon from "~/assets/icons/checkmark.svg?react";
 import DangerIcon from "~/assets/icons/danger.svg?react";
 
-import { deleteOperation, selectOperation } from "~/services/operation";
-import TokenPresentation from "../TokenPresentation";
 import { CgTrash } from "react-icons/cg";
 import { openModal } from "~/services/modal";
+import { deleteOperation, selectOperation } from "~/services/operation";
+import TokenPresentation from "../TokenPresentation";
 export const NotificationsModal = () => {
   const operations = useOperations();
 
@@ -61,21 +60,15 @@ export const NotificationsModal = () => {
             </thead>
             <tbody>
               {populatedOperations.map((operation, index) => {
-                const {
-                  iconBase,
-                  fromToken,
-                  toToken,
-                  fromValue,
-                  toValue,
-                  status,
-                } = operation;
+                const { fromToken, toToken, fromValue, toValue, status } =
+                  operation;
                 return (
                   <tr
                     key={`operation-${operation.id}-${index}`}
                     className="cursor-pointer bordered-hover"
                     onClick={() => {
                       selectOperation(operation.id);
-                      openModal({ modal: "steps",title: "TX TRACKER" });
+                      openModal({ modal: "steps", title: "TX TRACKER" });
                     }}
                   >
                     <td>

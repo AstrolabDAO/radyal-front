@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 
 import StrategyHeader from "./StrategyHeader";
 import DepositFor from "./deposit/DepositFor";
@@ -26,9 +26,9 @@ import { switchChain } from "wagmi/actions";
 import { Operation } from "~/model/operation";
 import { openModal } from "~/services/modal";
 import { executeSwapperRoute } from "~/services/swapper";
+import { getWagmiConfig } from "~/services/web3";
 import { GasDetails } from "../GasDetails";
 import { Button } from "../styled";
-import { getWagmiConfig } from "~/services/web3";
 
 const DepositTab = () => {
   const selectedStrategy = useSelectedStrategy();

@@ -1,8 +1,7 @@
 import { erc20Abi } from "abitype/abis";
-import { BaseError, ContractFunctionRevertedError } from "viem";
 
 import { writeContract } from "@wagmi/core";
-import { estimateGas, sendTransaction } from "wagmi/actions";
+import { sendTransaction } from "wagmi/actions";
 import { getWagmiConfig } from "./web3";
 
 export const executeTransaction = async (opts) => {

@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import { useEstimationOnProgress } from "~/hooks/swapper";
 import { Icon, Token } from "~/utils/interfaces";
@@ -15,12 +15,12 @@ import {
 import { OperationStatus } from "@astrolabs/swapper";
 import Loader from "~/components/Loader";
 
+import { useProtocols } from "~/hooks/web3";
 import { Network } from "~/model/network";
 import { Operation } from "~/model/operation";
 import { Protocol } from "~/model/protocol";
 import { findClosestMatch } from "~/utils";
 import ActionRouteDetailLine from "./ActionRouteDetailLine";
-import { useProtocols } from "~/hooks/web3";
 
 type ActionRouteDetailProps = {
   operation: Operation;
@@ -54,15 +54,6 @@ const OperationRouteDetail = ({
   );
 
   const getProtocolIconAndName = useCallback((id: string) => {
-    const protocol = {
-      // protocolName,
-      protocolIcon: {
-        // url: protocolData?.icon,
-        classes: "ms-1.5",
-        size: { width: 20, height: 20 },
-      } as Icon,
-    };
-
     let p = Protocol.byThirdPartyId[id];
 
     if (!p) {

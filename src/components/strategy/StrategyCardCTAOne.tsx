@@ -5,18 +5,15 @@ import { useAccount, useAccountEffect } from "wagmi";
 import { getStrategyIcon } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
-import StrategyCardAPY from "./StrategyCardAPY";
 import StrategyCardIcons from "./StrategyCardIcons";
 
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import ActionModal from "../modals/ActionModal";
 
-import "./StrategyCard.css";
-import { getRandomAPY } from "~/utils/mocking";
 import { openModal } from "~/services/modal";
 import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
-import { Button } from "../styled";
 import { COLORS } from "~/styles/constants";
+import { Button } from "../styled";
+import "./StrategyCard.css";
 
 interface StrategyProps {
   strategyGroup: Strategy[];

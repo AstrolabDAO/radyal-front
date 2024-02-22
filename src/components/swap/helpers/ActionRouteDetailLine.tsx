@@ -29,7 +29,6 @@ type ActionRouteDetailLineProps = {
 
 const ActionRouteDetailLine = ({
   status = "NEUTRAL",
-  operation,
   step: {
     via,
     protocolIcon,

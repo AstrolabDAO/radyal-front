@@ -10,7 +10,6 @@ import { getSwapRoute } from "./swap";
 import {
   getEstimationOnProgress,
   getInteraction,
-  getInteractionNeedApprove,
   getInteractionNeedToSwap,
   getSwapperStore,
   setEstimationOnprogress,
@@ -18,6 +17,9 @@ import {
 } from "./swapper";
 import { OperationStep } from "~/model/operation";
 import { ActionInteraction } from "~/store/swapper";
+import { getAccount, readContract } from "wagmi/actions";
+import { getWagmiConfig } from "./web3";
+import { erc20Abi, zeroAddress } from "viem";
 
 export const estimate = async (): Promise<Estimation> => {
   const store = getSwapperStore();
@@ -105,22 +107,18 @@ export const estimate = async (): Promise<Estimation> => {
   }
 };
 
-export const updateEstimation = (estimationData: Estimation) => {
+export const updateEstimation = async (estimationData: Estimation) => {
   if (!estimationData) {
     return;
   }
+  const wagmiconfig = getWagmiConfig();
   const state = getSwapperStore();
   let steps = estimationData?.steps;
   const interaction = getInteraction();
-  const needApprove = getInteractionNeedApprove();
   const needToSwap = getInteractionNeedToSwap();
   const { from: baseFrom, to: baseTo, value } = state[interaction];
   const from = "asset" in baseFrom ? baseFrom.asset : baseFrom;
   const to = "asset" in baseTo ? baseTo.asset : baseTo;
-
-  const spender = !needToSwap
-    ? baseTo?.address
-    : estimationData?.request?.approvalAddress;
 
   if (
     steps &&
@@ -129,14 +127,33 @@ export const updateEstimation = (estimationData: Estimation) => {
     const leftArray = [steps[0]];
     const rightArray = steps.slice(1);
 
-    if (needApprove && steps[0].type !== "approve") {
-      const isDeposit = interaction === ActionInteraction.DEPOSIT;
-      const { weiPerUnit } = from;
-      const fromAmount = isDeposit
-        ? value * weiPerUnit
-        : Number(rightArray[0].fromAmount);
+    const { address } = getAccount(wagmiconfig);
+    const spender = !needToSwap
+      ? baseTo?.address
+      : estimationData?.request?.approvalAddress;
+    const allowance =
+      from.address === zeroAddress
+        ? -1
+        : await readContract(wagmiconfig, {
+            address: from.address,
+            chainId: from.network.id,
+            abi: erc20Abi,
+            functionName: "allowance",
+            args: [address, spender],
+          });
 
-      const approveAmount = Math.round(fromAmount / weiPerUnit) * weiPerUnit;
+    const isDeposit = interaction === ActionInteraction.DEPOSIT;
+    const { weiPerUnit } = from;
+
+    const fromAmount = isDeposit
+      ? value * weiPerUnit
+      : Number(rightArray[0].fromAmount);
+
+    const approveAmount = Math.round(fromAmount / weiPerUnit) * weiPerUnit;
+
+    const needApprove = allowance !== -1 && allowance < approveAmount;
+
+    if (needApprove && steps[0].type !== "approve") {
       (isDeposit ? leftArray : rightArray).unshift({
         id: window.crypto.randomUUID(),
         type: "approve",

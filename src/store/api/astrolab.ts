@@ -15,7 +15,7 @@ export const initStore = (store) => {
 
 export const fetchNetworks = createAsyncThunk(
   "astrolab/fetchNetworks",
-  async (arg, { rejectWithValue }) => {
+  async (_arg, { rejectWithValue }) => {
     try {
       const result = await axios.get<NetworksResponse>(
         `${process.env.ASTROLAB_API}/networks?slugs=${JSON.stringify(NETWORKS)}`
@@ -29,7 +29,7 @@ export const fetchNetworks = createAsyncThunk(
 
 export const fetchProtocols = createAsyncThunk(
   "astrolab/fetchProtocols",
-  async (arg, { rejectWithValue }) => {
+  async (_arg, { rejectWithValue }) => {
     try {
       const result = await axios.get<ProtocolsResponse>(
         `${process.env.ASTROLAB_API}/protocols`

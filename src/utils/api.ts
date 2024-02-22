@@ -1,6 +1,6 @@
 import { abi as AgentABI } from "@astrolabs/registry/abis/StrategyV5.json";
 import axios from "axios";
-import { zeroAddress } from "viem";
+import { ContractFunctionParameters, zeroAddress } from "viem";
 import { getTokenBySlug } from "~/services/tokens";
 import { COINGECKO_API, TOKEN_BASENAME_REGEX } from "./constants";
 import { Strategy, Token } from "./interfaces";
@@ -309,7 +309,10 @@ export const getStrategies = async () => {
       })
       .flat(1);
 
-    const result = await multicall(Number(chainId), contractsCalls);
+    const result = await multicall(
+      Number(chainId),
+      contractsCalls as ContractFunctionParameters[]
+    );
 
     // Add multicall result on api Data
 

@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
 
 import { useAccount, useAccountEffect } from "wagmi";
 
@@ -26,7 +25,6 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
   const web3Modal = useWeb3Modal();
   const [shouldOpenModal, setShouldOpenModal] = useState<boolean>(false);
 
-  const dispatch = useDispatch();
   // handleConnect is called when the user connects to the wallet
   // isReconnected is true if the user was already connected
   const handleConnect = ({ isReconnected }) => {

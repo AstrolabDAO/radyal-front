@@ -1,14 +1,10 @@
 import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
 
-import { ICommonStep } from "@astrolabs/swapper";
-
-import { Estimation, Strategy } from "../interfaces";
-import { Operation, OperationStep } from "~/model/operation";
 import { createPublicClient, getContract, http } from "viem";
-import { getPublicClient } from "wagmi/actions";
-import { getWagmiConfig } from "~/services/web3";
-import { networkToWagmiChain } from "../format";
+import { OperationStep } from "~/model/operation";
 import { ActionInteraction } from "~/store/swapper";
+import { networkToWagmiChain } from "../format";
+import { Estimation, Strategy } from "../interfaces";
 
 export const previewStrategyTokenMove = async ({
   strategy,
@@ -23,7 +19,7 @@ export const previewStrategyTokenMove = async ({
     address: strategy.address,
     abi: StratV5Abi.abi,
     client: {
-      public: publicClient,
+      public: publicClient as never,
     },
   });
 

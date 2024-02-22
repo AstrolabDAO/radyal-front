@@ -11,14 +11,14 @@ import { useDispatch } from "react-redux";
 import { useTokensStore } from "~/hooks/tokens";
 import { getStrategiesBalances } from "~/services/strategies";
 
-import { addBalances, addTokens } from "~/store/tokens";
-import { cacheHash } from "~/utils/format";
-import Layout from "~/components/layout/Layout";
-import { getStrategies } from "~/utils/api";
-import { init } from "~/store/strategies";
-import { useProtocolsIsLoading } from "~/hooks/web3";
+import { useQuery } from "@tanstack/react-query";
 import { ONE_MINUTE } from "~/App";
-import { QueryKey, useQuery } from "@tanstack/react-query";
+import Layout from "~/components/layout/Layout";
+import { useProtocolsIsLoading } from "~/hooks/web3";
+import { init } from "~/store/strategies";
+import { addBalances, addTokens } from "~/store/tokens";
+import { getStrategies } from "~/utils/api";
+import { cacheHash } from "~/utils/format";
 const StrategiesPage = () => {
   const { address, isConnected } = useAccount();
 

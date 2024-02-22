@@ -1,9 +1,6 @@
-import clsx from "clsx";
-
 import { useEffect, useRef, useState } from "react";
 import ChevronDown from "~/assets/icons/chevron-down.svg?react";
 import Link from "~/assets/icons/link.svg";
-import Dropdown from "./HeaderActions";
 import { StyledDropdown } from "~/components/styled";
 
 const HeaderAbout: React.FC = () => {
@@ -36,7 +33,7 @@ const HeaderAbout: React.FC = () => {
         </div>
       </div>
       <StyledDropdown
-      className="border-darkerGrey border-solid border-2 bg-grey"
+        className="border-darkerGrey border-solid border-2 bg-grey"
         visible={isOpen}
         ref={dropdownRef}
         tabIndex={-1}
@@ -48,19 +45,11 @@ const HeaderAbout: React.FC = () => {
         </a>
         <a href="https://docs.astrolab.fi/" className=" hover:text-primary">
           DOCS&nbsp;
-          <img
-            className="invert w-4 inline"
-            src={Link}
-            alt="link"
-          />
+          <img className="invert w-4 inline" src={Link} alt="link" />
         </a>
         <a href="#" className=" hover:text-primary cursor-pointer">
           AUDITS&nbsp;
-          <img
-            className="invert w-4 inline"
-            src={Link}
-            alt="link"
-          />
+          <img className="invert w-4 inline" src={Link} alt="link" />
         </a>
       </StyledDropdown>
     </div>

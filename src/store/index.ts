@@ -1,25 +1,21 @@
-import {
-  PayloadAction,
-  configureStore,
-  ThunkMiddleware,
-} from "@reduxjs/toolkit";
+import { PayloadAction, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import {
   convertClassToObjectMiddleware,
   promiseAwaitingMiddleware,
 } from "./middlewares";
 import operationMiddlewares from "./middlewares/operations";
-import tokensMiddlewares from "./middlewares/tokens";
 import strategiesMiddlewares from "./middlewares/strategies";
 import swapperMiddlewares from "./middlewares/swapper";
+import tokensMiddlewares from "./middlewares/tokens";
 
-import { TokenReducer } from "./tokens";
+import { initStore } from "./api/astrolab";
+import { ModalReducer } from "./modal";
 import { OperationReducer } from "./operations";
 import { StrategiesReducer } from "./strategies";
-import { ModalReducer } from "./modal";
 import { SwapperReducer } from "./swapper";
+import { TokenReducer } from "./tokens";
 import { Web3Reducer } from "./web3";
-import { initStore } from "./api/astrolab";
 //import reduxApis, { endpoints } from "./api/api";
 export type IRootState = {
   tokens: ReturnType<typeof TokenReducer>;

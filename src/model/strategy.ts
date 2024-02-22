@@ -1,6 +1,6 @@
 import { Balance, Token } from "~/utils/interfaces";
+import { Network } from "./network";
 import { Serializable } from "./serializable";
-import { Network, NetworkInterface } from "./network";
 
 export interface StrategyInterface extends Token {
   rewardsTokens?: string[];

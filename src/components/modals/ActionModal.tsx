@@ -1,10 +1,9 @@
 import clsx from "clsx";
 
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Transition } from "@headlessui/react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { watchAccount } from "wagmi/actions";
-import { BaseModalProps } from "../Modal";
 import DepositTab from "~/components/swap/DepositTab";
 import WithdrawTab from "~/components/swap/WithdrawTab";
 
@@ -19,14 +18,14 @@ import { getTokenBySlug } from "~/services/tokens";
 import { cacheHash } from "~/utils/format";
 
 import { EstimationProvider } from "~/context/estimation-context";
-import { initSwapper, selectToken, setInteraction } from "~/services/swapper";
-import InfoTab from "../swap/InfoTab";
 import { closeModal } from "~/services/modal";
+import { initSwapper, selectToken, setInteraction } from "~/services/swapper";
 import { getWagmiConfig } from "~/services/web3";
 import { ActionInteraction } from "~/store/swapper";
+import InfoTab from "../swap/InfoTab";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ActionModal = (props: BaseModalProps) => {
+const ActionModal = () => {
   const balances = useBalances();
   const selectedStrategy = useSelectedStrategy();
   const isInit = useIsInit();

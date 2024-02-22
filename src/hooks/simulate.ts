@@ -1,5 +1,3 @@
-import { erc20Abi } from "abitype/abis";
-import { usePublicClient } from "wagmi";
 import { getPublicClient } from "wagmi/actions";
 import { getWagmiConfig } from "~/services/web3";
 
@@ -15,6 +13,6 @@ export const SimulateTx = async (
     functionName: functionName,
     address,
     abi: abi as any,
-    args: [],
+    args,
   });
 };

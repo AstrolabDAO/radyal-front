@@ -1,28 +1,21 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { usePrices } from "~/hooks/tokens";
 
 import { Token } from "~/utils/interfaces";
 
+import { useNetworks } from "~/hooks/web3";
 import { switchSelection } from "~/services/swapper";
 import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
 import { Input } from "../styled";
 import SelectTokenLine from "./SelectTokenLine";
-import { useNetworks } from "~/hooks/web3";
 
 type SelectTokenProps = {
   tokens: Array<Token>;
   onSelect: (token: Token) => void;
   onBackClick: () => void;
 };
-const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
+const SelectToken = ({ tokens, onSelect }: SelectTokenProps) => {
   const [search, setSearch] = useState("");
   const [networksFilter, setNetworksFilter] = useState([]);
 

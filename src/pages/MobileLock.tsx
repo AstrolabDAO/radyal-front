@@ -1,5 +1,3 @@
-import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
-
 import Lottie from "lottie-react";
 import Logo from "~/assets/animations/logo.json";
 import { SocialNetworks } from "~/components/SocialNetworks";

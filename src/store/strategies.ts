@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { StrategyInterface } from "~/model/strategy";
 import { cacheHash } from "~/utils/format";
 
 import { Balance, Strategy } from "~/utils/interfaces";

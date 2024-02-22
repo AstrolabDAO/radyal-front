@@ -23,13 +23,13 @@ const AppProvider = () => {
   const storedCoingeckoIds = useRequestedPriceCoingeckoIds();
   const { address, isConnected } = useAccount();
 
-  const { data: tokens, isLoading: tokenIsLoading } = useQuery<Token[]>({
+  const { data: tokens } = useQuery<Token[]>({
     queryKey: ["tokens"],
     queryFn: getTokens,
     retry: true,
   });
 
-  const { data: balances, isLoading: balancesIsLoading } = useQuery<Balance[]>({
+  const { data: balances } = useQuery<Balance[]>({
     queryKey: [cacheHash(`balances`, address)],
     queryFn: () => loadBalancesByAddress(address),
     enabled: !!address && isConnected,
@@ -52,7 +52,7 @@ const AppProvider = () => {
     return [coingeckoIds, true];
   }, [tokens, balances]);
 
-  const { data: prices, isLoading: pricesIsLoading } = useQuery({
+  const { data: prices } = useQuery({
     queryKey: [cacheHash("prices")],
     queryFn: () => {
       const uniqueIds = new Set<string>([

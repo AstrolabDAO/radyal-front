@@ -1,12 +1,18 @@
 import { getWagmiConfig } from "~/services/web3";
 import { Balance, Token } from "./interfaces";
+
 import { multicall as wagmiMulticall } from "@wagmi/core";
-import { MulticallContracts, Narrow } from "viem";
+import { ContractFunctionParameters } from "viem";
 import { Network } from "~/model/network";
-export const multicall = (chainId: number, calls: any) => {
+
+export const multicall = async (
+  chainId: number,
+  calls: ContractFunctionParameters[]
+) => {
+  // @ts-ignore
   return wagmiMulticall(getWagmiConfig(), {
-    contracts: calls,
     chainId,
+    contracts: calls,
   });
 };
 
@@ -15,10 +21,10 @@ export const getBalances = async (
   contracts: { abi: any; address: `0x${string}`; token: Token }[] = [],
   address: `0x${string}`
 ) => {
+  // @ts-ignore
   const result = await wagmiMulticall(getWagmiConfig(), {
     chainId: network.id,
     contracts: contracts
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .map(({ token, ...contract }) => [
         {
           ...contract,

@@ -1,14 +1,12 @@
 import { useContext, useState } from "react";
-import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
 import { DisclaimerContext } from "~/context/disclaimer-context";
 
 import Lottie from "lottie-react";
+import styled from "styled-components";
 import Logo from "~/assets/animations/logo.json";
 import Acknowledgement from "~/assets/docs/acknowledgement.mdx";
-import { Button } from "~/components/styled";
-import Layout from "~/components/layout/Layout";
 import { SocialNetworks } from "~/components/SocialNetworks";
-import styled from "styled-components";
+import { Button } from "~/components/styled";
 import { COLORS } from "~/styles/constants";
 
 const DisclaimerPage = () => {
@@ -69,10 +67,9 @@ const DisclaimerPage = () => {
   );
 };
 
-
 const PrimaryLinksContainer = styled.div`
   & a {
-    color: ${COLORS.primary}    
+    color: ${COLORS.primary};
   }
-`
+`;
 export default DisclaimerPage;

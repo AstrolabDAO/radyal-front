@@ -1,4 +1,4 @@
-import { createSelector, current } from "@reduxjs/toolkit";
+import { createSelector } from "@reduxjs/toolkit";
 import { IRootState, dispatch, getStoreState } from "~/store";
 import { SetOnWritePayload } from "~/store/interfaces/swapper";
 import {
@@ -13,14 +13,14 @@ import swapperActions, {
   SwapperState,
 } from "~/store/swapper";
 
+import toast from "react-hot-toast";
+import { getPublicClient } from "wagmi/actions";
+import { Operation, OperationStatus, OperationStep } from "~/model/operation";
 import { Estimation } from "~/utils/interfaces";
 import { closeModal, openModal } from "./modal";
-import { Operation, OperationStatus, OperationStep } from "~/model/operation";
 import { addOperation, emmitStep, updateOperation } from "./operation";
-import { approve } from "./transaction";
-import { getPublicClient } from "wagmi/actions";
-import toast from "react-hot-toast";
 import { executeSwap } from "./swap";
+import { approve } from "./transaction";
 import { getWagmiConfig } from "./web3";
 
 export const getSwapperStore = () => getStoreState().swapper;
@@ -199,7 +199,7 @@ export const executeSwapperRoute = async (
     closeModal();
     setEstimationIsLocked(false);
     unlockEstimation();
-    toast.error(error.message);
+    toast.error("An error has occured");
     updateOperation({
       id: operation.id,
       payload: {
