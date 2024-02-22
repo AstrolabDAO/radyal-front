@@ -6,14 +6,16 @@ import {
 import { erc20Abi } from "abitype/abis";
 import toast from "react-hot-toast";
 import { PublicClient, encodeFunctionData } from "viem";
-import { getAccount } from "wagmi/actions";
 import { Operation } from "~/model/operation";
-import { Store } from "~/store";
+
 import { tokensIsEqual } from "~/utils";
-import { StrategyInteraction } from "~/utils/constants";
 import { overrideZeroAddress } from "~/utils/format";
 import { getSwapperStore } from "./swapper";
 import { executeTransaction } from "./transaction";
+import { getAccount } from "wagmi/actions";
+import { getWagmiConfig } from "./web3";
+import { ActionInteraction } from "~/store/swapper";
+import { store } from "~/store";
 
 export const depositCallData = (address: string, toAmount: string) => {
   return generateCallData({
@@ -44,7 +46,7 @@ export const generateCallData = ({
 };
 
 export const getSwapRoute = async (_value?: number) => {
-  const { address } = getAccount();
+  const { address } = getAccount(getWagmiConfig());
   const store = getSwapperStore();
   const interaction = store.interaction;
   const { from: basefrom, to: baseTo, value } = store[interaction];
@@ -64,7 +66,7 @@ export const getSwapRoute = async (_value?: number) => {
   }
   const customContractCalls: ICustomContractCall[] = [];
   const slippage = 0.1;
-  if (interaction === StrategyInteraction.DEPOSIT) {
+  if (interaction === ActionInteraction.DEPOSIT) {
     const amountNumber = Number(amount);
 
     const approval = approvalCallData(baseTo.address, amountNumber.toString());
@@ -127,7 +129,7 @@ export const executeSwap = async (
   if (tr.maxFeePerGas) delete tr.maxFeePerGas;
   if (tr.maxPriorityFeePerGas) delete tr.maxPriorityFeePerGas;
 
-  const { hash } = await executeTransaction(tr);
+  const hash = await executeTransaction(tr);
 
   console.log("lifiExplorer: ", `https://explorer.li.fi/tx/${hash}`);
   console.log("squidExplorer: ", `https://axelarscan.io/gmp/${hash}`);
@@ -141,7 +143,7 @@ export const executeSwap = async (
     error: "Swap reverted rejected 🤯",
   });
 
-  Store.dispatch({
+  store.dispatch({
     type: "operations/emmitStep",
     payload: {
       operationId: operation.id,

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import tw from "twin.macro";
 import { COLORS } from "~/styles/constants";
+import PropTypes from "prop-types";
 
 export const Input = tw.input`input input-bordered hover:border-primary w-full focus:outline-none bg-base/25 backdrop-blur-3xl placeholder:text-darkGrey`;
 
@@ -17,7 +18,6 @@ export const Button = styled.button<{
   ${(props) => (props.big ? tw`h-12 text-lg` : "")}
   ${(props) => {
     if (props.outline) return;
-    if (props.primary === undefined) props.primary = true;
     if (props.disabled)
       return `
         background: ${COLORS["dark-grey"]}!important;
@@ -32,6 +32,18 @@ ${(props) =>
       ? tw`p-2.5 border-solid border-darkerGrey border-2 rounded-xl bg-base text-white`
       : ""}
 `;
+
+Button.defaultProps = {
+  big: false,
+  primary: true,
+  outline: false,
+};
+Button.propTypes = {
+  big: PropTypes.bool,
+  primary: PropTypes.bool,
+  outline: PropTypes.bool,
+};
+
 export const StyledDropdown = styled.div<{ visible: boolean }>`
   outline: none;
   font-weight: 800;

@@ -1,5 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useMemo } from "react";
-import { useQuery } from "react-query";
+
 import { zeroAddress } from "viem";
 import { useAccount } from "wagmi";
 import { useSelectedStrategy } from "~/hooks/strategies";
@@ -29,9 +30,10 @@ const EstimationProvider = ({ children }) => {
   const interactionNeedToSwap = useInteractionNeedToSwap();
   const { address } = useAccount();
 
-  const { data: estimationData } = useQuery(`estimation-${hash}`, estimate, {
+  const { data: estimationData } = useQuery({
+    queryKey: [`estimation-${hash}`],
+    queryFn: estimate,
     staleTime: 0,
-    cacheTime: 0,
     refetchInterval: 5000,
     enabled: isEnabled,
   });

@@ -21,6 +21,7 @@ import {
   strategyBySlugSelector,
 } from "~/store/selectors/strategies";
 import { IRootState } from "~/store";
+import { getWagmiConfig } from "~/services/web3";
 
 export const useStrategiesStore = () => {
   return useSelector((state: IRootState) => state.strategies);
@@ -73,7 +74,7 @@ export const useStrategyContractFunction = (functionName: string) => {
 
   return useCallback(
     async (args?: any) => {
-      const walletClient = await getWalletClient({
+      const walletClient = await getWalletClient(getWagmiConfig(), {
         chainId: network.id,
       });
       return walletClient.writeContract({
@@ -177,11 +178,11 @@ export const useApproveAndDeposit = () => {
         estimation,
       });
 
-      openModal({ modal: "steps",title: "TX TRACKER" });
+      openModal({ modal: "steps", title: "TX TRACKER" });
 
       try {
         if ((estimation.steps[0] as any).type === "approve") {
-          const { hash: approveHash } = await approve({
+          const approveHash = await approve({
             spender: strategy.address,
             amount,
           });

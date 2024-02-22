@@ -1,4 +1,5 @@
 import { Middleware, PayloadAction } from "@reduxjs/toolkit";
+import { Serializable } from "~/model/serializable";
 
 export const promiseAwaitingMiddleware: Middleware =
   () => (next) => (action: PayloadAction<any>) => {
@@ -17,4 +18,11 @@ export const promiseAwaitingMiddleware: Middleware =
     } else {
       next(action);
     }
+  };
+
+export const convertClassToObjectMiddleware: Middleware =
+  () => (next) => (action: PayloadAction) => {
+    if ((action.payload as any) instanceof Serializable)
+      action.payload = Object.assign({}, action.payload);
+    next(action);
   };

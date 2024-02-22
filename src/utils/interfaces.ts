@@ -1,7 +1,9 @@
 import { ICommonStep } from "@astrolabs/swapper";
 
-import { StrategyInteraction } from "./constants";
 import { OperationStep } from "~/model/operation";
+import { Strategy } from "~/model/strategy";
+import { Network } from "~/model/network";
+import { ActionInteraction } from "~/store/swapper";
 
 export type StepType =
   | "cross"
@@ -11,20 +13,6 @@ export type StepType =
   | "withdraw"
   | "approve"
   | "custom";
-
-export interface Network {
-  id: number;
-  name: string;
-  httpRpcs: string[];
-  wsRpcs: string[];
-  explorers: string[];
-  explorerApi: string;
-  gasToken: string;
-  slug: string;
-  icon?: string;
-  color1: string;
-  color2: string;
-}
 
 export interface Protocol {
   app: string;
@@ -61,19 +49,6 @@ export interface GetRouteResult {
   fromToken?: Token;
   toToken: Token;
   toAmount: number;
-}
-
-// TODO Strategy is Token
-export interface Strategy extends Token {
-  rewardsTokens?: string[];
-  asset: Token;
-  sharePrice: number;
-  protocols?: any[];
-  aggregationLevel?: number;
-  apy?: number;
-  tvl?: number;
-  valuable: any;
-  color1?: string;
 }
 
 export interface GrouppedStrategies {
@@ -139,7 +114,7 @@ export interface SwapperRequest {
   strategy: Strategy;
   amount: bigint;
   address: `0x${string}`;
-  interaction: StrategyInteraction;
+  interaction: ActionInteraction;
 }
 
 export interface SwapEstimation {
@@ -180,3 +155,5 @@ export interface Estimation {
 export interface EstimationError {
   error: string;
 }
+
+export { Strategy };

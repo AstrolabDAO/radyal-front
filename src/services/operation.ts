@@ -1,5 +1,5 @@
 import { EmmitStepAction, Operation, UpdateAction } from "~/model/operation";
-import { getStore, getStoreState } from "~/store";
+import { getStoreState, store } from "~/store";
 import {
   OperationsState,
   add,
@@ -26,7 +26,8 @@ import {
   selectOperation as storeSelectOperation,
   deleteOperation as storeDeleteOperation,
 } from "~/store/operations";
-import { ONE_MINUTE } from "~/main";
+import { ONE_MINUTE } from "~/App";
+
 export const getOperationsStore = () => {
   return getStoreState().operations;
 };
@@ -57,17 +58,17 @@ export const getOperation = (operationId: string) => {
   return operationSelector(getStoreState());
 };
 export const updateOperation = (action: UpdateAction) => {
-  getStore().dispatch(update(action));
+  store.dispatch(update(action));
 };
 
 export const addOperation = (operation: Operation) => {
-  getStore().dispatch(add(operation));
+  store.dispatch(add(operation));
 };
 export const deleteOperation = (id: string) => {
-  getStore().dispatch(storeDeleteOperation(id));
+  store.dispatch(storeDeleteOperation(id));
 };
 export const selectOperation = (id: string) => {
-  getStore().dispatch(storeSelectOperation(id));
+  store.dispatch(storeSelectOperation(id));
 };
 export const getCurrentStep = () => {
   const currentSteps = getCurrentSteps();
@@ -80,7 +81,7 @@ export const getCurrentStep = () => {
 };
 
 export const emmitStep = (action: EmmitStepAction) => {
-  getStore().dispatch(storeEmmitStep(action));
+  store.dispatch(storeEmmitStep(action));
 };
 
 export const startTimeById: { [key: string]: number } = {};
@@ -99,7 +100,7 @@ export const checkInterval = () => {
     const now = new Date().getTime();
     waitingOperatins.forEach(({ id, date }) => {
       if (now > date + ONE_MINUTE * 5)
-        getStore().dispatch(
+        store.dispatch(
           update({
             id,
             payload: {
@@ -110,7 +111,7 @@ export const checkInterval = () => {
     });
     if (listByStatus.length === 0) {
       clearInterval(intervalId);
-      getStore().dispatch({
+      store.dispatch({
         type: "operations/updateIntervalId",
         payload: {
           intervalId: null,
@@ -134,7 +135,7 @@ export const checkInterval = () => {
               result?.status.toUpperCase() as OperationStatus
             )
           ) {
-            getStore().dispatch(
+            store.dispatch(
               update({
                 id: op.id,
                 payload: {
@@ -161,7 +162,7 @@ export const checkInterval = () => {
               })
             );
           } else if (result.status === OperationStatus.FAILED) {
-            getStore().dispatch(
+            store.dispatch(
               update({
                 id: op.id,
                 payload: {
@@ -175,12 +176,12 @@ export const checkInterval = () => {
                 },
               })
             );
-            getStore().dispatch(failCurrentStep(op.id));
+            store.dispatch(failCurrentStep(op.id));
           }
         } catch (e) {
           console.error("ERROR", e);
           if (e?.response?.data?.code === 1011) {
-            getStore().dispatch(
+            store.dispatch(
               update({
                 id: op.id,
                 payload: {
@@ -194,7 +195,7 @@ export const checkInterval = () => {
                 },
               })
             );
-            getStore().dispatch(failCurrentStep(op.id));
+            store.dispatch(failCurrentStep(op.id));
           }
         }
       });

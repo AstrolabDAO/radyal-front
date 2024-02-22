@@ -7,8 +7,6 @@ import {
   useState,
 } from "react";
 
-import { Web3Context } from "~/context/web3-context";
-
 import { usePrices } from "~/hooks/tokens";
 
 import { Token } from "~/utils/interfaces";
@@ -17,6 +15,7 @@ import { switchSelection } from "~/services/swapper";
 import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
 import { Input } from "../styled";
 import SelectTokenLine from "./SelectTokenLine";
+import { useNetworks } from "~/hooks/web3";
 
 type SelectTokenProps = {
   tokens: Array<Token>;
@@ -24,11 +23,10 @@ type SelectTokenProps = {
   onBackClick: () => void;
 };
 const SelectToken = ({ tokens, onSelect, onBackClick }: SelectTokenProps) => {
-  const { networks } = useContext(Web3Context);
-
   const [search, setSearch] = useState("");
   const [networksFilter, setNetworksFilter] = useState([]);
 
+  const networks = useNetworks();
   const [displayedTokens, setDisplayedTokens] = useState([]);
   const [loading, setLoading] = useState(false);
   const loadMoreRef = useRef(null);

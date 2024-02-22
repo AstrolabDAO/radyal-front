@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 import { useMemo, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useAccountEffect } from "wagmi";
 
 import { Strategy } from "~/utils/interfaces";
 
@@ -39,7 +39,8 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
     }
   };
 
-  const { isConnected } = useAccount({ onConnect: handleConnect });
+  useAccountEffect({ onConnect: handleConnect });
+  const { isConnected } = useAccount();
 
   const [strategy, title, subtitle] = useMemo(() => {
     if (!strategyGroup || strategyGroup.length === 0) return [null, null, null];
@@ -70,7 +71,9 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   return (
-    <div className={clsx("md:-mt-24 absolute w-full bottom-0 right-0 pe-2 z-40")}>
+    <div
+      className={clsx("md:-mt-24 absolute w-full bottom-0 right-0 pe-2 z-40")}
+    >
       <div
         className="relative flex flex-col ms-auto pointers-event-none strategy-cta-size max-w-full"
         onClick={openModalStrategy}

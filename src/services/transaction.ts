@@ -1,14 +1,17 @@
-import { PrepareSendTransactionArgs } from "@wagmi/core";
-import { prepareSendTransaction, sendTransaction } from "wagmi/actions";
 import { erc20Abi } from "abitype/abis";
 import { BaseError, ContractFunctionRevertedError } from "viem";
-import { prepareWriteContract } from "wagmi/actions";
-import { writeContract } from "@wagmi/core";
 
-export const executeTransaction = async (opts: PrepareSendTransactionArgs) => {
+import { writeContract } from "@wagmi/core";
+import { estimateGas, sendTransaction } from "wagmi/actions";
+import { getWagmiConfig } from "./web3";
+
+export const executeTransaction = async (opts) => {
   try {
-    const prepare = await prepareSendTransaction(opts);
-    return await sendTransaction(prepare);
+    const config = getWagmiConfig();
+    //const estimate = await estimateGas(config, opts);
+    return sendTransaction(config, opts);
+    //const prepare = await estimateGas(opts);
+    //return await sendTransac(opts);
   } catch (e) {
     console.error(e);
     throw e;
@@ -16,9 +19,14 @@ export const executeTransaction = async (opts: PrepareSendTransactionArgs) => {
 };
 
 export const executeContract = async ({ abi = erc20Abi, ...args }: TxArgs) => {
-  return await writeContract(await prepareWriteTx({ abi, ...args }));
+  return writeContract(getWagmiConfig(), {
+    ...args,
+    abi,
+  });
+  //return await writeContract(await prepareWriteTx({ abi, ...args }));
 };
 
+/*
 export const prepareWriteTx = async ({ abi = erc20Abi, ...args }: TxArgs) => {
   try {
     const { request } = await prepareWriteContract({ abi, ...args });
@@ -39,6 +47,7 @@ export const prepareWriteTx = async ({ abi = erc20Abi, ...args }: TxArgs) => {
     }
   }
 };
+*/
 
 export const approve = async ({
   spender,

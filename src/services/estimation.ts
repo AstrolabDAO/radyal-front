@@ -1,7 +1,7 @@
 import { ICommonStep } from "@astrolabs/swapper";
 import toast from "react-hot-toast";
 import { tokensIsEqual } from "~/utils";
-import { StrategyInteraction } from "~/utils/constants";
+
 import { previewStrategyTokenMove } from "~/utils/flows/strategy";
 import { Estimation } from "~/utils/interfaces";
 import { weiToAmount } from "~/utils/maths";
@@ -17,6 +17,7 @@ import {
   setInteractionEstimation,
 } from "./swapper";
 import { OperationStep } from "~/model/operation";
+import { ActionInteraction } from "~/store/swapper";
 
 export const estimate = async (): Promise<Estimation> => {
   const store = getSwapperStore();
@@ -41,9 +42,9 @@ export const estimate = async (): Promise<Estimation> => {
     let result, interactionEstimation;
     if (
       from.network.id === to.network.id ||
-      StrategyInteraction.WITHDRAW === interaction
+      ActionInteraction.WITHDRAW === interaction
     ) {
-      if (interaction === StrategyInteraction.DEPOSIT) {
+      if (interaction === ActionInteraction.DEPOSIT) {
         result = await getSwapRoute();
         /*interactionEstimation = await previewStrategyTokenMove(
         result[0].estimatedOutput
@@ -85,7 +86,7 @@ export const estimate = async (): Promise<Estimation> => {
 
     const computedSteps = !interactionEstimation
       ? steps
-      : interaction === StrategyInteraction.DEPOSIT
+      : interaction === ActionInteraction.DEPOSIT
         ? [
             ...steps,
             ...(tokensIsEqual(from, to) ? interactionEstimation.steps : []),
@@ -123,13 +124,13 @@ export const updateEstimation = (estimationData: Estimation) => {
 
   if (
     steps &&
-    !(steps?.length === 1 && interaction === StrategyInteraction.WITHDRAW)
+    !(steps?.length === 1 && interaction === ActionInteraction.WITHDRAW)
   ) {
     const leftArray = [steps[0]];
     const rightArray = steps.slice(1);
 
     if (needApprove && steps[0].type !== "approve") {
-      const isDeposit = interaction === StrategyInteraction.DEPOSIT;
+      const isDeposit = interaction === ActionInteraction.DEPOSIT;
       const { weiPerUnit } = from;
       const fromAmount = isDeposit
         ? value * weiPerUnit

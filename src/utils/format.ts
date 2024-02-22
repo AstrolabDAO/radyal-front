@@ -1,11 +1,12 @@
 import { unwraps, wagmiChainById } from "./mappings";
-import { ChainRpcUrls, Network } from "./interfaces";
+import { ChainRpcUrls } from "./interfaces";
 
 import md5 from "md5";
 import { zeroAddress } from "viem";
 import { getDigits, round, truncateTrailingZeroes } from "./maths";
 import { dateToDateString, dateToString, dateToTimeString } from "./date";
 import { Callable, Stringifiable } from "./typing";
+import { Network } from "~/model/network";
 
 export function toRaw(s: string): string {
   return s

@@ -6,22 +6,14 @@ import {
 import { useInteraction } from "~/hooks/swapper";
 import { selectStrategy } from "~/services/strategies";
 import { selectToken } from "~/services/swapper";
-import { StrategyInteraction } from "~/utils/constants";
+import { ActionInteraction } from "~/store/swapper";
 import { toDollarsCompact, toPercent } from "~/utils/format";
-
-import { Strategy } from "~/utils/interfaces";
-import { getRandomAPY, getRandomTVL } from "~/utils/mocking";
 
 const SelectStrategy = () => {
   const selectedGroup = useSelectedStrategyGroup();
 
   const interaction = useInteraction();
-  const selectedStrategy: Strategy = useSelectedStrategy();
-  const strategies: Array<Strategy> = selectedGroup.map((strategy) => ({
-    ...strategy,
-    apy: getRandomAPY(strategy.slug),
-    tvl: getRandomTVL(strategy.slug),
-  }));
+  const selectedStrategy = useSelectedStrategy();
 
   return (
     <div className="flex flex-col ps-3 mb-auto">
@@ -34,7 +26,7 @@ const SelectStrategy = () => {
         className="flex flex-col overflow-y-scroll -me-2"
         style={{ maxHeight: "160px" }}
       >
-        {strategies.map((strategy, index) => {
+        {selectedGroup.map((strategy, index) => {
           const isSelected =
             selectedStrategy?.network.id === strategy.network.id;
           return (
@@ -49,7 +41,7 @@ const SelectStrategy = () => {
                 selectToken({
                   token: strategy,
                   for:
-                    interaction === StrategyInteraction.DEPOSIT ? "to" : "from",
+                    interaction === ActionInteraction.DEPOSIT ? "to" : "from",
                 });
               }}
             >

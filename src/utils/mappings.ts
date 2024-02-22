@@ -1,31 +1,17 @@
 import { Chain } from "viem";
 import * as wagmiChains from "wagmi/chains";
-import { Balance, Network, Protocol, Strategy } from "./interfaces";
-
-export const networkBySlug: { [slug: string]: Network } = {};
-export const networkByChainId: { [chainId: number]: Network } = {};
-export const deFiIdByChainId: { [chainId: number]: number } = {};
-export const chainIdByDeFiId: { [deFiId: number]: number } = {};
-
-export const protocolBySlug: { [slug: string]: Protocol } = {};
-export const protocolByStrippedSlug: { [slug: string]: Protocol } = {};
+import { Strategy } from "./interfaces";
 
 export const chainImages: { [id: number]: string } = {};
-
-export const strategiesByChainId: { [networkId: number]: Strategy[] } = {};
-export const strategyBalanceBySlug: { [slug: string]: Balance } = {};
-
-export const protocolByThirdPartyId: { [id: string]: Protocol } = {};
-
 export const wagmiChainById: { [id: number]: Chain } = {};
 Object.values(wagmiChains).map((chain) => (wagmiChainById[chain.id] = chain));
 
 export const updateStrategyMapping = (strategy: Strategy) => {
-  if (!strategiesByChainId[strategy.network.id]) {
-    strategiesByChainId[strategy.network.id] = [];
+  if (!Strategy.byChainId[strategy.network.id]) {
+    Strategy.byChainId[strategy.network.id] = [];
   }
-  if (!strategiesByChainId[strategy.network.id].includes(strategy))
-    strategiesByChainId[strategy.network.id].push(strategy);
+  if (!Strategy.byChainId[strategy.network.id].includes(strategy))
+    Strategy.byChainId[strategy.network.id].push(strategy);
 };
 
 export const unwraps: { [symbol: string]: string } = {

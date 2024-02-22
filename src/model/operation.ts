@@ -1,5 +1,6 @@
 import { ICommonStep, OperationStatus } from "@astrolabs/swapper";
 import { Token } from "~/utils/interfaces";
+import { Serializable } from "./serializable";
 
 export interface TransactionDetail {
   txHash: string;
@@ -61,7 +62,7 @@ export interface IOperation {
   toToken: Token;
 }
 
-class Operation implements IOperation {
+class Operation extends Serializable implements IOperation {
   id: string;
   isStored: boolean;
   date: number;
@@ -78,6 +79,7 @@ class Operation implements IOperation {
   toToken: Token;
 
   constructor(tx: Partial<Operation>) {
+    super();
     this.id = tx.id;
     this.isStored = false;
     this.date = tx.date ?? new Date().getTime();
@@ -92,13 +94,6 @@ class Operation implements IOperation {
     this.substatusMessage = tx.substatusMessage ?? null;
     this.fromToken = tx.fromToken ?? null;
     this.toToken = tx.toToken ?? null;
-  }
-
-  toObject(): Partial<Operation> {
-    return Object.assign({}, this);
-  }
-  toString(): string {
-    return JSON.stringify(this.toObject());
   }
 }
 

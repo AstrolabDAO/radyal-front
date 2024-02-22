@@ -4,11 +4,25 @@ import { zeroAddress } from "viem";
 import { getTokenBySlug } from "~/services/tokens";
 import { COINGECKO_API, TOKEN_BASENAME_REGEX } from "./constants";
 import { Strategy, Token } from "./interfaces";
-import { networkBySlug, protocolBySlug } from "./mappings";
+
 import { multicall } from "./multicall";
-import { ApiResponseStrategy } from "~/interfaces/astrolab-api";
+import {
+  ApiResponseStrategy,
+  NetworksResponse,
+  ProtocolsResponse,
+} from "~/interfaces/astrolab-api";
 import { getRandomAPY, getRandomTVL } from "./mocking";
-import { toPercent } from "./format";
+import {
+  clearNetworkTypeFromSlug,
+  networkToWagmiChain,
+  stripSlug,
+  toPercent,
+} from "./format";
+import { NETWORKS } from "./web3-constants";
+import { Network, NetworkInterface } from "~/model/network";
+import { setupWeb3modal } from "./setup-web3modal";
+import { Protocol } from "~/model/protocol";
+import { chainImages } from "./mappings";
 
 export const getTokenPrice = (token: Token) => {
   return axios.get(`${COINGECKO_API}/simple/price`, {
@@ -38,7 +52,7 @@ export const getTokens = async () => {
       const filteredTokens = tokens
         .filter((token) => {
           const { nativeNetwork } = token;
-          const network = networkBySlug[nativeNetwork];
+          const network = Network.bySlug[nativeNetwork];
           token.network = network;
           return !!token.network;
         })
@@ -74,12 +88,6 @@ export const getTokens = async () => {
     });
 };
 
-export const getNetworks = async () => {
-  return axios
-    .get(`${process.env.ASTROLAB_API}/networks`)
-    .then((result) => result.data.data);
-};
-
 export const loadBalancesByAddress = async (address: `0x${string}`) => {
   const result = await axios.get(
     `${process.env.ASTROLAB_API}/users/balance/${address}`
@@ -89,11 +97,115 @@ export const loadBalancesByAddress = async (address: `0x${string}`) => {
 
 type ApiResponseStrategyWithIndex = ApiResponseStrategy & { index: number };
 
-export const getStrategies = async () => {
-  const strategiesData = await axios
-    .get(`${process.env.ASTROLAB_API}/strategies`)
-    .then((res) => res.data.data as ApiResponseStrategy[]);
+export const formatNetworks = (networksResponse: NetworksResponse) => {
+  const networksData = networksResponse.data;
+  const chains = [];
+  const networks = [];
+  networksData
+    ?.filter((network) => NETWORKS.includes(network.slug))
+    .forEach((_network) => {
+      const network = new Network(_network as NetworkInterface);
+      Network.byChainId[network.id] = network;
+      Network.bySlug[network.slug] = network;
+      const icon = `/images/networks/${clearNetworkTypeFromSlug(
+        network.slug
+      )}.svg`;
+      chainImages[network.id] = icon;
+      network.icon = icon;
+      networks.push(network);
+      chains.push(networkToWagmiChain(network));
+    });
 
+  return { networks, config: setupWeb3modal(chains) };
+};
+
+export const formatProtocols = (protocolsData: ProtocolsResponse) => {
+  return protocolsData.data.map((_protocol) => {
+    const { app, landing, name, slug } = _protocol;
+    const protocol = new Protocol({
+      app,
+      landing,
+      name,
+      slug,
+      icon: `/images/protocols/${slug}.svg`,
+    });
+
+    Protocol.bySlug[slug] = protocol;
+    Protocol.byStrippedSlug[stripSlug(slug)] = protocol;
+    return protocol;
+  });
+};
+
+/*
+export const formatStrategies = (strategiesData: ApiResponseStrategy[]) => {
+  return strategiesData
+    .filter((strategy) => {
+      console.log("🚀 ~ returnprotocolsData.data.map ~ protocol:", protocol)
+      const { nativeNetwork, nativeAddress } = strategy;
+      const network = Network.bySlug[nativeNetwork];
+      const token = getTokenBySlug(strategy.denomination);
+      return !!network && !!token && nativeAddress !== zeroAddress;
+    })
+    .map((strategy) => {
+      const {
+        name,
+        nativeNetwork,
+        nativeAddress,
+        valuable,
+        symbol,
+        decimals,
+        sharePrice,
+        slug,
+        color1,
+        color2,
+        protocols,
+        aggregationLevel,
+      } = strategy as ApiResponseStrategy & {
+        decimals: number;
+        sharePrice: number;
+        aggregationLevel: number;
+      };
+
+      const network = Network.bySlug[nativeNetwork];
+
+      const dailyAPY = strategy?.valuable?.last?.investedApyDaily;
+      const fakeApy = getRandomAPY(strategy.slug);
+
+      const apy = dailyAPY
+        ? Math.round(dailyAPY * 100) / 100
+        : toPercent(fakeApy, 2, false, true);
+
+      const calculatedTVL =
+        (valuable?.last?.volume * valuable?.last?.sharePrice) /
+        strategy.weiPerUnit;
+      const tvl = calculatedTVL ? calculatedTVL : getRandomTVL(strategy.slug);
+
+      const token = getTokenBySlug(strategy.denomination);
+
+      const _strat = {
+        name,
+        symbol,
+        decimals,
+        address: nativeAddress,
+        network,
+        asset: token,
+        valuable,
+        color1,
+        color2,
+        icon: `/images/tokens/asl.svg`,
+        slug,
+        weiPerUnit: 10 ** decimals,
+        sharePrice,
+        protocols: protocols.map((slug) => Protocol.bySlug[slug]),
+        aggregationLevel,
+        apy,
+        tvl,
+      } as Strategy;
+      return _strat;
+    });
+};
+
+export const populateStrategiesOnChainData = async (strategies: Strategy[]) => {
   const strategiesByNetwork: { [key: number]: ApiResponseStrategyWithIndex[] } =
     {};
 
@@ -102,7 +214,7 @@ export const getStrategies = async () => {
     const strategy = strategiesData[i];
 
     const { nativeNetwork } = strategy;
-    const network = networkBySlug[nativeNetwork];
+    const network = Network.bySlug[nativeNetwork];
     if (!network) continue;
     if (!strategiesByNetwork[network.id]) strategiesByNetwork[network.id] = [];
     // Add index on strategy to retrieve it after
@@ -148,11 +260,77 @@ export const getStrategies = async () => {
       });
     }
   }
+};
+*/
+export const getProtocols = async () => {
+  const result = await axios.get(`${process.env.ASTROLAB_API}/protocols`);
+  return result.data.data;
+};
+
+export const getStrategies = async () => {
+  const strategiesData = await axios
+    .get(`${process.env.ASTROLAB_API}/strategies`)
+    .then((res) => res.data.data as ApiResponseStrategy[]);
+
+  const strategiesByNetwork: { [key: number]: ApiResponseStrategyWithIndex[] } =
+    {};
+
+  // Generate strategies mapping by Network with api Data
+  for (let i = 0; i < strategiesData.length; i++) {
+    const strategy = strategiesData[i];
+
+    const { nativeNetwork } = strategy;
+    const network = Network.bySlug[nativeNetwork];
+    if (!network) continue;
+    if (!strategiesByNetwork[network.id]) strategiesByNetwork[network.id] = [];
+    // Add index on strategy to retrieve it after
+    Object.assign(strategy, { index: i });
+    strategiesByNetwork[network.id].push(
+      strategy as ApiResponseStrategyWithIndex
+    );
+  }
+
+  // Loop on Strategies by networks to multicall (getting strategy token details)
+  for (const chainId of Object.keys(strategiesByNetwork)) {
+    const networkStrategies: ApiResponseStrategyWithIndex[] =
+      strategiesByNetwork[chainId];
+    const contractsCalls = networkStrategies
+      .map((strategy) => {
+        const call = {
+          abi: AgentABI,
+          address: strategy.nativeAddress,
+        };
+        return ["symbol", "decimals", "sharePrice", "name"].map(
+          (functionName) => ({
+            ...call,
+            functionName,
+          })
+        );
+      })
+      .flat(1);
+
+    const result = await multicall(Number(chainId), contractsCalls);
+
+    // Add multicall result on api Data
+
+    for (let i = 0; i < result.length; i += 4) {
+      const [symbol, decimals, sharePrice, name] = result.slice(i, i + 4);
+
+      if (!symbol?.result || !decimals?.result || !name?.result) continue;
+      const strategy = networkStrategies[i / 4];
+      Object.assign(strategiesData[strategy.index], {
+        symbol: symbol?.result,
+        decimals: decimals?.result,
+        sharePrice: Number(sharePrice?.result),
+        name: name?.result,
+      });
+    }
+  }
 
   return strategiesData
     .filter((strategy) => {
       const { nativeNetwork, nativeAddress } = strategy;
-      const network = networkBySlug[nativeNetwork];
+      const network = Network.bySlug[nativeNetwork];
 
       const token = getTokenBySlug(strategy.denomination);
       return !!network && !!token && nativeAddress !== zeroAddress;
@@ -178,7 +356,7 @@ export const getStrategies = async () => {
         aggregationLevel: number;
       };
 
-      const network = networkBySlug[nativeNetwork];
+      const network = Network.bySlug[nativeNetwork];
 
       const dailyAPY = strategy?.valuable?.last?.investedApyDaily;
       const fakeApy = getRandomAPY(strategy.slug);
@@ -208,16 +386,11 @@ export const getStrategies = async () => {
         slug,
         weiPerUnit: 10 ** decimals,
         sharePrice,
-        protocols: protocols.map((slug) => protocolBySlug[slug]),
+        protocols: protocols.map((slug) => Protocol.bySlug[slug]),
         aggregationLevel,
         apy,
         tvl,
       } as Strategy;
       return _strat;
     });
-};
-
-export const getProtocols = async () => {
-  const result = await axios.get(`${process.env.ASTROLAB_API}/protocols`);
-  return result.data.data;
 };

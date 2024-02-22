@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { StrategyInterface } from "~/model/strategy";
 import { cacheHash } from "~/utils/format";
 
 import { Balance, Strategy } from "~/utils/interfaces";
@@ -6,46 +7,28 @@ import { Balance, Strategy } from "~/utils/interfaces";
 export const CACHE_KEY = cacheHash("strategies");
 
 export interface StrategiesState {
+  isLoading: boolean;
   list: Strategy[];
   selectedStrategyIndex: number;
   selectedStrategyGroup: string[];
   strategiesBalances: Balance[];
   searchString: string;
   selectedNetworks: string[];
-  mappings: {
-    strategiesByChainId: { [chainId: number]: Strategy[] };
-    strategyBySlug: { [slug: string]: Strategy };
-    indexBySlug: { [id: string]: number };
-  };
+  indexBySlug: { [slug: string]: number };
 }
 export interface InitPayload {
   strategies: Strategy[];
 }
 
 const initialState: StrategiesState = {
+  isLoading: true,
   list: [],
   selectedStrategyIndex: 0,
   selectedStrategyGroup: [],
   strategiesBalances: [],
   searchString: "",
   selectedNetworks: [],
-  mappings: {
-    strategiesByChainId: {},
-    strategyBySlug: {},
-    indexBySlug: {},
-  },
-};
-
-const updateMappings = (state: StrategiesState) => {
-  state.mappings.indexBySlug = {};
-  state.list.forEach((strategy, index) => {
-    if (!state.mappings.strategiesByChainId[strategy.network.id])
-      state.mappings.strategiesByChainId[strategy.network.id] = [];
-    state.mappings.strategiesByChainId[strategy.network.id].push(strategy);
-
-    state.mappings.strategyBySlug[strategy.slug] = strategy;
-    state.mappings.indexBySlug[strategy.slug] = index;
-  });
+  indexBySlug: {},
 };
 
 const strategiesSlice = createSlice({
@@ -54,19 +37,19 @@ const strategiesSlice = createSlice({
   reducers: {
     init: (state, action: PayloadAction<InitPayload>) => {
       state.list = action.payload.strategies;
-      updateMappings(state);
+      state.list.forEach((strategy, index) => {
+        state.indexBySlug[strategy.slug] = index;
+      });
     },
     select: (state, action: PayloadAction<Strategy>) => {
-      state.selectedStrategyIndex =
-        state.mappings.indexBySlug[action.payload.slug];
+      state.selectedStrategyIndex = state.indexBySlug[action.payload.slug];
     },
     selectGroup: (state, action: PayloadAction<Strategy[]>) => {
       state.selectedStrategyGroup = action.payload.map(
         (strategy) => strategy.slug
       );
-
       state.selectedStrategyIndex =
-        state.mappings.indexBySlug[state.selectedStrategyGroup[0]];
+        state.indexBySlug[state.selectedStrategyGroup[0]];
     },
     search: (state, action: PayloadAction<string>) => {
       state.searchString = action.payload;
@@ -75,6 +58,16 @@ const strategiesSlice = createSlice({
       state.selectedNetworks = action.payload;
     },
   },
+  /*extraReducers: (builder) => {
+    builder.addCase(fetchStrategies.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchStrategies.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.list = action.payload;
+      updateMappings(state);
+    });
+  },*/
 });
 
 export const { init, select, selectGroup, search, filterByNetworks } =

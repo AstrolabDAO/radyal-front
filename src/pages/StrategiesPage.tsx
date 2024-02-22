@@ -2,31 +2,35 @@ import StrategyGrid from "~/components/strategy/StrategyGrid";
 import StrategyHero from "~/components/strategy/StrategyHero";
 
 import { useEffect, useMemo } from "react";
-import { useQuery } from "react-query";
+
 import { useAccount } from "wagmi";
-import { ONE_MINUTE } from "~/main";
-import { getStrategies } from "~/utils/api";
+
 import { Balance, Strategy } from "~/utils/interfaces";
 
 import { useDispatch } from "react-redux";
 import { useTokensStore } from "~/hooks/tokens";
 import { getStrategiesBalances } from "~/services/strategies";
 
-import { init } from "~/store/strategies";
 import { addBalances, addTokens } from "~/store/tokens";
 import { cacheHash } from "~/utils/format";
 import Layout from "~/components/layout/Layout";
+import { getStrategies } from "~/utils/api";
+import { init } from "~/store/strategies";
+import { useProtocolsIsLoading } from "~/hooks/web3";
+import { ONE_MINUTE } from "~/App";
+import { QueryKey, useQuery } from "@tanstack/react-query";
 const StrategiesPage = () => {
   const { address, isConnected } = useAccount();
 
   const dispatch = useDispatch();
 
   const tokensStore = useTokensStore();
+  const protocolsIsLoading = useProtocolsIsLoading();
 
-  const { data: strategies, isLoading: strategiesIsLoading } = useQuery<
-    Strategy[]
-  >("strategies", getStrategies, {
-    enabled: tokensStore.tokenLoaded,
+  const { data: strategies, isLoading: strategiesIsLoading } = useQuery({
+    queryKey: ["strategies"],
+    queryFn: getStrategies,
+    enabled: !protocolsIsLoading && tokensStore.tokenLoaded,
     staleTime: ONE_MINUTE * 5,
   });
 
@@ -34,21 +38,20 @@ const StrategiesPage = () => {
     return strategies?.length > 0 && isConnected;
   }, [isConnected, strategies]);
 
-  const { data: balances, isLoading: balancesIsLoading } = useQuery<Balance[]>(
-    cacheHash("strategiesBalances", address),
-    async () => getStrategiesBalances(address, strategies),
-    {
-      enabled,
-      staleTime: ONE_MINUTE,
-      refetchInterval: ONE_MINUTE,
-    }
-  );
+  const { data: balances, isLoading: balancesIsLoading } = useQuery<Balance[]>({
+    queryKey: [cacheHash("strategiesBalances", address)],
+    queryFn: () => getStrategiesBalances(address, strategies),
+    enabled,
+    staleTime: ONE_MINUTE,
+    refetchInterval: ONE_MINUTE,
+  });
 
   useEffect(() => {
     if (strategiesIsLoading || !strategies) return;
+
     dispatch(
       init({
-        strategies,
+        strategies: strategies.map((strategy) => new Strategy(strategy)),
       })
     );
     dispatch(addTokens(strategies));

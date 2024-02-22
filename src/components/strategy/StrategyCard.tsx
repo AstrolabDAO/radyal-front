@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { useAccount } from "wagmi";
+import { useAccount, useAccountEffect } from "wagmi";
 
 import { getStrategyIcon } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
@@ -37,8 +37,8 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
       });
     }
   };
-
-  const { isConnected } = useAccount({ onConnect: handleConnect });
+  useAccountEffect({ onConnect: handleConnect });
+  const { isConnected } = useAccount();
 
   const [strategy] = strategyGroup;
 
