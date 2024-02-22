@@ -3,12 +3,12 @@ import { useMemo } from "react";
 import { useInteraction } from "~/hooks/swapper";
 import { useBalances, useTokenBySlug, useTokens } from "~/hooks/tokens";
 
-import { StrategyInteraction } from "~/utils/constants";
 import { Token } from "~/utils/interfaces";
 
 import { closeModal } from "~/services/modal";
 import { selectToken, switchSelection } from "~/services/swapper";
 import SelectToken from "../select-token/SelectToken";
+import { ActionInteraction } from "~/store/swapper";
 
 const SelectTokenModal = () => {
   const tokens = useTokens();
@@ -17,7 +17,7 @@ const SelectTokenModal = () => {
   const interaction = useInteraction();
   const tokenBySlug = useTokenBySlug();
   const tokensList = useMemo(() => {
-    return interaction === StrategyInteraction.DEPOSIT
+    return interaction === ActionInteraction.DEPOSIT
       ? balances
           .filter((balance) => {
             const token = tokenBySlug[balance.token];
@@ -35,7 +35,7 @@ const SelectTokenModal = () => {
         onSelect={(token: Token) => {
           selectToken({
             token,
-            for: interaction === StrategyInteraction.DEPOSIT ? "from" : "to",
+            for: interaction === ActionInteraction.DEPOSIT ? "from" : "to",
           });
           switchSelection();
           closeModal();

@@ -1,4 +1,4 @@
-import { getStore, getStoreState } from "~/store";
+import { getStoreState, store } from "~/store";
 import { StoredModal, setRender, open, close } from "~/store/modal";
 
 export const getModalState = () => getStoreState().modal;
@@ -13,7 +13,6 @@ export const selectedModal = () => {
 };
 
 export const openModal = (modal: StoredModal) => {
-  const store = getStore();
   store.dispatch(setRender(true));
   setTimeout(() => {
     store.dispatch(open(modal));
@@ -21,7 +20,6 @@ export const openModal = (modal: StoredModal) => {
 };
 
 export const closeModal = () => {
-  const store = getStore();
   const modals = getModals();
   store.dispatch(close());
   if (modals.length === 0) {

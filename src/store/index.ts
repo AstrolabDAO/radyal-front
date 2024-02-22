@@ -1,42 +1,46 @@
 import { PayloadAction, configureStore } from "@reduxjs/toolkit";
-
-import { promiseAwaitingMiddleware } from "./middlewares";
+import { setupListeners } from "@reduxjs/toolkit/query";
+import {
+  convertClassToObjectMiddleware,
+  promiseAwaitingMiddleware,
+} from "./middlewares";
 import operationMiddlewares from "./middlewares/operations";
-import tokensMiddlewares from "./middlewares/tokens";
 import strategiesMiddlewares from "./middlewares/strategies";
 import swapperMiddlewares from "./middlewares/swapper";
+import tokensMiddlewares from "./middlewares/tokens";
 
-import { TokenReducer } from "./tokens";
+import { initStore } from "./api/astrolab";
+import { ModalReducer } from "./modal";
 import { OperationReducer } from "./operations";
 import { StrategiesReducer } from "./strategies";
-import { ModalReducer } from "./modal";
 import { SwapperReducer } from "./swapper";
+import { TokenReducer } from "./tokens";
+import { Web3Reducer } from "./web3";
+//import reduxApis, { endpoints } from "./api/api";
 export type IRootState = {
   tokens: ReturnType<typeof TokenReducer>;
   operations: ReturnType<typeof OperationReducer>;
   strategies: ReturnType<typeof StrategiesReducer>;
   modal: ReturnType<typeof ModalReducer>;
   swapper: ReturnType<typeof SwapperReducer>;
+  web3: ReturnType<typeof Web3Reducer>;
 };
-export const Store = configureStore({
+
+export const store = configureStore({
   reducer: {
     operations: OperationReducer,
     tokens: TokenReducer,
     strategies: StrategiesReducer,
     modal: ModalReducer,
     swapper: SwapperReducer,
+    web3: Web3Reducer,
+    //...apiReducers,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        // Ignore these action types
-        ignoredActions: ["operations/emmitStep", "modal/openModal"],
-        // Ignore these field paths in all actions
-        ignoredActionPaths: ["modal/*"],
-        // Ignore these paths in the state
-        ignoredPaths: [],
-      },
+      serializableCheck: false,
     }).concat(
+      convertClassToObjectMiddleware,
       promiseAwaitingMiddleware,
       ...operationMiddlewares,
       ...tokensMiddlewares,
@@ -44,14 +48,11 @@ export const Store = configureStore({
       ...swapperMiddlewares
     ),
 });
+setupListeners(store.dispatch);
+initStore(store);
 
-export const getStore = () => {
-  return Store;
-};
-
-export const dispatch = (action: PayloadAction<any>) =>
-  getStore().dispatch(action);
+export const dispatch = (action: PayloadAction<any>) => store.dispatch(action);
 
 export const getStoreState = () => {
-  return Store.getState();
+  return store.getState();
 };

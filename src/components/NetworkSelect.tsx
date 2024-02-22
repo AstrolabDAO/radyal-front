@@ -5,8 +5,8 @@ import ReactSelect, {
   Props as ReactSelectProps,
   StylesConfig,
 } from "react-select";
+import { Network } from "~/model/network";
 import { COLORS } from "~/styles/constants";
-import { Network } from "~/utils/interfaces";
 
 const Option = ({ ...props }: OptionProps) => {
   const { network } = props.data;
@@ -68,7 +68,7 @@ const NetworkSelect = ({
       "&:focus": { outline: "none" },
       backgroundColor: "transparent",
     }),
-  }
+  };
 
   return (
     <ReactSelect

@@ -1,8 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useMemo } from "react";
-import { useQuery } from "react-query";
 import { useAccount } from "wagmi";
+import { ONE_MINUTE } from "~/App";
 import { useRequestedPriceCoingeckoIds } from "~/hooks/tokens";
-import { ONE_MINUTE } from "~/main";
+
 import { dispatch } from "~/store";
 import {
   init,
@@ -21,22 +22,20 @@ const AppContext = createContext({});
 const AppProvider = () => {
   const storedCoingeckoIds = useRequestedPriceCoingeckoIds();
   const { address, isConnected } = useAccount();
-  const { data: tokens, isLoading: tokenIsLoading } = useQuery<Token[]>(
-    "tokens",
-    getTokens,
-    {
-      retry: true,
-    }
-  );
-  const { data: balances, isLoading: balancesIsLoading } = useQuery<Balance[]>(
-    cacheHash(`balances`, address),
-    () => loadBalancesByAddress(address),
-    {
-      enabled: !!address && isConnected,
-      staleTime: ONE_MINUTE,
-      refetchInterval: ONE_MINUTE,
-    }
-  );
+
+  const { data: tokens } = useQuery<Token[]>({
+    queryKey: ["tokens"],
+    queryFn: getTokens,
+    retry: true,
+  });
+
+  const { data: balances } = useQuery<Balance[]>({
+    queryKey: [cacheHash(`balances`, address)],
+    queryFn: () => loadBalancesByAddress(address),
+    enabled: !!address && isConnected,
+    staleTime: ONE_MINUTE,
+    refetchInterval: ONE_MINUTE,
+  });
 
   const [coingeckoIds, enable] = useMemo(() => {
     if (!tokens || !balances) return [[], false];
@@ -53,9 +52,9 @@ const AppProvider = () => {
     return [coingeckoIds, true];
   }, [tokens, balances]);
 
-  const { data: prices, isLoading: pricesIsLoading } = useQuery(
-    cacheHash("prices"),
-    () => {
+  const { data: prices } = useQuery({
+    queryKey: [cacheHash("prices")],
+    queryFn: () => {
       const uniqueIds = new Set<string>([
         ...storedCoingeckoIds,
         ...coingeckoIds,
@@ -63,12 +62,10 @@ const AppProvider = () => {
 
       return getTokensPrices(Array.from(uniqueIds));
     },
-    {
-      enabled: enable,
-      staleTime: ONE_MINUTE,
-      refetchInterval: ONE_MINUTE,
-    }
-  );
+    enabled: enable,
+    staleTime: ONE_MINUTE,
+    refetchInterval: ONE_MINUTE,
+  });
 
   useEffect(() => {
     if (!STORE_IS_INIT || !balances) return;

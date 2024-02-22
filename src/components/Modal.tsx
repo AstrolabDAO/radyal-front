@@ -7,12 +7,11 @@ import {
   useVisible,
 } from "~/hooks/modal";
 
-import Close from "~/assets/icons/close.svg?react";
-import ChevronLeft from "~/assets/icons/chevron-left.svg?react";
-import { Modals } from "~/utils/constants";
 import clsx from "clsx";
-import { ModalSizeConverter } from "~/store/modal";
+import ChevronLeft from "~/assets/icons/chevron-left.svg?react";
+import Close from "~/assets/icons/close.svg?react";
 import { closeModal } from "~/services/modal";
+import { Modals } from "~/utils/constants";
 
 import { ModalWrapper } from "./styled";
 

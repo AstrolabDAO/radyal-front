@@ -1,6 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { IRootState } from "..";
-import { Network, Strategy } from "~/utils/interfaces";
+import { Strategy } from "~/utils/interfaces";
+import { Network } from "~/model/network";
 
 export const createGrouppedStrategiesSelector = (filtered = true) => {
   return createSelector(
@@ -36,13 +37,10 @@ export const createGrouppedStrategiesSelector = (filtered = true) => {
 };
 
 export const selectedStrategyGroupSelector = createSelector(
-  [
-    (state: IRootState) => state.strategies.mappings.strategyBySlug,
-    (state: IRootState) => state.strategies.selectedStrategyGroup,
-  ],
-  (strategyBySlug, selectedStrategyGroup) => {
-    return selectedStrategyGroup.map((slug) => {
-      return strategyBySlug[slug];
+  (state: IRootState) => state.strategies,
+  (state) => {
+    return state.selectedStrategyGroup.map((slug) => {
+      return Strategy.bySlug[slug];
     });
   }
 );

@@ -3,23 +3,20 @@ import StrategyHeader from "./StrategyHeader";
 
 import { useSelectedStrategy } from "~/hooks/strategies";
 
-import { useEstimatedRoute } from "~/hooks/swapper";
-
 import { shortenAddress } from "@astrolabs/swapper";
-import { useContractRead } from "wagmi";
 import Link from "~/assets/icons/link.svg";
+import { useReadContract } from "wagmi";
 
 const InfoTab = () => {
   const selectedStrategy = useSelectedStrategy();
 
-  const agent = useContractRead({
+  const agent = useReadContract({
     functionName: "agent",
     address: selectedStrategy.address,
     abi: selectedStrategy.abi,
     chainId: selectedStrategy.network.id,
   });
 
-  const estimation = useEstimatedRoute();
   const links = useMemo(() => {
     const network = selectedStrategy?.network;
     const explorerUrl = network?.explorers[0];

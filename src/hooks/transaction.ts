@@ -1,15 +1,17 @@
 import { erc20Abi } from "abitype/abis";
 import { useCallback } from "react";
-import { useContractRead, useNetwork } from "wagmi";
-import { switchNetwork } from "wagmi/actions";
+
+import { useChainId, useReadContract } from "wagmi";
+import { switchChain } from "wagmi/actions";
 import { BaseTxArgs, TxArgs, approve } from "~/services/transaction";
+import { getWagmiConfig } from "~/services/web3";
 import { Token } from "~/utils/interfaces";
 
 export const useSwitchNetwork = (chainId: number) => {
-  const currentNetwork = useNetwork();
+  const currentNetwork = useChainId();
   return useCallback(async () => {
-    if (currentNetwork.chain.id !== chainId) switchNetwork({ chainId });
-  }, [chainId, currentNetwork.chain.id]);
+    if (currentNetwork !== chainId) switchChain(getWagmiConfig(), { chainId });
+  }, [chainId, currentNetwork]);
 };
 
 export const useReadTx = ({
@@ -18,15 +20,13 @@ export const useReadTx = ({
   args,
   chainId,
   abi = erc20Abi,
-  enabled = true,
 }: TxArgs) => {
-  return useContractRead({
+  return useReadContract({
     address,
     chainId,
     abi,
     args: args as any,
     functionName,
-    enabled: enabled,
   }).data;
 };
 

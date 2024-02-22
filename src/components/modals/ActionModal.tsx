@@ -1,10 +1,9 @@
 import clsx from "clsx";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { Transition } from "@headlessui/react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { watchAccount } from "wagmi/actions";
-import { BaseModalProps } from "../Modal";
 import DepositTab from "~/components/swap/DepositTab";
 import WithdrawTab from "~/components/swap/WithdrawTab";
 
@@ -17,15 +16,16 @@ import { useSelectedStrategy } from "~/hooks/strategies";
 
 import { getTokenBySlug } from "~/services/tokens";
 import { cacheHash } from "~/utils/format";
-import { StrategyInteraction } from "~/utils/constants";
 
 import { EstimationProvider } from "~/context/estimation-context";
-import { initSwapper, selectToken, setInteraction } from "~/services/swapper";
-import InfoTab from "../swap/InfoTab";
 import { closeModal } from "~/services/modal";
+import { initSwapper, selectToken, setInteraction } from "~/services/swapper";
+import { getWagmiConfig } from "~/services/web3";
+import { ActionInteraction } from "~/store/swapper";
+import InfoTab from "../swap/InfoTab";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ActionModal = (props: BaseModalProps) => {
+const ActionModal = () => {
   const balances = useBalances();
   const selectedStrategy = useSelectedStrategy();
   const isInit = useIsInit();
@@ -46,8 +46,10 @@ const ActionModal = (props: BaseModalProps) => {
   }, [balances]);
 
   useEffect(() => {
-    watchAccount(() => {
-      setAccountChanged(true);
+    watchAccount(getWagmiConfig(), {
+      onChange: () => {
+        setAccountChanged(true);
+      },
     });
   }, []);
 
@@ -57,7 +59,7 @@ const ActionModal = (props: BaseModalProps) => {
       const token = getTokenBySlug(balances?.[0]?.token) ?? null;
       selectToken({
         token,
-        interaction: StrategyInteraction.DEPOSIT,
+        interaction: ActionInteraction.DEPOSIT,
         for: "from",
       });
       setBalancesHash(newHash);
@@ -80,7 +82,7 @@ const ActionModal = (props: BaseModalProps) => {
         value: 0,
         estimatedRoute: null,
       },
-      interaction: StrategyInteraction.DEPOSIT,
+      interaction: ActionInteraction.DEPOSIT,
     });
   }, [isInit, tokenIsLoaded]);
 
@@ -113,8 +115,8 @@ const ActionModalContent = () => {
     if (selectedTab !== "info") {
       const action =
         selectedTab === "deposit"
-          ? StrategyInteraction.DEPOSIT
-          : StrategyInteraction.WITHDRAW;
+          ? ActionInteraction.DEPOSIT
+          : ActionInteraction.WITHDRAW;
       setInteraction(action);
     }
 

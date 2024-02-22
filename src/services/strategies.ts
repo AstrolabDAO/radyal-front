@@ -1,10 +1,12 @@
 import { Balance, Strategy } from "~/utils/interfaces";
 import { abi as AgentAbi } from "@astrolabs/registry/abis/StrategyV5.json";
-import { networkByChainId } from "~/utils/mappings";
+
 import getBalances from "~/utils/multicall";
-import { getStore } from "~/store";
+
 import { select, selectGroup } from "~/store/strategies";
 import { selectedStrategySelector } from "~/store/selectors/strategies";
+import { Network } from "~/model/network";
+import { store } from "~/store";
 
 export const getStrategiesBalances = async (
   address: `0x${string}`,
@@ -29,7 +31,7 @@ export const getStrategiesBalances = async (
         token: strategy,
       }));
 
-      const network = networkByChainId[key];
+      const network = Network.byChainId[key];
 
       const result = await getBalances(network, calls, address);
       balances.push(...result);
@@ -42,12 +44,12 @@ export const getStrategiesBalances = async (
 };
 
 export const getSelectedStrategy = () => {
-  const state = getStore().getState();
+  const state = store.getState();
   return selectedStrategySelector(state);
 };
 
 export const selectStrategy = (strategy: Strategy) =>
-  getStore().dispatch(select(strategy));
+  store.dispatch(select(strategy));
 
 export const selectStrategyGroup = (strategies: Strategy[]) =>
-  getStore().dispatch(selectGroup(strategies));
+  store.dispatch(selectGroup(strategies));

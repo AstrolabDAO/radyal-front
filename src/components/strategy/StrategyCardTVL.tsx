@@ -1,4 +1,4 @@
-import { toDollarsAuto, toDollarsCompact } from "~/utils/format";
+import { toDollarsCompact } from "~/utils/format";
 
 type StrategyCardTVLProps = {
   tvl: number;

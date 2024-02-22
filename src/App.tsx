@@ -1,38 +1,61 @@
-import { Web3Provider } from "./context/web3-context";
-
 import { DisclaimerProvider } from "./context/disclaimer-context";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-import HypnoticRing from "./components/HypnoticRing.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider } from "react-router-dom";
+import { WagmiProvider } from "wagmi";
 import Modal from "./components/Modal.tsx";
-import Layout from "./components/layout/Layout";
 import { AppProvider } from "./context/app.context.tsx";
+import { useIsMobile } from "./hooks/utils.ts";
+import { useNetworksIsLoading, useWagmiConfig } from "./hooks/web3.ts";
+import MobileLock from "./pages/MobileLock.tsx";
+import router from "./router/router.tsx";
 import { checkInterval } from "./services/operation";
 import { updateIntervalId } from "./store/operations";
-import { useIsMobile } from "./hooks/utils.ts";
-import MobileLock from "./pages/MobileLock.tsx";
-import { RouterProvider } from "react-router-dom";
-import router from "./router/router.tsx";
+
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { persistQueryClient } from "@tanstack/react-query-persist-client";
+import toast from "react-hot-toast";
+
+export const ONE_MINUTE = 1000 * 60;
+export const CACHE_TIME = ONE_MINUTE * 5;
+
+const doNotPersistQueries = ["estimation", "toto"];
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24,
+      staleTime: ONE_MINUTE,
+    },
+  },
+});
+
+const localStoragePersister = createSyncStoragePersister({
+  storage: window.localStorage,
+});
+
+persistQueryClient({
+  queryClient: queryClient as any,
+  persister: localStoragePersister,
+  dehydrateOptions: {
+    shouldDehydrateQuery: ({ queryKey }) => {
+      const can = queryKey.map(
+        (k: string) =>
+          !doNotPersistQueries.includes(k) || !k.startsWith("estimation")
+      );
+      return can.includes(true);
+    },
+  },
+});
 
 function App() {
-  const [haveStrokeColor, setHaveStrokeColor] = useState(false);
-  const [haveFillColor, setHaveFillColor] = useState(false);
   const isMobile = useIsMobile();
+  const networksIsLoading = useNetworksIsLoading();
+  const wagmiConfig = useWagmiConfig();
 
-  let debounceTimer: NodeJS.Timeout;
-  function changeColor() {
-    clearTimeout(debounceTimer);
-
-    setHaveFillColor(true);
-    setHaveStrokeColor(true);
-
-    debounceTimer = setTimeout(() => {
-      setHaveFillColor(false);
-      setHaveStrokeColor(false);
-    }, 1000);
-  }
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(updateIntervalId({ intervalId: checkInterval() }));
@@ -40,21 +63,18 @@ function App() {
 
   if (isMobile) return <MobileLock />;
 
+  if (networksIsLoading) return null;
+
   return (
-    <div>
-      <Web3Provider>
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
         <AppProvider />
         <DisclaimerProvider>
-          <HypnoticRing
-            haveFillColor={haveFillColor}
-            haveStrokeColor={haveStrokeColor}
-          />
           <RouterProvider router={router} />
         </DisclaimerProvider>
-
         <Modal />
-      </Web3Provider>
-    </div>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }
 

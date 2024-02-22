@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2021", "ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -26,6 +26,6 @@
       "@/static/*": ["./static/*"]
     }
   },
-  "include": ["src", "postcss.config.ts"],
+  "include": ["src", "postcss.config.ts"]
   //"references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -2,12 +2,12 @@ import clsx from "clsx";
 
 import { Operation, OperationStatus } from "~/model/operation";
 
-import { Network, Icon, Token } from "~/utils/interfaces";
+import { Icon, Token } from "~/utils/interfaces";
 import { FaLongArrowAltRight } from "react-icons/fa";
 
 import IconCard from "~/components/IconCard";
-import { useEffect } from "react";
 import { capitalize } from "~/utils/format";
+import { Network } from "~/model/network";
 
 type ActionRouteDetailLineProps = {
   status?: OperationStatus | "NEUTRAL";
@@ -29,7 +29,6 @@ type ActionRouteDetailLineProps = {
 
 const ActionRouteDetailLine = ({
   status = "NEUTRAL",
-  operation,
   step: {
     via,
     protocolIcon,

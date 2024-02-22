@@ -1,33 +1,26 @@
-import { IToken as LiFiToken } from "@astrolabs/swapper/dist/src/LiFi";
-import { IToken as SquidToken } from "@astrolabs/swapper/dist/src/Squid";
 import clsx from "clsx";
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
-import {
-  useCanSwap,
-  useEstimatedRoute,
-  useEstimationOnProgress,
-} from "~/hooks/swapper";
+import { useEstimationOnProgress } from "~/hooks/swapper";
 import { Icon, Token } from "~/utils/interfaces";
 
 import { clearFrom, stripName, toFloatAuto } from "~/utils/format";
-import { round, weiToAmount } from "~/utils/maths";
+import { weiToAmount } from "~/utils/maths";
 
 import {
   SwapRouteStepTypeTraduction,
   SwaptoolTraduction,
-  networkByChainId,
-  protocolBySlug,
-  protocolByStrippedSlug,
-  protocolByThirdPartyId,
 } from "~/utils/mappings";
 
 import { OperationStatus } from "@astrolabs/swapper";
 import Loader from "~/components/Loader";
-import { Operation, SwapperToken } from "~/model/operation";
-import ActionRouteDetailLine from "./ActionRouteDetailLine";
-import { Web3Context } from "~/context/web3-context";
+
+import { useProtocols } from "~/hooks/web3";
+import { Network } from "~/model/network";
+import { Operation } from "~/model/operation";
+import { Protocol } from "~/model/protocol";
 import { findClosestMatch } from "~/utils";
+import ActionRouteDetailLine from "./ActionRouteDetailLine";
 
 type ActionRouteDetailProps = {
   operation: Operation;
@@ -42,11 +35,11 @@ const OperationRouteDetail = ({
 
   const estimationError = operation?.estimation?.error;
   const steps = useMemo(() => operation.steps, [operation]);
-  const { protocols } = useContext(Web3Context);
+  const protocols = useProtocols();
 
   const amountWithNetworkAndSymbol = useCallback(
     (chain: number, amount: string, token: Token) => {
-      const network = networkByChainId[chain];
+      const network = Network.byChainId[chain];
       const amountFormatted = toFloatAuto(
         weiToAmount(amount, token?.decimals),
         false,
@@ -61,16 +54,7 @@ const OperationRouteDetail = ({
   );
 
   const getProtocolIconAndName = useCallback((id: string) => {
-    const protocol = {
-      // protocolName,
-      protocolIcon: {
-        // url: protocolData?.icon,
-        classes: "ms-1.5",
-        size: { width: 20, height: 20 },
-      } as Icon,
-    };
-
-    let p = protocolByThirdPartyId[id];
+    let p = Protocol.byThirdPartyId[id];
 
     if (!p) {
       const slug = findClosestMatch(
@@ -78,14 +62,14 @@ const OperationRouteDetail = ({
         protocols.map((p) => p.slug)
       );
       if (!slug) return { protocolName: id, protocolIcon: null };
-      p = protocolBySlug[slug];
+      p = Protocol.bySlug[slug];
       // add to search cache
-      protocolByThirdPartyId[id] = p;
+      Protocol.byThirdPartyId[id] = p;
     }
     const protocolName = stripName(
       SwaptoolTraduction[id] ?? p.name ?? id ?? "custom"
     );
-    p ??= protocolByStrippedSlug[protocolName];
+    p ??= Protocol.byStrippedSlug[protocolName];
 
     return {
       protocolName: p?.name ?? protocolName,
@@ -132,8 +116,8 @@ const OperationRouteDetail = ({
 
         const displayedStep = {
           id,
-          fromNetwork: networkByChainId[fromChain],
-          toNetwork: networkByChainId[toChain],
+          fromNetwork: Network.byChainId[fromChain],
+          toNetwork: Network.byChainId[toChain],
           protocolName,
           protocolIcon,
           type,

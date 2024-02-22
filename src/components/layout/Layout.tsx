@@ -12,50 +12,17 @@ import { COLORS } from "~/styles/constants";
 const Layout = ({ children }) => {
   const { accepted } = useContext(DisclaimerContext);
 
-  const style = {
-    backdropFilter: "blur(10px)",
-    color: COLORS["base-content"],
-  };
-
   if (!accepted) return <DisclaimerPage />;
 
   return (
     <>
       <main className="min-h-screen">
         <Header />
-        <div id="page-content" className="h-full relative overflow-x-hidden z-20">
+        <div
+          id="page-content"
+          className="h-full relative overflow-x-hidden z-20"
+        >
           {children}
-          <Toaster
-            containerClassName="container"
-            toastOptions={{
-              success: {
-                className: "strategy-card h-autp",
-                style,
-                iconTheme: {
-                  primary: "var(--success)",
-                  secondary: "transparent",
-                },
-              },
-              error: {
-                style,
-                className: "strategy-card h-auto",
-                iconTheme: {
-                  primary: "var(--error)",
-                  secondary: "transparent",
-                },
-              },
-              loading: {
-                style,
-                className: "strategy-card h-auto",
-                iconTheme: {
-                  primary: "var(--warning)",
-                  secondary: COLORS.base,
-                },
-              },
-            }}
-            position="top-right"
-            reverseOrder={false}
-          />
         </div>
       </main>
       <Footer />

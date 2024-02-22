@@ -1,30 +1,32 @@
-import { gweiUnits, parseEther, parseGwei } from "viem";
-import { Operation } from "~/model/operation";
+import { useMemo } from "react";
 import Gas from "~/assets/icons/gas.svg?react";
 import Slippage from "~/assets/icons/slippage.svg?react";
-import { useMemo } from "react";
-import { useFromToken, useFromValue, useToToken } from "~/hooks/swapper";
+import { useFromToken } from "~/hooks/swapper";
 import { usePrices } from "~/hooks/tokens";
+import { Operation } from "~/model/operation";
 
+import { ICommonStep } from "@astrolabs/swapper";
 import clsx from "clsx";
 import { toDollarsAuto, toPercent } from "~/utils/format";
-import { Token } from "~/utils/interfaces";
-import { ICommonStep } from "@astrolabs/swapper";
 
 export const GasDetails = ({ operation }: { operation: Operation }) => {
   const estimation = useMemo(() => operation?.estimation?.request, [operation]);
   // TODO -> CONVERT TO DOLLARD
-  const fromToken = useFromToken()
-  const toToken = useToToken()
+  const fromToken = useFromToken();
+
   const tokenPrices = usePrices();
 
-  const [fromValue, slippage, slippageUsd] = useMemo(() => {
+  const [slippage, slippageUsd] = useMemo(() => {
     if (!estimation) return [null, null];
 
     const firstStep = estimation.steps[0];
-    const lastStepBeforeCall = estimation.steps[estimation.steps.length - 2] as ICommonStep;
+    const lastStepBeforeCall = estimation.steps[
+      estimation.steps.length - 2
+    ] as ICommonStep;
     const fromValue = firstStep.fromAmount / 10 ** fromToken.decimals;
-    const toValue = Number(lastStepBeforeCall.toAmount) / 10 ** lastStepBeforeCall.toToken.decimals;
+    const toValue =
+      Number(lastStepBeforeCall.toAmount) /
+      10 ** lastStepBeforeCall.toToken.decimals;
 
     const getPrice = (t: any) => {
       let p = 0;
@@ -33,23 +35,20 @@ export const GasDetails = ({ operation }: { operation: Operation }) => {
       } else if (t.priceUSD) {
         p = t.priceUSD;
       } else if (t.sharePrice) {
-        if (t.asset)
-          p = (getPrice(t.asset) * t.sharePrice) / t.weiPerUnit;
+        if (t.asset) p = (getPrice(t.asset) * t.sharePrice) / t.weiPerUnit;
       }
       return Number(p);
-    }
+    };
 
     let fromPrice = getPrice(fromToken);
     let toPrice = getPrice(lastStepBeforeCall.toToken);
 
-    const tokenReceive = estimation.estimation;
-
     const fromValueUsd = fromValue * fromPrice;
-    const toValueUsd = toValue * toPrice
+    const toValueUsd = toValue * toPrice;
     const slippageUsd = fromValueUsd - toValueUsd;
-    const slippage = (slippageUsd / fromValueUsd);
+    const slippage = slippageUsd / fromValueUsd;
 
-    return [fromValue, slippage, slippageUsd];
+    return [slippage, slippageUsd];
   }, [operation, estimation]);
 
   if (!estimation) return;

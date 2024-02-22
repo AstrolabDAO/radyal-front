@@ -1,15 +1,7 @@
 import { Middleware, PayloadAction } from "@reduxjs/toolkit";
 import LocalStorageService from "~/services/localStorage";
-import { CACHE_KEY } from "../operations";
-import { Operation } from "~/model/operation";
 import { checkInterval } from "~/services/operation";
-
-const convertClassToObjectMiddleware: Middleware =
-  () => (next) => (action: PayloadAction) => {
-    if ((action.payload as any) instanceof Operation)
-      action.payload = Object.assign({}, action.payload);
-    next(action);
-  };
+import { CACHE_KEY } from "../operations";
 
 const operationsChangeMiddleware: Middleware =
   (store) => (next) => (action: PayloadAction) => {
@@ -38,7 +30,4 @@ const operationsChangeMiddleware: Middleware =
     }
   };
 
-export default [
-  convertClassToObjectMiddleware,
-  operationsChangeMiddleware,
-] as Middleware[];
+export default [operationsChangeMiddleware] as Middleware[];

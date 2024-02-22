@@ -173,26 +173,122 @@ export interface ApiResponseStrategy {
   updatedAt: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface TokenInfo {
-  decimalsAmount: string;
-  amount: string;
-  address: `0x${string}`;
-  price: number;
-  totalValue: number;
-  token: {
-    address: string;
-    displayName: string;
-    decimals: number;
-    symbol: string;
-    name: string;
-    chainId: number;
-    icon: string;
-    coingeckoId: string;
+interface ApiNetwork {
+  _id: string;
+  isLastRevision: boolean;
+  revision: number;
+  createdBy: string;
+  updatedBy: string;
+  name: string;
+  slug: string;
+  description: string;
+  shortDescription?: string;
+  descriptionSlides: any[];
+  color1: string;
+  color2?: string;
+  landing: string;
+  docs: string;
+  codebase: string;
+  app?: string;
+  twitter: string;
+  blog: string;
+  discord: string;
+  email?: string;
+  telegram?: string;
+  contract?: string;
+  token?: string;
+  id: number;
+  hexId: string;
+  lzId: number;
+  lzEndpoint: string;
+  coinGeckoId: string;
+  coinMarketCapId?: string;
+  defiLlamaId: string;
+  exponentialId: string;
+  defiSafetyId: string;
+  solityId: string;
+  httpRpcs: string[];
+  wsRpcs: string[];
+  explorers: string[];
+  explorerApi: string;
+  status: string;
+  gasToken: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface ApiProtocolInterface {
+  defiLlamaInfo: null | any;
+  exponentialInfo: null | any;
+  defiSafetyInfo: null | any;
+  _id: string;
+  isLastRevision: boolean;
+  revision: number;
+  createdBy: string;
+  updatedBy: string;
+  name: string;
+  slug: string;
+  description: string;
+  shortDescription: string;
+  descriptionSlides: string[];
+  color1: string;
+  color2: string;
+  landing: string;
+  docs: string;
+  codebase: string;
+  app: string;
+  twitter: string;
+  blog: string;
+  discord: string;
+  email: string;
+  telegram: string;
+  contract: string;
+  token: string;
+  id: number;
+  coinGeckoId: string;
+  coinMarketCapId: string;
+  defiLlamaId: string;
+  exponentialId: string;
+  defiSafetyId: string;
+  solityId: string;
+  types: string[];
+  governanceToken: null | any;
+  rewardTokens: any[];
+  networks: any[];
+  audits: any[];
+  scoring: {
+    ops: {
+      value: number;
+      weight: number;
+      description: string;
+      _id?: string;
+    };
+    value: number;
+    weight: number;
+    description: string;
+    governance: {
+      value: number;
+      weight: number;
+      description: string;
+      _id?: string;
+    };
+    tokenomics: {
+      value: number;
+      weight: number;
+      description: string;
+      _id?: string;
+    };
+    _id: string;
   };
-  tokenPriceUSD: number;
-  totalPriceUSD: number;
-  aggregationLevel: number;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface NetworksResponse {
+  data: ApiNetwork[];
+}
+
+export interface ProtocolsResponse {
+  data: ApiProtocolInterface[];
 }
 
 export interface ApiResponseBalance {

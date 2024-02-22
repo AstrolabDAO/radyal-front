@@ -1,4 +1,4 @@
-import { createSelector, current } from "@reduxjs/toolkit";
+import { createSelector } from "@reduxjs/toolkit";
 import { IRootState, dispatch, getStoreState } from "~/store";
 import { SetOnWritePayload } from "~/store/interfaces/swapper";
 import {
@@ -8,18 +8,20 @@ import {
   needApproveSelector,
 } from "~/store/selectors/swapper";
 import swapperActions, {
+  ActionInteraction,
   SelectTokenAction,
   SwapperState,
 } from "~/store/swapper";
-import { StrategyInteraction } from "~/utils/constants";
+
+import toast from "react-hot-toast";
+import { getPublicClient } from "wagmi/actions";
+import { Operation, OperationStatus, OperationStep } from "~/model/operation";
 import { Estimation } from "~/utils/interfaces";
 import { closeModal, openModal } from "./modal";
-import { Operation, OperationStatus, OperationStep } from "~/model/operation";
 import { addOperation, emmitStep, updateOperation } from "./operation";
-import { approve } from "./transaction";
-import { getPublicClient } from "wagmi/actions";
-import toast from "react-hot-toast";
 import { executeSwap } from "./swap";
+import { approve } from "./transaction";
+import { getWagmiConfig } from "./web3";
 
 export const getSwapperStore = () => getStoreState().swapper;
 
@@ -66,7 +68,7 @@ export const switchSelection = () => {
   dispatch(swapperActions.switchSelection());
 };
 
-export const setInteraction = (interaction: StrategyInteraction) => {
+export const setInteraction = (interaction: ActionInteraction) => {
   dispatch(swapperActions.setInteraction(interaction));
 };
 
@@ -120,13 +122,15 @@ export const getInteractionNeedToSwap = () => {
 
 export const executeSwapperRoute = async (
   estimation: Estimation = getEstimatedRoute(),
-  interaction: StrategyInteraction = StrategyInteraction.DEPOSIT
+  interaction: ActionInteraction = ActionInteraction.DEPOSIT
 ) => {
   const store = getSwapperStore();
   const { from, to } = store[interaction];
   const canSwap = getCanSwap();
 
-  const publicClient = getPublicClient({ chainId: from.network.id });
+  const publicClient = getPublicClient(getWagmiConfig(), {
+    chainId: from.network.id,
+  });
 
   if (!from || !to || !canSwap) return;
 
@@ -153,7 +157,7 @@ export const executeSwapperRoute = async (
       const approveStep = estimation.steps[0];
 
       addOperation(operation);
-      const { hash: approveHash } = await approve({
+      const approveHash = await approve({
         spender: approveStep.toAddress as `0x${string}`,
         amount: BigInt(approveStep.fromAmount),
         address: approveStep.fromAddress as `0x${string}`,
@@ -195,7 +199,7 @@ export const executeSwapperRoute = async (
     closeModal();
     setEstimationIsLocked(false);
     unlockEstimation();
-    toast.error(error.message);
+    toast.error("An error has occured");
     updateOperation({
       id: operation.id,
       payload: {

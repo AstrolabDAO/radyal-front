@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { useCanSwap, useEstimatedRoute } from "~/hooks/swapper";
+import { useEstimatedRoute } from "~/hooks/swapper";
 import { Token } from "~/utils/interfaces";
 import ActionBlock from "../helpers/ActionBlock";
 
@@ -14,7 +14,6 @@ const WithdrawFor = ({ token, onTokenClick }: WForProps) => {
   const depositToValue = useMemo(() => {
     return estimate?.estimation;
   }, [estimate]);
-  const canSwap = useCanSwap();
 
   const icons = {
     background: token?.icon,

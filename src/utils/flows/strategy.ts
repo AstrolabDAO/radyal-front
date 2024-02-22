@@ -1,38 +1,45 @@
 import StratV5Abi from "@astrolabs/registry/abis/StrategyV5.json";
 
-import { ICommonStep } from "@astrolabs/swapper";
-import { getContract } from "wagmi/actions";
-import { StrategyInteraction } from "../constants";
+import { createPublicClient, getContract, http } from "viem";
+import { OperationStep } from "~/model/operation";
+import { ActionInteraction } from "~/store/swapper";
+import { networkToWagmiChain } from "../format";
 import { Estimation, Strategy } from "../interfaces";
-import { Operation, OperationStep } from "~/model/operation";
 
 export const previewStrategyTokenMove = async ({
   strategy,
   interaction,
   value,
 }: PreviewStrategyMoveProps): Promise<Estimation> => {
+  const publicClient = createPublicClient({
+    transport: http(),
+    chain: networkToWagmiChain(strategy.network),
+  });
   const contract: any = getContract({
     address: strategy.address,
     abi: StratV5Abi.abi,
+    client: {
+      public: publicClient as never,
+    },
   });
 
   const weiPerUnit =
-    interaction === StrategyInteraction.DEPOSIT
+    interaction === ActionInteraction.DEPOSIT
       ? strategy.asset.weiPerUnit
       : strategy.weiPerUnit;
 
   const amount = BigInt(value * weiPerUnit);
 
   const previewAmount = (
-    interaction === StrategyInteraction.DEPOSIT
+    interaction === ActionInteraction.DEPOSIT
       ? await contract.read.previewDeposit([amount])
       : await contract.read.previewRedeem([amount])
   ) as bigint;
 
   const fromToken: any =
-    interaction === StrategyInteraction.DEPOSIT ? strategy.asset : strategy;
+    interaction === ActionInteraction.DEPOSIT ? strategy.asset : strategy;
   const toToken: any =
-    interaction === StrategyInteraction.DEPOSIT ? strategy : strategy.asset;
+    interaction === ActionInteraction.DEPOSIT ? strategy : strategy.asset;
 
   const step: OperationStep = {
     type: interaction,
@@ -49,7 +56,7 @@ export const previewStrategyTokenMove = async ({
 
   const estimation =
     Number(previewAmount) /
-    (interaction === StrategyInteraction.DEPOSIT
+    (interaction === ActionInteraction.DEPOSIT
       ? strategy.weiPerUnit
       : strategy.asset.weiPerUnit);
 
@@ -63,6 +70,6 @@ export const previewStrategyTokenMove = async ({
 
 interface PreviewStrategyMoveProps {
   strategy: Strategy;
-  interaction: StrategyInteraction;
+  interaction: ActionInteraction;
   value: number;
 }

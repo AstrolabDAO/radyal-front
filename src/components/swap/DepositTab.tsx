@@ -21,15 +21,14 @@ import {
 
 import ActionRouteDetail from "./helpers/OperationRouteDetail";
 
+import { useChainId } from "wagmi";
+import { switchChain } from "wagmi/actions";
 import { Operation } from "~/model/operation";
 import { openModal } from "~/services/modal";
+import { executeSwapperRoute } from "~/services/swapper";
+import { getWagmiConfig } from "~/services/web3";
 import { GasDetails } from "../GasDetails";
 import { Button } from "../styled";
-import { useNetwork } from "wagmi";
-import { useSwitchNetwork } from "~/hooks/transaction";
-import { switchNetwork } from "wagmi/actions";
-import { executeSwap } from "~/services/swap";
-import { executeSwapperRoute } from "~/services/swapper";
 
 const DepositTab = () => {
   const selectedStrategy = useSelectedStrategy();
@@ -46,7 +45,7 @@ const DepositTab = () => {
 
   const needApprove = useNeedApprove();
 
-  const currentNetwork = useNetwork();
+  const currentChain = useChainId();
 
   const operationSimulation = useMemo(
     () =>
@@ -77,9 +76,10 @@ const DepositTab = () => {
           big={true}
           disabled={!canSwap}
           onClick={async () => {
-            if (currentNetwork.chain.id !== fromToken.network.id)
-              await switchNetwork({ chainId: fromToken?.network?.id });
-
+            if (currentChain !== fromToken.network.id)
+              await switchChain(getWagmiConfig(), {
+                chainId: fromToken?.network?.id,
+              });
             if (interactionNeedToSwap) {
               await executeSwapperRoute(estimation);
             } else {

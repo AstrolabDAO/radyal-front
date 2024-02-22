@@ -1,23 +1,14 @@
 import { useMemo } from "react";
 
-import {
-  useCurrentStep,
-  useCurrentSteps,
-  useSelectedOperation,
-} from "~/hooks/operation";
-
-import ChevronLeft from "~/assets/icons/chevron-left.svg?react";
-import Close from "~/assets/icons/close.svg?react";
+import { useCurrentStep, useSelectedOperation } from "~/hooks/operation";
 
 import clsx from "clsx";
 import ArrowRight from "~/assets/icons/left-to-right-thin.svg?react";
-import ActionRouteDetail from "~/components/swap/helpers/OperationRouteDetail";
 import ActionStepsAnimation from "~/components/swap/helpers/ActionStepsAnimation.tsx";
+import ActionRouteDetail from "~/components/swap/helpers/OperationRouteDetail";
 import TokenPresentation from "../TokenPresentation";
-import { closeModal } from "~/services/modal";
 
 const ActionStepsModal = () => {
-  const currentSteps = useCurrentSteps();
   const currentStep = useCurrentStep();
   const operation = useSelectedOperation();
 
@@ -42,10 +33,7 @@ const ActionStepsModal = () => {
             "border-darkGrey"
           )}
         >
-          <TokenPresentation
-            token={operation.fromToken}
-            isHoverable={false}
-          />
+          <TokenPresentation token={operation.fromToken} isHoverable={false} />
           <div className="centerXY">
             <ArrowRight className="fill-base-content w-10" />
           </div>
