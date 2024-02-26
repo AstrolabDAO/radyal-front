@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { IRootState } from "~/store";
 import {
@@ -34,7 +35,10 @@ export const useEstimationHash = () => {
   const toToken = useToToken();
   const fromValue = useFromValue();
 
-  return cacheHash("estimate", interaction, fromToken, toToken, fromValue);
+  return useMemo(
+    () => cacheHash("estimate", interaction, fromToken, toToken, fromValue),
+    [interaction, fromToken, toToken, fromValue]
+  );
 };
 export const useEstimationOnProgress = () =>
   useSelector((state: IRootState) => state.swapper.is.estimationOnprogress);

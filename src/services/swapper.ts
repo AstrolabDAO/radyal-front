@@ -22,6 +22,7 @@ import { addOperation, emmitStep, updateOperation } from "./operation";
 import { executeSwap } from "./swap";
 import { approve } from "./transaction";
 import { getWagmiConfig } from "./web3";
+import { CgYoutube } from "react-icons/cg";
 
 export const getSwapperStore = () => getStoreState().swapper;
 
@@ -120,11 +121,9 @@ export const getInteractionNeedToSwap = () => {
   return interactionNeedToSwapSelector(state);
 };
 
-export const executeSwapperRoute = async (
-  estimation: Estimation = getEstimatedRoute(),
-  interaction: ActionInteraction = ActionInteraction.DEPOSIT
-) => {
+export const executeSwapperRoute = async (_operation?: Operation) => {
   const store = getSwapperStore();
+  const interaction = store.interaction;
   const { from, to } = store[interaction];
   const canSwap = getCanSwap();
 
@@ -134,29 +133,38 @@ export const executeSwapperRoute = async (
 
   if (!from || !to || !canSwap) return;
 
-  setEstimationIsLocked(true);
   lockEstimation();
+  const estimation = getEstimatedRoute();
 
-  openModal({ modal: "steps", title: "TX TRACKER" });
-
-  const operation = new Operation({
-    id: window.crypto.randomUUID(),
-    fromToken: from,
-    toToken: to,
-    steps: estimation.steps.map((step) => {
-      return {
-        ...step,
-        status: OperationStatus.WAITING,
-      } as OperationStep;
-    }),
-    estimation,
-  });
+  const operation =
+    _operation ??
+    new Operation({
+      id: window.crypto.randomUUID(),
+      fromToken: from,
+      toToken: to,
+      steps: estimation.steps.map((step) => {
+        return {
+          ...step,
+          status: OperationStatus.WAITING,
+        } as OperationStep;
+      }),
+      estimation,
+    });
 
   try {
-    if (estimation.steps[0].type == "approve") {
+    const steps = operation.steps;
+    const afterFirstStep = steps.slice(1);
+
+    if (
+      estimation.steps[0].type == "approve" ||
+      (interaction === ActionInteraction.WITHDRAW &&
+        afterFirstStep[0]?.type === "approve")
+    ) {
       const approveStep = estimation.steps[0];
 
       addOperation(operation);
+      openModal({ modal: "steps", title: "TX TRACKER" });
+
       const approveHash = await approve({
         spender: approveStep.toAddress as `0x${string}`,
         amount: BigInt(approveStep.fromAmount),
@@ -174,28 +182,52 @@ export const executeSwapperRoute = async (
       emmitStep({
         operationId: operation.id,
         promise: approvePending,
+        txHash: approveHash,
       });
 
       const hash = await executeSwap(operation, publicClient);
       updateOperation({
         id: operation.id,
         payload: {
-          status: OperationStatus.PENDING,
+          status:
+            from.network.id === to.network.id
+              ? OperationStatus.DONE
+              : OperationStatus.PENDING,
           txHash: hash,
+          steps: operation.steps.map((step) => {
+            if (!(from.network.id === to.network.id)) return step;
+            return {
+              ...step,
+              status: OperationStatus.DONE,
+            };
+          }),
         },
       });
     } else {
       addOperation(operation);
+      openModal({ modal: "steps", title: "TX TRACKER" });
+
       const hash = await executeSwap(operation, publicClient);
       updateOperation({
         id: operation.id,
         payload: {
-          status: OperationStatus.PENDING,
+          status:
+            from.network.id === to.network.id
+              ? OperationStatus.DONE
+              : OperationStatus.PENDING,
           txHash: hash,
+          steps: operation.steps.map((step) => {
+            if (!(from.network.id === to.network.id)) return step;
+            return {
+              ...step,
+              status: OperationStatus.DONE,
+            };
+          }),
         },
       });
     }
   } catch (error) {
+    console.error(error);
     closeModal();
     setEstimationIsLocked(false);
     unlockEstimation();

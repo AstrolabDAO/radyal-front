@@ -6,6 +6,7 @@ import { Strategy } from "~/utils/interfaces";
 import { useEstimatedRoute } from "~/hooks/swapper";
 
 import ActionBlock from "../helpers/ActionBlock";
+import { SwapInput } from "~/components/styled";
 
 const DepositFor = ({
   strategy,
@@ -35,11 +36,7 @@ const DepositFor = ({
       value={depositToValue}
     >
       <div className="flex ms-auto">
-        <input
-          className="swap-input-field bg-transparent font-3xl"
-          disabled={true}
-          value={depositToValue ?? 0}
-        />
+        <SwapInput disabled={true} value={depositToValue ?? 0} />
       </div>
     </ActionBlock>
   );

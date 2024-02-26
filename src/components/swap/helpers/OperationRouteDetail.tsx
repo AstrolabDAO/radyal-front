@@ -43,7 +43,7 @@ const OperationRouteDetail = ({
       const amountFormatted = toFloatAuto(
         weiToAmount(amount, token?.decimals),
         false,
-        2
+        4
       );
       const symbol = token?.symbol ?? "???";
       let networkName = network?.name ?? "???";

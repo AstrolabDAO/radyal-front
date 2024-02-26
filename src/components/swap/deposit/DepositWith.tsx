@@ -4,6 +4,7 @@ import { useFromValue } from "~/hooks/swapper";
 import { setFromValue } from "~/services/swapper";
 import { Token } from "~/utils/interfaces";
 import ActionBlock from "../helpers/ActionBlock";
+import { SwapInput } from "~/components/styled";
 type DepositWithProps = {
   token: Token;
   onTokenClick: () => void;
@@ -60,9 +61,8 @@ const DepositWith = ({ token, onTokenClick }: DepositWithProps) => {
       onTokenClick={onTokenClick}
       onWalletClick={setWholeWallet}
     >
-      <div className="flex ms-auto">
-        <input
-          className="swap-input-field font-3xl"
+      <div className="flex">
+        <SwapInput
           placeholder="10.0"
           value={depositValue ?? ""}
           onChange={handleInputChange}

@@ -46,7 +46,7 @@ const Modal = () => {
       show={visible}
       as={Dialog}
       onClose={onClose}
-      className="z-50 relative"
+      className="z-30 relative"
     >
       <div className="transition-wrapper">
         <Transition.Child
@@ -83,7 +83,7 @@ const Modal = () => {
                   </div>
 
                   <div
-                    className="z-50 rounded-tr-xl text-white"
+                    className="z-30 rounded-tr-xl text-white"
                     onClick={onClose}
                   >
                     <Close className="h-6 fill-base-content hover:fill-primary" />

@@ -16,6 +16,7 @@ import { getAccount } from "wagmi/actions";
 import { getWagmiConfig } from "./web3";
 import { ActionInteraction } from "~/store/swapper";
 import { store } from "~/store";
+import { emmitStep } from "./operation";
 
 export const depositCallData = (address: string, toAmount: string) => {
   return generateCallData({
@@ -143,13 +144,15 @@ export const executeSwap = async (
     error: "Swap reverted rejected 🤯",
   });
 
+  emmitStep({
+    operationId: operation.id,
+    promise: swapPending,
+    txHash: hash,
+  });
+
   store.dispatch({
     type: "operations/emmitStep",
-    payload: {
-      operationId: operation.id,
-      label: "swap-pending",
-      promise: swapPending,
-    },
+    payload: {},
   });
   await swapPending;
   return hash;
