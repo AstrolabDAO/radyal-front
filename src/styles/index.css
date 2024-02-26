@@ -1,7 +1,6 @@
 @import "animation.css";
 @import "base.css";
 @import "font.css";
-@import "input.css";
 @import "layout.css";
 @import "markdown.css";
 @import "modal.css";
@@ -116,6 +115,10 @@ body {
 }
 
 @layer utilities {
+  .swap-input-field {
+    @apply focus:outline-none bg-dark-700 placeholder:text-dark-500 max-h-9 pe-0 font-medium text-3xl text-right ms-auto w-full basis-4/5 rounded-none;
+  }
+
   #root {
     width: 100%;
   }

@@ -171,7 +171,7 @@ const ActionModalContent = () => {
           </div>
         </div>
         <div
-          className="z-50 rounded-tr-xl text-white my-auto"
+          className="z-30 rounded-tr-xl text-white my-auto"
           onClick={closeModal}
         >
           <Close className="h-6 fill-base-content hover:fill-primary" />

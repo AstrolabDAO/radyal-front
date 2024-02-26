@@ -81,7 +81,7 @@ const DepositTab = () => {
                 chainId: fromToken?.network?.id,
               });
             if (interactionNeedToSwap) {
-              await executeSwapperRoute(estimation);
+              await executeSwapperRoute();
             } else {
               await approveAndDeposit(fromValue);
             }

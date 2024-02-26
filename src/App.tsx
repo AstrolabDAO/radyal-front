@@ -18,11 +18,12 @@ import { updateIntervalId } from "./store/operations";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import toast from "react-hot-toast";
+import { cacheHash } from "./utils/format.ts";
 
 export const ONE_MINUTE = 1000 * 60;
 export const CACHE_TIME = ONE_MINUTE * 5;
 
-const doNotPersistQueries = ["estimation", "toto"];
+const doNotPersistQueries = ["estimation" /*"tokens"*/];
 
 export const queryClient = new QueryClient({
   defaultOptions: {

@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { useEstimatedRoute } from "~/hooks/swapper";
 import { Token } from "~/utils/interfaces";
 import ActionBlock from "../helpers/ActionBlock";
+import { SwapInput } from "~/components/styled";
 
 type WForProps = {
   token: Token;
@@ -29,10 +30,11 @@ const WithdrawFor = ({ token, onTokenClick }: WForProps) => {
       symbol={token?.symbol}
       network={token?.network.name}
       value={depositToValue}
-      children={
-        <div className="text-xl font-bold mt-2 mb-1"> {depositToValue} </div>
-      }
-    />
+    >
+      <div className="flex ms-auto">
+        <SwapInput disabled={true} value={depositToValue ?? 0} />
+      </div>
+    </ActionBlock>
   );
 };
 

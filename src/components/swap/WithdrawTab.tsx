@@ -3,33 +3,45 @@ import WithdrawWith from "./withdraw/WithdrawWith";
 
 import ActionRouteDetail from "./helpers/OperationRouteDetail";
 
-import { useSelectedStrategy } from "~/hooks/strategies";
+import { useSelectedStrategy, useWithdraw } from "~/hooks/strategies";
 import {
   useCanSwap,
   useEstimatedRoute,
   useFromToken,
+  useFromValue,
   useInteractionNeedToSwap,
   useToToken,
 } from "~/hooks/swapper";
 import { Strategy, Token } from "~/utils/interfaces";
 import StrategyHeader from "./StrategyHeader";
 import { Operation } from "~/model/operation";
-import { openModal } from "~/services/modal";
+import { closeModal, openModal } from "~/services/modal";
 import { Button } from "../styled";
+import { switchChain } from "wagmi/actions";
+import { useChainId } from "wagmi";
+import { getWagmiConfig } from "~/services/web3";
+import Modal from "../Modal";
+import { setLocked } from "~/store/swapper";
+import toast from "react-hot-toast";
+import { tokensIsEqual } from "~/utils";
+import { executeSwapperRoute } from "~/services/swapper";
 
 const WithdrawTab = () => {
   const fromToken = useFromToken();
   const toToken = useToToken();
-
   const estimation = useEstimatedRoute();
   const interactionNeedToSwap = useInteractionNeedToSwap();
   const selectedStrategy = useSelectedStrategy();
+  const currentChain = useChainId();
 
   const operationSimulation = new Operation({
     steps: estimation?.steps ?? [],
+    estimation,
   });
 
   const canSwap = useCanSwap();
+  const withdraw = useWithdraw();
+
   return (
     <>
       <div>
@@ -42,16 +54,33 @@ const WithdrawTab = () => {
           onTokenClick={() => openModal({ modal: "select-token" })}
         />
         <ActionRouteDetail operation={operationSimulation} />
-        <div
-          onClick={() => {
-            if (interactionNeedToSwap) {
-              //executeSwapperRoute();
-            }
-          }}
-          className="flex"
-        >
-          <Button disabled={!canSwap} className="btn btn-primary w-full">
-            Withdraw and Bridge
+        <div className="flex">
+          <Button
+            onClick={async () => {
+              if (currentChain !== fromToken.network.id)
+                await switchChain(getWagmiConfig(), {
+                  chainId: fromToken?.network?.id,
+                });
+              openModal({
+                modal: "steps",
+              });
+              try {
+                const operation = await withdraw(estimation.estimation);
+                if (interactionNeedToSwap) {
+                  await executeSwapperRoute(operation);
+                }
+                setLocked(false);
+              } catch (e) {
+                console.error(e);
+                setLocked(false);
+                closeModal();
+                toast.error("An error has occured");
+              }
+            }}
+            disabled={!canSwap}
+            className="btn btn-primary w-full"
+          >
+            {interactionNeedToSwap ? "Withdraw and Swap" : "Withdraw"}
           </Button>
         </div>
       </div>

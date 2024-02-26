@@ -1,5 +1,10 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { EmmitStepAction, IOperation, OperationStatus, UpdateAction } from "~/model/operation";
+import {
+  EmmitStepAction,
+  IOperation,
+  OperationStatus,
+  UpdateAction,
+} from "~/model/operation";
 import LocalStorageService from "~/services/localStorage";
 import { cacheHash } from "~/utils/format";
 
@@ -78,7 +83,7 @@ const operationSlice = createSlice({
       state.selectedOperationIndex = state.indexById[action.payload];
     },
     emmitStep: (state, action: PayloadAction<EmmitStepAction>) => {
-      const { operationId } = action.payload;
+      const { operationId, txHash } = action.payload;
 
       const operationIndex = state.indexById[operationId];
       const operation = state.list[operationIndex];
@@ -91,6 +96,7 @@ const operationSlice = createSlice({
             status !== OperationStatus.DONE && status !== OperationStatus.FAILED
         )[0] ?? null;
       if (!currentStep) return;
+      if (txHash) currentStep.txHash = txHash;
 
       currentStep.status = OperationStatus.DONE;
       currentStep.date = new Date().getTime();

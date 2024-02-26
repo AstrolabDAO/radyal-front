@@ -111,6 +111,7 @@ export const updateEstimation = async (estimationData: Estimation) => {
   if (!estimationData) {
     return;
   }
+
   const wagmiconfig = getWagmiConfig();
   const state = getSwapperStore();
   let steps = estimationData?.steps;
@@ -149,7 +150,7 @@ export const updateEstimation = async (estimationData: Estimation) => {
       ? value * weiPerUnit
       : Number(rightArray[0].fromAmount);
 
-    const approveAmount = Math.round(fromAmount / weiPerUnit) * weiPerUnit;
+    const approveAmount = fromAmount;
 
     const needApprove = allowance !== -1 && allowance < approveAmount;
 

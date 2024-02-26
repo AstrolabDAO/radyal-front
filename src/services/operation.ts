@@ -120,7 +120,7 @@ export const checkInterval = () => {
             startTimeById[op.id] = now;
           }
           const result = await getStatus({
-            aggregatorIds: [op.estimation.request.aggregatorId],
+            aggregatorIds: [op.estimation?.request?.aggregatorId],
             transactionId: op.txHash,
           });
 

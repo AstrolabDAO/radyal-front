@@ -36,11 +36,13 @@ export interface OperationStep
   substatusMessage?: string;
   fromToken?: Token;
   toToken?: Token;
+  txHash?: string;
 }
 
 export interface EmmitStepAction {
   operationId: string;
   promise?: Promise<any>;
+  txHash?: string;
 }
 export interface UpdateAction {
   id: string;

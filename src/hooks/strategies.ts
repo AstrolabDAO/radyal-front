@@ -10,8 +10,8 @@ import { useSelector, useStore } from "react-redux";
 
 import { Operation, OperationStatus, OperationStep } from "~/model/operation";
 
-import { emmitStep } from "~/services/operation";
-import { useEstimatedRoute } from "./swapper";
+import { addOperation, emmitStep, updateOperation } from "~/services/operation";
+import { useEstimatedRoute, useFromToken, useToToken } from "./swapper";
 import { closeModal, openModal } from "~/services/modal";
 import {
   createGrouppedStrategiesSelector,
@@ -22,6 +22,13 @@ import {
 } from "~/store/selectors/strategies";
 import { IRootState } from "~/store";
 import { getWagmiConfig } from "~/services/web3";
+import {
+  getEstimatedRoute,
+  getInteractionNeedToSwap,
+  getSwapperStore,
+} from "~/services/swapper";
+import { approve } from "~/services/transaction";
+import { getAccount, getPublicClient } from "wagmi/actions";
 
 export const useStrategiesStore = () => {
   return useSelector((state: IRootState) => state.strategies);
@@ -111,19 +118,31 @@ export const useDeposit = () => {
 export const useWithdraw = () => {
   const strategy = useSelectedStrategy();
 
-  const { network, asset } = strategy;
   const withdraw = useStrategyContractFunction("safeRedeem");
-  const switchNetwork = useSwitchNetwork(network.id);
   const publicClient = usePublicClient({
     chainId: strategy?.network?.id,
   });
-
   const { address } = useAccount();
   return useCallback(
-    async (value: number) => {
-      await switchNetwork();
-      const amount = BigInt(Math.round(value * asset.weiPerUnit));
+    async (value: number): Promise<Operation> => {
+      const state = getSwapperStore();
+      const interaction = state.interaction;
+      const { from, to, estimatedRoute } = state[interaction];
+      const amount = BigInt(Math.round(value * from.weiPerUnit));
 
+      const operation = new Operation({
+        id: window.crypto.randomUUID(),
+        fromToken: from,
+        toToken: to,
+        steps: estimatedRoute.steps.map((step) => {
+          return {
+            ...step,
+            status: OperationStatus.WAITING,
+          } as OperationStep;
+        }),
+        estimation: estimatedRoute,
+      });
+      addOperation(operation);
       const hash = (await withdraw([
         amount,
         "1",
@@ -131,60 +150,78 @@ export const useWithdraw = () => {
         address,
       ])) as `0x${string}`;
 
+      updateOperation({
+        id: operation.id,
+        payload: {
+          status: OperationStatus.PENDING,
+        },
+      });
       const withdrawPending = publicClient.waitForTransactionReceipt({
         hash,
       });
+
       toast.promise(withdrawPending, {
         loading: "Withdraw is pending...",
         success: "Withdraw transaction successful",
         error: "withdraw reverted rejected 🤯",
       });
-      return await withdrawPending;
+      emmitStep({
+        operationId: operation.id,
+        promise: withdrawPending,
+        txHash: hash,
+      });
+      if (!getInteractionNeedToSwap()) {
+        updateOperation({
+          id: operation.id,
+          payload: {
+            status: OperationStatus.DONE,
+            txHash: hash,
+          },
+        });
+      }
+      await withdrawPending;
+      return operation;
     },
-    [switchNetwork, asset.weiPerUnit, withdraw, address, publicClient]
+    [withdraw, address, publicClient]
   );
 };
 
 export const useApproveAndDeposit = () => {
-  const strategy = useSelectedStrategy();
-  const { asset, network } = strategy;
-
-  const publicClient = usePublicClient({
-    chainId: network.id,
-  });
-
   const deposit = useDeposit();
-
-  const approve = useApprove(asset);
-  const switchNetwork = useSwitchNetwork(network.id);
-
-  const estimation = useEstimatedRoute();
 
   const store = useStore();
   return useCallback(
     async (value: number) => {
-      await switchNetwork();
-      const amount = BigInt(value * asset.weiPerUnit);
+      const state = getSwapperStore();
+      const interaction = state.interaction;
+      const { from, to, estimatedRoute } = state[interaction];
+
+      const amount = BigInt(value * from.weiPerUnit);
+      const publicClient = getPublicClient(getWagmiConfig(), {
+        chainId: from.network.id,
+      });
 
       const _tx = new Operation({
         id: window.crypto.randomUUID(),
         status: OperationStatus.PENDING,
-        steps: estimation.steps.map((step) => {
+        steps: estimatedRoute.steps.map((step) => {
           return {
             ...step,
             status: OperationStatus.PENDING,
           } as OperationStep;
         }),
-        estimation,
+        estimation: estimatedRoute,
       });
 
       openModal({ modal: "steps", title: "TX TRACKER" });
 
       try {
-        if ((estimation.steps[0] as any).type === "approve") {
+        if ((estimatedRoute.steps[0] as any).type === "approve") {
           const approveHash = await approve({
-            spender: strategy.address,
+            spender: from.address,
+            address: getAccount(getWagmiConfig()).address,
             amount,
+            chainId: from.network.id,
           });
 
           const approvePending = publicClient.waitForTransactionReceipt({
@@ -239,17 +276,6 @@ export const useApproveAndDeposit = () => {
         toast.error("An error has occured");
       }
     },
-    [
-      approve,
-      asset.weiPerUnit,
-      deposit,
-      emmitStep,
-      estimation,
-      openModal,
-      publicClient,
-      store,
-      strategy.address,
-      switchNetwork,
-    ]
+    [approve, deposit, emmitStep, openModal, store]
   );
 };
