@@ -10,6 +10,7 @@ import {
   setBalances,
   setRequestedPriceCoingeckoIds,
 } from "~/store/tokens";
+import { setConnectedAddress } from "~/store/web3";
 import { getTokens, getTokensPrices, loadBalancesByAddress } from "~/utils/api";
 import { cacheHash } from "~/utils/format";
 import { Balance, Token } from "~/utils/interfaces";
@@ -71,6 +72,12 @@ const AppProvider = () => {
     if (!STORE_IS_INIT || !balances) return;
     dispatch(setBalances(balances));
   });
+
+  useEffect(() => {
+    if (isConnected) dispatch(setConnectedAddress(address));
+    else dispatch(setConnectedAddress(null));
+  }, [address, isConnected]);
+
   useEffect(() => {
     if (STORE_IS_INIT) return;
     if (tokens && !isConnected && !STORE_IS_PARTIAL_INIT) {

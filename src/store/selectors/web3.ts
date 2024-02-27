@@ -14,7 +14,7 @@ export const protocolsIsLoadingSelector = createSelector(
 );
 export const wagmiConfigSelector = createSelector(
   (state: IRootState) => state.web3,
-  (web3) => web3.config.wagmiConfig
+  (web3) => web3.config.config
 );
 
 export const networksSelector = createSelector(

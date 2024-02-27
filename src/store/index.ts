@@ -8,6 +8,7 @@ import operationMiddlewares from "./middlewares/operations";
 import strategiesMiddlewares from "./middlewares/strategies";
 import swapperMiddlewares from "./middlewares/swapper";
 import tokensMiddlewares from "./middlewares/tokens";
+import astrolabMiddlewares from "./middlewares/astrolab";
 
 import { initStore } from "./api/astrolab";
 import { ModalReducer } from "./modal";
@@ -16,6 +17,8 @@ import { StrategiesReducer } from "./strategies";
 import { SwapperReducer } from "./swapper";
 import { TokenReducer } from "./tokens";
 import { Web3Reducer } from "./web3";
+import localforage from "localforage";
+
 //import reduxApis, { endpoints } from "./api/api";
 export type IRootState = {
   tokens: ReturnType<typeof TokenReducer>;
@@ -25,6 +28,12 @@ export type IRootState = {
   swapper: ReturnType<typeof SwapperReducer>;
   web3: ReturnType<typeof Web3Reducer>;
 };
+
+localforage.config({
+  driver: localforage.INDEXEDDB, // Utiliser IndexedDB
+  name: "redux-store",
+  storeName: "reduxStore", // Nom du store IndexedDB
+});
 
 export const store = configureStore({
   reducer: {
@@ -45,7 +54,8 @@ export const store = configureStore({
       ...operationMiddlewares,
       ...tokensMiddlewares,
       ...strategiesMiddlewares,
-      ...swapperMiddlewares
+      ...swapperMiddlewares,
+      ...astrolabMiddlewares
     ),
 });
 setupListeners(store.dispatch);

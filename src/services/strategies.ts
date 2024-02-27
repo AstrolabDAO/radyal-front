@@ -1,19 +1,23 @@
-import { Balance, Strategy } from "~/utils/interfaces";
+import { Balance } from "~/utils/interfaces";
 import { abi as AgentAbi } from "@astrolabs/registry/abis/StrategyV5.json";
 
 import getBalances from "~/utils/multicall";
 
 import { select, selectGroup } from "~/store/strategies";
-import { selectedStrategySelector } from "~/store/selectors/strategies";
+import {
+  selectedStrategySelector,
+  strategiesSelector,
+} from "~/store/selectors/strategies";
 import { Network } from "~/model/network";
-import { store } from "~/store";
+import { getStoreState, store } from "~/store";
+import { StrategyInterface } from "~/model/strategy";
 
 export const getStrategiesBalances = async (
   address: `0x${string}`,
-  strategies: Strategy[]
+  strategies: StrategyInterface[]
 ) => {
   const balances: Balance[] = [];
-  const strategiesByChainId: { [chainId: number]: Strategy[] } = {};
+  const strategiesByChainId: { [chainId: number]: StrategyInterface[] } = {};
 
   strategies.forEach((strategy) => {
     if (!strategiesByChainId[strategy.network.id])
@@ -34,6 +38,7 @@ export const getStrategiesBalances = async (
       const network = Network.byChainId[key];
 
       const result = await getBalances(network, calls, address);
+
       balances.push(...result);
     }
 
@@ -43,13 +48,21 @@ export const getStrategiesBalances = async (
   }
 };
 
+export const getStrategiesStore = () => {
+  return getStoreState().strategies;
+};
+
+export const getStrategies = () => {
+  const state = getStoreState();
+  return strategiesSelector(state);
+};
 export const getSelectedStrategy = () => {
   const state = store.getState();
   return selectedStrategySelector(state);
 };
 
-export const selectStrategy = (strategy: Strategy) =>
+export const selectStrategy = (strategy: StrategyInterface) =>
   store.dispatch(select(strategy));
 
-export const selectStrategyGroup = (strategies: Strategy[]) =>
+export const selectStrategyGroup = (strategies: StrategyInterface[]) =>
   store.dispatch(selectGroup(strategies));

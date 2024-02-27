@@ -65,7 +65,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
   return (
-    <div className="absolute top-0 w-full">
+    <div className="absolute top-0 w-full z-20">
       <div
         className="relative flex flex-col w-full strategy-cta-size max-w-full"
         onClick={openModalStrategy}

@@ -21,8 +21,13 @@ export const promiseAwaitingMiddleware: Middleware =
   };
 
 export const convertClassToObjectMiddleware: Middleware =
-  () => (next) => (action: PayloadAction) => {
-    if ((action.payload as any) instanceof Serializable)
-      action.payload = Object.assign({}, action.payload);
+  () => (next) => (action: PayloadAction<any>) => {
+    if (action.payload?.map) {
+      if (action.payload[0] instanceof Serializable) {
+        action.payload = action.payload.map((e: Serializable) => e.toObject());
+      }
+    } else if ((action.payload as any) instanceof Serializable) {
+      action.payload = action.payload.toObject();
+    }
     next(action);
   };

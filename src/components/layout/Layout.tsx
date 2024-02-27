@@ -8,6 +8,7 @@ import DisclaimerPage from "~/pages/DisclaimerPage";
 import Footer from "../layer/MainFooter";
 import Header from "../layer/MainHeader";
 import { COLORS } from "~/styles/constants";
+import HypnoticRing from "../HypnoticRing";
 
 const Layout = ({ children }) => {
   const { accepted } = useContext(DisclaimerContext);
@@ -25,6 +26,7 @@ const Layout = ({ children }) => {
           {children}
         </div>
       </main>
+      <HypnoticRing />
       <Footer />
     </>
   );

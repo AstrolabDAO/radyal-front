@@ -3,6 +3,11 @@ import { IRootState } from "..";
 import { Strategy } from "~/utils/interfaces";
 import { Network } from "~/model/network";
 
+export const strategiesSelector = createSelector(
+  (state: IRootState) => state.strategies,
+  (state) => state.list
+);
+
 export const createGrouppedStrategiesSelector = (filtered = true) => {
   return createSelector(
     [

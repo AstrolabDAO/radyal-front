@@ -26,7 +26,7 @@ const StrategiesPage = () => {
 
   const tokensStore = useTokensStore();
   const protocolsIsLoading = useProtocolsIsLoading();
-
+  /*
   const { data: strategies, isLoading: strategiesIsLoading } = useQuery({
     queryKey: ["strategies"],
     queryFn: getStrategies,
@@ -61,7 +61,7 @@ const StrategiesPage = () => {
     if (balancesIsLoading || !balances) return;
     dispatch(addBalances(balances));
   }, [balancesIsLoading, balances, dispatch]);
-
+*/
   return (
     <Layout>
       <StrategyHero />

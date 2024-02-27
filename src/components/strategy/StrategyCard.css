@@ -10,7 +10,7 @@
 }
 
 .strategy-card {
-  @apply bg-darkGrey/20 h-48 cursor-pointer border-darkGrey hover:shadow-sm hover:border-primary/50 transition-all duration-500 backdrop-blur-xl;
+  @apply bg-darkGrey/20 h-48 cursor-pointer border-darkGrey hover:shadow-sm hover:border-primary/50 transition-all duration-500 backdrop-blur-lg;
 }
 
 div.strategy-cta-size {

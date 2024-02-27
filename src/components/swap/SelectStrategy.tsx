@@ -6,12 +6,14 @@ import {
 import { useInteraction } from "~/hooks/swapper";
 import { selectStrategy } from "~/services/strategies";
 import { selectToken } from "~/services/swapper";
+import { getStoreState } from "~/store";
 import { ActionInteraction } from "~/store/swapper";
 import { toDollarsCompact, toPercent } from "~/utils/format";
 
 const SelectStrategy = () => {
   const selectedGroup = useSelectedStrategyGroup();
 
+  const state = getStoreState();
   const interaction = useInteraction();
   const selectedStrategy = useSelectedStrategy();
 

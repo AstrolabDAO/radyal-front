@@ -15,13 +15,12 @@ const IconCard = ({ icon }: IconCardProps) => {
     >
       <div
         style={{ width: size?.width, height: size?.height }}
-        className={
-          clsx("mt-auto", {
-            "w-16 h-16": !small && !size,
-            "w-8 h-8 border-none": small && !size,
-          })
-        }>
-          <img src={ icon.url } alt={ icon.alt } />
+        className={clsx("mt-auto", {
+          "w-16 h-16": !small && !size,
+          "w-8 h-8 border-none": small && !size,
+        })}
+      >
+        <img src={icon.url} alt={icon.alt} />
       </div>
     </div>
   );

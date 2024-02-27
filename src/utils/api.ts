@@ -5,24 +5,18 @@ import { getTokenBySlug } from "~/services/tokens";
 import { COINGECKO_API, TOKEN_BASENAME_REGEX } from "./constants";
 import { Strategy, Token } from "./interfaces";
 
-import { multicall } from "./multicall";
 import {
   ApiResponseStrategy,
   NetworksResponse,
   ProtocolsResponse,
 } from "~/interfaces/astrolab-api";
-import { getRandomAPY, getRandomTVL } from "./mocking";
-import {
-  clearNetworkTypeFromSlug,
-  networkToWagmiChain,
-  stripSlug,
-  toPercent,
-} from "./format";
-import { NETWORKS } from "./web3-constants";
 import { Network, NetworkInterface } from "~/model/network";
-import { setupWeb3modal } from "./setup-web3modal";
 import { Protocol } from "~/model/protocol";
+import { clearNetworkTypeFromSlug, stripSlug } from "./format";
 import { chainImages } from "./mappings";
+import { getRandomAPY, getRandomTVL } from "./mocking";
+import { multicall } from "./multicall";
+import { NETWORKS } from "./web3-constants";
 
 export const getTokenPrice = (token: Token) => {
   return axios.get(`${COINGECKO_API}/simple/price`, {
@@ -101,22 +95,17 @@ export const formatNetworks = (networksResponse: NetworksResponse) => {
   const networksData = networksResponse.data;
   const chains = [];
   const networks = [];
-  networksData
+  return networksData
     ?.filter((network) => NETWORKS.includes(network.slug))
-    .forEach((_network) => {
+    .map((_network) => {
       const network = new Network(_network as NetworkInterface);
-      Network.byChainId[network.id] = network;
-      Network.bySlug[network.slug] = network;
       const icon = `/images/networks/${clearNetworkTypeFromSlug(
         network.slug
       )}.svg`;
       chainImages[network.id] = icon;
       network.icon = icon;
-      networks.push(network);
-      chains.push(networkToWagmiChain(network));
+      return network;
     });
-
-  return { networks, config: setupWeb3modal(chains) };
 };
 
 export const formatProtocols = (protocolsData: ProtocolsResponse) => {
@@ -136,132 +125,6 @@ export const formatProtocols = (protocolsData: ProtocolsResponse) => {
   });
 };
 
-/*
-export const formatStrategies = (strategiesData: ApiResponseStrategy[]) => {
-  return strategiesData
-    .filter((strategy) => {
-      console.log("🚀 ~ returnprotocolsData.data.map ~ protocol:", protocol)
-      const { nativeNetwork, nativeAddress } = strategy;
-      const network = Network.bySlug[nativeNetwork];
-      const token = getTokenBySlug(strategy.denomination);
-      return !!network && !!token && nativeAddress !== zeroAddress;
-    })
-    .map((strategy) => {
-      const {
-        name,
-        nativeNetwork,
-        nativeAddress,
-        valuable,
-        symbol,
-        decimals,
-        sharePrice,
-        slug,
-        color1,
-        color2,
-        protocols,
-        aggregationLevel,
-      } = strategy as ApiResponseStrategy & {
-        decimals: number;
-        sharePrice: number;
-        aggregationLevel: number;
-      };
-
-      const network = Network.bySlug[nativeNetwork];
-
-      const dailyAPY = strategy?.valuable?.last?.investedApyDaily;
-      const fakeApy = getRandomAPY(strategy.slug);
-
-      const apy = dailyAPY
-        ? Math.round(dailyAPY * 100) / 100
-        : toPercent(fakeApy, 2, false, true);
-
-      const calculatedTVL =
-        (valuable?.last?.volume * valuable?.last?.sharePrice) /
-        strategy.weiPerUnit;
-      const tvl = calculatedTVL ? calculatedTVL : getRandomTVL(strategy.slug);
-
-      const token = getTokenBySlug(strategy.denomination);
-
-      const _strat = {
-        name,
-        symbol,
-        decimals,
-        address: nativeAddress,
-        network,
-        asset: token,
-        valuable,
-        color1,
-        color2,
-        icon: `/images/tokens/asl.svg`,
-        slug,
-        weiPerUnit: 10 ** decimals,
-        sharePrice,
-        protocols: protocols.map((slug) => Protocol.bySlug[slug]),
-        aggregationLevel,
-        apy,
-        tvl,
-      } as Strategy;
-      return _strat;
-    });
-};
-
-export const populateStrategiesOnChainData = async (strategies: Strategy[]) => {
-  const strategiesByNetwork: { [key: number]: ApiResponseStrategyWithIndex[] } =
-    {};
-
-  // Generate strategies mapping by Network with api Data
-  for (let i = 0; i < strategiesData.length; i++) {
-    const strategy = strategiesData[i];
-
-    const { nativeNetwork } = strategy;
-    const network = Network.bySlug[nativeNetwork];
-    if (!network) continue;
-    if (!strategiesByNetwork[network.id]) strategiesByNetwork[network.id] = [];
-    // Add index on strategy to retrieve it after
-    Object.assign(strategy, { index: i });
-    strategiesByNetwork[network.id].push(
-      strategy as ApiResponseStrategyWithIndex
-    );
-  }
-
-  // Loop on Strategies by networks to multicall (getting strategy token details)
-  for (const chainId of Object.keys(strategiesByNetwork)) {
-    const networkStrategies: ApiResponseStrategyWithIndex[] =
-      strategiesByNetwork[chainId];
-    const contractsCalls = networkStrategies
-      .map((strategy) => {
-        const call = {
-          abi: AgentABI,
-          address: strategy.nativeAddress,
-        };
-        return ["symbol", "decimals", "sharePrice", "name"].map(
-          (functionName) => ({
-            ...call,
-            functionName,
-          })
-        );
-      })
-      .flat(1);
-
-    const result: any[] = await multicall(Number(chainId), contractsCalls);
-
-    // Add multicall result on api Data
-
-    for (let i = 0; i < result.length; i += 4) {
-      const [symbol, decimals, sharePrice, name] = result.slice(i, i + 4);
-
-      if (!symbol?.result || !decimals?.result || !name?.result) continue;
-      const strategy = networkStrategies[i / 4];
-      Object.assign(strategiesData[strategy.index], {
-        symbol: symbol?.result,
-        decimals: decimals?.result,
-        sharePrice: Number(sharePrice?.result),
-        name: name?.result,
-      });
-    }
-  }
-};
-*/
 export const getProtocols = async () => {
   const result = await axios.get(`${process.env.ASTROLAB_API}/protocols`);
   return result.data.data;
@@ -364,9 +227,7 @@ export const getStrategies = async () => {
       const dailyAPY = strategy?.valuable?.last?.investedApyDaily;
       const fakeApy = getRandomAPY(strategy.slug);
 
-      const apy = dailyAPY
-        ? Math.round(dailyAPY * 100) / 100
-        : toPercent(fakeApy, 2, false, true);
+      const apy = dailyAPY ? Math.round(dailyAPY * 100) / 100 : fakeApy;
 
       const calculatedTVL =
         (valuable?.last?.volume * valuable?.last?.sharePrice) /
@@ -375,11 +236,11 @@ export const getStrategies = async () => {
 
       const token = getTokenBySlug(strategy.denomination);
 
-      const _strat = {
+      return new Strategy({
         name,
         symbol,
         decimals,
-        address: nativeAddress,
+        address: nativeAddress as `0x${string}`,
         network,
         asset: token,
         valuable,
@@ -393,7 +254,6 @@ export const getStrategies = async () => {
         aggregationLevel,
         apy,
         tvl,
-      } as Strategy;
-      return _strat;
+      });
     });
 };
