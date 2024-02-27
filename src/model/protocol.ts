@@ -1,3 +1,4 @@
+import { stripSlug } from "~/utils/format";
 import { Serializable } from "./serializable";
 
 export interface ProtocolInterface {
@@ -25,5 +26,8 @@ export class Protocol extends Serializable implements Protocol {
     this.landing = data.landing;
     this.slug = data.slug;
     this.icon = data.icon;
+
+    Protocol.bySlug[this.slug] = this;
+    Protocol.byStrippedSlug[stripSlug(this.slug)] = this;
   }
 }

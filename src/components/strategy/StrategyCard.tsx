@@ -60,7 +60,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
       });
   };
 
-  const strategyIconPath = getStrategyIcon(strategy).replace(
+  const strategyIconPath = getStrategyIcon(strategy)?.replace(
     ".svg",
     "-mono.svg"
   );

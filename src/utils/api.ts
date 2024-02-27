@@ -119,8 +119,6 @@ export const formatProtocols = (protocolsData: ProtocolsResponse) => {
       icon: `/images/protocols/${slug}.svg`,
     });
 
-    Protocol.bySlug[slug] = protocol;
-    Protocol.byStrippedSlug[stripSlug(slug)] = protocol;
     return protocol;
   });
 };
