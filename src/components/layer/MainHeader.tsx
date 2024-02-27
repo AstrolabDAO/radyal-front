@@ -35,16 +35,16 @@ const Header = () => {
           <Link to="/" className="navbar-start">
             <Logo className="flex fill-white w-52" />
           </Link>
-          <nav className="navbar-center text-secondary flex-row justify-center gap-5 px-5 hidden sm:flex ">
+          <nav className="text-xl navbar-center text-secondary flex-row justify-center gap-6 px-5 hidden sm:flex ">
             <Link
               to="/"
-              className="text-xl flex font-bold hover:text-primary text-neon cursor-pointer font-bold"
+              className="flex font-bold hover:text-primary text-neon cursor-pointer font-bold"
             >
               VAULTS
             </Link>
-            <div className="text-xl flex cursor-not-allowed font-medium text-darkGrey tooltip tooltip-bottom" data-tip="Soon™">BORROW</div>
-            <div className="text-xl flex cursor-not-allowed font-medium text-darkGrey tooltip tooltip-bottom" data-tip="Soon™">FOLIO</div>
-            <div className="text-xl flex cursor-pointer relative">
+            <div className="flex cursor-not-allowed font-medium text-darkGrey tooltip tooltip-bottom" data-tip="Soon™">BORROW</div>
+            <div className="flex cursor-not-allowed font-medium text-darkGrey tooltip tooltip-bottom" data-tip="Soon™">FOLIO</div>
+            <div className="flex cursor-pointer relative">
               <HeaderAbout />
             </div>
           </nav>
