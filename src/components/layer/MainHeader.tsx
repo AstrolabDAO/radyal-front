@@ -35,7 +35,7 @@ const Header = () => {
           <Link to="/" className="navbar-start">
             <Logo className="flex fill-white w-52" />
           </Link>
-          <nav className="navbar-center text-secondary flex-row justify-center gap-10 hidden sm:flex ">
+          <nav className="navbar-center text-secondary flex-row justify-center gap-5 px-5 hidden sm:flex ">
             <Link
               to="/"
               className="text-xl flex font-bold hover:text-primary text-neon cursor-pointer font-bold"

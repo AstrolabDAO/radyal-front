@@ -16,6 +16,7 @@ import { selectStrategy, selectStrategyGroup } from "~/services/strategies";
 import { COLORS } from "~/styles/constants";
 import { getStrategyIcon } from "~/utils";
 import { Button } from "../styled";
+import { toPercent } from "~/utils/format";
 
 interface StrategyProps {
   strategyGroup: Strategy[];
@@ -153,7 +154,7 @@ const StrategyCardCTATwo = ({ strategyGroup }: StrategyProps) => {
                       "text-4xl font-black group-hover:text-primary"
                     )}
                   >
-                    {strategy.apy}
+                    {toPercent(strategy.apy, 2, false, true)}
                   </div>
                   <div className="flex flex-col text-center text-xs leading-none -mt-1 -ml-2">
                     <span className="text-2xl font-black">%</span>
