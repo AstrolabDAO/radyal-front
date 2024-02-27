@@ -14,7 +14,7 @@ export const tokensIsEqual = (
 };
 
 export const getStrategyIcon = (strategy: Strategy) => {
-  console.log("🚀 ~ getStrategyIcon ~ strategy:", strategy);
+  // console.log("🚀 ~ getStrategyIcon ~ strategy:", strategy);
   if (!strategy) return "";
   switch (strategy.aggregationLevel) {
     case 0:

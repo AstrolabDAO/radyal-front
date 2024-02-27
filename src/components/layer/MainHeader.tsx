@@ -42,10 +42,8 @@ const Header = () => {
             >
               VAULTS
             </Link>
-            <div className="text-xl flex font-medium text-darkGrey">BORROW</div>
-            <div className="text-xl flex cursor-pointer hover:text-primary font-medium">
-              FOLIO
-            </div>
+            <div className="text-xl flex cursor-not-allowed font-medium text-darkGrey tooltip tooltip-bottom" data-tip="Soon™">BORROW</div>
+            <div className="text-xl flex cursor-not-allowed font-medium text-darkGrey tooltip tooltip-bottom" data-tip="Soon™">FOLIO</div>
             <div className="text-xl flex cursor-pointer relative">
               <HeaderAbout />
             </div>

@@ -71,7 +71,7 @@ const DepositTab = () => {
         <GasDetails operation={operationSimulation} />
         <ActionRouteDetail operation={new Operation(operationSimulation)} />
       </div>
-      <div className="flex mt-4">
+      <div className="flex">
         <Button
           big={true}
           disabled={!canSwap}

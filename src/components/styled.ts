@@ -56,14 +56,10 @@ Button.propTypes = {
 
 export const StyledDropdown = styled.div<{ visible: boolean }>`
   outline: none;
-  font-weight: 800;
-  font-family: "Gilroy", sans-serif;
   ${(props) => (props.visible ? tw`flex` : tw`hidden`)};
-  ${tw`absolute cursor-default right-0 mt-2 bg-dark
-  rounded-2xl gap-3 p-4 flex-col w-40 font-semibold focus:outline-none`}
 `;
 
 export const ModalWrapper = styled.div`
   max-height: 90vh;
-  ${tw`bg-base p-6 rounded-2xl`}
+  ${tw`bg-base p-6 rounded-2xl`};
 `;
