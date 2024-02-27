@@ -29,7 +29,7 @@ const StrategyTableListItem = ({
     size: { width: 24, height: 24 },
     url: strategy.asset.icon,
   };
-  const w1 = (strategy.apy / 100 ) / 365 * 7;
+  const w1 = (strategy.apy / 365) * 7;
   return (
     <tr
       className={clsx(
@@ -46,7 +46,7 @@ const StrategyTableListItem = ({
         <IconCard icon={icon} />
       </td>
       <td className="text-white">{strategy.name}</td>
-      <td className="text-white font-semibold">{toPercent(strategy.apy / 100)}</td>
+      <td className="text-white font-semibold">{toPercent(strategy.apy)}</td>
       <td className="text-white">${strategy.tvl}</td>
       <td>
         {protocolsIcons.map((icon) =>
