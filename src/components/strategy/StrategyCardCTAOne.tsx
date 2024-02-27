@@ -40,6 +40,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
   const [strategy, title, subtitle] = useMemo(() => {
     if (!strategyGroup || strategyGroup.length === 0) return [null, null, null];
     const [strategy] = strategyGroup;
+
     const { name } = strategy;
     const [title, subtitle] = name.replace("Astrolab ", "").split(" ");
     return [strategy, title, subtitle];
