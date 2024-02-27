@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 const Table = ({ headers = [], data = [] }) => {
   return (
-    <table className="table border-darkGrey rounded-xl">
+    <table className="table rounded-xl">
       <thead className="text-secondary">
         <tr>
           <th className="pe-0"></th>

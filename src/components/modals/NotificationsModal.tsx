@@ -48,7 +48,7 @@ export const NotificationsModal = () => {
           </div>
         )}
         {operations.length > 0 && (
-          <table className="table border-darkGrey rounded-xl">
+          <table className="table rounded-xl">
             <thead className="text-secondary">
               <tr>
                 {["date", "from", "to", "status", ""].map((header, index) => {
