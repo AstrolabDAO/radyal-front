@@ -6,7 +6,7 @@ import { zeroAddress } from "viem";
 import { getDigits, round, truncateTrailingZeroes } from "./maths";
 import { dateToDateString, dateToString, dateToTimeString } from "./date";
 import { Callable, Stringifiable } from "./typing";
-import { Network } from "~/model/network";
+import { Network, NetworkInterface } from "~/model/network";
 
 export function toRaw(s: string): string {
   return s
@@ -82,7 +82,7 @@ export const cacheHash = (...params: any[]) => {
   return md5(JSON.stringify(params));
 };
 
-export const networkToWagmiChain = (network: Network) => {
+export const networkToWagmiChain = (network: NetworkInterface) => {
   if (!network) return;
 
   const wagmiNetwork = wagmiChainById[network.id];

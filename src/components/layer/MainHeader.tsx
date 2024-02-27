@@ -42,9 +42,7 @@ const Header = () => {
             >
               VAULTS
             </Link>
-            <div className="text-xl flex hover:text-primary cursor-pointer font-medium">
-              BORROW
-            </div>
+            <div className="text-xl flex font-medium text-darkGrey">BORROW</div>
             <div className="text-xl flex cursor-pointer hover:text-primary font-medium">
               FOLIO
             </div>

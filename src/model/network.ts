@@ -42,5 +42,7 @@ export class Network extends Serializable implements NetworkInterface {
     this.icon = network.icon;
     this.color1 = network.color1;
     this.color2 = network.color2;
+    Network.byChainId[this.id] = this;
+    Network.bySlug[this.slug] = this;
   }
 }

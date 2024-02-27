@@ -1,13 +1,15 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { cacheHash } from "~/utils/format";
 
-import { Balance, Strategy } from "~/utils/interfaces";
+import { Balance } from "~/utils/interfaces";
+import { fetchStrategies, fetchStrategiesBalances } from "./api/astrolab";
+import { StrategyInterface } from "~/model/strategy";
 
 export const CACHE_KEY = cacheHash("strategies");
 
 export interface StrategiesState {
   isLoading: boolean;
-  list: Strategy[];
+  list: StrategyInterface[];
   selectedStrategyIndex: number;
   selectedStrategyGroup: string[];
   strategiesBalances: Balance[];
@@ -16,7 +18,7 @@ export interface StrategiesState {
   indexBySlug: { [slug: string]: number };
 }
 export interface InitPayload {
-  strategies: Strategy[];
+  strategies: StrategyInterface[];
 }
 
 const initialState: StrategiesState = {
@@ -36,14 +38,15 @@ const strategiesSlice = createSlice({
   reducers: {
     init: (state, action: PayloadAction<InitPayload>) => {
       state.list = action.payload.strategies;
+      state.isLoading = false;
       state.list.forEach((strategy, index) => {
         state.indexBySlug[strategy.slug] = index;
       });
     },
-    select: (state, action: PayloadAction<Strategy>) => {
+    select: (state, action: PayloadAction<StrategyInterface>) => {
       state.selectedStrategyIndex = state.indexBySlug[action.payload.slug];
     },
-    selectGroup: (state, action: PayloadAction<Strategy[]>) => {
+    selectGroup: (state, action: PayloadAction<StrategyInterface[]>) => {
       state.selectedStrategyGroup = action.payload.map(
         (strategy) => strategy.slug
       );
@@ -57,16 +60,21 @@ const strategiesSlice = createSlice({
       state.selectedNetworks = action.payload;
     },
   },
-  /*extraReducers: (builder) => {
+  extraReducers: (builder) => {
     builder.addCase(fetchStrategies.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(fetchStrategies.fulfilled, (state, action) => {
       state.isLoading = false;
       state.list = action.payload;
-      updateMappings(state);
+      state.list.forEach((strategy, index) => {
+        state.indexBySlug[strategy.slug] = index;
+      });
     });
-  },*/
+    builder.addCase(fetchStrategiesBalances.fulfilled, (state, action) => {
+      state.strategiesBalances = action.payload;
+    });
+  },
 });
 
 export const { init, select, selectGroup, search, filterByNetworks } =

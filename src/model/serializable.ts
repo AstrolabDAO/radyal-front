@@ -1,4 +1,4 @@
-export class Serializable {
+export abstract class Serializable {
   toObject(): Partial<this> {
     return Object.assign({}, this);
   }

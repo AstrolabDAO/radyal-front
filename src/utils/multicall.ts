@@ -24,6 +24,7 @@ export const getBalances = async (
   // @ts-ignore
   const result = await wagmiMulticall(getWagmiConfig(), {
     chainId: network.id,
+    // @ts-ignore
     contracts: contracts
       .map(({ token, ...contract }) => [
         {
