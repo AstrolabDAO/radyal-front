@@ -10,12 +10,16 @@ import NetworkSelect, { NetworkSelectData } from "../NetworkSelect";
 import StrategyCard from "./StrategyCard";
 import StrategyTable from "./table/StrategyTable";
 
-import CardIcon from "@/assets/icons/cards.svg?react";
-import TableIcon from "@/assets/icons/table.svg?react";
+import CardIcon from "@/assets/icons/card-view.svg?react";
+import TableIcon from "@/assets/icons/table-view.svg?react";
 import { Transition } from "@headlessui/react";
 import clsx from "clsx";
 import { useCallback, useState } from "react";
 import { Input } from "../styled";
+import {
+  StrategyTableContext,
+  StrategyTableContextProvider,
+} from "~/context/strategy-table.context";
 
 const StrategyGrid = () => {
   const [tabActive, setTabActive] = useState<"cards" | "table">("cards");
@@ -45,8 +49,8 @@ const StrategyGrid = () => {
   return (
     <div className="w-full container px-2 sm:mx-auto mt-5 overflow-x-hidden">
       <div className="flex flex-row ms-auto w-full justify-end gap-x-3 items-center">
-        <div className="flex w-8 h-8">
-          <TableIcon
+        <div className="flex w-10 h-10">
+          <CardIcon
             className={clsx(
               tabActive === "cards" ? "fill-primary" : "fill-dark-500",
               "cursor-pointer hover:fill-primary/50"
@@ -56,8 +60,8 @@ const StrategyGrid = () => {
             }}
           />
         </div>
-        <div className="flex w-8 h-8">
-          <CardIcon
+        <div className="flex w-10 h-10">
+          <TableIcon
             className={clsx(
               tabActive === "table" ? "fill-primary" : "fill-dark-500",
               "cursor-pointer hover:fill-primary/50"
@@ -70,9 +74,10 @@ const StrategyGrid = () => {
       </div>
       <div className="flex flex-col md:flex-row w-full relative z-30">
         <div className="mr-4 w-full flex flex-col">
-          <span className="label-text block my-1">Search a strategy</span>
+          <span className="label-text block mb-1">Search a strategy</span>
           <Input
             type="text"
+            className="bordered-hover"
             placeholder="“Stable”, “Arbitrum”, “Staking”..."
             onChange={({ target }) => {
               dispatch(search(target.value));
@@ -80,7 +85,7 @@ const StrategyGrid = () => {
           />
         </div>
         <div className="flex flex-col relative ">
-          <span className="label-text my-1">Chain</span>
+          <span className="label-text mb-1">Chain</span>
           <NetworkSelect
             isSearchable={false}
             className="w-64 h-12"
@@ -130,7 +135,9 @@ const StrategyGrid = () => {
                 </div>
               )}
               {tabActive === "table" && (
-                <StrategyTable strategies={grouppedStrategies} />
+                <StrategyTableContextProvider>
+                  <StrategyTable />
+                </StrategyTableContextProvider>
               )}
             </div>
           </Transition.Child>

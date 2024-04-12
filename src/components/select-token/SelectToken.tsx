@@ -81,6 +81,7 @@ const SelectToken = ({ tokens, onSelect }: SelectTokenProps) => {
             <label className="flex mb-1">Search by name</label>
             <Input
               type="text"
+              className="bordered-hover"
               placeholder="USDC..."
               onChange={({ target }) => {
                 setSearch(target.value);

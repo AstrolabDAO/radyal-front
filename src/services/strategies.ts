@@ -10,14 +10,14 @@ import {
 } from "~/store/selectors/strategies";
 import { Network } from "~/model/network";
 import { getStoreState, store } from "~/store";
-import { StrategyInterface } from "~/model/strategy";
+import { IStrategy } from "~/model/strategy";
 
-export const getStrategiesBalances = async (
+export const getStrategiesBalancesFromApi = async (
   address: `0x${string}`,
-  strategies: StrategyInterface[]
+  strategies: IStrategy[]
 ) => {
   const balances: Balance[] = [];
-  const strategiesByChainId: { [chainId: number]: StrategyInterface[] } = {};
+  const strategiesByChainId: { [chainId: number]: IStrategy[] } = {};
 
   strategies.forEach((strategy) => {
     if (!strategiesByChainId[strategy.network.id])
@@ -48,6 +48,9 @@ export const getStrategiesBalances = async (
   }
 };
 
+export const getStrategiesBalances = () => {
+  return getStoreState().strategies.strategiesBalances;
+};
 export const getStrategiesStore = () => {
   return getStoreState().strategies;
 };
@@ -61,8 +64,8 @@ export const getSelectedStrategy = () => {
   return selectedStrategySelector(state);
 };
 
-export const selectStrategy = (strategy: StrategyInterface) =>
+export const selectStrategy = (strategy: IStrategy) =>
   store.dispatch(select(strategy));
 
-export const selectStrategyGroup = (strategies: StrategyInterface[]) =>
+export const selectStrategyGroup = (strategies: IStrategy[]) =>
   store.dispatch(selectGroup(strategies));

@@ -1,7 +1,7 @@
 import { abi } from "@astrolabs/registry/abis/StrategyV5.json";
 import { useCallback } from "react";
 import { useAccount, useContractRead, usePublicClient } from "wagmi";
-import { useApprove, useSwitchNetwork } from "./transaction";
+import { useSwitchNetwork } from "./transaction";
 
 import toast from "react-hot-toast";
 
@@ -10,9 +10,13 @@ import { useSelector, useStore } from "react-redux";
 
 import { Operation, OperationStatus, OperationStep } from "~/model/operation";
 
-import { addOperation, emmitStep, updateOperation } from "~/services/operation";
-import { useEstimatedRoute, useFromToken, useToToken } from "./swapper";
+import { getAccount, getPublicClient } from "wagmi/actions";
 import { closeModal, openModal } from "~/services/modal";
+import { addOperation, emmitStep, updateOperation } from "~/services/operation";
+import { getInteractionNeedToSwap, getSwapperStore } from "~/services/swapper";
+import { approve } from "~/services/transaction";
+import { getWagmiConfig } from "~/services/web3";
+import { IRootState } from "~/store";
 import {
   createGrouppedStrategiesSelector,
   selectedStrategyGroupSelector,
@@ -20,15 +24,6 @@ import {
   strategiesNetworksSelector,
   strategyBySlugSelector,
 } from "~/store/selectors/strategies";
-import { IRootState } from "~/store";
-import { getWagmiConfig } from "~/services/web3";
-import {
-  getEstimatedRoute,
-  getInteractionNeedToSwap,
-  getSwapperStore,
-} from "~/services/swapper";
-import { approve } from "~/services/transaction";
-import { getAccount, getPublicClient } from "wagmi/actions";
 
 export const useStrategiesStore = () => {
   return useSelector((state: IRootState) => state.strategies);
@@ -37,7 +32,11 @@ export const useStrategiesStore = () => {
 export const useStrategies = () => {
   return useSelector((state: IRootState) => state.strategies.list);
 };
-
+export const useStrategiesBalances = () => {
+  return useSelector(
+    (state: IRootState) => state.strategies.strategiesBalances
+  );
+};
 export const useSelectedStrategy = () => {
   return useSelector(selectedStrategySelector);
 };

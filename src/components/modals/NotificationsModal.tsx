@@ -4,8 +4,8 @@ import { useMemo } from "react";
 import { useOperations } from "~/hooks/operation";
 
 import { OperationStatus } from "@astrolabs/swapper";
-import SuccessIcon from "~/assets/icons/checkmark.svg?react";
-import DangerIcon from "~/assets/icons/danger.svg?react";
+import SuccessIcon from "~/assets/icons/success.svg?react";
+import DangerIcon from "~/assets/icons/warning.svg?react";
 
 import { CgTrash } from "react-icons/cg";
 import { openModal } from "~/services/modal";

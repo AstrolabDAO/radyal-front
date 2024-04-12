@@ -23,8 +23,10 @@ export const COLORS = {
   darkGrey: "#606060",
   darkerGrey: "#3E3E3E",
   "base-content": "#909090",
-  dark: "#2A2A2A",
+  dark: "#505050",
   background: "#1B1B1B",
+  hoverPrimaryBorder: "rgba(255,184,0,0.2)",
+  hoverPrimaryBackground: "rgba(255,184,0,0.05)",
   ...SENTIMENT_COLORS,
 };
 

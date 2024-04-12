@@ -1,5 +1,7 @@
 import { Middleware, PayloadAction } from "@reduxjs/toolkit";
 import { InitPayload } from "../strategies";
+import { getStoreState } from "..";
+import { Strategy } from "~/model/strategy";
 
 const addCoingeckoIdMiddleware: Middleware =
   (store) => (next) => (action: PayloadAction<InitPayload>) => {
@@ -23,5 +25,23 @@ const groupStrategies: Middleware =
       });
     }
   };
+const updateStrategiesBalancesMapping: Middleware =
+  () => (next) => (action: PayloadAction) => {
+    next(action);
+    if (
+      [
+        "astrolab/strategiesBalances/fulfilled",
+        "strategies/updateStrategiesPrices",
+      ].includes(action.type)
+    ) {
+      getStoreState().strategies.strategiesBalances.forEach(
+        (balance) => (Strategy.balanceBySlug[balance.token] = balance)
+      );
+    }
+  };
 
-export default [addCoingeckoIdMiddleware, groupStrategies] as Middleware[];
+export default [
+  addCoingeckoIdMiddleware,
+  groupStrategies,
+  updateStrategiesBalancesMapping,
+] as Middleware[];

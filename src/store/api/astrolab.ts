@@ -3,7 +3,10 @@ import axios from "axios";
 import localforage from "localforage";
 import { getAccount } from "wagmi/actions";
 import { NetworksResponse, ProtocolsResponse } from "~/interfaces/astrolab-api";
-import { getStrategies, getStrategiesBalances } from "~/services/strategies";
+import {
+  getStrategies,
+  getStrategiesBalancesFromApi,
+} from "~/services/strategies";
 import { getNetworks, getWagmiConfig } from "~/services/web3";
 import {
   formatNetworks,
@@ -14,8 +17,8 @@ import { setConfig, setNetworks, setProtocols } from "../web3";
 import { init } from "../strategies";
 import { networkToWagmiChain } from "~/utils/format";
 import { Network, NetworkInterface } from "~/model/network";
-import { Strategy, StrategyInterface } from "~/model/strategy";
-import { Protocol, ProtocolInterface } from "~/model/protocol";
+import { Strategy, IStrategy } from "~/model/strategy";
+import { Protocol, IProtocol } from "~/model/protocol";
 import { setupWeb3modal } from "~/utils/setup-web3modal";
 import { store } from "..";
 import { addBalances } from "../tokens";
@@ -28,10 +31,10 @@ export const initStore = async (store) => {
     const localNetworks: NetworkInterface[] = JSON.parse(
       await localforage.getItem("networks")
     );
-    const localStrategies: StrategyInterface[] = JSON.parse(
+    const localStrategies: IStrategy[] = JSON.parse(
       await localforage.getItem("strategies")
     );
-    const localProtocols: ProtocolInterface[] = JSON.parse(
+    const localProtocols: IProtocol[] = JSON.parse(
       await localforage.getItem("protocols")
     );
     const localStrategiesBalances = JSON.parse(
@@ -124,7 +127,7 @@ export const fetchStrategiesBalances = createAsyncThunk(
       const wagmiConfig = getWagmiConfig();
       const { address } = getAccount(wagmiConfig);
       const strategies = getStrategies();
-      return getStrategiesBalances(address, strategies);
+      return getStrategiesBalancesFromApi(address, strategies);
     } catch (error) {
       return rejectWithValue(error.message);
     }

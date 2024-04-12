@@ -35,6 +35,7 @@ export const getTokensPrices = async (coingeckoIds: string[]) => {
       vs_currencies: "usd",
     },
   });
+
   return result.data;
 };
 
@@ -176,7 +177,6 @@ export const getStrategies = async () => {
     );
 
     // Add multicall result on api Data
-
     for (let i = 0; i < result.length; i += 4) {
       const [symbol, decimals, sharePrice, name] = result.slice(i, i + 4);
 
@@ -223,9 +223,9 @@ export const getStrategies = async () => {
       const network = Network.bySlug[nativeNetwork];
 
       const dailyAPY = strategy?.valuable?.last?.investedApyDaily;
-      const fakeApy = getRandomAPY(strategy.slug);
+      const mockApy = getRandomAPY(strategy.slug);
 
-      const apy = dailyAPY ? Math.round(dailyAPY * 100) / 100 : fakeApy;
+      const apy = dailyAPY ? Math.round(dailyAPY * 100) / 100 : mockApy;
 
       const calculatedTVL =
         (valuable?.last?.volume * valuable?.last?.sharePrice) /

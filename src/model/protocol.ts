@@ -1,7 +1,7 @@
 import { stripSlug } from "~/utils/format";
 import { Serializable } from "./serializable";
 
-export interface ProtocolInterface {
+export interface IProtocol {
   app: string;
   name: string;
   landing: string;
@@ -9,7 +9,7 @@ export interface ProtocolInterface {
   icon: string;
 }
 
-export class Protocol extends Serializable implements Protocol {
+export class Protocol extends Serializable implements IProtocol {
   app: string;
   name: string;
   landing: string;
@@ -19,7 +19,8 @@ export class Protocol extends Serializable implements Protocol {
   static bySlug: { [slug: string]: Protocol } = {};
   static byStrippedSlug: { [slug: string]: Protocol } = {};
   static byThirdPartyId: { [id: string]: Protocol } = {};
-  constructor(data: ProtocolInterface) {
+
+  constructor(data: IProtocol) {
     super();
     this.app = data.app;
     this.name = data.name;

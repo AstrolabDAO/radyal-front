@@ -76,13 +76,16 @@ const tokensSlice = createSlice({
       }
 
       if (action.payload.balances) {
-        state.balances = action.payload.balances;
+        state.balances.push(...action.payload.balances);
         state.balances.forEach((balance) => {
           state.mappings.balanceByTokenSlug[balance.token] = balance;
         });
       }
       if (action.payload.prices) {
         state.prices = action.payload.prices;
+        state.balances.forEach((balance) => {
+          balance.amountUsd = balance.amount * balance.price;
+        });
       }
     },
     setBalances: (state, action: PayloadAction<Balance[]>) => {
@@ -120,7 +123,9 @@ const tokensSlice = createSlice({
       const balances = action.payload.filter(
         (balance) => !state.mappings.balanceByTokenSlug[balance.token]
       );
+
       state.balances.push(...balances);
+
       balances.forEach((balance) => {
         state.mappings.balanceByTokenSlug[balance.token] = balance;
       });
@@ -145,6 +150,9 @@ const tokensSlice = createSlice({
     },
     updatePrices: (state, action: PayloadAction<CoinGeckoPrices>) => {
       state.prices = action.payload;
+      state.balances.forEach((balance) => {
+        balance.amountUsd = balance.amount * balance.price;
+      });
     },
   },
 });

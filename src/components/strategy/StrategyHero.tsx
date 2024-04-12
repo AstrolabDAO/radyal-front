@@ -5,7 +5,7 @@ import StrategyCardCTATwo from "./StrategyCardCTATwo";
 import StrategyBanner from "./StrategyBanner";
 
 const StrategyHero = () => {
-  const grouppedStrategies = useGrouppedStrategies();
+  const grouppedStrategies = useGrouppedStrategies(false);
   const [strategyOne, strategyTwo, groupOne, groupTwo] = useMemo(() => {
     if (grouppedStrategies.length === 0) return [null, null, null, null];
     const [groupOne, groupTwo] = grouppedStrategies;

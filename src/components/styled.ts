@@ -3,14 +3,13 @@ import tw from "twin.macro";
 import { COLORS } from "~/styles/constants";
 import PropTypes from "prop-types";
 
-export const Input = tw.input`input input-bordered hover:border-primary w-full focus:outline-none bg-base/25 backdrop-blur-3xl placeholder:text-darkGrey`;
+export const Input = tw.input`input input-bordered border-dark-500 w-full focus:outline-none bg-base/25 backdrop-blur-3xl placeholder:text-dark-500`;
 export const SwapInput = styled.input`
   &:focus {
     border: none !important;
     outline: none !important;
   }
-
-  ${tw`focus:outline-none bg-transparent placeholder:text-dark-500 max-h-9 pe-0 font-medium text-3xl text-right ms-auto w-full`}
+  ${tw`border-transparent focus:outline-none bg-transparent placeholder:text-dark-500 max-h-9 pe-0 font-medium text-3xl text-right ms-auto w-full`};
 `;
 SwapInput.defaultProps = {
   disabled: false,

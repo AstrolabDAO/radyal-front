@@ -6,7 +6,7 @@ import { useMemo } from "react";
 
 import { Operation, OperationStatus } from "~/model/operation";
 
-import ArrowRight from "~/assets/icons/left-to-right-thin.svg?react";
+import ArrowRight from "~/assets/icons/to-right-thin.svg?react";
 import { selectOperation } from "~/services/operation";
 import { openModal } from "~/services/modal";
 
@@ -38,7 +38,7 @@ const NotificationTokenPresentation = ({
       className={clsx("flex flex-col my-4 cursor-pointer  ")}
       onClick={() => {
         selectOperation(operation.id);
-        openModal({ modal: "steps",title: "TX TRACKER" });
+        openModal({ modal: "steps", title: "TX TRACKER" });
       }}
     >
       <div className="text-xs">

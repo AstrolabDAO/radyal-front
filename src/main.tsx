@@ -52,15 +52,3 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     />
   </React.StrictMode>
 );
-
-/*ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <Web3Provider>
-        <ReduxProvider store={Store}>
-          <App />
-        </ReduxProvider>
-      </Web3Provider>
-    </QueryClientProvider>
-  </React.StrictMode>
-);*/

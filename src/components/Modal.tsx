@@ -8,7 +8,7 @@ import {
 } from "~/hooks/modal";
 
 import clsx from "clsx";
-import ChevronLeft from "~/assets/icons/chevron-left.svg?react";
+import ChevronLeft from "~/assets/icons/previous.svg?react";
 import Close from "~/assets/icons/close.svg?react";
 import { closeModal } from "~/services/modal";
 import { Modals } from "~/utils/constants";

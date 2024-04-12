@@ -73,7 +73,7 @@ const StrategyCard = ({ strategyGroup }: StrategyProps) => {
 
   return (
     <div
-      className={clsx("card group strategy-card", {
+      className={clsx("card group strategy-card bordered-hover", {
         active: selectedStrategy?.slug === strategy.slug,
       })}
       onClick={openModalStrategy}

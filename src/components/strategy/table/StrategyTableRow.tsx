@@ -1,21 +1,27 @@
-import IconCard from "~/components/IconCard";
-import { Strategy } from "~/utils/interfaces";
-import StrategyTableListItemIcons from "./StrategyTableListItemIcons";
 import clsx from "clsx";
+import IconCard from "~/components/IconCard";
+import { Strategy } from "~/model/strategy";
 import { openModal } from "~/services/modal";
 import { selectStrategy } from "~/services/strategies";
 import { selectGroup } from "~/store/strategies";
-import { toPercent } from "~/utils/format";
+import { toPercent, toDollarsAuto } from "~/utils/format";
+import StrategyTableRowIcons from "./StrategyTableRowIcons";
 
-type StrategyTableListItemProps = {
+type StrategyTableRowProps = {
   isLast?: boolean;
+  holding: number;
+  apy: number;
   strategyGroup: Strategy[];
+  folio?: boolean;
 };
 
-const StrategyTableListItem = ({
+const StrategyTableRow = ({
   strategyGroup,
+  holding,
+  apy,
   isLast,
-}: StrategyTableListItemProps) => {
+  folio = false,
+}: StrategyTableRowProps) => {
   const [strategy] = strategyGroup;
 
   const protocolsIcons = Array.from(
@@ -25,11 +31,12 @@ const StrategyTableListItem = ({
         .flat(1)
     )
   );
+
   const icon = {
     size: { width: 24, height: 24 },
     url: strategy.asset.icon,
   };
-  const w1 = (strategy.apy / 365) * 7;
+  const w1 = (apy / 365) * 7;
   return (
     <tr
       className={clsx(
@@ -42,23 +49,23 @@ const StrategyTableListItem = ({
         openModal({ modal: "swap", showTitle: false });
       }}
     >
-      <td className="pe-0 text-center">
+      <td className="text-white">{strategy.name}</td>
+      <td className="text-white font-semibold">{toPercent(apy)}</td>
+      <td className="text-white">{toDollarsAuto(holding)}</td>
+      <td className="pe-0">
         <IconCard icon={icon} />
       </td>
-      <td className="text-white">{strategy.name}</td>
-      <td className="text-white font-semibold">{toPercent(strategy.apy)}</td>
-      <td className="text-white">${strategy.tvl}</td>
       <td>
         {protocolsIcons.map((icon) =>
           IconCard({ icon: { url: icon, size: { width: 24, height: 24 } } })
         )}
       </td>
       <td>
-        <StrategyTableListItemIcons strategyGroup={strategyGroup} />
+        <StrategyTableRowIcons strategyGroup={strategyGroup} />
       </td>
       <td className="text-success">{toPercent(w1)}</td>
     </tr>
   );
 };
 
-export default StrategyTableListItem;
+export default StrategyTableRow;

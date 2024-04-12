@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { IRootState } from "~/store";
 import { sortedBalancesSelector } from "~/store/selectors/tokens";
 import { Token } from "~/utils/interfaces";
+import { useStrategiesBalances } from "./strategies";
 
 export const useTokensStore = () => {
   return useSelector((state: IRootState) => state.tokens);
@@ -17,7 +18,9 @@ export const useTokenIsLoaded = () => {
   return useSelector((state: IRootState) => state.tokens.tokenLoaded);
 };
 export const useBalances = () => {
-  return useSelector(sortedBalancesSelector);
+  const balances = useSelector(sortedBalancesSelector);
+  const strategiesBalances = useStrategiesBalances();
+  return [...balances, ...strategiesBalances];
 };
 
 export const useBalanceByTokenSlug = () => {

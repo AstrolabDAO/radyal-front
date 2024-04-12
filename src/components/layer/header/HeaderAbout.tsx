@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import ChevronDown from "~/assets/icons/chevron-down.svg?react";
+import ChevronDown from "~/assets/icons/down.svg?react";
 import Link from "~/assets/icons/link.svg";
 import { StyledDropdown } from "~/components/styled";
 

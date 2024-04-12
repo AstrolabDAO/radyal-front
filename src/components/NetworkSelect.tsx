@@ -32,12 +32,15 @@ const NetworkSelect = ({
     control: (baseStyles: any) => ({
       ...baseStyles,
       backgroundColor: "inherit",
-      borderColor: "var(--fallback-bc,oklch(var(--bc)/0.2))",
-      borderRadius: "0.375rem",
+      borderColor: COLORS.dark,
+      "::placeholder": COLORS.dark,
       height: "3rem",
+      color: COLORS.dark,
+      borderRadius: "0.5rem",
       "&:hover": {
         boxShadow: "none",
-        borderColor: "var(--primary)",
+        borderColor: COLORS.hoverPrimaryBorder,
+        background: COLORS.hoverPrimaryBackground,
       },
       "&:focus": {
         boxShadow: "none",
@@ -48,7 +51,9 @@ const NetworkSelect = ({
       ...baseStyles,
       backgroundColor: "inherit",
       "&:hover": {
-        color: "var(--primary)",
+        color: COLORS.primary,
+        background: COLORS.hoverPrimaryBackground,
+        border: COLORS.hoverPrimaryBorder,
         cursor: "pointer",
       },
     }),
@@ -61,6 +66,7 @@ const NetworkSelect = ({
       zIndex: 1000,
       borderRadius: "0.375rem",
       backgroundColor: COLORS.base,
+      border: COLORS.dark,
       "&:focus": { outline: "none" },
     }),
     multiValue: (baseStyles: any) => ({

@@ -4,21 +4,21 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider } from "react-router-dom";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import { WagmiProvider } from "wagmi";
 import Modal from "./components/Modal.tsx";
 import { AppProvider } from "./context/app.context.tsx";
 import { useIsMobile } from "./hooks/utils.ts";
 import { useNetworksIsLoading, useWagmiConfig } from "./hooks/web3.ts";
 import MobileLock from "./pages/MobileLock.tsx";
-import router from "./router/router.tsx";
+
 import { checkInterval } from "./services/operation";
 import { updateIntervalId } from "./store/operations";
 
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
-import toast from "react-hot-toast";
-import { cacheHash } from "./utils/format.ts";
+import Layout from "./components/layout/Layout.tsx";
+import routes from "./router/routes.tsx";
 
 export const ONE_MINUTE = 1000 * 60;
 export const CACHE_TIME = ONE_MINUTE * 5;
@@ -71,7 +71,17 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <AppProvider />
         <DisclaimerProvider>
-          <RouterProvider router={router} />
+          <Router>
+            <Layout>
+              <Switch>
+                {routes.map(({ path, element }) => (
+                  <Route exact key={path} path={path}>
+                    {element}
+                  </Route>
+                ))}
+              </Switch>
+            </Layout>
+          </Router>
         </DisclaimerProvider>
         <Modal />
       </QueryClientProvider>

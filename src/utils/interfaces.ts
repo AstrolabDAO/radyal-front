@@ -41,6 +41,7 @@ export interface Balance {
   token: string;
   amountWei: string;
   price?: number;
+  amountUsd?: number;
   logo_url?: string;
 }
 

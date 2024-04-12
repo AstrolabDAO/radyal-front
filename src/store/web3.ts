@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Network, NetworkInterface } from "~/model/network";
-import { ProtocolInterface } from "~/model/protocol";
+import { IProtocol } from "~/model/protocol";
 import { fetchNetworks, fetchProtocols } from "./api/astrolab";
 
 import { createWeb3Modal } from "@web3modal/wagmi/react";
@@ -16,7 +16,7 @@ export interface Web3State {
     wagmiConfig: boolean;
   };
   config: Web3ModalConfig;
-  protocols: ProtocolInterface[];
+  protocols: IProtocol[];
   networks: NetworkInterface[];
 }
 
@@ -43,7 +43,7 @@ const web3Slice = createSlice({
       state.networks = action.payload;
       state.loading.networks = false;
     },
-    setProtocols: (state, action: PayloadAction<ProtocolInterface[]>) => {
+    setProtocols: (state, action: PayloadAction<IProtocol[]>) => {
       state.protocols = action.payload;
       state.loading.protocols = false;
     },

@@ -1,19 +1,17 @@
 import { useContext } from "react";
 
-import { Toaster } from "react-hot-toast";
-
 import { DisclaimerContext } from "~/context/disclaimer-context";
 import DisclaimerPage from "~/pages/DisclaimerPage";
 
+import HypnoticRing from "../HypnoticRing";
 import Footer from "../layer/MainFooter";
 import Header from "../layer/MainHeader";
-import { COLORS } from "~/styles/constants";
-import HypnoticRing from "../HypnoticRing";
-
+import { useLocation } from "react-router-dom";
 const Layout = ({ children }) => {
   const { accepted } = useContext(DisclaimerContext);
 
   if (!accepted) return <DisclaimerPage />;
+  const location = useLocation();
 
   return (
     <>

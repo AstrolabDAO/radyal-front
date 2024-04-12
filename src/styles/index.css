@@ -98,7 +98,7 @@ body {
 }
 
 .bordered-hover {
-  @apply hover:bg-primary/5 hover:border-primary/25 border-2 border-solid border-transparent;
+  @apply hover:bg-primary/5 hover:border-primary/25 border-1 border-solid;
 }
 
 .title {

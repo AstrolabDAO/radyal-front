@@ -6,7 +6,6 @@ import { getStrategyIcon } from "~/utils";
 import { Strategy } from "~/utils/interfaces";
 
 import StrategyCardIcons from "./StrategyCardIcons";
-
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 import { openModal } from "~/services/modal";

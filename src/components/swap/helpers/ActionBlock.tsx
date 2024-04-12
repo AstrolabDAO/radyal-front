@@ -81,7 +81,8 @@ const ActionBlock = ({
       >
         <div
           className={clsx("flex flex-row rounded-xl py-0 ps-2", {
-            "group cursor-pointer bg-dark-550 bordered-hover": !disabled,
+            "group cursor-pointer bg-dark-550 border-transparent bordered-hover":
+              !disabled,
           })}
           onClick={onTokenClick}
         >

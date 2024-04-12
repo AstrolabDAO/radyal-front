@@ -42,8 +42,18 @@ const Header = () => {
             >
               VAULTS
             </Link>
-            <div className="flex cursor-not-allowed font-medium text-darkGrey tooltip tooltip-bottom" data-tip="Soon™">BORROW</div>
-            <div className="flex cursor-not-allowed font-medium text-darkGrey tooltip tooltip-bottom" data-tip="Soon™">FOLIO</div>
+            <div
+              className="flex cursor-not-allowed font-medium text-darkGrey tooltip tooltip-bottom"
+              data-tip="Soon™"
+            >
+              BORROW
+            </div>
+            <Link
+              to={"/folio"}
+              className="flex font-medium tooltip tooltip-bottom"
+            >
+              FOLIO
+            </Link>
             <div className="flex cursor-pointer relative">
               <HeaderAbout />
             </div>

@@ -5,10 +5,13 @@ import { ONE_MINUTE } from "~/App";
 import { useRequestedPriceCoingeckoIds } from "~/hooks/tokens";
 
 import { dispatch } from "~/store";
+import { updateStrategiesPrices } from "~/store/strategies";
 import {
+  addBalances,
   init,
   setBalances,
   setRequestedPriceCoingeckoIds,
+  updatePrices,
 } from "~/store/tokens";
 import { setConnectedAddress } from "~/store/web3";
 import { getTokens, getTokensPrices, loadBalancesByAddress } from "~/utils/api";
@@ -70,7 +73,7 @@ const AppProvider = () => {
 
   useEffect(() => {
     if (!STORE_IS_INIT || !balances) return;
-    dispatch(setBalances(balances));
+    dispatch(addBalances(balances));
   });
 
   useEffect(() => {
@@ -78,6 +81,10 @@ const AppProvider = () => {
     else dispatch(setConnectedAddress(null));
   }, [address, isConnected]);
 
+  useEffect(() => {
+    dispatch(updatePrices(prices));
+    dispatch(updateStrategiesPrices(prices));
+  }, [prices]);
   useEffect(() => {
     if (STORE_IS_INIT) return;
     if (tokens && !isConnected && !STORE_IS_PARTIAL_INIT) {

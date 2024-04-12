@@ -1,15 +1,15 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { cacheHash } from "~/utils/format";
 
-import { Balance } from "~/utils/interfaces";
+import { Balance, CoinGeckoPrices } from "~/utils/interfaces";
 import { fetchStrategies, fetchStrategiesBalances } from "./api/astrolab";
-import { StrategyInterface } from "~/model/strategy";
+import { Strategy, IStrategy } from "~/model/strategy";
 
 export const CACHE_KEY = cacheHash("strategies");
 
 export interface StrategiesState {
   isLoading: boolean;
-  list: StrategyInterface[];
+  list: IStrategy[];
   selectedStrategyIndex: number;
   selectedStrategyGroup: string[];
   strategiesBalances: Balance[];
@@ -18,7 +18,7 @@ export interface StrategiesState {
   indexBySlug: { [slug: string]: number };
 }
 export interface InitPayload {
-  strategies: StrategyInterface[];
+  strategies: IStrategy[];
 }
 
 const initialState: StrategiesState = {
@@ -43,15 +43,30 @@ const strategiesSlice = createSlice({
         state.indexBySlug[strategy.slug] = index;
       });
     },
-    select: (state, action: PayloadAction<StrategyInterface>) => {
+    select: (state, action: PayloadAction<IStrategy>) => {
       state.selectedStrategyIndex = state.indexBySlug[action.payload.slug];
     },
-    selectGroup: (state, action: PayloadAction<StrategyInterface[]>) => {
+    selectGroup: (state, action: PayloadAction<IStrategy[]>) => {
       state.selectedStrategyGroup = action.payload.map(
         (strategy) => strategy.slug
       );
       state.selectedStrategyIndex =
         state.indexBySlug[state.selectedStrategyGroup[0]];
+    },
+    updateStrategiesPrices: (state, action: PayloadAction<CoinGeckoPrices>) => {
+      state.list.forEach((strategy) => {
+        const price =
+          action.payload[strategy.asset.coinGeckoId].usd *
+          (strategy.sharePrice / strategy.weiPerUnit);
+        strategy.sharePriceUsd = price;
+        strategy.tvlUsd = price * strategy.tvl;
+      });
+      state.strategiesBalances.forEach((balance) => {
+        const strategy = Strategy.bySlug[balance.token];
+        if (strategy) {
+          balance.amountUsd = balance.amount * strategy.sharePriceUsd;
+        }
+      });
     },
     search: (state, action: PayloadAction<string>) => {
       state.searchString = action.payload;
@@ -72,12 +87,24 @@ const strategiesSlice = createSlice({
       });
     });
     builder.addCase(fetchStrategiesBalances.fulfilled, (state, action) => {
-      state.strategiesBalances = action.payload;
+      state.strategiesBalances = action.payload.map((balance) => {
+        const strategy = Strategy.bySlug[balance.token];
+        if (strategy) {
+          balance.amountUsd = balance.amount * strategy.sharePriceUsd;
+        }
+        return balance;
+      });
     });
   },
 });
 
-export const { init, select, selectGroup, search, filterByNetworks } =
-  strategiesSlice.actions;
+export const {
+  init,
+  select,
+  selectGroup,
+  search,
+  filterByNetworks,
+  updateStrategiesPrices,
+} = strategiesSlice.actions;
 
 export const StrategiesReducer = strategiesSlice.reducer;

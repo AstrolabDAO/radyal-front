@@ -217,7 +217,7 @@ interface ApiNetwork {
   updatedAt: string;
 }
 
-interface ApiProtocolInterface {
+interface ApiIProtocol {
   defiLlamaInfo: null | any;
   exponentialInfo: null | any;
   defiSafetyInfo: null | any;
@@ -288,7 +288,7 @@ export interface NetworksResponse {
 }
 
 export interface ProtocolsResponse {
-  data: ApiProtocolInterface[];
+  data: ApiIProtocol[];
 }
 
 export interface ApiResponseBalance {

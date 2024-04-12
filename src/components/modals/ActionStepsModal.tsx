@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { useCurrentStep, useSelectedOperation } from "~/hooks/operation";
 
 import clsx from "clsx";
-import ArrowRight from "~/assets/icons/left-to-right-thin.svg?react";
+import ArrowRight from "~/assets/icons/to-right-thin.svg?react";
 import ActionStepsAnimation from "~/components/swap/helpers/ActionStepsAnimation.tsx";
 import ActionRouteDetail from "~/components/swap/helpers/OperationRouteDetail";
 import TokenPresentation from "../TokenPresentation";

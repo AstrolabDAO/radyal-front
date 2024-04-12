@@ -54,35 +54,36 @@ const WithdrawTab = () => {
           onTokenClick={() => openModal({ modal: "select-token" })}
         />
         <ActionRouteDetail operation={operationSimulation} />
-        <div className="flex">
-          <Button
-            onClick={async () => {
-              if (currentChain !== fromToken.network.id)
-                await switchChain(getWagmiConfig(), {
-                  chainId: fromToken?.network?.id,
-                });
-              openModal({
-                modal: "steps",
+      </div>
+      <div className="flex">
+        <Button
+          big={true}
+          onClick={async () => {
+            if (currentChain !== fromToken.network.id)
+              await switchChain(getWagmiConfig(), {
+                chainId: fromToken?.network?.id,
               });
-              try {
-                const operation = await withdraw(estimation.estimation);
-                if (interactionNeedToSwap) {
-                  await executeSwapperRoute(operation);
-                }
-                setLocked(false);
-              } catch (e) {
-                console.error(e);
-                setLocked(false);
-                closeModal();
-                toast.error("An error has occured");
+            openModal({
+              modal: "steps",
+            });
+            try {
+              const operation = await withdraw(estimation.estimation);
+              if (interactionNeedToSwap) {
+                await executeSwapperRoute(operation);
               }
-            }}
-            disabled={!canSwap}
-            className="btn btn-primary w-full"
-          >
-            {interactionNeedToSwap ? "Withdraw and Swap" : "Withdraw"}
-          </Button>
-        </div>
+              setLocked(false);
+            } catch (e) {
+              console.error(e);
+              setLocked(false);
+              closeModal();
+              toast.error("An error has occured");
+            }
+          }}
+          disabled={!canSwap}
+          className="btn btn-primary w-full"
+        >
+          {interactionNeedToSwap ? "Withdraw and Swap" : "Withdraw"}
+        </Button>
       </div>
     </>
   );

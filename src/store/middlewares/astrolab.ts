@@ -1,9 +1,7 @@
 import { Middleware, PayloadAction } from "@reduxjs/toolkit";
-import { fetchStrategiesBalances } from "../api/astrolab";
-import { IRootState } from "..";
 import localforage from "localforage";
-import { setConfig } from "../web3";
-import { networkToWagmiChain } from "~/utils/format";
+import { IRootState } from "..";
+import { fetchStrategiesBalances } from "../api/astrolab";
 
 const loadStrategiesBalancesMiddleware: Middleware =
   (store: any) => (next) => (action: PayloadAction<any>) => {

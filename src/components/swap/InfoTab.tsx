@@ -4,7 +4,7 @@ import StrategyHeader from "./StrategyHeader";
 import { useSelectedStrategy } from "~/hooks/strategies";
 
 import { shortenAddress } from "@astrolabs/swapper";
-import Link from "~/assets/icons/link.svg";
+import Link from "~/assets/icons/link.svg?react";
 import { useReadContract } from "wagmi";
 
 const InfoTab = () => {
@@ -54,16 +54,12 @@ const InfoTab = () => {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-500 px-2 flex text-white hover:text-primary w-full"
+                        className="text-blue-500 px-2 flex text-white hover:text-primary w-full fill-white hover:fill-primary"
                       >
                         <span className="inline-block px-2">
                           {link.content}
                         </span>
-                        <img
-                          className="invert w-4 inline"
-                          src={Link}
-                          alt="link"
-                        />
+                        <Link className="w-4 fill-inherit" />
                       </a>
                     )}
                     {!link.href && (

@@ -2,19 +2,21 @@ import { Balance, Token } from "~/utils/interfaces";
 import { Network } from "./network";
 import { Serializable } from "./serializable";
 
-export interface StrategyInterface extends Token {
+export interface IStrategy extends Token {
   rewardsTokens?: string[];
   asset: Token;
   sharePrice: number;
+  sharePriceUsd?: number;
   protocols?: any[];
   aggregationLevel?: number;
   apy?: number;
   tvl?: number;
+  tvlUsd?: number;
   valuable: any;
   color1?: string;
 }
 
-export class Strategy extends Serializable implements StrategyInterface {
+export class Strategy extends Serializable implements IStrategy {
   address: `0x${string}`;
   name: string;
   decimals: number;
@@ -29,10 +31,12 @@ export class Strategy extends Serializable implements StrategyInterface {
   rewardsTokens?: string[];
   asset: Token;
   sharePrice: number;
+  sharePriceUsd?: number;
   protocols?: any[];
   aggregationLevel?: number;
   apy?: number;
   tvl?: number;
+  tvlUsd?: number;
   valuable: any;
 
   static byChainId: { [chainId: number]: Strategy[] } = {};
@@ -41,7 +45,7 @@ export class Strategy extends Serializable implements StrategyInterface {
   static byThirdPartyId: { [id: string]: Strategy } = {};
   static balanceBySlug: { [slug: string]: Balance } = {};
 
-  constructor(strategy: StrategyInterface) {
+  constructor(strategy: IStrategy) {
     super();
     this.address = strategy.address;
     this.name = strategy.name;
