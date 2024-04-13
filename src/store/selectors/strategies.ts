@@ -27,7 +27,7 @@ export const createGrouppedStrategiesSelector = (filtered = true) => {
         .filter((item) => {
           if (!filtered) return true;
           return Object.values(item).some((value) =>
-            value.toString().toLowerCase().includes(searchString.toLowerCase())
+            value?.toString().toLowerCase().includes(searchString.toLowerCase())
           );
         })
         .forEach((strategy) => {

@@ -1,10 +1,14 @@
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
+import styled from "styled-components";
+import { StrategyTableContext } from "~/context/strategy-table.context";
 import { useStrategies } from "~/hooks/strategies";
 import { useBalances } from "~/hooks/tokens";
 import { Strategy } from "~/model/strategy";
 import { getPrices } from "~/services/tokens";
+import { COLORS } from "~/styles/constants";
 import { toDollarsAuto, toPercent } from "~/utils/format";
-
+import Vault from "~/assets/icons/vault.svg?react";
+import Insurance from "~/assets/icons/insurance.svg?react";
 export const Exposure = () => {
   const balances = useBalances();
 
@@ -14,62 +18,64 @@ export const Exposure = () => {
     const prices = getPrices();
     const assetPrice = prices[strategy.asset.coinGeckoId];
   });
-  const [balancesTotal, apyMoy] = useMemo(() => {
-    let total = 0;
-    let apyTotal = 0;
 
-    const strategySlugs = Object.keys(Strategy.bySlug);
-    const balanceSlugs = balances
-      .filter((b) => strategySlugs.includes(b.token))
-      .map((b) => b.token);
-
-    const filteredStrategies = strategies.filter((s) =>
-      balanceSlugs.includes(s.slug)
-    );
-
-    balances
-      .filter((b) => balanceSlugs.includes(b.token))
-      .forEach((balance) => {
-        total += balance?.amount * balance?.price;
-      });
-
-    filteredStrategies.forEach(({ apy }) => {
-      apyTotal += apy;
-    });
-
-    const apyMoy =
-      filteredStrategies.length === 0
-        ? 0
-        : apyTotal / filteredStrategies.length;
-    return [total, apyMoy];
-  }, [strategies, balances]);
+  const { totalHoldings, weightedAPY } = useContext(StrategyTableContext);
 
   return (
     <div>
       <div className="p-4 flex">
         <div className="w-1/3">
           <h4 className="uppercase">Exposure</h4>
-          <div className="text-primary text-6xl inter">
-            {toDollarsAuto(balancesTotal, false)}
+          <div className="text-primary text-6xl inter font-bold">
+            {toDollarsAuto(totalHoldings, false)}
           </div>
-          <ul>
-            <li>{toDollarsAuto(balancesTotal)} in Strategies </li>
-            <li>$0.00 in insurence</li>
-          </ul>
+          <ExposureDetail>
+            <li>
+              {toDollarsAuto(totalHoldings)} in Strategies
+              <Vault className="fill-darkGrey w-6 inline-block ml-2" />
+            </li>
+            <li>
+              $0.00 in insurence
+              <Insurance className="fill-darkGrey w-6 inline-block ml-2" />
+            </li>
+          </ExposureDetail>
         </div>
         <div className="w-1/3">
           <h4 className="uppercase">APY</h4>
-          <div className="text-primary text-6xl inter">{toPercent(apyMoy)}</div>
-          <ul>
-            <li>{toPercent(apyMoy / 12)} monthly</li>
-            <li>{toPercent(apyMoy / 365)} daily</li>
-          </ul>
+          <div className="text-primary text-6xl inter font-bold">
+            {toPercent(weightedAPY)}
+          </div>
+          <ExposureDetail>
+            <li>{toPercent(weightedAPY / 12)} monthly</li>
+            <li>{toPercent(weightedAPY / 365)} daily</li>
+          </ExposureDetail>
         </div>
         <div className="w-1/3">
           <h4 className="uppercase">ROR</h4>
-          <div className="text-primary text-6xl inter">{toPercent(apyMoy)}</div>
+          <div className="text-primary text-6xl inter font-bold">
+            {toPercent(weightedAPY)}
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
+const ExposureDetail = styled.ul`
+  margin-top: 1rem;
+  > li {
+    margin-top: -0.7rem;
+    &::before {
+      content: "";
+      display: inline-block;
+      position: relative;
+      width: 1rem;
+      height: 1.5rem;
+      border: 1px solid transparent;
+      border-left-color: ${COLORS.darkGrey};
+      border-bottom-color: ${COLORS.darkGrey};
+      margin-bottom: 0.3rem;
+      margin-right: 0.5rem;
+    }
+  }
+`;

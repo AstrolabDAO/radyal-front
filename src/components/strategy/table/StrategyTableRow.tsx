@@ -40,7 +40,7 @@ const StrategyTableRow = ({
   return (
     <tr
       className={clsx(
-        "border-t-1 border-solid border-darkGrey cursor-pointer bordered-hover",
+        "border-t-1  cursor-pointer bordered-hover border-transparent",
         isLast && "rounded-b-xl"
       )}
       onClick={() => {

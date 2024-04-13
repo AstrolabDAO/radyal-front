@@ -15,11 +15,8 @@ import TableIcon from "@/assets/icons/table-view.svg?react";
 import { Transition } from "@headlessui/react";
 import clsx from "clsx";
 import { useCallback, useState } from "react";
+import { StrategyTableContextProvider } from "~/context/strategy-table.context";
 import { Input } from "../styled";
-import {
-  StrategyTableContext,
-  StrategyTableContextProvider,
-} from "~/context/strategy-table.context";
 
 const StrategyGrid = () => {
   const [tabActive, setTabActive] = useState<"cards" | "table">("cards");
