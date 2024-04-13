@@ -133,10 +133,10 @@ const ActionModalContent = () => {
   return (
     <>
       <div className="flex mb-8">
-        <div className="flex justify-between w-full uppercase text-2-5xl items-center">
+        <div className="flex justify-between w-full uppercase text-xl md:text-2-5xl items-center">
           <div
             className={clsx("cursor-pointer hover:text-primary", {
-              "font-bold border-white text-white text-3xl":
+              "font-bold border-white text-white text-xl md:text-3xl":
                 !isInfo && selectedTab === "deposit",
             })}
             onClick={() => {
@@ -148,7 +148,7 @@ const ActionModalContent = () => {
           </div>
           <div
             className={clsx("cursor-pointer  hover:text-primary", {
-              "font-bold border-white text-white text-3xl":
+              "font-bold border-white text-white text-xl md:text-3xl":
                 !isInfo && selectedTab === "withdraw",
             })}
             onClick={() => {
@@ -160,7 +160,7 @@ const ActionModalContent = () => {
           </div>
           <div
             className={clsx("cursor-pointer  hover:text-primary mr-4", {
-              "font-bold border-white text-white  text-3xl": isInfo,
+              "font-bold border-white text-white  text-xl md:text-3xl": isInfo,
             })}
             onClick={() => {
               setIsInfo(true);

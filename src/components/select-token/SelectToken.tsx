@@ -76,8 +76,8 @@ const SelectToken = ({ tokens, onSelect }: SelectTokenProps) => {
   return (
     <>
       <header>
-        <div className="flex flex-row mt-6">
-          <div className="basis-3/5 pe-1.5">
+        <div className="flex flex-row mt-6 flex-wrap sm:flex-nowrap">
+          <div className="sm:basis-3/5 pe-1.5 w-full">
             <label className="flex mb-1">Search by name</label>
             <Input
               type="text"
@@ -88,7 +88,7 @@ const SelectToken = ({ tokens, onSelect }: SelectTokenProps) => {
               }}
             />
           </div>
-          <div className="basis-2/5">
+          <div className="sm:basis-2/5 w-full">
             <div className="flex mb-1">Filter by network</div>
             <NetworkSelect
               className="z-50 relative"

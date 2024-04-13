@@ -87,7 +87,10 @@ body {
 .gilroy {
   font-family: "Gilroy", sans-serif;
 }
-
+.right-0,
+.right_0 {
+  right: 0;
+}
 .text-2-5xl {
   font-size: 1.75rem;
   line-height: 2.5rem;

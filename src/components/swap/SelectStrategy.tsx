@@ -18,7 +18,7 @@ const SelectStrategy = () => {
   const selectedStrategy = useSelectedStrategy();
 
   return (
-    <div className="flex flex-col ps-3 mb-auto">
+    <div className="flex flex-col ps-3 mb-auto w-full sm:w-auto">
       <div className="flex flex-row text-left text-xs leading-6">
         <div className="w-8"></div>
         <div className="w-24">APY</div>
@@ -36,7 +36,7 @@ const SelectStrategy = () => {
               key={`${strategy.network.id}-${index}`}
               className={clsx("rounded-full my-1 cursor-pointer", {
                 "bg-dark-550": isSelected,
-                "cursor-pointer bordered-hover": !isSelected,
+                "cursor-pointer bordered-hover border-transparent": !isSelected,
               })}
               onClick={() => {
                 selectStrategy(strategy);

@@ -66,7 +66,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
   return (
-    <div className="absolute top-0 w-full z-20">
+    <div className="relatie md:absolute top-0 w-full z-20">
       <div
         className="relative flex flex-col w-full strategy-cta-size max-w-full"
         onClick={openModalStrategy}
@@ -157,10 +157,10 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
         </svg>
         {strategy !== null && (
           <div className="absolute flex flex-col w-full pointer-events-none">
-            <div className="flex flex-row justify-between px-5 pt-5">
+            <div className="flex flex-row justify-between p-2 md:p-5">
               <div
                 className={clsx(
-                  "me-auto text-2xl md:text-5xl gilroy font-extrabold italic mt-auto",
+                  "md:me-auto text-2xl md:text-5xl gilroy font-extrabold italic md:mt-auto me-",
                   `${isHovered ? "text-primary" : "text-white"}`
                 )}
               >
@@ -172,7 +172,7 @@ const StrategyCardCTAOne = ({ strategyGroup }: StrategyProps) => {
                 size={{ height: 45, width: 45 }}
               />
             </div>
-            <div className="text-2xl md:text-4xl gilroy me-auto px-5 mb-3">
+            <div className="text-2xl md:text-4xl gilroy me-auto px-2 md:px-5 mb-3">
               {subtitle}
             </div>
             <div className="flex flex-row justify-between px-5">

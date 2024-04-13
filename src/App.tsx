@@ -62,8 +62,6 @@ function App() {
     dispatch(updateIntervalId({ intervalId: checkInterval() }));
   }, [dispatch]);
 
-  if (isMobile) return <MobileLock />;
-
   if (networksIsLoading) return null;
 
   return (

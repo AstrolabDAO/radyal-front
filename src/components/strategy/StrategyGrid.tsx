@@ -81,11 +81,11 @@ const StrategyGrid = () => {
             }}
           />
         </div>
-        <div className="flex flex-col relative ">
+        <div className="flex flex-col relative my-4 md:my-auto">
           <span className="label-text mb-1">Chain</span>
           <NetworkSelect
             isSearchable={false}
-            className="w-64 h-12"
+            className="w-full md:w-64 h-12"
             networks={strategiesNetworks}
             onChange={(value: Array<NetworkSelectData>) => {
               dispatch(filterByNetworks(value.map((v) => v.network?.slug)));

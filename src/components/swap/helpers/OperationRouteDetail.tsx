@@ -162,7 +162,7 @@ const OperationRouteDetail = ({
         )}
         {!estimationError && (
           <ul
-            className="steps steps-vertical gap-0"
+            className="steps steps-vertical gap-0 text-xs sm:text-sm"
             style={{
               maxHeight: steps.length > 0 ? "500px" : "0px",
               transition: "max-height 2s ease-out",

@@ -69,7 +69,7 @@ const ActionBlock = ({
       <div className="mb-1 font-medium">{label}</div>
       <div
         className={clsx(
-          "flex flex-col md:flex-row p-2 pr-4 rounded-[1.15rem] border-1 border-solid",
+          "flex flex-row p-2 pr-4 rounded-[1.15rem] border-1 border-solid",
           {
             "bg-dark-700": !disabled,
             "border-darkGrey": disabled,
